@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/game/db" VERSION="2011082604" COMMENT="XMLDB file for Moodle mod/game"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="game" COMMENT="game" NEXT="game_attempts">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="name" NEXT="sourcemodule"/>
+        <FIELD NAME="sourcemodule" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" PREVIOUS="course" NEXT="timeopen"/>
+        <FIELD NAME="timeopen" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sourcemodule" NEXT="timeclose"/>
+        <FIELD NAME="timeclose" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="timeopen" NEXT="quizid"/>
+        <FIELD NAME="quizid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timeclose" NEXT="glossaryid"/>
+        <FIELD NAME="glossaryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="quizid" NEXT="glossarycategoryid"/>
+        <FIELD NAME="glossarycategoryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="glossaryid" NEXT="questioncategoryid"/>
+        <FIELD NAME="questioncategoryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="glossarycategoryid" NEXT="bookid"/>
+        <FIELD NAME="bookid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="questioncategoryid" NEXT="gamekind"/>
+        <FIELD NAME="gamekind" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="bookid" NEXT="param1"/>
+        <FIELD NAME="param1" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="gamekind" NEXT="param2"/>
+        <FIELD NAME="param2" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param1" NEXT="param3"/>
+        <FIELD NAME="param3" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param2" NEXT="param4"/>
+        <FIELD NAME="param4" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param3" NEXT="param5"/>
+        <FIELD NAME="param5" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param4" NEXT="param6"/>
+        <FIELD NAME="param6" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param5" NEXT="param7"/>
+        <FIELD NAME="param7" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param6" NEXT="param8"/>
+        <FIELD NAME="param8" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param7" NEXT="param9"/>
+        <FIELD NAME="param9" TYPE="text" LENGTH="medium" NOTNULL="false" SEQUENCE="false" PREVIOUS="param8" NEXT="param10"/>
+        <FIELD NAME="param10" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="param9" NEXT="shuffle"/>
+        <FIELD NAME="shuffle" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" DEFAULT="1" SEQUENCE="false" PREVIOUS="param10" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="shuffle" NEXT="gameinputid"/>
+        <FIELD NAME="gameinputid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="timemodified" NEXT="toptext"/>
+        <FIELD NAME="toptext" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="gameinputid" NEXT="bottomtext"/>
+        <FIELD NAME="bottomtext" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="toptext" NEXT="grademethod"/>
+        <FIELD NAME="grademethod" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="bottomtext" NEXT="grade"/>
+        <FIELD NAME="grade" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="grademethod" NEXT="decimalpoints"/>
+        <FIELD NAME="decimalpoints" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="grade" NEXT="popup"/>
+        <FIELD NAME="popup" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="decimalpoints" NEXT="review"/>
+        <FIELD NAME="review" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="popup" NEXT="attempts"/>
+        <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="review" NEXT="glossaryid2"/>
+        <FIELD NAME="glossaryid2" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="attempts" NEXT="glossarycategoryid2"/>
+        <FIELD NAME="glossarycategoryid2" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="glossaryid2" NEXT="language"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="glossarycategoryid2" NEXT="subcategories"/>
+        <FIELD NAME="subcategories" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="language"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_attempts" COMMENT="game_attempts" PREVIOUS="game" NEXT="game_grades">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="gameid"/>
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="gameid" NEXT="timestart"/>
+        <FIELD NAME="timestart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="userid" NEXT="timefinish"/>
+        <FIELD NAME="timefinish" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="timestart" NEXT="timelastattempt"/>
+        <FIELD NAME="timelastattempt" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="timefinish" NEXT="lastip"/>
+        <FIELD NAME="lastip" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" PREVIOUS="timelastattempt" NEXT="lastremotehost"/>
+        <FIELD NAME="lastremotehost" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" PREVIOUS="lastip" NEXT="preview"/>
+        <FIELD NAME="preview" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="lastremotehost" NEXT="attempt"/>
+        <FIELD NAME="attempt" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="preview" NEXT="score"/>
+        <FIELD NAME="score" TYPE="float" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="attempt" NEXT="attempts"/>
+        <FIELD NAME="attempts" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="score" NEXT="language"/>
+        <FIELD NAME="language" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="attempts"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="gameiduseridfinished" UNIQUE="false" FIELDS="gameid, userid, timefinish"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="game_grades" COMMENT="game_grades" PREVIOUS="game_attempts" NEXT="game_queries">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="gameid"/>
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="gameid" NEXT="score"/>
+        <FIELD NAME="score" TYPE="float" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="userid" NEXT="timemodified"/>
+        <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" PREVIOUS="score"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="userid" UNIQUE="false" FIELDS="userid" NEXT="gameid"/>
+        <INDEX NAME="gameid" UNIQUE="false" FIELDS="gameid" PREVIOUS="userid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="game_queries" COMMENT="game_queries" PREVIOUS="game_grades" NEXT="game_hangman">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="attemptid"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="gamekind"/>
+        <FIELD NAME="gamekind" TYPE="char" LENGTH="255" NOTNULL="false" SEQUENCE="false" PREVIOUS="attemptid" NEXT="gameid"/>
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="gamekind" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="gameid" NEXT="sourcemodule"/>
+        <FIELD NAME="sourcemodule" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="userid" NEXT="questionid"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="sourcemodule" NEXT="glossaryentryid"/>
+        <FIELD NAME="glossaryentryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="questionid" NEXT="questiontext"/>
+        <FIELD NAME="questiontext" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="glossaryentryid" NEXT="score"/>
+        <FIELD NAME="score" TYPE="float" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="questiontext" NEXT="timelastattempt"/>
+        <FIELD NAME="timelastattempt" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="score" NEXT="studentanswer"/>
+        <FIELD NAME="studentanswer" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="timelastattempt" NEXT="col"/>
+        <FIELD NAME="col" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="studentanswer" NEXT="row"/>
+        <FIELD NAME="row" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="col" NEXT="horizontal"/>
+        <FIELD NAME="horizontal" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="row" NEXT="answertext"/>
+        <FIELD NAME="answertext" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="horizontal" NEXT="correct"/>
+        <FIELD NAME="correct" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="answertext" NEXT="attachment"/>
+        <FIELD NAME="attachment" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" PREVIOUS="correct" NEXT="answerid"/>
+        <FIELD NAME="answerid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="attachment" NEXT="tries"/>
+        <FIELD NAME="tries" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="answerid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="attemptid" UNIQUE="false" FIELDS="attemptid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="game_hangman" COMMENT="game_hangman" PREVIOUS="game_queries" NEXT="game_cross">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="queryid"/>
+        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" PREVIOUS="id" NEXT="letters"/>
+        <FIELD NAME="letters" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="queryid" NEXT="allletters"/>
+        <FIELD NAME="allletters" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="letters" NEXT="try"/>
+        <FIELD NAME="try" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="allletters" NEXT="maxtries"/>
+        <FIELD NAME="maxtries" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="try" NEXT="finishedword"/>
+        <FIELD NAME="finishedword" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="maxtries" NEXT="corrects"/>
+        <FIELD NAME="corrects" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="finishedword" NEXT="iscorrect"/>
+        <FIELD NAME="iscorrect" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="corrects"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_cross" COMMENT="game_cross" PREVIOUS="game_hangman" NEXT="game_cryptex">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="cols"/>
+        <FIELD NAME="cols" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="rows"/>
+        <FIELD NAME="rows" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="cols" NEXT="words"/>
+        <FIELD NAME="words" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="rows" NEXT="wordsall"/>
+        <FIELD NAME="wordsall" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="words" NEXT="createscore"/>
+        <FIELD NAME="createscore" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="wordsall" NEXT="createtries"/>
+        <FIELD NAME="createtries" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="createscore" NEXT="createtimelimit"/>
+        <FIELD NAME="createtimelimit" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="createtries" NEXT="createconnectors"/>
+        <FIELD NAME="createconnectors" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="createtimelimit" NEXT="createfilleds"/>
+        <FIELD NAME="createfilleds" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="createconnectors" NEXT="createspaces"/>
+        <FIELD NAME="createspaces" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="createfilleds" NEXT="triesplay"/>
+        <FIELD NAME="triesplay" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="createspaces"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_cryptex" COMMENT="game_cryptex" PREVIOUS="game_cross" NEXT="game_millionaire">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="letters"/>
+        <FIELD NAME="letters" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_millionaire" COMMENT="game_millionaire" PREVIOUS="game_cryptex" NEXT="game_sudoku">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="queryid"/>
+        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="state"/>
+        <FIELD NAME="state" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="queryid" NEXT="level"/>
+        <FIELD NAME="level" TYPE="int" LENGTH="2" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="state"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_sudoku" COMMENT="game_sudoku" PREVIOUS="game_millionaire" NEXT="game_sudoku_database">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="level"/>
+        <FIELD NAME="level" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="data"/>
+        <FIELD NAME="data" TYPE="char" LENGTH="81" NOTNULL="true" SEQUENCE="false" PREVIOUS="level" NEXT="opened"/>
+        <FIELD NAME="opened" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="data" NEXT="guess"/>
+        <FIELD NAME="guess" TYPE="char" LENGTH="81" NOTNULL="false" SEQUENCE="false" PREVIOUS="opened"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_sudoku_database" COMMENT="game_sudoku_database" PREVIOUS="game_sudoku" NEXT="game_bookquiz">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="level"/>
+        <FIELD NAME="level" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="opened"/>
+        <FIELD NAME="opened" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="level" NEXT="data"/>
+        <FIELD NAME="data" TYPE="char" LENGTH="81" NOTNULL="false" SEQUENCE="false" PREVIOUS="opened"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="data" UNIQUE="true" FIELDS="data"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="game_bookquiz" COMMENT="game_bookquiz" PREVIOUS="game_sudoku_database" NEXT="game_bookquiz_chapters">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="lastchapterid"/>
+        <FIELD NAME="lastchapterid" TYPE="char" LENGTH="81" NOTNULL="true" SEQUENCE="false" PREVIOUS="id"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_bookquiz_chapters" COMMENT="game_bookquiz_chapters" PREVIOUS="game_bookquiz" NEXT="game_bookquiz_questions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="attemptid"/>
+        <FIELD NAME="attemptid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="chapterid"/>
+        <FIELD NAME="chapterid" TYPE="char" LENGTH="81" NOTNULL="true" SEQUENCE="false" PREVIOUS="attemptid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="attemptidchapterid" UNIQUE="false" FIELDS="attemptid, chapterid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="game_bookquiz_questions" COMMENT="game_bookquiz" PREVIOUS="game_bookquiz_chapters" NEXT="game_export_javame">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="gameid"/>
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="chapterid"/>
+        <FIELD NAME="chapterid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="gameid" NEXT="questioncategoryid"/>
+        <FIELD NAME="questioncategoryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="chapterid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="gameidchapterid" UNIQUE="false" FIELDS="gameid, chapterid"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="game_export_javame" COMMENT="game_export_javame" PREVIOUS="game_bookquiz_questions" NEXT="game_export_html">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="filename"/>
+        <FIELD NAME="filename" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="icon"/>
+        <FIELD NAME="icon" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="filename" NEXT="createdby"/>
+        <FIELD NAME="createdby" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" PREVIOUS="icon" NEXT="vendor"/>
+        <FIELD NAME="vendor" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false" PREVIOUS="createdby" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="vendor" NEXT="description"/>
+        <FIELD NAME="description" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="name" NEXT="version"/>
+        <FIELD NAME="version" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="description" NEXT="maxpicturewidth"/>
+        <FIELD NAME="maxpicturewidth" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="version" NEXT="maxpictureheight"/>
+        <FIELD NAME="maxpictureheight" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="maxpicturewidth" NEXT="type"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="maxpictureheight"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_export_html" COMMENT="game_export_html" PREVIOUS="game_export_javame" NEXT="game_snakes">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="filename"/>
+        <FIELD NAME="filename" TYPE="char" LENGTH="30" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="200" NOTNULL="false" SEQUENCE="false" PREVIOUS="filename" NEXT="checkbutton"/>
+        <FIELD NAME="checkbutton" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="title" NEXT="printbutton"/>
+        <FIELD NAME="printbutton" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="checkbutton" NEXT="inputsize"/>
+        <FIELD NAME="inputsize" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="printbutton" NEXT="maxpicturewidth"/>
+        <FIELD NAME="maxpicturewidth" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="inputsize" NEXT="maxpictureheight"/>
+        <FIELD NAME="maxpictureheight" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="maxpicturewidth" NEXT="type"/>
+        <FIELD NAME="type" TYPE="char" LENGTH="10" NOTNULL="false" SEQUENCE="false" PREVIOUS="maxpictureheight"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_snakes" COMMENT="game_snakes" PREVIOUS="game_export_html" NEXT="game_snakes_database">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="snakesdatabaseid"/>
+        <FIELD NAME="snakesdatabaseid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="id" NEXT="position"/>
+        <FIELD NAME="position" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="snakesdatabaseid" NEXT="queryid"/>
+        <FIELD NAME="queryid" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="position" NEXT="dice"/>
+        <FIELD NAME="dice" TYPE="int" LENGTH="1" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="queryid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_snakes_database" COMMENT="game_snakes_database" PREVIOUS="game_snakes" NEXT="game_course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="cols"/>
+        <FIELD NAME="cols" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="name" NEXT="rows"/>
+        <FIELD NAME="rows" TYPE="int" LENGTH="3" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="cols" NEXT="data"/>
+        <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="rows" NEXT="fileboard"/>
+        <FIELD NAME="fileboard" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="data" NEXT="direction"/>
+        <FIELD NAME="direction" TYPE="int" LENGTH="2" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="fileboard" NEXT="headerx"/>
+        <FIELD NAME="headerx" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="direction" NEXT="headery"/>
+        <FIELD NAME="headery" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="headerx" NEXT="footerx"/>
+        <FIELD NAME="footerx" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="headery" NEXT="footery"/>
+        <FIELD NAME="footery" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="footerx" NEXT="width"/>
+        <FIELD NAME="width" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="footery" NEXT="height"/>
+        <FIELD NAME="height" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="width"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_course" COMMENT="game_course" PREVIOUS="game_snakes_database" NEXT="game_course_inputs">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="messagewin"/>
+        <FIELD NAME="messagewin" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="messageloose"/>
+        <FIELD NAME="messageloose" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="messagewin"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_course_inputs" COMMENT="game_course_inputs" PREVIOUS="game_course" NEXT="game_hiddenpicture">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false" PREVIOUS="id" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" SEQUENCE="false" PREVIOUS="name" NEXT="sourcemodule"/>
+        <FIELD NAME="sourcemodule" TYPE="char" LENGTH="20" NOTNULL="false" SEQUENCE="false" PREVIOUS="course" NEXT="ids"/>
+        <FIELD NAME="ids" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="sourcemodule"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_hiddenpicture" COMMENT="game_hiddenpicture" PREVIOUS="game_course_inputs" NEXT="game_repetitions">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" NEXT="correct"/>
+        <FIELD NAME="correct" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="wrong"/>
+        <FIELD NAME="wrong" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="correct" NEXT="found"/>
+        <FIELD NAME="found" TYPE="int" LENGTH="4" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="wrong"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="game_repetitions" COMMENT="game_repetitions" PREVIOUS="game_hiddenpicture">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" NEXT="gameid"/>
+        <FIELD NAME="gameid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="userid"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="gameid" NEXT="questionid"/>
+        <FIELD NAME="questionid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="userid" NEXT="glossaryentryid"/>
+        <FIELD NAME="glossaryentryid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="questionid" NEXT="repetitions"/>
+        <FIELD NAME="repetitions" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="false" DEFAULT="0" SEQUENCE="false" PREVIOUS="glossaryentryid"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="main" UNIQUE="true" FIELDS="gameid, userid, questionid, glossaryentryid"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
