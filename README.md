@@ -45,8 +45,6 @@ Documentation http://docs.moodle.org/en/Game_module
 Browse source code http://cvs.moodle.org/contrib/plugins/mod/game/
 Changelog https://docs.google.com/document/pub?id=1-WJUa_Hbdo9eualKSjjP9wTnI4GVMs4JYDaLypU2IDQ
 Discussion http://moodle.org/mod/forum/view.php?id=7220
-Download for Moodle 2.0 http://download.moodle.org/download.php/plugins/mod/game.zip
-Download for Moodle 1.9 http://download.moodle.org/download.php/plugins19/mod/game.zip
 Bugs and Issues http://tracker.moodle.org/browse/CONTRIB/component/10295
 
 Interface:
