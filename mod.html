@@ -1,0 +1,684 @@
+<?php // $Id: mod.html,v 1.4 2008/11/11 13:03:57 bdaloukas
+/**
+ * This page defines the form to create or edit an instance of this module
+ * It is used from /course/mod.php.  The whole instance is available as $form.
+ *
+ * @author 
+ * @version $Id: mod.html,v 1.4 2008/11/11 13:03:57 bdaloukas
+ * @package game
+ **/
+
+require_once( "lib.php");
+require_once( "$CFG->dirroot/lib/ddllib.php");
+require_once $CFG->dirroot.'/lib/accesslib.php';
+require_once $CFG->dirroot.'/lib/questionlib.php';
+
+/// First we check that form variables have been initialised
+if (!isset($form->name)) {
+    $form->name = '';
+    $form->gamekind = '';
+	$form->sourcemodule = 'glossary';
+	$form->id = 0;
+    $form->glossaryid = 0;
+    $form->glossarycategoryid = 0;
+    $gamekind = '-';
+}else
+    $gamekind = $form->gamekind;
+
+$existsbook = ( get_record_select( 'modules', "name='book'", 'id,id') ? 1 : 0);
+
+if( $form->sourcemodule == ''){
+    //the variables need initialization
+    switch( $form->gamekind){
+    case 'hangman':
+    case '':
+        $form->param1 = 0;  //show first letter
+        $form->param2 = 0;  //show last letter
+        $form->param3 = 1;  //image set
+        $form->param4 = 1;  //how many words in each game
+        $form->param5 = 1;  //show question
+        $form->param6 = 1;  //show answer
+        $form->param7 = 0;  //allow spaces
+        $form->param8 = 0;  //allow -
+        break;
+    case 'cross':
+        $form->param1 = 0;  //max cols
+        $form->param2 = 0;  //max words
+        $form->param3 = 0;  //layout
+        $form->param7 = 0;  //allow spaces
+        break;
+    case 'cryptex':
+        $form->param1 = 0;  //max cols
+        $form->param2 = 0;  //max words
+        $form->param3 = 0;  //layout
+        $form->param7 = 0;  //allow spaces
+		$form->param8 = 0;  //maxtries
+        break;
+    case 'sudoku':
+        $form->param2 = 0;  //max questions
+	    break;
+    case 'snakes':
+        $form->param3 = 0;  //background
+	    break;
+    case 'hiddenpicture':
+        $form->param1 = 3;  //cols accross
+        $form->param2 = 3;  //cols down
+	    $form->param4 = 0;  //width
+	    $form->param5 = 0;  //height
+	    $form->param7 = 0;  //allow spaces
+	    break;
+	case 'millionaire':
+	    $form->shuffle = 1; //randomize 
+	    $form->param4 = 0;  //width
+	    $form->param5 = 0;  //height
+	    $form->param7 = 0;  //allow spaces
+	    $form->param8 = 0x408080;
+	    $form->shuffle = 1; //randomize questions
+        break;
+    }
+}
+
+require_once( "locallib.php");
+
+?>
+
+<form name="form" method="post" action="mod.php">
+<center>
+<table>
+<tr valign="top"><td>&nbsp;</td><td>
+<?php
+    if( $form->gamekind != '')
+        echo get_string('game_'.$form->gamekind,'game');
+?>
+ </td></tr>
+<tr valign="top">
+    <td align="right"><b><?php  print_string("name") ?>:</b></td>
+    <td align="left">
+        <input type="text" name="name" size="50" value="<?php  p($form->name) ?>" />
+    </td>
+</tr>
+
+<?php
+if( $form->mode == 'add'){
+?>
+    <tr valign="top"><td align="right"><b><?php echo get_string('selectgame', 'game'); ?>:</b></td><td align="left">
+       <?php
+        $a = array();
+        $a[ 'hangman'] = get_string('game_hangman', 'game');
+        $a[ 'cross'] = get_string('game_cross', 'game');
+        $a[ 'cryptex'] = get_string('game_cryptex', 'game');
+        $a[ 'millionaire'] = get_string('game_millionaire', 'game');
+        $a[ 'sudoku'] = get_string('game_sudoku', 'game');
+        if( $existsbook){
+            $a[ 'bookquiz'] = get_string('game_bookquiz', 'game');
+        }
+        $a[ 'snakes'] = get_string('game_snakes', 'game');
+        $a[ 'hiddenpicture'] = get_string('game_hiddenpicture', 'game');
+        $events = 'ONCHANGE="onselectgame(document.form.gamekind.value)"';
+        echo game_showselectcontrol( 'gamekind', $a, $form->gamekind, $events); 
+       ?>
+       </td>
+    </tr>
+<?php
+}
+
+print_visible_setting($form);
+
+if( $form->mode != 'add'){
+    
+    for( $i=1; $i <= 6; $i++){
+        $name = 'param'.$i;
+        echo '<input type="hidden" name="'.$name.'" value="'.$form->$name.'" />'."\r\n";
+    }
+        echo '<input type="hidden" name="gamekind" value="'.$form->gamekind.'" />'."\r\n";
+
+?>
+
+<tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule', 'game'); ?>:</b></td><td align="left">
+<?php
+if( $form->gamekind == 'bookquiz'){
+    if( $existsbook){
+        echo get_string('sourcemodule_question','game').'</td>';
+        $form->sourcemodule = 'question';
+        echo '<input type="hidden" name="sourcemodule" value="question" />';
+    }
+}else
+{
+    $a = array();
+    if( $form->gamekind != 'millionaire'){
+        $a[ 'glossary'] = get_string('modulename','glossary');
+    }
+
+    $a[ 'question'] = get_string('sourcemodule_question','game');
+    $a[ 'quiz'] = get_string('modulename','quiz');
+    $events = 'ONCHANGE="onselectsourcemodule(document.form.sourcemodule.value)"';
+    echo game_showselectcontrol( 'sourcemodule', $a, $form->sourcemodule, $events);
+    echo '</td>';
+}
+echo "</tr>\r\n";
+
+
+?>
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_quiz', 'game'); ?>:</b></td><td align="left">
+       <?php
+        $a = array();
+        if( $recs = get_records_select( 'quiz', "course='$course->id'", 'id,name')){
+            foreach( $recs as $rec){
+                $a[ $rec->id] = $rec->name;
+            }
+        }
+        echo game_showselectcontrol( 'quizid', $a, $form->quizid);
+       ?>
+       </td>
+    </tr>
+
+
+<?php
+if( $existsbook){
+?>
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_book', 'game'); ?>:</b></td><td align="left">
+       <?php
+        $a = array();
+        if( $recs = get_records_select( 'book', "course='$course->id'", 'id,name')){
+            foreach( $recs as $rec){
+                $a[ $rec->id] = $rec->name;
+            }
+        }
+        echo game_showselectcontrol( 'bookid', $a, $form->bookid);
+       ?>
+       </td>
+    </tr>
+<?php
+}
+
+?>
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_glossary', 'game'); ?>:</b></td><td align="left">
+       <?php
+        $a = array();
+        if( $recs = get_records_select( 'glossary', "course='$course->id'", 'id,name')){
+            foreach( $recs as $rec){
+                $a[ $rec->id] = $rec->name;
+            }
+        }
+		$events = 'ONCHANGE="onselectglossary(document.form.glossaryid.value)"';
+        echo game_showselectcontrol( 'glossaryid', $a, $form->glossaryid, $events); 
+       ?>
+        </td>
+    </tr>
+
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_glossarycategory', 'game'); ?>:</b></td><td align="left">
+       <?php
+           $a = array();
+            if($recs = get_records_select('glossary', "course='$COURSE->id'", 'id,name')){
+                foreach($recs as $rec){
+                    $a[$rec->id] = $rec->name;
+                }                                            
+            }
+
+            if( count( $a) == 0)
+                $select = 'glossaryid=-1';
+            else if( count( $a) == 1)
+                $select = 'glossaryid='.$rec->id;
+            else
+            {
+                $select = '';
+                foreach($recs as $rec){
+                    $select .= ','.$rec->id;
+                }
+                $select = 'g.id IN ('.substr( $select, 1).')';
+            }
+            $select .= ' AND g.id=gc.glossaryid';
+            $table = "glossary g, {$CFG->prefix}glossary_categories gc";
+            $a = array();
+            $a[ ] = '';
+            if($recs = get_records_select( $table, $select, 'g.name,gc.name', 'gc.id,gc.name,g.name as name2')){
+                foreach($recs as $rec){
+                    $a[$rec->id] = $rec->name2.' -> '.$rec->name;
+                }
+            }
+        echo game_showselectcontrol( 'glossarycategoryid', $a, $form->glossarycategoryid); 
+       ?>
+    </td></tr>
+
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_questioncategory', 'game'); ?>:</b></td><td align="left">
+       <?php
+	$select = '';
+	$recs = get_records_select( 'question_categories', '', '', '*', 0, 1);
+	foreach( $recs as $rec){
+		if( array_key_exists( 'course', $rec)){
+			$select = "course=$course->id";
+		}else{
+			$context = get_context_instance(50, $course->id);
+	    		$select = " contextid in ($context->id)";
+		}
+		break;
+	}
+
+	$a = array();
+        if( $recs = get_records_select( 'question_categories', $select, 'id,name')){
+            foreach( $recs as $rec){
+                $s = $rec->name;
+                if( ($count = count_records_select( 'question', "category={$rec->id}")) != 0){
+                    $s .= " ($count)";
+                }
+                $a[ $rec->id] = $s;
+            }
+        }
+		echo game_showselectcontrol( 'questioncategoryid', $a, $form->questioncategoryid); 
+       ?>
+	</td></tr>
+	
+
+    <tr valign="top"><td align="right"><b><?php  echo get_string('sourcemodule_include_subcategories', 'game'); ?>:</b></td><td align="left">
+       <?php
+		$a = array();
+		$a[ 0] = 'no';
+		$a[ 1] = 'yes';
+        echo game_showselectcontrol( 'subcategories', $a, $form->subcategories); 
+       ?>
+    </td></tr>
+	
+<?php
+
+
+if( $form->gamekind == 'millionaire' && $form->sourcemodule == 'quiz' ){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('millionaire_shuffle', 'game'); ?>:</b></td>
+    <td align="left">
+    <?php
+        echo game_showcheckbox( 'shuffle', $form->shuffle);
+    ?>
+    </tr>
+<?
+}
+
+if( $form->gamekind == 'millionaire' ){
+    if( $form->param8 == 0)
+        $form->param8 = 0x408080;
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('millionaire_background', 'game'); ?>:</b></td>
+    <td align="left">
+    <input type="grade" name="param8" size="7" value="#<?php  echo base_convert($form->param8, 10, 16); ?>" />
+    </tr>
+
+<?php
+}
+
+?>
+<tr valign="top">
+		<td align="right"><b><?php  print_string('grade', 'game') ?> :</b></td>
+		<td align="left">
+			<input type="grade" name="grade" size="5" value="<?php  p($form->grade) ?>" />
+		</td>
+</tr>
+
+
+<?php
+
+
+
+
+if( $form->gamekind == 'hangman')
+{
+?>
+	<tr valign="top">
+		<td align="right"><b><?php  print_string('hangman_maxtries', 'game') ?> :</b></td>
+		<td align="left">
+			<input type="param4" name="param4" size="5" value="<?php  p($form->param4) ?>" />
+		</td>
+	</tr>
+
+    <tr>    
+    <td align="right"><b><?php  echo get_string('hangman_showfirst', 'game'); ?>:</b></td>
+    <td align="left">
+        <?php echo game_showcheckbox( 'param1', $form->param1); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_showlast', 'game'); ?>:</b></td>
+    <td align="left"> 
+        <?php echo game_showcheckbox( 'param2', $form->param2); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_allowspaces', 'game'); ?>:</b></td>
+    <td align="left"> 
+        <?php echo game_showcheckbox( 'param7', $form->param7); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_allowsub', 'game'); ?>:</b></td>
+    <td align="left"> 
+        <?php echo game_showcheckbox( 'param8', $form->param8); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_imageset', 'game'); ?>:</b></td>
+    <td align="left">
+        <?php 
+                if( $form->param3 < 1){
+                    $form->param3 = 1;
+                }
+                $a = array();
+                $a[ 1] = 1;
+                echo game_showselectcontrol( 'param3', $a, $form->param3); 
+        ?>
+    </td>
+    </tr>
+
+     <tr>
+    <td align="right"><b><?php  echo get_string('hangman_showquestion', 'game'); ?>:</b></td>
+    <td align="left">
+        <?php echo game_showcheckbox( 'param5', $form->param5); ?>
+    </td>
+    </tr>
+
+     <tr>
+    <td align="right"><b><?php  echo get_string('hangman_showcorrectanswer', 'game'); ?>:</b></td>
+    <td align="left">
+        <?php echo game_showcheckbox( 'param6', $form->param6); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_language', 'game'); ?>:</b></td>
+    <td align="left">
+        <?php
+		$a = get_list_of_languages();
+		$a[ ''] = '----------';
+                echo game_showselectcontrol( 'language', $a, $form->language);
+        ?>
+    </td>
+    </tr>
+
+<?php
+}
+
+if( $form->gamekind == 'cross'){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('cross_maxcols', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param1" value="<?php  p($form->param1) ?>" />
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('cross_maxwords', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param2" value="<?php  p($form->param2) ?>" />
+    </td>
+    </tr>
+    
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_allowspaces', 'game'); ?>:</b></td>
+    <td align="left"> 
+        <?php echo game_showcheckbox( 'param7', $form->param7); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('cross_layout', 'game'); ?>:</b></td>
+    <td align="left"> 
+    <?php
+	if( $form->param3 != 2){
+		$form->param3 = 1;
+	}
+        $a = array();
+        $a[ 1] = get_string('cross_layout0', 'game');
+        $a[ 2] = get_string('cross_layout1', 'game');
+        echo game_showselectcontrol( 'param3', $a, $form->param3);
+    ?>        
+    </td>
+    </tr>
+    
+
+<?php
+}
+
+
+if( $form->gamekind == 'sudoku'){
+	    if( !record_exists_select( 'game_sudoku_database')){
+            require( "{$CFG->dirroot}/mod/game/db/importsudoku.php");
+        }
+
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('sudoku_maxquestions', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param2" value="<?php  p($form->param2) ?>" />
+    </td>
+    </tr>
+
+<?php
+}
+
+
+
+if( $form->gamekind == 'cryptex'){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('cryptex_maxcols', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param1" value="<?php  p($form->param1) ?>" />
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('cryptex_maxwords', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param2" value="<?php  p($form->param2) ?>" />
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_allowspaces', 'game'); ?>:</b></td>
+    <td align="left"> 
+        <?php echo game_showcheckbox( 'param7', $form->param7); ?>
+    </td>
+    </tr>
+
+	    <tr>
+    <td align="right"><b><?php  echo get_string('cryptex_maxtries', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param8" value="<?php  p($form->param8) ?>" />
+    </td>
+    </tr>
+
+<?php
+}
+
+
+if( $form->gamekind == 'bookquiz' and $existsbook){
+?>
+
+    <tr>
+    <td></td>
+    <td align="left">
+        <a href="<?php echo $CFG->wwwroot;?>/mod/game/bookquiz/importodt.php?id=<?php echo $_GET[ 'update'] ?>"> <?php  echo get_string('bookquiz_import_odt', 'game'); ?></a><br>
+        <a href="<?php echo $CFG->wwwroot;?>/mod/game/bookquiz/questions.php?id=<?php echo $_GET[ 'update'] ?>"> <?php  echo get_string('bookquiz_questions', 'game'); ?></a>
+    </td>
+    </tr>
+
+<?php
+}
+
+if( $form->gamekind == 'millionaire'){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('millionaire_shuffle', 'game'); ?>:</b></td>
+    <td align="left">
+    <?php
+        $a = array();
+        $a[ 1] = get_string('yes');
+        $a[ 0] = get_string('no');
+        echo game_showselectcontrol( 'shuffle', $a, $form->shuffle);
+    ?>
+    </tr>
+
+<?php
+}
+
+if( $form->gamekind == 'snakes'){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('snakes_background', 'game'); ?>:</b></td>
+    <td align="left">
+    <?php
+        $a = array();
+        if( $recs = get_records_select( 'game_snakes_database', "", 'id,name')){
+            foreach( $recs as $rec){
+                $a[ $rec->id] = $rec->name;
+            }
+        }
+        if( count( $a) == 0){
+            require( "{$CFG->dirroot}/mod/game/db/importsnakes.php");
+            
+            if( $recs = get_records_select( 'game_snakes_database', "", 'id,name')){
+                foreach( $recs as $rec){
+                    $a[ $rec->id] = $rec->name;
+                }
+            }
+        }
+        echo game_showselectcontrol( 'param3', $a, $form->param3);
+    ?>
+    </tr>
+
+<?php
+}
+
+if( $form->gamekind == 'hiddenpicture'){
+?>
+    <tr>
+    <td align="right"><b><?php  echo get_string('hiddenpicture_across', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param1" value="<?php  p($form->param1) ?>" />
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hiddenpicture_down', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param2" value="<?php  p($form->param2) ?>" />
+    </td>
+    </tr>
+
+    <tr valign="top"><td align="right"><b><?php  echo get_string('hiddenpicture_pictureglossary', 'game'); ?>:</b></td><td align="left">
+       <?php
+        $a = array();
+        if( $recs = get_records_select( 'glossary', "course='$course->id'", 'id,name')){
+            foreach( $recs as $rec){
+                $a[ $rec->id] = $rec->name;
+            }
+        }
+        echo game_showselectcontrol( 'glossaryid2', $a, $form->glossaryid2); 
+       ?>
+        </td>
+    </tr>
+    
+    <tr valign="top"><td align="right"><b><?php  echo get_string('hiddenpicture_pictureglossarycategories', 'game'); ?>:</b></td><td align="left">
+       <?php
+		$a = array();
+		$select = ( $form->glossaryid ? 'glossaryid='.$form->glossaryid2 : '');
+        if( $recs = get_records_select( 'glossary_categories', $select, 'id,name')){
+            foreach( $recs as $rec){
+                if( count( $a) == 0){
+                    $a[] = '';
+                }
+                $a[ $rec->id] = $rec->name;
+            }
+        }
+        echo game_showselectcontrol( 'glossarycategoryid2', $a, $form->glossarycategoryid2); 
+       ?>
+    </td></tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hangman_allowspaces', 'game'); ?>:</b></td>
+    <td align="left"> 
+        <?php echo game_showcheckbox( 'param7', $form->param7); ?>
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hiddenpicture_width', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param4" value="<?php  p($form->param4) ?>" />
+    </td>
+    </tr>
+
+    <tr>
+    <td align="right"><b><?php  echo get_string('hiddenpicture_height', 'game'); ?>:</b></td>
+    <td align="left">
+        <input type="input" size="4" name="param5" value="<?php  p($form->param5) ?>" />
+    </td>
+    </tr>
+
+    
+<?php
+}
+
+//a text at bottom
+if( $form->gamekind <> 'bookquiz'){
+    echo '<tr><td>'.get_string('toptext', 'game').'</td><td>';
+    print_textarea( $usehtmleditor, 15, 60, 630, 200, 'toptext', $game->toptext, $game->course);
+    echo '</td></tr>';
+
+    echo '<tr><td>'.get_string('bottomtext', 'game').'</td><td>';
+    print_textarea( $usehtmleditor, 15, 60, 630, 200, 'bottomtext', $game->bottomtext, $game->course);
+    echo '</td></tr>';
+}
+
+//grademethod
+?>
+    <tr>
+        <td align="right"><b><?php print_string('grademethod', 'game') ?>:</b></td>        
+        <td align="left">
+            <?php echo game_showselectcontrol( 'grademethod', $GAME_GRADE_METHOD, $form->grademethod); ?>
+        </td>
+    </tr> 
+
+<?php
+}   //$form->mode != 'add'
+
+$answers = 0;
+if (array_key_exists( 'answers', $_GET)) {
+    $answers = ( $_GET[ 'answers'] != 0 ? 1 : 0);
+}
+$nanswers = ($answers ? '0' : '1');
+
+?>
+</table>
+
+<br/>
+<!-- These hidden variables are always the same -->
+<input type="hidden" name="course"        value="<?php  p($form->course) ?>" />
+<input type="hidden" name="sesskey"     value="<?php  p($form->sesskey) ?>" />
+<input type="hidden" name="coursemodule"  value="<?php  p($form->coursemodule) ?>" />
+<input type="hidden" name="section"       value="<?php  p($form->section) ?>" />
+<input type="hidden" name="module"        value="<?php  p($form->module) ?>" />
+<input type="hidden" name="modulename"    value="<?php  p($form->modulename) ?>" />
+<input type="hidden" name="instance"      value="<?php  p($form->instance) ?>" />
+<input type="hidden" name="mode"          value="<?php  p($form->mode) ?>" />
+<input type="submit" value="<?php  print_string("savechanges") ?>" />
+</center>
+</form>
+
+<SCRIPT TYPE="TEXT/JAVASCRIPT">
+
+function onselectsourcemodule( sourcemodule)
+{
+}
+
+
+function onselectglossary( glossaryid)
+{
+}
+
+</SCRIPT>
+
