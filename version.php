@@ -9,7 +9,7 @@
  **/
 
 $module->version  = 2011082604;  // The current module version (Date: YYYYMMDDXX)
-$module->release = 'v2'.substr( $module->version, 4);
+$module->release = 'v2 ('.$module->version.')';
 $module->cron     = 0;           // Period for cron to check this module (secs)
 
-?>
+$module->requires = 2007101512;  // Requires this Moodle version
