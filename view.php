@@ -58,8 +58,6 @@
         $USER->editing = $edit;
     }
 
-    $PAGE->requires->yui2_lib('event');
-
     $title = $course->shortname . ': ' . format_string($game->name);
 
     if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {

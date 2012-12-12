@@ -82,8 +82,6 @@
             $USER->editing = $edit;
         }
 
-        $PAGE->requires->yui2_lib('event');
-
         // Note: MDL-19010 there will be further changes to printing header and blocks.
         // The code will be much nicer than this eventually.
         $title = $course->shortname . ': ' . format_string($game->name);
