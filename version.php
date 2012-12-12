@@ -11,7 +11,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $module->component = 'mod_game';  // Full name of the plugin (used for diagnostics)
-$module->version   = 2012072301;  // The current module version (Date: YYYYMMDDXX)
+$module->version   = 2012121201;  // The current module version (Date: YYYYMMDDXX)
 $module->requires  = 2010112400;  // Requires Moodle 2.0
 $module->cron      = 0;           // Period for cron to check this module (secs)
-$module->release   = 'v.2.12.07 (2012072301)
+$module->release   = 'v.2.12.12 (2012121201)';
