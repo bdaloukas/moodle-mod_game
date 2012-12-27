@@ -365,10 +365,8 @@ class mod_game_mod_form extends moodleform_mod {
 
             $mform->addElement('text', 'param4', get_string('hiddenpicture_width', 'game'));
             $mform->setType('param4', PARAM_INT);
-            $mform->setDefault('param4',3);
             $mform->addELement('text', 'param5', get_string('hiddenpicture_height', 'game'));
             $mform->setType('param5', PARAM_INT);
-            $mform->setDefault('param5',3);
             $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
         }
 
