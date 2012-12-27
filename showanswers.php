@@ -186,7 +186,7 @@ function game_showanswers_quiz( $game)
 	$select = "quiz='$game->quizid' ".
 			  ' AND qqi.question=q.id'.
 			  ' AND q.hidden=0'.
-              showanswers_appendselect( $game);
+              game_showanswers_appendselect( $game);
 	$table = '{question} q,{quiz_question_instances} qqi';
 	
     game_showanswers_question_select( $game, $table, $select, 'q.*', 'category,questiontext', false, $game->course);
