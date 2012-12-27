@@ -50,6 +50,10 @@
 /// Log this request.
     add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
 
+   // Mark as viewed
+    $completion=new completion_info($course);
+    $completion->set_module_viewed($cm);
+
 /// Initialize $PAGE, compute blocks
     $PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
 
@@ -288,5 +292,5 @@
         echo $OUTPUT->continue_button($CFG->wwwroot . '/course/view.php?id=' . $course->id);
     }
     echo $OUTPUT->box_end();
-
+    
     echo $OUTPUT->footer();

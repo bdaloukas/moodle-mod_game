@@ -1100,3 +1100,38 @@ function game_reset_userdata($data) {
     return $status;
 }
 
+/**
+ * Obtains the automatic completion state for this module based on any conditions
+ * in game settings.
+ *
+ * @param object $course Course
+ * @param object $cm Course-module
+ * @param int $userid User ID
+ * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ * @return bool True if completed, false if not, $type if conditions not set.
+ */
+function game_get_completion_state($course, $cm, $userid, $type) {
+    global $CFG,$DB;
+    
+    require_once($CFG->dirroot . '/mod/game/locallib.php');
+
+    if( ($cm->completion == 0) or ($cm->completion == 1)){
+        // Completion option is not enabled so just return $type.
+        return $type;
+    }
+    
+    if( $cm->completionview)
+    {
+        //Just want to view it. Not needed it
+        return true;
+    }
+
+    if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
+        print_error('invalidcoursemodule');
+    }
+    
+    $grade = $DB->get_record_select('game_grades', "userid=$userid AND gameid = $cm->instance", null, 'id,score');
+
+    return $grade && $grade->score > 0;
+}
+
