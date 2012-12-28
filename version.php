@@ -8,8 +8,8 @@
  * @package game
  **/
 
-$module->version  = 2012122801;  // The current module version (Date: YYYYMMDDXX)
-$module->release = 'v2.12.12.28 (2012122801)';
+$module->version  = 2012122802;  // The current module version (Date: YYYYMMDDXX)
+$module->release = 'v1.12.12.28 (2012122802)';
 $module->cron     = 0;           // Period for cron to check this module (secs)
 
 $module->requires = 2007101512;  // Requires this Moodle version
