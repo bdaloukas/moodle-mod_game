@@ -1571,7 +1571,7 @@ function game_snakes_get_board( $game)
         if( $board == false)
             print_error( 'No board');
         $board->imagesrc = $CFG->wwwroot.'/mod/game/snakes/boards/'.$board->fileboard;
-        list( $board->width, $board->height) = getimagesize( $board->imagesrc);
+        list( $board->width, $board->height) = getimagesize( __DIR__.'/snakes/boards/'.$board->fileboard);
     }else
     {
         //user defined board
