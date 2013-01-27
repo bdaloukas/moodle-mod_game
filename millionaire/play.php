@@ -502,7 +502,7 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
         
 		$n = count( $aAnswer);
 		if( $n < 2){
-			$wrong = $correct;
+			$wrong = $query->correct;
 		}else
 		{
 			for(;;)
