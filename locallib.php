@@ -1596,11 +1596,14 @@ function game_snakes_create_user_defined_board( &$game)
         require("snakes/createboard.php");
         $fs = get_file_storage();
         $files = $fs->get_area_files($modcontext->id, 'mod_game', 'snakes_file', $game->id);
+        $f = false;
         foreach ($files as $f) {
             if( $f->is_directory())
                 continue;
             break;
         }
+        if( $f === false)
+            print_error( 'No image specified');
         $im=game_createsnakesboard($f->get_content(), $board->cols, $board->rows, $board->headery, $board->headery, $board->footerx, $board->headerx, $board->data, $board->width, $board->height);
         ob_start();
         imagepng($im);
