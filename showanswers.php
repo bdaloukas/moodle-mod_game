@@ -336,7 +336,7 @@ function game_showanswers_glossary( $game)
 					    " AND gec.categoryid = {$game->glossarycategoryid}";
 		$table .= ",{glossary_entries_categories} gec";		
 	}
-    $sql = "SELECT id,definition,concept FROM $table WHERE $select ORDER BY definition";
+    $sql = "SELECT ge.id,definition,concept FROM $table WHERE $select ORDER BY definition";
     if( ($questions = $DB->get_records_sql( $sql)) === false){
         return;
     }
