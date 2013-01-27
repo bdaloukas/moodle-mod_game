@@ -311,9 +311,9 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 		$select = 'category='.$game->questioncategoryid;
         if( $game->subcategories){
             $cats = question_categorylist( $game->questioncategoryid);
-            if( strpos( $cats, ',') > 0){
-                $select = 'category in ('.$cats.')';
-            }
+            if( count( $cats)){
+                $select = 'q.category in ('.implode(',', $cats).')';
+            }            
         }  						
 		$select .= " AND qtype='multichoice'";
 		
