@@ -67,6 +67,8 @@ class Cross
 		}
 		
 		$N20 = $maxlen;
+		if( $N20 < 15)
+		    $N20 = 15;
 
 		$this->m_N20min = round( $N20 - $N20/4);
 		$this->m_N20max = round( $N20 + $N20/4);
