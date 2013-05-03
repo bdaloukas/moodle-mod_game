@@ -19,6 +19,7 @@ class mod_game_mod_form extends moodleform_mod {
         $id = $this->_instance;
 
         if(!empty($this->_instance)){
+            
             if($g = $DB->get_record('game', array('id' => $id))){
                 $gamekind = $g->gamekind;
             }
@@ -33,8 +34,10 @@ class mod_game_mod_form extends moodleform_mod {
         //Hidden elements
         $mform->addElement('hidden', 'gamekind', $gamekind);
         $mform->setDefault('gamekind', $gamekind);
+        $mform->setType('gamekind', PARAM_ALPHA);
         $mform->addElement('hidden', 'type', $gamekind);
         $mform->setDefault('type', $gamekind);
+        $mform->setType('type', PARAM_ALPHA);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
@@ -253,7 +256,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('header', 'millionaire', get_string( 'millionaire_options', 'game'));
             $mform->addElement('text', 'param8', get_string('millionaire_background', 'game'));
             $mform->setDefault('param8', '#408080');
-
+            $mform->setType('param8', PARAM_TEXT);
 
             //$mform->addElement('colorpicker', 'param8', get_string('millionaire_background', 'game'));
             //$mform->registerRule('color','regex','/^#([a-fA-F0-9]{6})$/');
@@ -268,6 +271,7 @@ class mod_game_mod_form extends moodleform_mod {
         if($gamekind == 'sudoku'){
             $mform->addElement('header', 'sudoku', get_string( 'sudoku_options', 'game'));
             $mform->addElement('text', 'param2', get_string('sudoku_maxquestions', 'game'));
+            $mform->setType('param2', PARAM_INT);
         }
 
 //---------------------------------------------------------------------------
@@ -316,21 +320,27 @@ class mod_game_mod_form extends moodleform_mod {
 
             $mform->addElement('text', 'snakes_cols', get_string('snakes_cols', 'game'), array('size' => 4));
             $mform->disabledIf('snakes_cols', 'param3', 'neq', '0');
+            $mform->setType('snakes_cols', PARAM_INT);
 
             $mform->addElement('text', 'snakes_rows', get_string('snakes_rows', 'game'), array('size' => 4));
             $mform->disabledIf('snakes_rows', 'param3', 'neq', '0');
+            $mform->setType('snakes_rows', PARAM_INT);
 
             $mform->addElement('text', 'snakes_headerx', get_string('snakes_headerx', 'game'), array('size' => 4));
             $mform->disabledIf('snakes_headerx', 'param3', 'neq', '0');
+            $mform->setType('snakes_headerx', PARAM_INT);
 
             $mform->addElement('text', 'snakes_headery', get_string('snakes_headery', 'game'), array('size' => 4));
             $mform->disabledIf('snakes_headery', 'param3', 'neq', '0');
+            $mform->setType('snakes_headery', PARAM_INT);
 
             $mform->addElement('text', 'snakes_footerx', get_string('snakes_footerx', 'game'), array('size' => 4));
             $mform->disabledIf('snakes_footerx', 'param3', 'neq', '0');
+            $mform->setType('snakes_footerx', PARAM_INT);
 
             $mform->addElement('text', 'snakes_footery', get_string('snakes_footery', 'game'), array('size' => 4));
             $mform->disabledIf('snakes_footery', 'param3', 'neq', '0');
+            $mform->setType('snakes_footery', PARAM_INT);
 
             $mform->addElement('text', 'snakes_width', get_string('hiddenpicture_width', 'game'), array('size' => 6));
             $mform->setType('snakes_width', PARAM_INT);
