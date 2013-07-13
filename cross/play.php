@@ -62,8 +62,9 @@ function game_cross_new( $game, $attemptid, &$crossm)
 	
 	$cross->setwords( $answers, $game->param1, $reps);
 	
+	//game->param4 is minimum words in crossword
 	//game->param2 is maximum words in crossword
-	if( $cross->computedata( $crossm, $crossd, $lettets, $game->param2)){
+	if( $cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2)){
 		$new_crossd = array();
 		foreach( $crossd as $rec)
 		{

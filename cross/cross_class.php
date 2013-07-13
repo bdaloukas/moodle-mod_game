@@ -105,7 +105,7 @@ class Cross
 		}
 	}
 
-    function computedata( &$crossm, &$crossd, &$letters, $maxwords)
+    function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords)
     {
         $t1 = time();
     
@@ -121,9 +121,9 @@ class Cross
             //selects the size of the cross
             $N20 = mt_rand( $this->m_N20min, $this->m_N20max);
       
-            if( !$this->computenextcross( $N20, $t1, $ctries, $maxwords, $nochange))
+            if( !$this->computenextcross( $N20, $t1, $ctries, $minwords, $maxwords, $nochange))
                 break;
-
+                
             $ctries++;
 
             if (time() - $t1 > $this->m_time_limit - 3){
@@ -140,7 +140,7 @@ class Cross
         return $this->savepuzzle( $crossm, $crossd, $ctries, time()-$t1);
     }
   
-	function computenextcross( $N20, $t1, $ctries, $maxwords, &$nochange)
+	function computenextcross( $N20, $t1, $ctries, $minwords, $maxwords, &$nochange)
 	{
         $MAXW = $N20;
     
@@ -186,7 +186,8 @@ class Cross
 
 			if ($this->scan_pos($p[0], $p[1], false, $puzzle, $words, $magics, $poss, $cross_pos, $cross_dir, $cross_word, $N20)){
 				$n_words = count( $cross_word);
-				if( $maxwords){
+				if( $maxwords)
+				{
 					if( $n_words >= $maxwords){
 						break;
 					}
@@ -198,6 +199,12 @@ class Cross
 		}
 
     $n_words = count( $cross_word);
+    if( $minwords)
+    {
+        if( $n_words < $minwords)
+            return true;
+    }
+    
 	$score = $this->computescore( $puzzle, $N20, $N22, $N2222, $n_words, $n_connectors, $n_filleds, $cSpaces, $cross_word);
 
 	if ($score > $this->m_best_score)
