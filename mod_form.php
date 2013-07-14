@@ -30,7 +30,7 @@ class mod_game_mod_form extends moodleform_mod {
         else {     
             $gamekind = required_param('type', PARAM_ALPHA);
         }
-
+    
         //Hidden elements
         $mform->addElement('hidden', 'gamekind', $gamekind);
         $mform->setDefault('gamekind', $gamekind);
@@ -38,9 +38,12 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('hidden', 'type', $gamekind);
         $mform->setDefault('type', $gamekind);
         $mform->setType('type', PARAM_ALPHA);
+        
+        $mform->addElement( 'hidden', 'gameversion', game_get_version());
+        $mform->setType('gameversion', PARAM_INT);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
-
+        
         $mform->addElement('text', 'name', 'Name', array('size'=>'64'));
         if (!empty($CFG->formatstringstriptags)){
             $mform->setType('name', PARAM_TEXT);

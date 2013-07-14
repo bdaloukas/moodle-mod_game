@@ -1897,3 +1897,13 @@ function game_debug_array( $title, $a)
     print_r( $a);
     echo '<br>';
 }
+
+function game_get_version()
+{
+    global $DB;
+    
+    if( ($rec = $DB->get_record( 'modules', array( 'name' => 'game'), 'id,version')) === false)
+        return '';
+        
+    return $rec->version;
+}
