@@ -166,10 +166,10 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('text', 'grade', get_string( 'grademax', 'grades'), array('size' => 4));
         $mform->setType('grade', PARAM_INT);
         $gradingtypeoptions = array();
-        $gradingtypeoptions[0] = get_string('gradehighest','game');
-        $gradingtypeoptions[1] = get_string('gradeaverage','game');
-        $gradingtypeoptions[2] = get_string('attemptfirst','game');
-        $gradingtypeoptions[3] = get_string('attemptlast','game');
+        $gradingtypeoptions[ GAME_GRADEHIGHEST] = get_string('gradehighest','game');
+        $gradingtypeoptions[ GAME_GRADEAVERAGE] = get_string('gradeaverage','game');
+        $gradingtypeoptions[ GAME_ATTEMPTFIRST] = get_string('attemptfirst','game');
+        $gradingtypeoptions[ GAME_ATTEMPTLAST] = get_string('attemptlast','game');
         $mform->addElement('select', 'grademethod', get_string('grademethod','game'), $gradingtypeoptions);
         
         // Open and close dates.
