@@ -158,6 +158,10 @@ class mod_game_mod_form extends moodleform_mod {
             }
             $mform->addElement('select', 'bookid', get_string('sourcemodule_book', 'game'), $a);
         }
+        
+//Common settings to all games                
+        $mform->addElement('text', 'maxattempts', get_string('cross_max_attempts','game'));
+        $mform->setType('maxattempts', PARAM_INT);              
 
 //---------------------------------------------------------------------------
 // Grade options 
@@ -178,8 +182,8 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addHelpButton('timeopen', 'quizopenclose', 'quiz');
 
         $mform->addElement('date_time_selector', 'timeclose', get_string('gameclose', 'game'),
-                array('optional' => true, 'step' => 1));        
-        
+                array('optional' => true, 'step' => 1));              
+                        
 //---------------------------------------------------------------------------
 // Bookquiz options
 

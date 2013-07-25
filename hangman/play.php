@@ -466,17 +466,20 @@ function hangman_onincorrect( $id, $word_line, $word, $game, $attempt, $hangman,
 
 function game_hangman_show_nextword( $id, $game, $attempt, $hangman)
 {
-	global $CFG, $DB;
+	global $CFG, $DB;	
 	
 	echo '<br/>';
 	if( ($hangman->try < $hangman->maxtries) or ($hangman->maxtries == 0)){
 		//continue to next word
+		 
 		$params = "id=$id&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;'; 
-		echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?$params";
+        echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?$params";
 	}else
 	{
 		game_hangman_onfinishgame( $game, $attempt, $hangman);
-		echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+		
+	    if( game_can_start_new_attempt( $game))
+		    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
 	}
 	
 	if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {

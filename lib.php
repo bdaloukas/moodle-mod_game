@@ -786,6 +786,7 @@ function game_get_grading_options() {
  * @param stdClass $module The module object returned from the DB
  * @param stdClass $cm The course module isntance returned from the DB
  */
+ /*
 function game_extend_navigation($gamenode, $course, $module, $cm) {
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 
@@ -802,10 +803,10 @@ function game_extend_navigation($gamenode, $course, $module, $cm) {
         $gamenode->add(get_string('edit', 'moodle', ''), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('t/edit', ''));
     }
 
-    /* if (has_capability('mod/game:viewreports', $context)) {
-        $url = new moodle_url('/mod/game/report.php', array('q'=>$cm->instance));
-        $reportnode = $gamenode->add(get_string('results', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
-    } */
+    // if (has_capability('mod/game:viewreports', $context)) {
+    //    $url = new moodle_url('/mod/game/report.php', array('q'=>$cm->instance));
+    //    $reportnode = $gamenode->add(get_string('results', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+    //}
 
     if (has_capability('mod/game:viewreports', $context)) {
         $url = new moodle_url('/mod/game/showanswers.php', array('q'=>$cm->instance));
@@ -843,6 +844,80 @@ function game_extend_navigation($gamenode, $course, $module, $cm) {
             break;
         }
     }
+}
+*/
+/**
+ * This function extends the settings navigation block for the site.
+ *
+ * It is safe to rely on PAGE here as we will only ever be within the module
+ * context when this is called
+ *
+ * @param settings_navigation $settings
+ * @param navigation_node $quiznode
+ * @return void
+ */
+function game_extend_settings_navigation($settings, $gamenode) {
+    global $PAGE, $CFG, $DB;
+
+    $context = $PAGE->cm->context;
+    
+    if (!has_capability('mod/game:viewreports', $context))
+        return;
+
+    if (has_capability('mod/game:view', $context)) {
+        $url = new moodle_url('/mod/game/view.php', array('id'=>$PAGE->cm->id));
+        $gamenode->add(get_string('info', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/info', ''));
+    }
+
+    if (has_capability('mod/game:manage', $context)) {
+        $url = new moodle_url('/course/modedit.php', array('update' => $PAGE->cm->id, 'return' => true, 'sesskey' => sesskey()));
+        $gamenode->add(get_string('edit', 'moodle', ''), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('t/edit', ''));
+    }
+
+    /* if (has_capability('mod/game:viewreports', $context)) {
+        $url = new moodle_url('/mod/game/report.php', array('q'=>$cm->instance));
+        $reportnode = $gamenode->add(get_string('results', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+    } */
+
+    if (has_capability('mod/game:viewreports', $context)) {
+        $url = new moodle_url('/mod/game/showanswers.php', array('q'=>$PAGE->cm->instance));
+        $reportnode = $gamenode->add(get_string('showanswers', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+    }
+
+    if (has_capability('mod/game:viewreports', $context)) {
+        $url = new moodle_url('/mod/game/showattempts.php', array('q'=>$PAGE->cm->instance));
+        $reportnode = $gamenode->add(get_string('showattempts', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('f/explore', ''));
+    }
+
+
+    if (has_capability('mod/game:viewreports', $context)) 
+    {
+        $game = $DB->get_record('game', array("id" => $PAGE->cm->instance));
+        $courseid = $game->course;
+    
+        switch( $game->gamekind){
+        case 'bookquiz':
+            $url = new moodle_url('/mod/game/bookquiz/questions.php',  array('q'=>$PAGE->cm->instance));
+            $exportnode = $gamenode->add( get_string('bookquiz_questions', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+            break;
+        case 'hangman':
+            $url = new moodle_url('', null);
+            $exportnode = $gamenode->add( get_string('export', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/report', ''));
+
+            $url = new moodle_url('/mod/game/export.php', array( 'id' => $PAGE->cm->id,'courseid'=>$courseid, 'target' => 'html'));
+            $exportnode->add( get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+
+            $url = new moodle_url('/mod/game/export.php', array( 'id' => $PAGE->cm->id,'courseid'=>$courseid, 'target' => 'javame'));
+            $exportnode->add( get_string('export_to_javame', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+            break;
+        case 'snakes':        
+        case 'cross':
+        case 'millionaire':
+            $url = new moodle_url('/mod/game/export.php', array( 'id' => $game->id,'courseid'=>$courseid, 'target' => 'html'));
+            $gamenode->add(get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
+            break;
+        }
+    }    
 }
 
 /**

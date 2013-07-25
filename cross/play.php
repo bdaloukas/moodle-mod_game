@@ -118,8 +118,11 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
 		if( $endofgame == false){
 			echo '<B>'.get_string( 'win', 'game').'</B><BR>';
 		}
-		echo '<br>';	
-		echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id&forcenew=1\">".get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+		if( game_can_start_new_attempt( $game))
+		{
+		    echo '<br>';	
+		    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id&forcenew=1\">".get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+		}
 	}else if( $info != ''){
 		echo "<br>$info<br>";
 	}

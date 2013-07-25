@@ -1907,3 +1907,20 @@ function game_get_version()
         
     return $rec->version;
 }
+
+function game_can_start_new_attempt( $game)
+{
+    global $DB, $USER;
+    
+    if( $game->maxattempts == 0)
+        return true;
+    
+    $sql = "SELECT COUNT(*) as c FROM {game_attempts} WHERE gameid={$game->id} AND userid={$USER->id}";
+    if( ($rec = $DB->get_record_sql( $sql)) === false)
+        return true;
+        
+    if( $rec->c >= $game->maxattempts)
+        return false;
+    else
+        return true;
+}

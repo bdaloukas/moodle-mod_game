@@ -124,9 +124,9 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 {
 	$ret = '';
 	
-	if( $correctletters == 0 and $wrongletters == 0){
-		return $ret;
-	}
+	//if( $correctletters == 0 and $wrongletters == 0){
+	//	return $ret;
+	//}
 	
 	$and = get_string( 'and', 'game');
 	
@@ -134,7 +134,7 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 	if( $correctletters)
 		$a[] = $correctletters.' '.( $correctletters > 1 ? get_string( 'cross_corrects', 'game') :get_string( 'cross_correct', 'game'));
 	if( $wrongletters)
-		$a[] = $wrongletters.' '.( $wrongletters > 1 ? get_string( 'cross_errors', 'game') : get_string( 'cross_error', 'game'));
+		$a[] = '<b>'.$wrongletters.' '.( $wrongletters > 1 ? get_string( 'cross_errors', 'game') : get_string( 'cross_error', 'game')).'</b>';
 	
 	if(  $correctletters > 1 or $wrongletters > 1) {
 		$ret = get_string( 'cross_found_many', 'game');

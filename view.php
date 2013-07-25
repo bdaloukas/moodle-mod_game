@@ -94,6 +94,10 @@
             //echo '<div class="gameattemptcounts"><a href="report.php?mode=overview&amp;id=' .
             //        $cm->id . '">' . $strattemptnum . "</a></div>\n";
             echo $strattemptnum;
+            if( $game->maxattempts)
+            {
+                echo ' ('.get_string( 'max', 'quiz').': '.$game->maxattempts.')';
+            }
         }
     }
 
@@ -262,6 +266,10 @@
             $buttontext = get_string('continueattemptgame', 'game');
         }
     } else {
+        //Game is finished. Check if max number of attempts is reached
+        if( !game_can_start_new_attempt( $game))
+            $canattempt = false;
+        
         if ($canattempt) {
             echo '<br>';
             if ($numattempts == 0) {
