@@ -1476,7 +1476,22 @@ function xmldb_game_upgrade($oldversion) {
 
         // game savepoint reached
         upgrade_mod_savepoint(true, 2011082604, 'game');
-    }      
+    }   
+    
+    if ($oldversion < 2013072601) {
+
+        // Define field timeclose to be added to game
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('maxattempts', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'subcategories');
+
+        // Conditionally launch add field maxattempts
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // game savepoint reached
+        upgrade_mod_savepoint(true, 2013072601, 'game');
+    }         
     
     return true;
 }

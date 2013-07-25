@@ -730,7 +730,7 @@ function game_get_extra_capabilities() {
 function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup = 0) {
     global $CFG, $USER, $DB;
 
-    $numattempts = $DB->count_records('game_attempts', array('gameid'=> $game->id, 'preview'=>0));
+    $numattempts = $DB->count_records('game_attempts', array('gameid'=> $game->id, 'preview'=>0));echo "num=$numattempts gameid=$game->id<br>";
     if ($numattempts || $returnzero) {
         if (groups_get_activity_groupmode($cm)) {
             $a = new stdClass();
