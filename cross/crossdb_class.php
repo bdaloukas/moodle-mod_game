@@ -212,8 +212,8 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 				    $correctletters++;
                 }else
                 {
-                    $wrongletters++;
-                    game_setchar( $guess, $i, '_');
+                    //$wrongletters++;
+                    //game_setchar( $guess, $i, '_');
 				}
 			}else
 			{
