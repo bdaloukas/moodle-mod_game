@@ -1322,6 +1322,8 @@ function game_repairquestion( $s){
         $s = substr( $s, 0, -6);
     }
     
+    $s = str_replace( "\'", "'", $s);
+    
     return $s;
 }
 
