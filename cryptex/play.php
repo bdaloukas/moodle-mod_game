@@ -84,17 +84,6 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
 	return game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context);
 }
 
-function cryptex_showlegend( $legend, $title)
-{
-  if( count( $legend) == 0)
-    return;
-    
-  echo "<br><b>$title</b><br>";
-  foreach( $legend as $key => $line)
-    echo "$key: $line<br>";
-}
-
-
 //q means game_queries.id
 function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $context)
 {
@@ -268,7 +257,7 @@ width:	240pt;
 	$i = 0;
 	$else = '';
 	$contextglossary = false;
-	foreach( $questions as $key => $q){//print_r( $q);
+	foreach( $questions as $key => $q){
 		$i++;
 		if( $showsolution == false){
 			//When I want to show the solution a want to show the questions to.
@@ -278,7 +267,7 @@ width:	240pt;
 		}
 		
         $question = "$i. ".$q->questiontext;
-        $question = game_filterquestion(str_replace( '\"', '"', $question), $q->questionid, $context->id, $game->course);
+        $question = game_filterquestion(str_replace( array( "\'", '\"'), array( "'", '"'), $question), $q->questionid, $context->id, $game->course);
         $question2 = strip_tags($question); //ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question
 		if( ($onlyshow == false) and ($showsolution == false)){
 			if( ($game->param8 == 0) || ($game->param8 > $q->tries))

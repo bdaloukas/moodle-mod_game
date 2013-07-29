@@ -416,7 +416,7 @@ function game_questions_selectrandom_detail( $table, $select, $id_field="id", $c
 		return $a;
 	}else
 	{
-		$id = array_rand(  $a, $count);
+		$id = array_rand(  $a, $count);print_r( $a); echo "count=$count<br>";
 		return ( $count == 1  ? array( $id) : $id);
 	}
 }
@@ -1321,9 +1321,8 @@ function game_repairquestion( $s){
         }
         $s = substr( $s, 0, -6);
     }
-    
-    $s = str_replace( "\'", "'", $s);
-    
+    $s = str_replace( array("\'", '\"'), array("'", '"'), $s);
+
     return $s;
 }
 

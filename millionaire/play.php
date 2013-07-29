@@ -86,7 +86,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aAnswer, 
 {
     global $OUTPUT;
 
-	$question = str_replace( '\"', '"', $query->questiontext);
+    $question = str_replace( array("\'", '\"'), array("'", '"'), $query->questiontext);
 
 	if( $game->param8 == '')
 	    $color = 408080;

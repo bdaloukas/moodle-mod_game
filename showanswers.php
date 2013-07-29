@@ -30,7 +30,7 @@
     echo '<br><br>';
 
     $existsbook = ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id'));
-    game_showanswers( $game, $existsbook);
+    game_showanswers( $game, $existsbook, $context);
 
     echo $OUTPUT->footer();
 
@@ -106,7 +106,7 @@ function game_showusers($game)
     echo $output . '</select>' . "\n";
 }
 
-function game_showanswers( $game, $existsbook)
+function game_showanswers( $game, $existsbook, $context)
 {
     if( $game->gamekind == 'bookquiz' and $existsbook){
         game_showanswers_bookquiz( $game);
@@ -115,13 +115,13 @@ function game_showanswers( $game, $existsbook)
     
     switch( $game->sourcemodule){
     case 'question':
-        game_showanswers_question( $game);
+        game_showanswers_question( $game, $context);
         break;
     case 'glossary':
         game_showanswers_glossary( $game);
         break;
     case 'quiz':
-        game_showanswers_quiz( $game);
+        game_showanswers_quiz( $game, $context);
         break;
     }
 }
@@ -144,7 +144,7 @@ function game_showanswers_appendselect( $game)
     return '';
 }
 
-function game_showanswers_question( $game)
+function game_showanswers_question( $game, $context)
 {
     global $DB;
 
@@ -159,8 +159,8 @@ function game_showanswers_question( $game)
         }
     }else
     {
-        $context = get_context_instance(50, $COURSE->id);
-        $select = " contextid in ($context->id)";
+        $context2 = get_context_instance(50, $COURSE->id);
+        $select = " contextid in ($context2->id)";
         $select2 = '';
         if( $recs = $DB->get_records_select( 'question_categories', $select, null, 'id,id')){
             foreach( $recs as $rec){
@@ -175,11 +175,11 @@ function game_showanswers_question( $game)
     
     $showcategories = ($game->gamekind == 'bookquiz');
     $order = ($showcategories ? 'category,questiontext' : 'questiontext');
-    game_showanswers_question_select( $game, '{question} q', $select, '*', $order, $showcategories, $game->course);
+    game_showanswers_question_select( $game, '{question} q', $select, '*', $order, $showcategories, $game->course, $context);
 }
 
 
-function game_showanswers_quiz( $game)
+function game_showanswers_quiz( $game, $context)
 {
     global $CFG;
 
@@ -189,11 +189,11 @@ function game_showanswers_quiz( $game)
               game_showanswers_appendselect( $game);
 	$table = '{question} q,{quiz_question_instances} qqi';
 	
-    game_showanswers_question_select( $game, $table, $select, 'q.*', 'category,questiontext', false, $game->course);
+    game_showanswers_question_select( $game, $table, $select, 'q.*', 'category,questiontext', false, $game->course, $context);
 }
 
 
-function game_showanswers_question_select( $game, $table, $select, $fields='*', $order='questiontext', $showcategoryname=false, $courseid=0)
+function game_showanswers_question_select( $game, $table, $select, $fields, $order, $showcategoryname, $courseid, $context)
 {
     global $CFG, $DB, $OUTPUT;
 
@@ -219,7 +219,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields='*', 
 	    		$select = "course=$courseid";
 	    	}else{
 	    		$context = get_context_instance(50, $courseid);
-	        		$select = " contextid in ($context->id)";
+	        	$select = " contextid in ($context->id)";
 	    	}
 	    	break;
     	}
@@ -260,7 +260,8 @@ function game_showanswers_question_select( $game, $table, $select, $fields='*', 
 
         echo '<td>';
         echo "<a title=\"Edit\" href=\"{$CFG->wwwroot}/question/question.php?inpopup=1&amp;id=$question->id&courseid=$courseid\" target=\"_blank\"><img src=\"".$OUTPUT->pix_url('t/edit')."\" alt=\"Edit\" /></a> ";
-        echo $question->questiontext.'</td>';
+        
+        echo game_filterquestion(str_replace( array( "\'", '\"'), array( "'", '"'), $question->questiontext), $question->id, $context->id, $game->course);
         
         switch( $question->qtype){
         case 'shortanswer':

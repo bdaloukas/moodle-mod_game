@@ -297,7 +297,8 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 		
 	if( $query->questionid)
 	{
-        $query->questiontext = game_filterquestion(str_replace( '\"', '"', $query->questiontext), $query->questionid, $context->id, $game->course);
+	    $questiontext = str_replace( array("\'", '\"'), array("'", '"'), $query->questiontext);
+        $query->questiontext = game_filterquestion($questiontext, $query->questionid, $context->id, $game->course);
     }else
     {
         $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);

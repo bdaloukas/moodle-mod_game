@@ -92,7 +92,10 @@ function showlegend( $legend, $title)
     
     echo "<br><b>$title</b><br>";
     foreach( $legend as $key => $line)
+    {
+        $line = game_repairquestion( $line);
         echo game_filtertext( "$key: $line<br>", 0);
+    }
 }
 
 function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution, $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,$showstudentguess, $context)
