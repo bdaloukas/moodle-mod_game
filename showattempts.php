@@ -154,6 +154,8 @@
     function game_showattempts($game){
         global $CFG, $DB, $OUTPUT;
 
+        $allowdelete = optional_param('allowdelete', 0, PARAM_INT);
+
         $userid = optional_param('userid',0,PARAM_INT);
         $limitfrom = optional_param('limitfrom',  0, PARAM_INT);
         $gamekind = $game->gamekind;
@@ -203,8 +205,11 @@
             foreach( $recs as $rec){
                 echo '<tr>';
                 echo '<td><center>';
-                if( $rec->timefinish == 0){
-                    echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/showattempts.php?attemptid={$rec->id}&amp;q={$game->id}&amp;action=delete\">";
+                if( ($rec->timefinish == 0) or $allowdelete){
+                    echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/showattempts.php?attemptid={$rec->id}&amp;q={$game->id}&amp;action=delete";
+		    if( $allowdelete)
+			echo '&allowdelete=1';
+		    echo '">';
                     echo '<img src="'.$OUTPUT->pix_url('t/delete').'" alt="'.get_string( 'delete').'" /></a>';
                 }
                 echo '</center></td>';
