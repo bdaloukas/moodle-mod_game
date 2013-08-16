@@ -8,7 +8,7 @@
  **/
  
     require_once("../../config.php");
-    require_once( "header.php");
+    require_once( "headergame.php");
 
     if (!has_capability('mod/game:viewreports', $context)){
 		print_error( get_string( 'only_teachers', 'game'));

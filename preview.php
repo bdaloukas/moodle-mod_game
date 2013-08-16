@@ -18,7 +18,7 @@
     require_once( "sudoku/play.php");
     require_once( "bookquiz/play.php");
 	
-	require_once( "header.php");
+    require_once( "headergame.php");
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 

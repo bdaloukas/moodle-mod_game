@@ -12,7 +12,7 @@ ob_start();
 
 require_once ($CFG->dirroot.'/lib/formslib.php');
 require( 'locallib.php');
-require( 'header.php');
+require( 'headergame.php');
 
     $context = get_context_instance(CONTEXT_MODULE, $cm->id);
     if (!has_capability('mod/game:viewreports', $context))
