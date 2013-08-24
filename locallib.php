@@ -1945,7 +1945,7 @@ function game_can_start_new_attempt( $game)
 
 function game_strlen( $str)
 {
-    if( game_get_moodle_version() < '02.05')
+    if( game_get_moodle_version() < '02.03')
         return textlib_get_instance()->strlen( $str);
     else
         return textlib::strlen( $str);
@@ -1958,13 +1958,13 @@ function game_substr()
 
     if( $num == 3)
     {
-        if( game_get_moodle_version() < '02.05')
+        if( game_get_moodle_version() < '02.03')
             return textlib_get_instance()->substr( $a[ 0], $a[ 1], $a[ 2]);
         else
             return textlib::substr( $a[ 0], $a[ 1], $a[ 2]);
     }else if( $num == 2)
     {
-        if( game_get_moodle_version() < '02.05')
+        if( game_get_moodle_version() < '02.03')
             return textlib_get_instance()->substr( $a[ 0], $a[ 1]);
         else
             return textlib::substr( $a[ 0], $a[ 1]);
@@ -1974,15 +1974,15 @@ function game_substr()
 
 function game_strtoupper( $str)
 {
-    if( game_get_moodle_version() < '02.05')
-        return textlib_get_instance()->qstrtoupper( $str);
+    if( game_get_moodle_version() < '02.03')
+        return textlib_get_instance()->strtoupper( $str);
     else
         return textlib::strtoupper( $str);
 }
 
 function game_strpos( $haystack, $needle, $offset = 0)
 {
-    if( game_get_moodle_version() < '02.05')
+    if( game_get_moodle_version() < '02.03')
         return textlib_get_instance()->strpos( $haystack, $needle, $offset);
     else
         return textlib::strpos( $haystack, $needle, $offset);
