@@ -154,10 +154,10 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 		
 	$letters = '';
 	if( $game->param1){
-		$letters .= textlib::substr( $min->answer, 0, 1);
+		$letters .= game_substr3( $min->answer, 0, 1);
 	}
 	if( $game->param2){
-		$letters .= textlib::substr( $min->answer, -1, 1);
+		$letters .= game_substr3( $min->answer, -1, 1);
 	}
 	$newrec->letters = $letters;
 
@@ -285,7 +285,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
     $letters = $hangman->letters;
     if( $newletter != NULL)
     {
-		if( textlib::strpos( $letters,$newletter) === false){
+		if( game_strpos( $letters,$newletter) === false){
 			$letters .= $newletter;
 		}
     }
@@ -320,21 +320,21 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 
     $word_line = $word_line2 = "";
 	
-	$len = textlib::strlen( $word);
+	$len = game_strlen( $word);
 	
 	$done = 1;
 	$answer = '';
     $correct = 0;
     for ($x=0; $x < $len; $x++)
     {
-		$char = textlib::substr( $word, $x, 1);
+		$char = game_substr3( $word, $x, 1);
 		
 		if( $showsolution){
 			$word_line2 .= ( $char == " " ? '&nbsp; ' : $char);
 			$done = 0;
 		}
 		
-		if ( textlib::strpos($letters, $char)  === false){
+		if ( game_strpos($letters, $char)  === false){
 			$word_line.="_<font size=\"1\">&nbsp;</font>\r\n";
 			$done = 0;
 			$answer .= '_';
@@ -346,14 +346,14 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 		}
     }
 
-    $len_alpha = textlib::strlen($alpha);
+    $len_alpha = game_strlen($alpha);
 	$fontsize = 5;
 
     for ($c=0; $c < $len_alpha; $c++)
     {
-		$char = textlib::substr( $alpha, $c, 1);
+		$char = game_substr3( $alpha, $c, 1);
 		
-		if ( textlib::strpos($letters, $char) === false)
+		if ( game_strpos($letters, $char) === false)
 		{
 			//User doesn't select this character
 			$params = 'id='.$id.'&amp;newletter='.urlencode( $char);
@@ -366,7 +366,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 			continue;
 		}
 		
-		if ( textlib::strpos($word, $char) === false)
+		if ( game_strpos($word, $char) === false)
 		{
 			$links .= "\r\n<font size=\"$fontsize\" color=\"red\">$char </font>";
 			$wrong++;
@@ -399,7 +399,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 		
 	}
 
-	$query->percent = ($correct -$wrong/$max) /  textlib::strlen( $word);
+	$query->percent = ($correct -$wrong/$max) /  game_strlen( $word);
 	if( $query->percent < 0){
 		$query->percent = 0;
 	}
@@ -454,7 +454,7 @@ function hangman_onincorrect( $id, $word_line, $word, $game, $attempt, $hangman,
 	
 	if( $game->param6){
 		//show the correct answer
-		if( textlib::strpos($word, ' ') != false)
+		if( game_strpos($word, ' ') != false)
 		    echo '<br/>'.get_string( 'hangman_correct_phrase', 'game');
         else
 		    echo '<br/>'.get_string( 'hangman_correct_word', 'game');

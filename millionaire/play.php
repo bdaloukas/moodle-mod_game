@@ -223,7 +223,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aAnswer, 
     for( $i=1; $i <= count( $aAnswer); $i++)
     {
 		$name = "btAnswer".$i;
-		$s = textlib::substr( $letters, $i-1, 1);
+		$s = game_substr( $letters, $i-1, 1);
       
 		$disabled = ( $state == 15 ? "disabled=1" : "");
         
@@ -560,10 +560,10 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
         
         $info = '<br>'.get_string( 'millionaire_info_people', 'game').':<br>';
         for( $i=0; $i < $n; $i++){
-			$info .= "<br>".  textlib::substr(  get_string( 'lettersall', 'game'), $i, 1) ." : ".$aPercent[ $i]. ' %';
+			$info .= "<br>".  game_substr(  get_string( 'lettersall', 'game'), $i, 1) ." : ".$aPercent[ $i]. ' %';
 		}  
 		
-        game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, textlib::substr( $info, 4), $context);
+        game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aAnswer, game_substr( $info, 4), $context);
     }
   
 

@@ -42,7 +42,7 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
     $reps = array();
 	foreach( $recs as $rec){
 	    if( $game->param7 == false){	        
-    		if( textlib::strpos( $rec->answertext, ' ')){
+    		if( game_strpos( $rec->answertext, ' ')){
 	    		continue;		//spaces not allowed
 	    	}
 	    }
@@ -100,13 +100,13 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $co
 	$answer1 = trim( game_upper( $query->answertext));
 	$answer2 = trim( game_upper( $answer));
 
-	$len1 = textlib::strlen( $answer1);
-	$len2 = textlib::strlen( $answer2);
+	$len1 = game_strlen( $answer1);
+	$len2 = game_strlen( $answer2);
 	$equal = ( $len1 == $len2);
 	if( $equal){
 		for( $i=0; $i < $len1; $i++)
 		{
-			if( textlib::substr( $answer1, $i, 1) != textlib::substr( $answer2, $i, 1))
+			if( game_substr( $answer1, $i, 1) != game_substr( $answer2, $i, 1))
 			{
 				$equal = true;
 				break;
@@ -159,14 +159,14 @@ function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updatea
     else
         $textdir = '';
 
-	$len = textlib::strlen( $mask);
+	$len = game_strlen( $mask);
 	
 	//count1 means there is a guested letter 
 	//count2 means there is a letter that not guessed
 	$count1 = $count2 = 0;
 	for($i=0; $i < $len; $i++)
 	{
-		$c = textlib::substr( $mask, $i, 1);
+		$c = game_substr( $mask, $i, 1);
 		if( $c == '1'){
 			$count1++;
 		}else if( $c == '2')

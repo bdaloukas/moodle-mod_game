@@ -60,7 +60,7 @@ class Cross
 		$maxlen = 0;
 		foreach( $this->m_input_answers as $word => $answer)
 		{
-			$len = textlib::strlen( $word);
+			$len = game_strlen( $word);
 			if( $len > $maxlen){
 				$maxlen = $len;
 			}
@@ -82,7 +82,7 @@ class Cross
 		$this->m_words = array();
 		foreach( $this->m_input_answers as $word => $answer)
 		{
-			$len =textlib::strlen( $word);
+			$len = game_strlen( $word);
 
 			if( $len <= $this->m_N20max){
 				$this->m_words[] = game_upper( $word);
@@ -259,7 +259,7 @@ class Cross
 
         $sum_rep = 0;
         foreach( $cross_word as $word){
-            $word = textlib::substr( $word, 1, -1);        
+            $word = game_substr( $word, 1, -1);        
 
             if( array_key_exists( $word, $this->m_reps))
                 $sum_rep += $this->m_reps[ $word] - $this->m_average_reps;
@@ -293,7 +293,7 @@ class Cross
           $row = floor( $pos / $N22);
           $dir = $cross_dir[ $i];
 
-          $len =  textlib::strlen($cross_word[ $i])-3;
+          $len =  game_strlen($cross_word[ $i])-3;
 
           if( $bPrint)
             echo "col=$col row=$row dir=$dir word=".$cross_word[ $i]."<br>";
@@ -415,7 +415,7 @@ class Cross
     
 		$ret = "<table border=0 cellpadding=2 cellspacing=1><tr>";
 		for ($n = 0;; $n ++) {
-			$c = textlib::substr( $puzzle, $n, 1);
+			$c = game_substr( $puzzle, $n, 1);
 		
 			if (($m = $n % $N22) == 0 or $m == $N21 or $n < $N22 or $n > $N2200) {
 				$ret .= "<td class=marc>  </td>";
@@ -424,10 +424,10 @@ class Cross
 			} elseif ($c == '.') {
 				$ret .= "<td class=blanc> </td>";
 			} else {
-				if ((textlib::substr( $puzzle, $n - 1, 1) > '0' or 
-				textlib::substr( $puzzle, $n + 1, 1) > '0') and
-				(textlib::substr( $puzzle, $n - $N22, 1) > '0' 
-				  or textlib::substr( $puzzle, $n + $N22, 1) > '0')) {
+				if ((game_substr( $puzzle, $n - 1, 1) > '0' or 
+				game_substr( $puzzle, $n + 1, 1) > '0') and
+				(game_substr( $puzzle, $n - $N22, 1) > '0' 
+				  or game_substr( $puzzle, $n + $N22, 1) > '0')) {
 					$ret .= "<td align=center class=connector>$c</td>";
 				} else {
 					$ret .= "<td align=center class=filled>$c</td>";
@@ -468,23 +468,23 @@ class Cross
 			$new_dir = 'h';
 		}
 
-	    $regex  = textlib::substr( $puzzle, $pos, 1);
+	    $regex  = game_substr( $puzzle, $pos, 1);
     	if ( ($regex  == '0' or $regex == '.') and (! $val_blanc)){
 	    	return false;
 	    }
 
-        if ((textlib::substr( $puzzle, $pos -  $inc, 1) > '0')){
+        if ((game_substr( $puzzle, $pos -  $inc, 1) > '0')){
 	    	return false;
 	    }
 
-        if ((textlib::substr( $puzzle, $pos + $inc, 1) > '0')){
+        if ((game_substr( $puzzle, $pos + $inc, 1) > '0')){
 	    	return false;
 	    }
 
         $left = $right = 0;
-        for ($limit_a = $pos - $inc; ($w = textlib::substr( $puzzle, $limit_a, 1)) !== '0'; $limit_a -= $inc)
+        for ($limit_a = $pos - $inc; ($w = game_substr( $puzzle, $limit_a, 1)) !== '0'; $limit_a -= $inc)
         {
-	    	if ($w == '.' and ((textlib::substr( $puzzle, $limit_a -  $oinc, 1) > '0') or (textlib::substr( $puzzle, $limit_a +  $oinc, 1) > '0'))){
+	    	if ($w == '.' and ((game_substr( $puzzle, $limit_a -  $oinc, 1) > '0') or (game_substr( $puzzle, $limit_a +  $oinc, 1) > '0'))){
 	    		break;
 	    	}
 		
@@ -496,9 +496,9 @@ class Cross
 	    	$regex = $w . $regex;
         }
 
-        for ($limit_b = $pos + $inc; ($w = textlib::substr( $puzzle, $limit_b, 1)) !== '0'; $limit_b += $inc)
+        for ($limit_b = $pos + $inc; ($w = game_substr( $puzzle, $limit_b, 1)) !== '0'; $limit_b += $inc)
         {
-	    	if ($w== '.' and ((textlib::substr( $puzzle, $limit_b -  $oinc, 1) > '0') or (textlib::substr( $puzzle, $limit_b +  $oinc, 1) > '0'))){
+	    	if ($w== '.' and ((game_substr( $puzzle, $limit_b -  $oinc, 1) > '0') or (game_substr( $puzzle, $limit_b +  $oinc, 1) > '0'))){
 	    		break;
 	    	}
 		
@@ -510,7 +510,7 @@ class Cross
 	    	$regex .= $w;
         }
 
-        if (($len_regex = textlib::strlen($regex)) < 2){
+        if (($len_regex = game_strlen($regex)) < 2){
 	    	return false;
 	    }
 
@@ -523,36 +523,36 @@ class Cross
 
 	    	for($pos_c = $ini; $pos_c <= $fin; $pos_c++, $pos_p += $inc)
 	    	{
-	    		if (textlib::substr( $puzzle, $pos_p - $inc, 1) > '0'){
+	    		if (game_substr( $puzzle, $pos_p - $inc, 1) > '0'){
 	    			continue;
 	    		}
 
-	    		$w = textlib::substr($regex, $pos_c, $lens);
+	    		$w = game_substr($regex, $pos_c, $lens);
 
 	    		if( !$this->my_preg_match( $w, $words, $word))
     				continue;
 
-    			$larr0 = $pos_p + ((textlib::strlen( $word) - 2) * $inc);
+    			$larr0 = $pos_p + ((game_strlen( $word) - 2) * $inc);
 
     			if ($larr0 >= $N2222){
     				continue;
     			}
 
-    			if (textlib::substr( $puzzle, $larr0, 1) > '0'){
+    			if (game_substr( $puzzle, $larr0, 1) > '0'){
     				continue;
     			}
 
     			$words = str_replace( $word, ';', $words);
 
-    			$len = textlib::strlen( $word) ;
+    			$len = game_strlen( $word) ;
     			for ($n = 1, $pp = $pos_p; $n < $len - 1; $n++, $pp += $inc)
     			{				
-    				$this->setchar( $puzzle, $pp,  textlib::substr( $word , $n, 1));
+    				$this->setchar( $puzzle, $pp,  game_substr( $word , $n, 1));
 				
     				if ($pp == $pos)
     					continue;
 				
-				    $c = textlib::substr( $puzzle, $pp, 1);
+				    $c = game_substr( $puzzle, $pp, 1);
 				    $poss[] = array($pp, $new_dir, ord( $c));
 			    }
 
@@ -573,17 +573,17 @@ class Cross
 	function my_preg_match( $w, $words, &$word)
 	{
 		$a = explode( ";", $words);
-		$len_w = textlib::strlen( $w);
+		$len_w = game_strlen( $w);
 		foreach( $a as $test)
 		{
-			if( textlib::strlen( $test) != $len_w)
+			if( game_strlen( $test) != $len_w)
 				continue;
 			
 			for( $i=0; $i <$len_w; $i++)
 			{
-				if( textlib::substr( $w, $i, 1) == '.')
+				if( game_substr( $w, $i, 1) == '.')
 					continue;
-				if( textlib::substr( $w, $i, 1)  != textlib::substr( $test, $i, 1) )
+				if( game_substr( $w, $i, 1)  != game_substr( $test, $i, 1) )
 					break;
 			}
 			if( $i < $len_w)
@@ -601,9 +601,9 @@ class Cross
 		$ret = "";
 		
 		if( $pos > 0)
-			$ret .= textlib::substr( $s, 0, $pos);
+			$ret .= game_substr( $s, 0, $pos);
 		
-		$s = $ret . $char . textlib::substr( $s, $pos+1, textlib::strlen( $s)-$pos-1);
+		$s = $ret . $char . game_substr( $s, $pos+1, game_strlen( $s)-$pos-1);
 	}
 	
 	function showhtml_base( $crossm, $crossd, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game)
@@ -640,7 +640,7 @@ class Cross
 		
 			$i++;
 
-			$sWordLength .= ",".textlib::strlen( $rec->answertext);
+			$sWordLength .= ",".game_strlen( $rec->answertext);
 			if( $rec->questionid != 0)
 			{
     			$q = game_filterquestion(str_replace( '\"', '"', $rec->questiontext), $rec->questionid, $context->id, $game->course);
@@ -705,7 +705,7 @@ class Cross
 		    {
 		        for( $i=0; $i < count( $value); $i++)
 		        {
-		            $this->m_LegendH[ $key.textlib::substr( $letters, $i, 1)] = $value[ $i];
+		            $this->m_LegendH[ $key.game_substr( $letters, $i, 1)] = $value[ $i];
                 }
 		    }
 		}
@@ -719,7 +719,7 @@ class Cross
 		    {
 		        for( $i=0; $i < count( $value); $i++)
 		        {
-		            $this->m_LegendV[ $key.textlib::substr( $letters, $i, 1)] = $value[ $i];
+		            $this->m_LegendV[ $key.game_substr( $letters, $i, 1)] = $value[ $i];
                 }
 		    }
 		}
@@ -727,16 +727,16 @@ class Cross
 		ksort( $this->m_LegendH);
 		ksort( $this->m_LegendV);
 
-		$sRet .= "WordLength = new Array( ".textlib::substr( $sWordLength, 1).");\n";
-		$sRet .= "Clue = new Array( ".textlib::substr( $sClue, 1).");\n";
+		$sRet .= "WordLength = new Array( ".game_substr( $sWordLength, 1).");\n";
+		$sRet .= "Clue = new Array( ".game_substr( $sClue, 1).");\n";
 		$sguess = str_replace( ' ', '_', $sguess);
-		$sRet .= "Guess = new Array( ".textlib::substr( $sguess, 1).");\n";
-		$sRet .= "Solutions = new Array( ".textlib::substr( $ssolutions, 1).");\n";
+		$sRet .= "Guess = new Array( ".game_substr( $sguess, 1).");\n";
+		$sRet .= "Solutions = new Array( ".game_substr( $ssolutions, 1).");\n";
 		if( $showhtmlsolutions){
-		    $sRet .= "HtmlSolutions = new Array( ".textlib::substr( $shtmlsolutions, 1).");\n";
+		    $sRet .= "HtmlSolutions = new Array( ".game_substr( $shtmlsolutions, 1).");\n";
 		}
-		$sRet .= "WordX = new Array( ".textlib::substr( $sWordX, 1).");\n";
-		$sRet .= "WordY = new Array( ".textlib::substr( $sWordY, 1).");\n";
+		$sRet .= "WordX = new Array( ".game_substr( $sWordX, 1).");\n";
+		$sRet .= "WordY = new Array( ".game_substr( $sWordY, 1).");\n";
 		$sRet .= "LastHorizontalWord = $LastHorizontalWord;\n";
 
 		return $sRet;
@@ -744,11 +744,11 @@ class Cross
 
 
 	function cmp($a, $b) {
-		return textlib::strlen($b) - textlib::strlen($a);
+		return game_strlen($b) - game_strlen($a);
 	}
 
 
 	function cmp_magic($a, $b) {
-		return (textlib::strlen($a) + mt_rand(0, 3)) - (textlib::strlen($b) - mt_rand(0, 1));
+		return (game_strlen($a) + mt_rand(0, 3)) - (game_strlen($b) - mt_rand(0, 1));
 	}
 }

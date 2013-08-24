@@ -184,10 +184,10 @@ function game_sudoku_getclosed( $data)
 {
 	$a = array();
   
-	$n = textlib::strlen( $data);
+	$n = game_strlen( $data);
 	for( $i=1; $i <= $n; $i++)
 	{
-		$c = textlib::substr( $data, $i-1, 1);
+		$c = game_substr( $data, $i-1, 1);
 		if( $c >= "1" and $c <= "9")
 			$a[ $i] = $i;
 	}
@@ -608,7 +608,7 @@ function game_sudoku_check_number( $id, $game, $attempt, $sudoku, $pos, $num, $c
 {
     global $DB;
 
-	$correct = textlib::substr( $sudoku->data, $pos-1, 1);
+	$correct = game_substr( $sudoku->data, $pos-1, 1);
 
 	if( $correct != $num)
 	{
@@ -616,8 +616,8 @@ function game_sudoku_check_number( $id, $game, $attempt, $sudoku, $pos, $num, $c
 		return;
 	}
 	
-	$leng = textlib::strlen( $sudoku->guess);
-	$lend = textlib::strlen( $sudoku->data);
+	$leng = game_strlen( $sudoku->guess);
+	$lend = game_strlen( $sudoku->data);
 	if( $leng < $lend){
 		$sudoku->guess .= str_repeat( ' ', $lend - $leng);
 	}

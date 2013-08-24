@@ -500,7 +500,7 @@ var Base64 = {
 $letters = get_string( 'lettersall', 'game');
 for($i=1 ; $i <= $maxquestions; $i++)
 {
-    $s = textlib::substr( $letters, $i-1, 1);
+    $s = game_substr( $letters, $i-1, 1);
     echo "<tr>\n";
     echo "<td style='background:$colorback;color:$color1'>";
     echo "<input style=\"background:$colorback;color:$color1;\" type=\"submit\" name=\"btAnswer$i\" value=\"$s\" id=\"btAnswer$i\"";

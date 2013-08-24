@@ -103,12 +103,12 @@ var used_letters = "";
 var wrong_guesses = 0;
 var used_letters_all = "";
 var all_letters = new Array(<?php 
-$len = textlib::strlen( $allletters);
+$len = game_strlen( $allletters);
 for( $i=0; $i < $len; $i++)
 {
     if( $i > 0)
         echo ',';
-    echo '"'.textlib::substr( $allletters, $i, 1).'"';
+    echo '"'.game_substr( $allletters, $i, 1).'"';
 }
 ?>);
 

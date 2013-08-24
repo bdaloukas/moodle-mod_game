@@ -223,17 +223,17 @@
 function game_cross_unpackpuzzle( $g)
 {
 	$ret = "";
-	$len = textlib::strlen( $g);
+	$len = game_strlen( $g);
 	while( $len)
 	{
 		for( $i=0; $i < $len; $i++)
 		{
-			$c = textlib::substr( $g, $i, 1);
+			$c = game_substr( $g, $i, 1);
 			if( $c >= '1' and $c <= '9'){
 			    if( $i > 0){
 			        //found escape character
-			        if(  textlib::substr( $g, $i-1, 1) == '/'){
-			            $g = textlib::substr( $g, 0, $i-1).textlib::substr( $g, $i);
+			        if(  game_substr( $g, $i-1, 1) == '/'){
+			            $g = game_substr( $g, 0, $i-1).game_substr( $g, $i);
 			            $i--;
 			            $len--;
 			            continue;
@@ -247,16 +247,16 @@ function game_cross_unpackpuzzle( $g)
 			//found the start of a number
 			for( $j=$i+1; $j < $len; $j++)
 			{
-				$c = textlib::substr( $g, $j, 1);
+				$c = game_substr( $g, $j, 1);
 				if( $c < '0' or $c > '9'){
 					break;
 				}
 			}
-			$count = textlib::substr( $g, $i, $j-$i);
-			$ret .= textlib::substr( $g, 0, $i) . str_repeat( '_', $count);
+			$count = game_substr( $g, $i, $j-$i);
+			$ret .= game_substr( $g, 0, $i) . str_repeat( '_', $count);
 			
-			$g = textlib::substr( $g, $j);
-			$len = textlib::strlen( $g);
+			$g = game_substr( $g, $j);
+			$len = game_strlen( $g);
 			
 		}else
 		{

@@ -45,7 +45,7 @@ function game_cross_new( $game, $attemptid, &$crossm)
     $reps = array();
 	foreach( $recs as $rec){
 	    if( $game->param7 == false){	        
-    		if( textlib::strpos( $rec->answertext, ' ')){
+    		if( game_strpos( $rec->answertext, ' ')){
 	    		continue;		//spaces not allowed
 	    	}
 	    }

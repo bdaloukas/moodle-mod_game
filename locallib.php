@@ -30,10 +30,28 @@ define( "CONST_GAME_TRIES_REPETITION", "3");
 
 /**#@-*/
 
+function game_get_moodle_version()
+{
+    global $DB;
+
+    static $s_moodle_version = null;
+    
+    if( $s_moodle_version != null)
+        return $s_moodle_version;
+        
+    $rec = $DB->get_record_select( 'config', "name='release'");
+    if( $rec == false)
+        return $s_moodle_version='';
+    else
+    {
+        $a = explode( '.', $rec->value); 
+        return $s_moodle_version = sprintf( '%02u.%02u', $a[ 0], $a[ 1]);
+    }
+}
 
 function game_upper( $str, $lang='')
 {
-    $str = textlib::strtoupper( $str);
+    $str = game_strtoupper( $str);
 
     $strings = get_string_manager()->load_component_strings( 'game', ($lang == '' ? 'en' : $lang));
     if( !isset( $strings[ 'convertfrom']))
@@ -43,9 +61,9 @@ function game_upper( $str, $lang='')
 	
     $from = $strings[ 'convertfrom'];
     $to = $strings[ 'convertto'];
-    $len = textlib::strlen( $from);
+    $len = game_strlen( $from);
     for($i=0; $i < $len; $i++){
-        $str = str_replace( textlib::substr( $from, $i, 1), textlib::substr( $to, $i, 1), $str);
+        $str = str_replace( game_substr( $from, $i, 1), game_substr( $to, $i, 1), $str);
     }
 
     return $str;
@@ -483,13 +501,12 @@ function game_getallletters( $word, $lang='')
     return '';
 }
 
-
 function hangman_existall( $str, $strfind)
 {
-    $n = textlib::strlen( $str);
+    $n = game_strlen( $str);
     for( $i=0; $i < $n; $i++)
     {
-		$pos = textlib::strpos( $strfind, textlib::substr( $str, $i, 1));
+		$pos = game_strpos( $strfind, game_substr( $str, $i, 1));
         if( $pos === false)
             return false;
     }
@@ -620,10 +637,10 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 		$ret = "";
 		
 		if( $pos > 0){
-			$ret .= textlib::substr( $s, 0, $pos);
+			$ret .= game_substr( $s, 0, $pos);
 		}
 		
-		$s = $ret . $char . textlib::substr( $s, $pos+1);
+		$s = $ret . $char . game_substr( $s, $pos+1);
 	}
 
 
@@ -1924,4 +1941,49 @@ function game_can_start_new_attempt( $game)
         return false;
     else
         return true;
+}
+
+function game_strlen( $str)
+{
+    if( game_get_moodle_version() < '02.05')
+        return textlib_get_instance()->strlen( $str);
+    else
+        return textlib::strlen( $str);
+}
+
+function game_substr()
+{
+    $num = func_num_args();
+    $a = func_get_args();
+
+    if( $num == 3)
+    {
+        if( game_get_moodle_version() < '02.05')
+            return textlib_get_instance()->substr( $a[ 0], $a[ 1], $a[ 2]);
+        else
+            return textlib::ubstr( $a[ 0], $a[ 1], $a[ 2]);
+    }else if( $num == 2)
+    {
+        if( game_get_moodle_version() < '02.05')
+            return textlib_get_instance()->substr( $a[ 0], $a[ 1]);
+        else
+            return textlib::ubstr( $a[ 0], $a[ 1]);
+    }else
+        die( 'Substr requires 2 or 3 parameters');
+}
+
+function game_strtoupper( $str)
+{
+    if( game_get_moodle_version() < '02.05')
+        return textlib_get_instance()->qstrtoupper( $str);
+    else
+        return textlib::strtoupper( $str);
+}
+
+function game_strpos( $haystack, $needle, $offset = 0)
+{
+    if( game_get_moodle_version() < '02.05')
+        return textlib_get_instance()->strpos( $haystack, $needle, $offset);
+    else
+        return textlib::strtoupper( $haystack, $needle, $offset);
 }

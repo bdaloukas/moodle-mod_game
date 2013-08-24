@@ -182,28 +182,28 @@ function game_cross_computecheck( $correctletters,  $wrongletters, $restletters,
 		global $DB, $USER;
 
 		$word = $rec->answertext;
-		$len = textlib::strlen( $word);
+		$len = game_strlen( $word);
 		
 		if( $loadfromdb)
 		    $guess = $rec->studentanswer;
 		else
-		    $guess = textlib::substr( $g, $pos, $len);
+		    $guess = game_substr( $g, $pos, $len);
 		    
-		$len_guess = textlib::strlen( $guess);;
+		$len_guess = game_strlen( $guess);;
 		$pos += $len;
 
 		$is_empty = true;
 		for($i = 0; $i < $len; $i++)
 		{
 			if( $i < $len_guess)
-				$letterguess = textlib::substr( $guess, $i, 1);
+				$letterguess = game_substr( $guess, $i, 1);
 			else
 				$letterguess = " ";
 				
 			if( $letterguess != ' ')
 			    $is_empty = false;
 				
-			$letterword= textlib::substr( $word, $i, 1);
+			$letterword= game_substr( $word, $i, 1);
 			if( $letterword != $letterguess)
 			{
                 if( ($letterguess != ' ' and $letterguess != '_')){

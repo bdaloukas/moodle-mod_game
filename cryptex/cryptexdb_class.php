@@ -39,11 +39,11 @@ class CryptexDB extends CrossDB
 		{
 			$pos = $rec->col - 1 + ($rec->row-1) * $cols;
 			$s = $rec->answertext;
-			$len = textlib::strlen( $s);
+			$len = game_strlen( $s);
 			
 			$a = array();
 			for( $i=0; $i < $len; $i++){
-				$a[] = textlib::substr( $s, $i, 1);
+				$a[] = game_substr( $s, $i, 1);
 			}
 			
 			for( $i=0; $i < $len; $i++){
@@ -57,10 +57,10 @@ class CryptexDB extends CrossDB
 			}
 		}
 	
-		$len = textlib::strlen( $letters);
+		$len = game_strlen( $letters);
 		$spaces = 0;
 		for( $i=0; $i < $len; $i++){
-			if( textlib::substr( $letters, $i, 1) == '.'){
+			if( game_substr( $letters, $i, 1) == '.'){
 				$spaces++;
 			}
 		}	
@@ -82,7 +82,7 @@ class CryptexDB extends CrossDB
 
 		$ret_letters = "";
 		for( $row=0; $row < $crossm->rows; $row++){
-			$ret_letters .= textlib::substr( $letters, $cols * $row, ($cols-1));
+			$ret_letters .= game_substr( $letters, $cols * $row, ($cols-1));
 		}
 
 
@@ -97,8 +97,8 @@ class CryptexDB extends CrossDB
 			echo "<tr>";
 			for( $col=0; $col < $cols; $col++){
 				$pos = $cols * $row+$col;
-				$c = textlib::substr( $letters, $pos, 1);
-				$m = textlib::substr( $mask, $pos, 1);
+				$c = game_substr( $letters, $pos, 1);
+				$m = game_substr( $mask, $pos, 1);
 				
 				if( $showsolution and $m > '0'){
 					echo "<td align=center><b><FONT color=red>".$c."</font></td>";
@@ -116,9 +116,9 @@ class CryptexDB extends CrossDB
 	
 	function insertchar( &$letters, $cols, $rows, $char, &$spaces)
 	{
-		$len = textlib::strlen( $letters);
+		$len = game_strlen( $letters);
 		for( $i=0; $i < $len; $i++){
-			if( textlib::substr( $letters, $i, 1) == '.'){
+			if( game_substr( $letters, $i, 1) == '.'){
 				$this->setchar( $letters, $i, $char);
 				$spaces--;
 				return;
@@ -128,17 +128,17 @@ class CryptexDB extends CrossDB
 	
 	function insertchars( &$letters, $cols, $rows, $char, &$spaces)
 	{
-		$len = textlib::strlen( $letters);
+		$len = game_strlen( $letters);
 		for( $i=0; $i < $len; $i++){
-			if( textlib::substr( $letters, $i, 1) == '.'  and textlib::substr( $letters, $i+1, 1) == '.' ){
-				$this->setchar( $letters, $i, textlib::substr( $char, 0, 1));
-				$this->setchar( $letters, $i+1, textlib::substr( $char, 1, 1));
+			if( game_substr( $letters, $i, 1) == '.'  and game_substr( $letters, $i+1, 1) == '.' ){
+				$this->setchar( $letters, $i, game_substr( $char, 0, 1));
+				$this->setchar( $letters, $i+1, game_substr( $char, 1, 1));
 				$spaces-=2;
 				return true;
 			}
-			if( textlib::substr( $letters, $i, 1) == '.'  and textlib::substr( $letters, $i+$cols+1, 1) == '.' ){
-				$this->setchar( $letters, $i, textlib::substr( $char, 0, 1));
-				$this->setchar( $letters, $i + $cols+1, textlib::substr( $char, 1, 1));
+			if( game_substr( $letters, $i, 1) == '.'  and game_substr( $letters, $i+$cols+1, 1) == '.' ){
+				$this->setchar( $letters, $i, game_substr( $char, 0, 1));
+				$this->setchar( $letters, $i + $cols+1, game_substr( $char, 1, 1));
 				$spaces-=2;
 				return true;
 			}
@@ -150,10 +150,10 @@ class CryptexDB extends CrossDB
 	function gethash( $word)
 	{
 		$x = 37;
-		$len = count( textlib::strlen( $word));
+		$len = count( game_strlen( $word));
 		
 		for($i=0; $i < $len; $i++){
-			$x = $x xor ord( textlib::substr( $word, $i, 1));
+			$x = $x xor ord( game_substr( $word, $i, 1));
 		}
 		
 		return $x;
@@ -180,14 +180,14 @@ class CryptexDB extends CrossDB
 				
 				$word = $rec->answertext;
 				$pos = $crossm->cols * ($rec->row-1)+($rec->col-1);
-				$len = textlib::strlen( $word);
+				$len = game_strlen( $word);
 				$found = ($rec->answertext == $rec->studentanswer);
 
 				for( $i=0; $i < $len; $i++)
 				{
 					$c = ( $found ? '1' : '2');
 					
-					if( textlib::substr( $mask, $pos,  1) != '1'){
+					if( game_substr( $mask, $pos,  1) != '1'){
 						game_setchar( $mask, $pos, $c);
 					}
 					
