@@ -179,7 +179,7 @@ class mod_game_mod_form extends moodleform_mod {
         // Open and close dates.
         $mform->addElement('date_time_selector', 'timeopen', get_string('gameopen', 'game'),
                 array('optional' => true, 'step' => 1));
-        $mform->addHelpButton('timeopen', 'quizopenclose', 'quiz');
+        $mform->addHelpButton('timeopen', 'gameopenclose', 'game');
 
         $mform->addElement('date_time_selector', 'timeclose', get_string('gameclose', 'game'),
                 array('optional' => true, 'step' => 1));              

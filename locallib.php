@@ -1945,10 +1945,10 @@ function game_can_start_new_attempt( $game)
 
 function game_strlen( $str)
 {
-    if( game_get_moodle_version() < '02.03')
-        return textlib_get_instance()->strlen( $str);
-    else
+    if( game_get_moodle_version() >= '02.04')
         return textlib::strlen( $str);
+    else
+        return textlib_get_instance()->strlen( $str);
 }
 
 function game_substr()
@@ -1958,32 +1958,34 @@ function game_substr()
 
     if( $num == 3)
     {
-        if( game_get_moodle_version() < '02.03')
-            return textlib_get_instance()->substr( $a[ 0], $a[ 1], $a[ 2]);
-        else
+        if( game_get_moodle_version() >= '02.04')
             return textlib::substr( $a[ 0], $a[ 1], $a[ 2]);
+        else
+            return textlib_get_instance()->substr( $a[ 0], $a[ 1], $a[ 2]);
     }else if( $num == 2)
     {
-        if( game_get_moodle_version() < '02.03')
-            return textlib_get_instance()->substr( $a[ 0], $a[ 1]);
-        else
+        if( game_get_moodle_version() >= '02.04')
             return textlib::substr( $a[ 0], $a[ 1]);
+        else
+            return textlib_get_instance()->substr( $a[ 0], $a[ 1]);
     }else
         die( 'Substr requires 2 or 3 parameters');
 }
 
 function game_strtoupper( $str)
 {
-    if( game_get_moodle_version() < '02.03')
+    if( game_get_moodle_version() >= '02.04')
+        return textlib::strtoupper( $str);
+    else if( game_get_moodle_version() >= '02.01')
         return textlib_get_instance()->strtoupper( $str);
     else
-        return textlib::strtoupper( $str);
+        return textlib_get_instance()->qstrtoupper( $str);
 }
 
 function game_strpos( $haystack, $needle, $offset = 0)
 {
-    if( game_get_moodle_version() < '02.03')
-        return textlib_get_instance()->strpos( $haystack, $needle, $offset);
-    else
+    if( game_get_moodle_version() >= '02.04')
         return textlib::strpos( $haystack, $needle, $offset);
+    else
+        return textlib_get_instance()->strpos( $haystack, $needle, $offset);
 }
