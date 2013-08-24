@@ -1961,13 +1961,13 @@ function game_substr()
         if( game_get_moodle_version() < '02.05')
             return textlib_get_instance()->substr( $a[ 0], $a[ 1], $a[ 2]);
         else
-            return textlib::ubstr( $a[ 0], $a[ 1], $a[ 2]);
+            return textlib::substr( $a[ 0], $a[ 1], $a[ 2]);
     }else if( $num == 2)
     {
         if( game_get_moodle_version() < '02.05')
             return textlib_get_instance()->substr( $a[ 0], $a[ 1]);
         else
-            return textlib::ubstr( $a[ 0], $a[ 1]);
+            return textlib::substr( $a[ 0], $a[ 1]);
     }else
         die( 'Substr requires 2 or 3 parameters');
 }
@@ -1985,5 +1985,5 @@ function game_strpos( $haystack, $needle, $offset = 0)
     if( game_get_moodle_version() < '02.05')
         return textlib_get_instance()->strpos( $haystack, $needle, $offset);
     else
-        return textlib::strtoupper( $haystack, $needle, $offset);
+        return textlib::strpos( $haystack, $needle, $offset);
 }
