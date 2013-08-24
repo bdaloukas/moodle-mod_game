@@ -434,7 +434,7 @@ function game_questions_selectrandom_detail( $table, $select, $id_field="id", $c
 		return $a;
 	}else
 	{
-		$id = array_rand(  $a, $count);print_r( $a); echo "count=$count<br>";
+		$id = array_rand(  $a, $count);
 		return ( $count == 1  ? array( $id) : $id);
 	}
 }

@@ -154,10 +154,10 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 		
 	$letters = '';
 	if( $game->param1){
-		$letters .= game_substr3( $min->answer, 0, 1);
+		$letters .= game_substr( $min->answer, 0, 1);
 	}
 	if( $game->param2){
-		$letters .= game_substr3( $min->answer, -1, 1);
+		$letters .= game_substr( $min->answer, -1, 1);
 	}
 	$newrec->letters = $letters;
 
@@ -327,7 +327,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
     $correct = 0;
     for ($x=0; $x < $len; $x++)
     {
-		$char = game_substr3( $word, $x, 1);
+		$char = game_substr( $word, $x, 1);
 		
 		if( $showsolution){
 			$word_line2 .= ( $char == " " ? '&nbsp; ' : $char);
@@ -351,7 +351,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
 
     for ($c=0; $c < $len_alpha; $c++)
     {
-		$char = game_substr3( $alpha, $c, 1);
+		$char = game_substr( $alpha, $c, 1);
 		
 		if ( game_strpos($letters, $char) === false)
 		{
