@@ -685,6 +685,7 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 	    	else{
 	    		$updrec->lastremotehost = gethostbyaddr( $updrec->lastip);
 	    	}
+            $updrec->lastip = substr( $updrec->lastip, 0, 30);
 	    	$updrec->lastremotehost = substr( $updrec->lastremotehost, 0, 50);
 
 	    	if( $score >= 0){
