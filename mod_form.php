@@ -240,6 +240,8 @@ class mod_game_mod_form extends moodleform_mod {
             $crosslayoutoptions[0] = get_string('cross_layout0', 'game');
             $crosslayoutoptions[1] = get_string('cross_layout1', 'game');
             $mform->addElement('select','param3', get_string('cross_layout', 'game'), $crosslayoutoptions);
+            $mform->setType('param5', PARAM_INT);
+            $mform->addElement('selectyesno', 'param5', get_string('cross_showprint','game'));
         }
 
 //---------------------------------------------------------------------------
@@ -423,7 +425,7 @@ class mod_game_mod_form extends moodleform_mod {
 
     function set_data($default_values) {
         global $DB;
-        
+
         if( isset( $default_values->type))
         {
             //Default values for every game.
@@ -438,7 +440,7 @@ class mod_game_mod_form extends moodleform_mod {
             }else if( $default_values->type == 'millionaire')
             {
                 $default_values->shuffle = 1;
-            }            
+            }
         }        
 
         if( isset( $default_values->gamekind)){
@@ -448,6 +450,10 @@ class mod_game_mod_form extends moodleform_mod {
             }else if( $default_values->gamekind == 'millionaire'){
                 if( isset( $default_values->param8))
                     $default_values->param8 = '#'.substr( '000000'.strtoupper( dechex( $default_values->param8)),-6);
+            }else if( $default_values->gamekind == 'cross')
+            {
+                if( $default_values->param5 == NULL)
+                    $default_values->param5 = 1;
             }
             
             //repair questioncategoryid
