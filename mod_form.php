@@ -109,7 +109,7 @@ class mod_game_mod_form extends moodleform_mod {
         // Question Category - Short Answer
 
         if( $gamekind != 'bookquiz'){
-            $context = get_context_instance(50, $COURSE->id);
+            $context = game_get_context_course_instance( $COURSE->id);
             $select = " contextid in ($context->id)";
 
             $a = array();
@@ -378,7 +378,7 @@ class mod_game_mod_form extends moodleform_mod {
             if($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')){
                 foreach($recs as $rec){
                     $cmg = get_coursemodule_from_instance('glossary', $rec->id, $COURSE->id);
-                    $context = get_context_instance(CONTEXT_MODULE, $cmg->id);
+                    $context = game_get_context_module_instance( $cmg->id);
                     if( $DB->record_exists( 'files', array( 'contextid' => $context->id))){
                         $a[$rec->id] = $rec->name;
                     }

@@ -55,7 +55,7 @@
 
         /// Check login and get context.
         require_login($course->id, false, $cm);
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $context = game_get_context_module_instance( $cm->id);
         require_capability('mod/game:view', $context);
 
         /// Cache some other capabilites we use several times.

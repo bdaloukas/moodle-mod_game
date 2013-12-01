@@ -460,7 +460,10 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
             continue;   //I don't show the correct answers
         }
 
-		$s = '<b>A'.$ofs.'.</b> '.game_filtertext( $entry->definition, 0).'<br>';
+        $query = new StdClass;
+        $query->glossaryid = $game->glossaryid;
+        $query->glossaryentryid = $entry->id;
+        $s = '<b>A'.$ofs.'.</b> '.game_show_query( $game, $query, $entry->definition, 0).'<br>';
 		if( $showsolution){
 			$s .= get_string( 'answer').': ';
 			$s .= "<input type=\"text\" name=\"resp{$entry->id}\" value=\"$entry->concept\"size=30 /><br>";

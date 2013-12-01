@@ -37,7 +37,7 @@
 
         $users = array();
 
-        $context = get_context_instance(CONTEXT_COURSE, $game->course);
+        $context = game_get_context_course_instance( $game->course);
 
         $groupid = optional_param('groupid',0, PARAM_INT);
         $sql =  "SELECT DISTINCT ra.userid,u.lastname,u.firstname FROM {role_assignments} ra, {user} u ".

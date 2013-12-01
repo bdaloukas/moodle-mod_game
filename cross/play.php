@@ -1042,7 +1042,7 @@ if( $attempt != false){
 
 </body>
 
-<?PHP
+<?php
 }
 
 function game_cross_show_welcome( $game){

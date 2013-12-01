@@ -20,7 +20,7 @@
 	
     require_once( "headergame.php");
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = game_get_context_module_instance( $cm->id);
 
     if (!has_capability('mod/game:viewreports', $context)){
 		print_error( get_string( 'only_teachers', 'game'));

@@ -53,7 +53,7 @@ function game_showusers($game)
 
     $users = array();
 
-    $context = get_context_instance(CONTEXT_COURSE, $game->course);
+    $context = game_get_context_course_instance( $game->course);
 
     if ($courseusers = get_enrolled_users($context)) {
         foreach ($courseusers as $courseuser) {
@@ -377,8 +377,13 @@ function game_showanswers_glossary( $game)
         echo '<tr>';
         echo '<td>'.(++$line);
         echo '</td>';
-        
-        echo '<td>'.$question->definition.'</td>';
+
+        $query = new StdClass;
+        $query->glossaryid = $game->glossaryid;
+        $query->glossaryentryid = $question->id;
+        echo '<td>'.game_show_query( $game, $query, $question->definition).'</td>';
+
+
         echo '<td>'.$question->concept.'</td>';
         if( $reps != false){
             if( array_key_exists( $question->id, $reps))

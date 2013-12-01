@@ -111,7 +111,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt){
     $keys = array();
     $fs = get_file_storage();
     $cmg = get_coursemodule_from_instance('glossary', $game->glossaryid2, $game->course);
-    $context = get_context_instance(CONTEXT_MODULE, $cmg->id);
+    $context = game_get_context_module_instance( $cmg->id);
     foreach( $recs as $rec){
         $files = $fs->get_area_files($context->id, 'mod_glossary', 'attachment', $rec->id, "timemodified", false);
         if( $files)

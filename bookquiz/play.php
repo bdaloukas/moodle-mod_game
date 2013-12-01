@@ -86,6 +86,7 @@ $previd = null;
 $nextid = null;
 $found = 0;
 $scoreattempt = 0;
+$lastid = 0;
 foreach ($chapters as $ch) {
 	$scoreattempt++;
     if ($found) {
@@ -98,6 +99,7 @@ foreach ($chapters as $ch) {
     if (!$found) {
         $previd = $ch->id;
     }
+    $lastid = $ch->id;
 }
 if ($ch == current($chapters)) {
     $nextid = $ch->id;
@@ -132,7 +134,9 @@ if ($nextid) {
 	game_updateattempts_maxgrade( $game, $attempt, 1, 0);
     $sec = '';
     if( !isset( $cm))
-        $cm = get_coursemodule_from_id('game', $game->id);
+    {
+        $cm = get_coursemodule_from_instance('game', $game->id, $game->course);
+    }
     if ($section = $DB->get_record('course_sections', array( 'id' => $cm->section))) {
         $sec = $section->section;
     }
@@ -140,7 +144,7 @@ if ($nextid) {
 	if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
 		print_error("Course Module ID was incorrect id=$id");
 	}	
-    $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="../../course/attempt.php?id='.$cm->course.'"><img src="'.$OUTPUT->pix_url('bookquiz/nav_exit', 'mod_game').'" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';
+    $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="attempt.php?id='.$id.'&chapterid='.$lastid.'><img src="'.$OUTPUT->pix_url('bookquiz/nav_exit', 'mod_game').'" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';
 }
 
 require( 'toc.php');
@@ -188,7 +192,9 @@ $tocwidth = '10%';
               $content .= '<p class="book_chapter_title">'.$currtitle.'<br />'.$currsubtitle.'</p>';
           }
         }
-        $content .= $chapter->content;
+        $cmbook = get_coursemodule_from_instance( 'book', $game->bookid, $game->course);
+        $modcontext = game_get_context_module_instance( $cmbook->id);
+        $content .= game_filterbook( $chapter->content, $chapter->id, $modcontext->id, $game->course);
 
         $nocleanoption = new object();
         $nocleanoption->noclean = true;
@@ -196,7 +202,7 @@ $tocwidth = '10%';
 		if( $nextbutton != ''){
 			echo $nextbutton;
 		}
-        echo format_text($content, FORMAT_HTML, $nocleanoption, $id);
+        echo format_text($content, FORMAT_HTML, $nocleanoption);
 		if( $nextbutton != ''){
 			echo $nextbutton;
 		}
@@ -221,7 +227,13 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz)
 {
     global $DB;
 
+    if( $game->bookid == 0)
+    {
+		print_error( 'Not defined a book on this game');
+    }
+
 	$pagenum = $DB->get_field( 'book_chapters', 'min(pagenum) as p', array('bookid' => $game->bookid));
+
 	if( $pagenum){
 		$bookquiz->lastchapterid = $DB->get_field( 'book_chapters', 'id', array('bookid' => $game->bookid, 'pagenum' => $pagenum));
 		

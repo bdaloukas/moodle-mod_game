@@ -630,7 +630,7 @@ class Cross
         if( $game->glossaryid)
         {
             $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
-            $contextglossary = get_context_instance(CONTEXT_MODULE, $cmglossary->id);
+            $contextglossary = game_get_context_module_instance( $cmglossary->id);
         }
 		foreach ($crossd as $rec)
 		{

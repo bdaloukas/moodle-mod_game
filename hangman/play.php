@@ -302,7 +302,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$word_line, &$word_
     }else
     {
         $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
-        $contextglossary = get_context_instance(CONTEXT_MODULE, $cmglossary->id);        
+        $contextglossary = game_get_context_module_instance( $cmglossary->id);    
         $query->questiontext = game_filterglossary(str_replace( '\"', '"', $query->questiontext), $query->glossaryentryid, $contextglossary->id, $game->course);
     }
 		

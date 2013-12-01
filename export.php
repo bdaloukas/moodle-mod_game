@@ -14,7 +14,7 @@ require_once ($CFG->dirroot.'/lib/formslib.php');
 require( 'locallib.php');
 require( 'headergame.php');
 
-    $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $context = game_get_context_module_instance( $cm->id);
     if (!has_capability('mod/game:viewreports', $context))
         return;
 
@@ -44,18 +44,22 @@ class mod_game_exporthtml_form extends moodleform {
     //filename
         $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), array('size'=>'30'));
         $mform->setDefault('filename',$html->filename);
+        $mform->setType('filename', PARAM_TEXT);
 
     //html title
         $mform->addElement('text', 'title', get_string('html_title', 'game'), array('size'=>'80'));
         $mform->setDefault('title',$html->title);
+        $mform->setType('title', PARAM_TEXT);
 
     //fields for hangman
         if( $game->gamekind == 'hangman')
         {
             $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), array('size'=>'5'));
             $mform->setDefault('maxpicturewidth',$html->maxpicturewidth);
+            $mform->setType('maxpicturewidth', PARAM_INT);
             $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), array('size'=>'5'));
             $mform->setDefault('maxpictureheight',$html->maxpictureheight);
+            $mform->setType('maxpictureheight', PARAM_INT);
         }
        
     //fiels for cross
@@ -68,7 +72,9 @@ class mod_game_exporthtml_form extends moodleform {
         }
 
         $mform->addElement('hidden', 'q', $game->id);
+        $mform->setType('q', PARAM_INT);
         $mform->addElement('hidden', 'target', 'html');
+        $mform->setType('target', PARAM_TEXT);
 
 //-------------------------------------------------------------------------------
         $mform->addElement('submit', 'submitbutton', get_string( 'export', 'game'));
@@ -138,25 +144,36 @@ class mod_game_exportjavame_form extends moodleform {
     //filename
         $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), array('size'=>'30'));
         $mform->setDefault('filename',$javame->filename);
+        $mform->setType('filename', PARAM_TEXT);
         $mform->addElement('text', 'icon', get_string('javame_icon', 'game'));
         $mform->setDefault('icon',$javame->icon);
+        $mform->setType('icon', PARAM_TEXT);  
         $mform->addElement('text', 'createdby', get_string('javame_createdby', 'game'));
         $mform->setDefault('createdby',$javame->createdby);
+        $mform->setType('createdby', PARAM_TEXT);
         $mform->addElement('text', 'vendor', get_string('javame_vendor', 'game'));
         $mform->setDefault('vendor',$javame->vendor);
+        $mform->setType('vendor', PARAM_TEXT);
         $mform->addElement('text', 'name', get_string('javame_name', 'game'), array('size'=>'80'));
         $mform->setDefault('name',$javame->name);
+        $mform->setType('name', PARAM_TEXT);
         $mform->addElement('text', 'description', get_string('javame_description', 'game'), array('size'=>'80'));
         $mform->setDefault('description',$javame->description);
+        $mform->setType('description', PARAM_TEXT);
         $mform->addElement('text', 'version', get_string('javame_version', 'game'), array('size'=>'10'));
         $mform->setDefault('version',$javame->version);
+        $mform->setType('version', PARAM_TEXT);
         $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), array('size'=>'5'));
         $mform->setDefault('maxpicturewidth',$javame->maxpicturewidth);
+        $mform->setType('maxpicturewidth', PARAM_INT);
         $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), array('size'=>'5'));
         $mform->setDefault('maxpictureheight',$javame->maxpictureheight);
+        $mform->setType('maxpictureheight', PARAM_INT);
     
         $mform->addElement('hidden', 'q', $game->id);
+        $mform->setType('q', PARAM_INT);
         $mform->addElement('hidden', 'target', 'javame');
+        $mform->setType('target', PARAM_TEXT);
 
 //-------------------------------------------------------------------------------
         $mform->addElement('submit', 'submitbutton', get_string( 'export', 'game'));

@@ -176,7 +176,8 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aAnswer, 
         $bTR = true;
         break;
       case 12:
-        $question = game_filterquestion($question, $query->questionid, $context->id, $game->course);
+        //$question = game_filterquestion($question, $query->questionid, $context->id, $game->course);
+        $question = game_show_query( $game, $query, $question, $context);
         echo "<tr>";
         echo "<td rowspan=12 colspan=2 valign=top style=\"$styletext\">$question</td>\r\n";
         $bTR = true;

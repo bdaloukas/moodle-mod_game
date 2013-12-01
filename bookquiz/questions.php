@@ -8,7 +8,7 @@
  **/
 
     require_once("../../../config.php");
-	require_once( "../header.php");
+	require_once( "../headergame.php");
     require_once("../locallib.php");
 
 	$attempt = game_getattempt( $game, $detail);
@@ -21,7 +21,7 @@
 		$ids = explode( ',', $form->ids);
 		game_bookquiz_save( $game->id, $game->bookid, $ids, $form);
 		
-		redirect("{$CFG->wwwroot}/mod/game/bookquiz/questions.php?id=$cm->id", '', 0);
+		//redirect("{$CFG->wwwroot}/mod/game/bookquiz/questions.php?id=$cm->id", '', 0);
     }
 
     /// Print upload form
@@ -36,7 +36,7 @@
 		}
 	}
 
-    $context = get_context_instance(50, $COURSE->id);
+    $context = game_get_context_course_instance( $COURSE->id);
     $select = " contextid in ($context->id)";
 
 	$a = array();
@@ -160,7 +160,7 @@ function game_bookquiz_save( $gameid, $bookid, $ids, $form)
 			}
 		}else
 		{
-			unset( $updrec);
+			$updrec = new StdClass;
 			$updrec->id = $recids[ $chapterid];
 			$updrec->questioncategoryid = $categoryid;
 			if (($DB->update_record( 'game_bookquiz_questions', $updrec)) == false) {
