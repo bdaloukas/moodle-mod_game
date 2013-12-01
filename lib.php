@@ -1010,8 +1010,9 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
     {
         $questionid = $args[ 0];
         $file = $args[ 1];
-        
-        if (!$contextcourse = get_context_instance(CONTEXT_COURSE, $course->id)) {
+        $a = explode( '/', $context->path);
+        $courseid = $a[ 2];
+        if (!$contextcourse = get_context_instance(CONTEXT_COURSE, $courseid)) {
             print_error('nocontext');
         }
         $a = array( 'component' => 'question', 'filearea' => 'questiontext', 

@@ -260,14 +260,14 @@ function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpict
     //Grade
 	echo "<br/>".get_string( 'grade', 'game').' : '.round( $attempt->score * 100).' %';
        
-    game_hiddenpicture_showquestion_glossary( $id, $query);
+    game_hiddenpicture_showquestion_glossary( $game, $id, $query);
     
     $cells = substr( $cells, 1);
     $foundcells = substr( $foundcells, 1);
     game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, true);
 }
 
-function game_hiddenpicture_showquestion_glossary( $id, $query)
+function game_hiddenpicture_showquestion_glossary( $game, $id, $query)
 {
 	global $CFG, $DB;
 	
@@ -286,7 +286,10 @@ function game_hiddenpicture_showquestion_glossary( $id, $query)
     // Add a hidden field with glossaryentryid
     echo '<input type="hidden" name="glossaryentryid" value="'.$query->glossaryentryid."\" />\n";
 
-    echo game_filtertext( $entry->definition, 0).'<br>';
+    $temp = $game->glossaryid;
+        $game->glossaryid = $game->glossaryid2;
+        echo game_show_query( $game, $query, $entry->definition);
+    $game->glossaryid = $temp;
     
     echo get_string( 'answer').': ';
 	echo "<input type=\"text\" name=\"answer\" size=30 /><br>";
@@ -363,7 +366,7 @@ function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpict
     return true;
 }
 
-function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenpicture, $finishattempt)
+function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenpicture, $finishattempt, $context)
 {
     global $QTYPES, $CFG, $DB;
 
@@ -480,3 +483,4 @@ function game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, $u
         echo "</MAP>";    
     }
 }
+

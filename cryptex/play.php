@@ -266,15 +266,15 @@ width:	240pt;
 			}	
 		}
 		
-        $question = "$i. ".$q->questiontext;
-        $question = game_filterquestion(str_replace( array( "\'", '\"'), array( "'", '"'), $question), $q->questionid, $context->id, $game->course);
+        $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
         $question2 = strip_tags($question); //ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question
+
 		if( ($onlyshow == false) and ($showsolution == false)){
 			if( ($game->param8 == 0) || ($game->param8 > $q->tries))
 				$question .= ' &nbsp;<input type="submit" value="'.get_string( 'answer').'" onclick="OnCheck( '.$q->id.',\''.$question2.'\');" />';
 		}
+        echo $question;
 
-		echo $question;
 		if( $showsolution){
 			echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
 		}
