@@ -51,7 +51,7 @@ function AppendSudokuB()
   
 	for( $i=1; $i <= $count; $i++)
 	{
-		set_time_limit( 30);
+		//set_time_limit( 30);
 		Create( $si, $sp, $level);
   
 		$newrec->data = PackSudoku( $si, $sp);
@@ -104,7 +104,7 @@ function create( &$si, &$sp, $level=1)
 {
 	for( $i=1; $i <= 40; $i++)
 	{
-		set_time_limit( 30);
+		//set_time_limit( 30);
 		$sp = new Sudoku() ;
 		$theInitialPosition = $sp->generatePuzzle( 10, 50, $level) ;
 		if( count( $theInitialPosition)){
