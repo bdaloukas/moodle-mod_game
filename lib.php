@@ -928,6 +928,8 @@ function game_extend_settings_navigation($settings, $gamenode) {
 function game_get_types(){
     global $DB;
 
+    $config = get_config('game');
+
     $types = array();
 
     $type = new object();
@@ -936,54 +938,110 @@ function game_get_types(){
     $type->typestr = '--'.get_string( 'modulenameplural', 'game');
     $types[] = $type;
 
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=hangman";
-    $type->typestr = get_string('game_hangman', 'game');
-    $types[] = $type;
-
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=cross";
-    $type->typestr = get_string('game_cross', 'game');
-    $types[] = $type;
-    
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=cryptex";
-    $type->typestr = get_string('game_cryptex', 'game');
-    $types[] = $type;
-    
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=millionaire";
-    $type->typestr = get_string('game_millionaire', 'game');
-    $types[] = $type;
-    
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=sudoku";
-    $type->typestr = get_string('game_sudoku', 'game');
-    $types[] = $type;
-   
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=snakes";
-    $type->typestr = get_string('game_snakes', 'game');
-    $types[] = $type;
-
-    $type = new object();
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game&amp;type=hiddenpicture";
-    $type->typestr = get_string('game_hiddenpicture', 'game');
-    $types[] = $type;
-
-    if($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id')){
+    if( isset( $config->hidehangman))
+        $hide = ($config->hidehangman != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
         $type = new object();
         $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=bookquiz";
-        $type->typestr = get_string('game_bookquiz', 'game');
+        $type->type = "game&amp;type=hangman";
+        $type->typestr = get_string('game_hangman', 'game');
         $types[] = $type;
+    }
+
+    if( isset( $config->hidecross))
+        $hide = ($config->hidecross != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=cross";
+        $type->typestr = get_string('game_cross', 'game');
+        $types[] = $type;
+    }
+    
+    if( isset( $config->hidecryptex))
+        $hide = ($config->hidecryptex != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=cryptex";
+        $type->typestr = get_string('game_cryptex', 'game');
+        $types[] = $type;
+    }
+    
+    if( isset( $config->hidemillionaire))
+        $hide = ($config->hidemillionaire != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=millionaire";
+        $type->typestr = get_string('game_millionaire', 'game');
+        $types[] = $type;
+    }
+    
+    if( isset( $config->hidesudoku))
+        $hide = ($config->hidesudoku != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=sudoku";
+        $type->typestr = get_string('game_sudoku', 'game');
+        $types[] = $type;
+    }
+
+    if( isset( $config->hidesnakes))
+        $hide = ($config->hidesnakes != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=snakes";
+        $type->typestr = get_string('game_snakes', 'game');
+        $types[] = $type;
+    }
+
+    if( isset( $config->hidehiddenpicture))
+        $hide = ($config->hidehiddenpicture != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        $type = new object();
+        $type->modclass = MOD_CLASS_ACTIVITY;
+        $type->type = "game&amp;type=hiddenpicture";
+        $type->typestr = get_string('game_hiddenpicture', 'game');
+        $types[] = $type;
+    }
+
+    if( isset( $config->hidebookquiz))
+        $hide = ($config->hidebookquiz != 0);
+    else
+        $hide = false;
+    if( $hide == false)
+    { 
+        if($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id')){
+            $type = new object();
+            $type->modclass = MOD_CLASS_ACTIVITY;
+            $type->type = "game&amp;type=bookquiz";
+            $type->typestr = get_string('game_bookquiz', 'game');
+            $types[] = $type;
+        }
     }
 
     $type = new object();
@@ -993,7 +1051,6 @@ function game_get_types(){
     $types[] = $type;
 
     return $types;
-
 }
 
 function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload)
