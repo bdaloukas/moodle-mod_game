@@ -270,7 +270,7 @@ function game_question_selectrandom( $game, $table, $select, $id_fields='id', $u
             $questionid = $id;
         
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $questionid, 'glossaryentryid' => $glossaryentryid);
-        if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions r')) != false){
+        if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions AS r')) != false){
             if( ($rec->r < $min_num) or ($min_num == 0)){
                 $min_num = $rec->r;
                 $min_id = $id;
@@ -295,7 +295,7 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
     global $DB;
 
     $a = array( 'gameid' => $gameid, 'userid' => $userid, 'questionid' => $questionid, 'glossaryentryid' => $glossaryentryid);
-    if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions r')) != false){
+    if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions AS r')) != false){
         $updrec = new stdClass();
         $updrec->id = $rec->id;
         $updrec->repetitions = $rec->r + 1;
@@ -1480,7 +1480,7 @@ function game_select_from_repetitions( $game, $recs, $need){
     foreach( $recs as $rec){
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
         $id = $rec->$field;
-        if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions r')) != false){
+        if( ($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions AS r')) != false){
             $reps[ $id] = $rec->r;
         }else
         {

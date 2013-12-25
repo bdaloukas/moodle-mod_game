@@ -170,7 +170,7 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query)
     $query = new stdClass();
     foreach( $recs as $rec){
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
-        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false){
+        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false){
             if( ($rec2->r < $min_num) or ($min_num == 0)){
                 $min_num = $rec2->r;
                 $query->glossaryentryid = $rec->glossaryentryid;

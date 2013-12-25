@@ -55,7 +55,7 @@ function game_cross_new( $game, $attemptid, &$crossm)
 		$infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
 
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
-        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false){
+        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false){
             $reps[ $rec->answertext] = $rec2->r;
         }
 	}
