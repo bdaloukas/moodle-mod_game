@@ -1268,3 +1268,22 @@ function game_get_completion_state($course, $cm, $userid, $type) {
     return $grade && $grade->score > 0;
 }
 
+/**
+ * Checks if scale is being used by any instance of Game
+ *
+ * This is used to find out if scale used anywhere
+ *
+ * @global object
+ * @param int $scaleid
+ * @return boolean True if the scale is used by any Game
+ */
+function game_scale_used_anywhere($scaleid) {
+    global $DB;
+
+    if ($scaleid and $DB->record_exists('game', array('grade'=>-$scaleid))) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
