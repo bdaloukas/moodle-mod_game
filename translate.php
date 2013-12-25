@@ -166,6 +166,9 @@ sort( $strings);
 foreach( $langname as $lang => $name)
 {
     $strings_lang = readlangfile( $lang, $header);
+    if (empty($string_lang)) {
+        continue;
+    }
     $ret = '';
     
     foreach( $strings_lang as $key => $value)
@@ -230,6 +233,9 @@ function readlangfile( $lang, &$header)
     global $CFG;
 
     $file = $CFG->dirroot.'/mod/game/lang/'.$lang.'/game.php';
+    if (!is_file($file)) {
+        return null;
+    }
 
     $a = array();
 
@@ -289,7 +295,7 @@ function readsourcecode( $file, &$strings)
     $lines = file( $file);
     foreach( $lines as $line)
     {
-        parseline( &$strings, $line, $file);
+        parseline( $strings, $line, $file);
     }
 
     return $strings;

@@ -574,7 +574,8 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
         //correct answer
         $select = "attemptid=$attempt->id";
         $select .= " AND glossaryentryid=$entry->id AND col>0";
-            
+        $select .= " AND questiontext is null"; // check the student guesses not source glossary entry.
+           
 		$query = new stdClass();
         if( ($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0){
 			echo "not found $select<br>";

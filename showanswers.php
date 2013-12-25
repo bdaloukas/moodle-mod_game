@@ -109,7 +109,7 @@ function game_showusers($game)
 function game_showanswers( $game, $existsbook, $context)
 {
     if( $game->gamekind == 'bookquiz' and $existsbook){
-        game_showanswers_bookquiz( $game);
+        game_showanswers_bookquiz( $game, $context);
         return;
     }
     
@@ -398,7 +398,7 @@ function game_showanswers_glossary( $game)
     echo "</table><br>\r\n\r\n";
 }
 
-function game_showanswers_bookquiz( $game)
+function game_showanswers_bookquiz( $game, $context)
 {
     global $CFG;
     
@@ -407,5 +407,6 @@ function game_showanswers_bookquiz( $game)
 			  " AND bc.id = gbq.chapterid";
 	$table = "{question} q,{game_bookquiz_questions} gbq,{book_chapters} bc";
 	
-    game_showanswers_question_select( $game, $table, $select, "DISTINCT q.*", "bc.pagenum,questiontext");
+    $showcategories = ($game->gamekind == 'bookquiz');
+    game_showanswers_question_select( $game, $table, $select, "DISTINCT q.*", "bc.pagenum,questiontext", $showcategories, $game->course, $context);
 }

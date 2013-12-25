@@ -33,7 +33,7 @@
     {
         require( "cross/play.php");
 
-        $attempt = game_getattempt( $game, &$crossrec); 
+        $attempt = game_getattempt( $game, $crossrec); 
         
         $g = '';
         $onlyshow = true;
