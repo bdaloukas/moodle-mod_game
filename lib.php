@@ -913,7 +913,7 @@ function game_extend_settings_navigation($settings, $gamenode) {
         case 'snakes':        
         case 'cross':
         case 'millionaire':
-            $url = new moodle_url('/mod/game/export.php', array( 'id' => $game->id,'courseid'=>$courseid, 'target' => 'html'));
+            $url = new moodle_url('/mod/game/export.php', array( 'q' => $game->id,'courseid'=>$courseid, 'target' => 'html'));
             $gamenode->add(get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING, null, null, new pix_icon('i/item', ''));
             break;
         }
