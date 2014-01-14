@@ -300,7 +300,7 @@
         file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $output_string);
         
         //Copy the standard pictures of Millionaire
-        $src = $CFG->dirroot.'/mod/game/millionaire/1';
+        $src = $CFG->dirroot.'/mod/game/pix/millionaire/1';
         $handle = opendir( $src);
         while (false!==($item = readdir($handle))) {
             if($item != '.' && $item != '..') {

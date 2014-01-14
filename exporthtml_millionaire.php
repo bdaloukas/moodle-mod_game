@@ -175,7 +175,7 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
 	    if( flag5050)
 	        return;
 	        
-        document.getElementById( "Help5050").src = "5050x.gif";
+        document.getElementById( "Help5050").src = "5050x.png";
         flag5050 = 1;
         
         for(pos = posCorrect;pos == posCorrect;pos = 1+Math.floor(Math.random()*countQuestions));
@@ -195,7 +195,7 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
 	    if( flagTelephone)
 	        return;
 	    flagTelephone = 1;
-        document.getElementById( "HelpTelephone").src = "telephonex.gif";
+        document.getElementById( "HelpTelephone").src = "telephonex.png";
 	    
 		if( countQuestions < 2){
 			wrong = posCorrect;
@@ -224,7 +224,7 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
         if( flagPeople)
 	        return;
 	    flagPeople = 1;
-        document.getElementById( "HelpPeople").src = "peoplex.gif";
+        document.getElementById( "HelpPeople").src = "peoplex.png";
         
         sum = 0;
         var aPercent = new Array();
@@ -279,9 +279,9 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
         flagTelephone = 0;
         flagPeople = 0;
         
-        document.getElementById( "Help5050").src = "5050.gif";
-        document.getElementById( "HelpPeople").src = "people.gif";
-        document.getElementById( "HelpTelephone").src = "telephone.gif";
+        document.getElementById( "Help5050").src = "5050.png";
+        document.getElementById( "HelpPeople").src = "people.png";
+        document.getElementById( "HelpTelephone").src = "telephone.png";
 
 	    document.getElementById( "info").innerHTML = "";
 	    UpdateLevel( 1);
@@ -425,10 +425,10 @@ var Base64 = {
 
 <tr height=10%>
 <td style='background:#408080' rowspan=3 colspan=2>
-<input type="image"  name="Help5050" id="Help5050" Title="50 50" src="5050.gif" alt="" border="0" onmousedown=OnHelp5050();>&nbsp;
-<input type="image" name="HelpTelephone"  id="HelpTelephone" Title="<?php echo get_string( 'millionaire_telephone', 'game');?>" src="telephone.gif" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;
-<input type="image" name="HelpPeople"  id="HelpPeople" Title="<?php echo get_string( 'millionaire_helppeople', 'game');?>" src="people.gif" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;
-<input type="image" name="Quit" id="Quit" Title="<?php echo get_string( 'millionaire_quit', 'game');?>" src="x.gif" alt="" border="0" onmousedown=OnQuit();>&nbsp;
+<input type="image"  name="Help5050" id="Help5050" Title="50 50" src="5050.png" alt="" border="0" onmousedown=OnHelp5050();>&nbsp;
+<input type="image" name="HelpTelephone"  id="HelpTelephone" Title="<?php echo get_string( 'millionaire_telephone', 'game');?>" src="telephone.png" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;
+<input type="image" name="HelpPeople"  id="HelpPeople" Title="<?php echo get_string( 'millionaire_helppeople', 'game');?>" src="people.png" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;
+<input type="image" name="Quit" id="Quit" Title="<?php echo get_string( 'millionaire_quit', 'game');?>" src="x.png" alt="" border="0" onmousedown=OnQuit();>&nbsp;
 </td>
 <td rowspan=<?php echo 16+$maxquestions;?> style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td id="levela15" align=right>15</td>
