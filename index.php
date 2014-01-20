@@ -30,7 +30,7 @@
 
 /// Print the header
 $PAGE->set_url('/mod/game/index.php', array('id'=>$id));
-$coursecontext = get_context_instance(CONTEXT_COURSE, $id);
+$coursecontext = game_get_context_course_instance( $id);
 $PAGE->set_pagelayout('incourse');
 
 add_to_log($course->id, "game", "view all", "index.php?id=$course->id", "");
@@ -57,6 +57,8 @@ echo $OUTPUT->header();
     $strname  = get_string("name");
     $strweek  = get_string("week");
     $strtopic  = get_string("topic");
+
+    $table = new html_table();
 
     if ($course->format == "weeks") {
         $table->head  = array ($strweek, $strname);
@@ -87,7 +89,7 @@ echo $OUTPUT->header();
 
     echo "<br />";
 
-    print_table($table);
+    echo html_writer::table($table);
 
 /// Finish the page
 

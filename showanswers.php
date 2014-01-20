@@ -342,7 +342,7 @@ function game_showanswers_glossary( $game)
         return;
     }
 
-    //Show repetiotions of questions
+    //Show repetitions of questions
     $table = "{glossary_entries} ge, {game_repetitions} gr";
     $select = "glossaryid={$game->glossaryid} AND gr.glossaryentryid=ge.id AND gr.gameid=".$game->id;
     $userid = optional_param('userid',0,PARAM_INT);
