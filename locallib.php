@@ -2051,7 +2051,8 @@ function game_show_query( $game, $query, $text)
         return game_filterglossary(str_replace( '\"', '"', $text), $query->glossaryentryid, $contextglossary->id, $game->course);
     }else if( $query->questionid)
     {
-        $context = game_get_context_module_instance( $game->id);
+        $cmgame = get_coursemodule_from_instance('game', $game->id, $game->course);
+        $context = game_get_context_module_instance( $cmgame->id);
 	    $text = str_replace( array("\'", '\"'), array("'", '"'), $text);
         return game_filterquestion($text, $query->questionid, $context->id, $game->course);
     }
