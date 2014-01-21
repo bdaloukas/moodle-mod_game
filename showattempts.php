@@ -181,7 +181,7 @@
                     echo ($i+1).' ';
                 }else
                 {
-                    echo "<A HREF=\"{$CFG->wwwroot}/mod/game/preview.php?action=showattempts&amp;update=$update&amp;q={$game->id}&amp;limitfrom=$i&\">".($i+1)."</a>";
+                    echo "<A HREF=\"{$CFG->wwwroot}/mod/game/showattempts.php?q={$game->id}&amp;limitfrom=$i&\">".($i+1)."</a>";
                     echo ' &nbsp;';
                 }
             }
