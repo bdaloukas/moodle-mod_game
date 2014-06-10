@@ -46,9 +46,13 @@
         $canattempt = true;
     }
     
-
 /// Log this request.
-    add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
+    if( game_use_events())
+    {
+        require( 'classes/event/course_module_viewed.php');
+        \mod_game\event\course_module_viewed::viewed($game, $context)->trigger();
+    }else
+        add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
 
    // Mark as viewed
     $completion=new completion_info($course);
