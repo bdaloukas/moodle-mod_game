@@ -1286,4 +1286,3 @@ function game_scale_used_anywhere($scaleid) {
         return false;
     }
 }
-

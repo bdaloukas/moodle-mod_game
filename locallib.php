@@ -2059,3 +2059,10 @@ function game_show_query( $game, $query, $text)
 
     return $text;
 }
+
+function game_use_events()
+{
+    $version = game_get_moodle_version();
+    
+    return( $version >= '02.06');
+}

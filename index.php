@@ -19,9 +19,6 @@
 
     require_login($course->id);
 
-    add_to_log($course->id, 'game', 'view all', "index.php?id=$course->id", "");
-
-
 /// Get all required strings game
 
     $strgames = get_string( 'modulenameplural', 'game');
@@ -33,7 +30,12 @@ $PAGE->set_url('/mod/game/index.php', array('id'=>$id));
 $coursecontext = game_get_context_course_instance( $id);
 $PAGE->set_pagelayout('incourse');
 
-add_to_log($course->id, "game", "view all", "index.php?id=$course->id", "");
+if( game_use_events())
+{
+    require( 'classes/event/course_module_instance_list_viewed.php');
+    \mod_game\event\course_module_instance_list_viewed::create_from_course($course)->trigger();
+}else
+    add_to_log($course->id, "game", "view all", "index.php?id=$course->id", "");
 
 // Print the header.
 $strgames = get_string("modulenameplural", "game");

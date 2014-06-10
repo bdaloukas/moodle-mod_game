@@ -72,7 +72,12 @@
         //}
 
         /// Log this request.
-        add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
+        if( game_use_events())
+        {
+            require( 'classes/event/game_played.php');
+            \mod_game\event\game_played::played($game, $context)->trigger();
+        }else
+            add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);      
 
         /// Initialize $PAGE, compute blocks
         $PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));

@@ -15,6 +15,13 @@ $string[ 'bookquiz_categories'] = 'Categories';
 $string[ 'bookquiz_chapters'] = 'Chapters';
 $string[ 'bookquiz_numquestions'] = 'Questions';
 
+//classes
+$string[ 'eventgamecreated'] = 'Game created';
+$string[ 'eventgamedeleted'] = 'Game deleted';
+$string[ 'eventgamesupdated'] = 'Game updated';
+$string[ 'eventgameviewed'] = 'Game viewed';
+$string[ 'eventgameplayed'] = 'Game played';
+
 //cross/cross_class.php
 $string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
