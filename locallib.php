@@ -160,9 +160,17 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $use_repetitions)
 		print_error( get_string( 'must_select_quiz', 'game'));
 	}
 
-	$select = "qtype='shortanswer' AND quiz='$game->quizid' ".
+    if( game_get_moodle_version() < '02.07')
+    {
+	    $select = "qtype='shortanswer' AND quiz='$game->quizid' ".
 					" AND qqi.question=q.id";
-	$table = "{question} q,{quiz_question_instances} qqi";
+	    $table = "{question} q,{quiz_question_instances} qqi";
+    }else
+    {
+	    $select = "qtype='shortanswer' AND qs.quizid='$game->quizid' ".
+					" AND qs.questionid=q.id";
+	    $table = "{question} q,{quiz_slots} qs";
+    }
 	$fields = "q.id";
 	
     if( ($id = game_question_selectrandom( $game, $table, $select, $fields, $use_repetitions)) == false)
@@ -337,12 +345,23 @@ function game_questions_selectrandom( $game, $count=1)
 		if( $game->quizid == 0){
 			print_error( get_string( 'must_select_quiz', 'game'));
 		}
-	
-		$table = '{question} q, {quiz_question_instances} qqi';
-		$select = " qqi.quiz=$game->quizid".
-			" AND qqi.question=q.id ".			
-			" AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')".
-			" AND q.hidden=0";
+	    
+        if( game_get_moodle_version() < '02.07')
+        {
+		    $table = '{question} q, {quiz_question_instances} qqi';
+		    $select = " qqi.quiz=$game->quizid".
+			    " AND qqi.question=q.id ".			
+			    " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')".
+			    " AND q.hidden=0";
+        }else
+        {
+
+		    $table = '{question} q, {quiz_slots} qs';
+		    $select = " qs.quizid=$game->quizid".
+			    " AND qs.questionid=q.id ".			
+			    " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')".
+			    " AND q.hidden=0";        
+        }
 //todo 'match'
 		$field = "q.id as id";
 		
@@ -561,14 +580,27 @@ function game_questions_shortanswer_quiz( $game)
         print_error( get_string( 'must_select_quiz', 'game'));
     }	
     		
-	$select = "qtype='shortanswer' AND quiz='$game->quizid' ".
+    if( game_get_moodle_version() < '02.07')
+    {
+	    $select = "qtype='shortanswer' AND quiz='$game->quizid' ".
 					" AND qqi.question=q.id".
 					" AND qa.question=q.id".
 					" AND q.hidden=0";
-	$table = "{question} q,{quiz_question_instances} qqi,{question_answers} qa";
-	$fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
+	    $table = "{question} q,{quiz_question_instances} qqi,{question_answers} qa";
+	    $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
 				   "qa.answer as answertext, q.id as questionid,".
 				   " 0 as glossaryentryid,'' as attachment";
+    }else
+    {
+	    $select = "qtype='shortanswer' AND qs.quizid='$game->quizid' ".
+					" AND qs.questionid=q.id".
+					" AND qa.question=q.id".
+					" AND q.hidden=0";
+	    $table = "{question} q,{quiz_slots} qs,{question_answers} qa";
+	    $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
+				   "qa.answer as answertext, q.id as questionid,".
+				   " 0 as glossaryentryid,'' as attachment";
+    }
 
 	return game_questions_shortanswer_question_fraction( $table, $fields, $select);
 }

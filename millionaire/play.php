@@ -298,10 +298,18 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	if( $game->sourcemodule == 'quiz'){
 		if( $game->quizid == 0){
 			print_error( get_string( 'must_select_quiz', 'game'));
-		}		
-		$select = "qtype='multichoice' AND quiz='$game->quizid' ".
+		}
+        if( game_get_moodle_version() < '02.07')
+        {
+		    $select = "qtype='multichoice' AND quiz='$game->quizid' ".
 						" AND qqi.question=q.id";
-		$table = "{question} q,{quiz_question_instances} qqi";
+		    $table = "{question} q,{quiz_question_instances} qqi";
+        }else
+        {
+		    $select = "qtype='multichoice' AND qs.quizid='$game->quizid' ".
+						" AND qs.questionid=q.id";
+		    $table = "{question} q,{quiz_slots} qs";    
+        }
 	}else
 	{
 		if( $game->questioncategoryid == 0){
