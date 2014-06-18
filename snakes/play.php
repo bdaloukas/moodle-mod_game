@@ -269,7 +269,7 @@ function game_snakes_showquestion_glossary( $id, $snakes, $query, $game)
     echo '<input type="hidden" name="glossaryentryid" value="'.$query->glossaryentryid."\" />\n";
 
     $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
-    $contextglossary = get_context_instance(CONTEXT_MODULE, $cmglossary->id);
+    $contextglossary = game_get_context_module_instance( $cmglossary->id);
     $s = game_filterglossary(str_replace( '\"', '"', $entry->definition), $query->glossaryentryid, $contextglossary->id, $game->course);
     echo $s.'<br>';
     
