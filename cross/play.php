@@ -1068,7 +1068,7 @@ function game_cross_show_welcome0( $game){
 <div id="wordinfo" style="font-size:8pt;color:#808080"> </div>
 <div id="wordclue" class="cluebox"> </div>
 <div style="margin-top:1em;"><input id="wordentry" type="text" size="24"
- style="font-weight: bold; text-transform:uppercase;"
+ style="font-weight: bold; <?  if( $game->param6 == 0) echo 'text-transform:uppercase;';  ?>"
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
 <?php
     if( $game->param3 == 2){

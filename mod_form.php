@@ -241,7 +241,7 @@ class mod_game_mod_form extends moodleform_mod {
             $crosslayoutoptions[1] = get_string('cross_layout1', 'game');
             $mform->addElement('select','param3', get_string('cross_layout', 'game'), $crosslayoutoptions);
             $mform->setType('param5', PARAM_INT);
-            $mform->addElement('selectyesno', 'param5', get_string('cross_showprint','game'));
+            $mform->addElement('selectyesno', 'param6', get_string('cross_disabletransformuppercase','game'));
         }
 
 //---------------------------------------------------------------------------

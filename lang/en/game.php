@@ -34,6 +34,7 @@ $string[ 'cross_errors'] = 'wrong characters';
 $string[ 'cross_found_many'] = 'Found';
 $string[ 'cross_found_one'] = 'Found';
 $string[ 'grade'] = 'Grade';
+$string[ 'cross_disabletransformuppercase'] = 'Disables text-transform:uppercase in CSS';
 
 //cross/play.php
 $string[ 'cross_across'] = 'Across';
