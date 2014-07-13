@@ -290,6 +290,7 @@ $string[ 'startagain'] = 'Start again';
 $string[ 'timetaken'] = 'Time taken';
 
 //settings.php
+$string[ 'hangmanimagesets'] = 'Number of image sets used by hangman';
 $string[ 'hidebookquiz'] = 'Hide the "Book with questions" game';
 $string[ 'hidecross'] = 'Hide the Crossword game';
 $string[ 'hidecryptex'] = 'Hide the Cryptex game';
@@ -298,6 +299,7 @@ $string[ 'hidehiddenpicture'] = 'Hide the "Hidden Picture" game';
 $string[ 'hidemillionaire'] = 'Hide the Millionaire game';
 $string[ 'hidesnakes'] = 'Hide the "Snakes and Ladders" game';
 $string[ 'hidesudoku'] = 'Hide the Sudoku game';
+$string[ 'confighangmanimagesets'] = 'Configs how many set of images are used by hangman';
 $string[ 'confighidebookquiz'] = 'Configs if the "Book with questions" game is shown to teachers or not';
 $string[ 'confighidecross'] = 'Configs if the Crossword game is shown to teachers or not';
 $string[ 'confighidecryptex'] = 'Configs if the Cryptex game is shown to teachers or not';
@@ -306,7 +308,6 @@ $string[ 'confighidehiddenpicture'] = 'Configs if the "Hidden Picture" game is s
 $string[ 'confighidemillionaire'] = 'Configs if the Millionaire game is shown to teachers or not';
 $string[ 'confighidesnakes'] = 'Configs if the "Snakes and Ladders" game is shown to teachers or not';
 $string[ 'confighidesudoku'] = 'Configs if the Sudoku game is shown to teachers or not';
-
 
 //showanswers.php
 $string[ 'clearrepetitions'] = 'Clear statistics';

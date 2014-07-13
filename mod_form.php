@@ -15,6 +15,9 @@ class mod_game_mod_form extends moodleform_mod {
     function definition() {
         global $CFG, $DB, $COURSE;
 
+
+        $config = get_config('game');
+
         $mform =& $this->_form;
         $id = $this->_instance;
 
@@ -210,8 +213,17 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('text', 'param10', get_string( 'hangman_maximum_number_of_errors', 'game'), array('size' => 4));
             $mform->setType('param10', PARAM_INT);
 
-            $a = array( 1 => 1);
-            $mform->addElement('select', 'param3', get_string('hangman_imageset','game'), $a);
+            if( !isset( $config->hangmanimagesets))
+                $number = 1;
+            else
+                $number = $config->hangmanimagesets;
+            if( $number > 1)
+            {            
+                $a = array();
+                for( $i=1; $i <= $number; $i++)
+                    $a[ $i] = $i;
+                $mform->addElement('select', 'param3', get_string('hangman_imageset','game'), $a);
+            }
 
             $mform->addElement('selectyesno', 'param5', get_string('hangman_showquestion', 'game'));
             $mform->setDefault('param5', 1);
