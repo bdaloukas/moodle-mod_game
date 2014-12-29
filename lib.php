@@ -189,60 +189,53 @@ function game_before_add_or_update(&$game) {
 function game_delete_instance($gameid) {
     global $DB;
 
-    $result = true;
-
     # Delete any dependent records here #
 	
-	if( ($recs = $DB->get_records( 'game_attempts', array( 'gameid' => $gameid))) != false){
-	    $ids = '';
-	    $count = 0;
-	    $aids = array();
-		foreach( $recs as $rec){
-		    $ids .= ','.$rec->id;
-		    if( ++$count > 10){
-		        $count = 0;
-		        $aids[] = $ids;
-		        $ids = '';
-		    }
-		}
-		if( $ids != ''){
-    		$aids[] = $ids;
-        }
+    $aids = array();
+    if( ($recs = $DB->get_records( 'game_attempts', array( 'gameid' => $gameid))) != false)
+    {
+        $ids = '';
+	$count = 0;
+	foreach( $recs as $rec)
+	{
+	    $ids .= ( $ids == '' ? $rec->id : ','.$rec->id);
+	    if( ++$count > 10)
+	    {
+		$aids[] = $ids;
+		$count = 0;
+		$ids = '';
+	     }
+	}
+	if( $ids != '')
+    	    $aids[] = $ids;
+     }
         
-		foreach( $aids as $ids){
-		    if( $result == false){
-		        break;
-		    }
-	        $tables = array( 'game_hangman', 'game_cross', 'game_cryptex', 'game_millionaire', 'game_bookquiz', 'game_sudoku', 'game_snakes');
-	        foreach( $tables as $t){
-	            $sql = "DELETE FROM {".$t."} WHERE id IN (".substr( $ids, 1).')';
-		        if (! $DB->execute( $sql)) {
-			        $result = false;
-			        break;
-                }
-            }
-		}
+     foreach( $aids as $ids)
+     {
+	$tables = array( 'game_hangman', 'game_cross', 'game_cryptex', 'game_millionaire', 'game_bookquiz', 'game_sudoku', 'game_snakes');
+	foreach( $tables as $t)	
+	{
+	    $sql = "DELETE FROM {".$t."} WHERE id IN (".$ids.')';
+	    if (! $DB->execute( $sql)) 
+		return false; 
 	}
-		    
+    }
+		
     $tables = array( 'game_attempts', 'game_grades', 'game_bookquiz_questions', 'game_queries', 'game_repetitions');
-    foreach( $tables as $t){
-        if( $result == false){
-            break;
-        }
-		    
-        if (! $DB->delete_records( $t, array( 'gameid' =>  $gameid))) {
-            $result = false;
-		}
-	}
-	
-	if( $result){
-        $tables = array( 'game_export_javame', 'game_export_html', 'game');
-        if (!$DB->delete_records( 'game', array( 'id' => $gameid))) {
-            $result = false;
-        }
+    foreach( $tables as $t)
+    {
+        if (! $DB->delete_records( $t, array( 'gameid' =>  $gameid))) 
+            return false;
+    }	
+
+    $tables = array( 'game_export_javame', 'game_export_html', 'game');
+    foreach( $tables as $table)
+    {
+        if (!$DB->delete_records( $table, array( 'id' => $gameid))) 
+            return false;
     }
         
-    return $result;
+    return true;
 }
 
 /**

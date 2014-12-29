@@ -80,6 +80,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data = (object)$data;
  
         $data->id = $this->get_new_parentid('game');
+	if( $data->id == 0)
+	    return;
  
         $DB->insert_record('game_export_html', $data);
     }
@@ -90,6 +92,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data = (object)$data;
  
         $data->id = $this->get_new_parentid('game');
+	if( $data->id == 0)
+	   return;
  
         $DB->insert_record('game_export_javame', $data);
     }    
