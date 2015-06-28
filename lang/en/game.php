@@ -334,3 +334,5 @@ $string[ 'gamenotavailable'] = 'The game will not be available until {$a}';
 $string[ 'gameopenedon'] = 'This game opened at {$a}';
 $string[ 'reattemptgame'] = 'Reattempt game';
 $string[ 'yourfinalgradeis'] = 'Your final grade for this game is {$a}.';
+
+$string['game:addinstance'] = 'Add a game activity to a course'; 
