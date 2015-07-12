@@ -253,7 +253,7 @@ width:	240pt;
  style="font-weight: bold; text-transform:uppercase;" autocomplete="off"></div>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
-<td align="right">print
+<td align="right">
 <button id="okbutton" type="submit" class="button" style="font-weight: bold;">OK</button> &nbsp;
 <button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();">Cancel</button>
 </td></tr></table>
