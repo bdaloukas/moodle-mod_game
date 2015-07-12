@@ -127,7 +127,7 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $co
 	game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, true, $onlyshow, $showsolution, $context);
 }
 
-function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updateattempt=false, $onlyshow=false, $showsolution=false, $context)
+function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, $updateattempt=false, $onlyshow=false, $showsolution=false, $context, $print=false, $showhtmlprintbutton=true)
 {
     global $DB;
 
@@ -219,6 +219,11 @@ width:	240pt;
 --></style>
 <?php
 
+	$grade = round( 100 * $gradeattempt);
+	echo get_string( 'grade', 'game').' '.$grade.' %';
+
+	echo '<br>';
+
 	echo '<table border=0>';
 	echo '<tr><td>';
 	$cryptex->displaycryptex( $crossm->cols, $crossm->rows, $cryptexrec->letters, $mask, $showsolution, $textdir);
@@ -239,7 +244,7 @@ width:	240pt;
  style="font-weight: bold; text-transform:uppercase;" autocomplete="off"></div>
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
-<td align="right">
+<td align="right">print
 <button id="okbutton" type="submit" class="button" style="font-weight: bold;">OK</button> &nbsp;
 <button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();">Cancel</button>
 </td></tr></table>
@@ -248,12 +253,37 @@ width:	240pt;
 </tr>
 </table>
 
-
 <?php
-	$grade = round( 100 * $gradeattempt);
-	echo '<br>'.get_string( 'grade', 'game').' '.$grade.' %';
 
-	echo "<br><br>";
+	if( $showhtmlprintbutton){
+        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" onclick="OnPrint();" style="display: block;">'.get_string( 'print', 'game');
+        echo '</button>';	    
+	}
+
+if( $showhtmlprintbutton){
+?>
+<script>
+    function PrintHtmlClick()
+    {
+    	document.getElementById("printbutton").style.display = "none";
+    	
+        window.print();     
+
+    	document.getElementById("printbutton").style.display = "block";	
+    }
+
+function OnPrint()
+{
+<?php
+    global $CFG; 
+    $params = "id=$id&gameid=$game->id";
+    echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";
+?>
+}
+</script>
+<?php
+}
+
 	$i = 0;
 	$else = '';
 	$contextglossary = false;
@@ -305,7 +335,14 @@ width:	240pt;
 			}
 		</script>
 	<?php
+
+    if( $print){
+        echo '<body onload="window.print()">';
+    }else{
+        echo '<body>';
+    }
 }
+
 
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec)
 {
