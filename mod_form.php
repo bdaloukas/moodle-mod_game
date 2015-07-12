@@ -468,11 +468,6 @@ class mod_game_mod_form extends moodleform_mod {
                     $default_values->param5 = 1;
             }
             
-            //repair questioncategoryid
-            $categoryid = $default_values->questioncategoryid;
-            $contextid = $DB->get_field( 'question_categories', 'contextid', array( 'id' => $categoryid));
-            $default_values->questioncategoryid = $categoryid.','.$contextid;            
-
             if( $default_values->gamekind == 'snakes'){
                 if( isset( $default_values->param9)){
                     $a = explode( '#',$default_values->param9);
