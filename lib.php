@@ -1166,7 +1166,7 @@ function game_reset_userdata($data) {
                 if (!$cm = get_coursemodule_from_instance('game', $rec->id)) {
                     continue;
                 }
-                $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+                $context = game_get_context_module_instance( $cm->id);
                 $fs->delete_area_files($context->id, 'mod_game', 'gnakes_file');
                 $fs->delete_area_files($context->id, 'mod_game', 'gnakes_board');
                 
@@ -1277,4 +1277,12 @@ function game_scale_used_anywhere($scaleid) {
     } else {
         return false;
     }
+}
+
+function game_get_context_module_instance( $moduleid)
+{
+    if( class_exists( 'context_module'))
+        return context_module::instance( $moduleid);
+    
+    return get_context_instance( CONTEXT_MODULE, $moduleid);
 }

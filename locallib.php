@@ -2080,14 +2080,6 @@ function game_get_context_course_instance( $courseid)
     return get_context_instance( 50, $courseid);
 }
 
-function game_get_context_module_instance( $moduleid)
-{
-    if( class_exists( 'context_module'))
-        return context_module::instance( $moduleid);
-    
-    return get_context_instance( CONTEXT_MODULE, $moduleid);
-}
-
 function game_show_query( $game, $query, $text)
 {
     if( $game->glossaryid)

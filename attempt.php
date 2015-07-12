@@ -150,7 +150,7 @@
             break;
     	case 'cryptexcheck':	//the user tries to guess a question
     		$attempt = game_getattempt( $game, $detail);
-    		game_cryptex_check( $id, $game, $attempt, $detail, $q, $answer, $context);
+    		game_cryptex_check( $id, $game, $attempt, $detail, $q, $answer, $finishattempt, $context);
             break;
         case 'bookquizcheck':		//the student tries to answer a question
     		$attempt = game_getattempt( $game, $detail);
