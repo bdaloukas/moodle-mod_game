@@ -735,8 +735,12 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 	    	}
 	    	
             // update grade item and send all grades to gradebook
-            game_grade_item_update( $game);
-            game_update_grades( $game);    
+            $grades = new stdClass();
+            $grades->userid = $USER->id;
+            $grades->rawgrade = game_score_to_grade($score, $game);
+            $grades->datesubmitted = time();
+            game_grade_item_update( $game, $grades);
+            game_update_grades( $game, $grades->userid);    
 	    }
 		
 		//Update table game_grades

@@ -208,7 +208,7 @@
             $attemptgrade = game_score_to_grade($attempt->score, $game);
 
             if ($gradecolumn) {
-                if ($attemptoptions->scores && $attempt->timefinish > 0) {
+                if ($attemptoptions->scores) {
                     $formattedgrade = game_format_grade($game, $attemptgrade);
                     // highlight the highest grade if appropriate
                     if ($overallstats && !$attempt->preview && $numattempts > 1 && !is_null($mygrade) &&
