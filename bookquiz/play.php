@@ -343,7 +343,7 @@ function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz, $contex
             continue;
         }
         $grade = $grades[ $question->id];
-        if( $grade->grade < 0.5){
+        if( $grade->grade < 0.99){
             continue;
         }
 

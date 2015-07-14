@@ -2013,17 +2013,23 @@ function game_grade_questions( $questions)
         $id = game_question_get_id_from_name_prefix( $key);
         if( $id === false)
             continue;
-            
-        $grade = new stdClass();
-        $grade->id = $id;
-        $grade->response = $value;
-        $grade->grade = 0;
+                
+        if( array_key_exists( $id, $grades))
+            $grade = $grades[ $id];
+        else
+        {
+            $grade = new stdClass();            
+            $grade->grade = 0;
+            $grade->id = $id;
+        }
+
+        $grade->response = $value;        
         
         $question = $questions[ $id];
         if( $question->qtype == 'multichoice')
         {
             $answer = $question->options->answers[ $value];
-            $grade->grade = $answer->fraction;
+            $grade->grade += $answer->fraction;
         }else if( $question->qtype == 'shortanswer')
         {
             foreach( $question->options->answers as $answerid => $answer)
@@ -2034,7 +2040,7 @@ function game_grade_questions( $questions)
                 }
             }
         }
-            
+
         $grades[ $grade->id] = $grade;
     }
 
