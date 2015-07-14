@@ -524,14 +524,10 @@ function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishatte
         if( ($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0){
 			die( "problem game_sudoku_check_questions (select=$select)");
             continue;
-        }
-
-        $name = "resp{$question->id}_";
-        if( !isset( $responses->$name))
-            continue;        
+        }       
         
         $grade = game_grade_responses( $question, $responses, 100, $answertext);
-        if( $grade < 50){
+        if( $grade < 99){
 			//wrong answer
 			game_update_queries( $game, $attempt, $query, $grade/100, $answertext);
             continue;
