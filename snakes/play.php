@@ -301,7 +301,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context)
         $query->id = $snakes->queryid;
 
         $grade = game_grade_responses( $question, $responses, 100, $answertext);
-        if( $grade < 50){
+        if( $grade < 99){
 			//wrong answer
 			game_update_queries( $game, $attempt, $query, 0, $answertext);
             continue;

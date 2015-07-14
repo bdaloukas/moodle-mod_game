@@ -1539,6 +1539,8 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext)
 {
     if( $question->qtype == 'multichoice')
     {
+        if( $question->category == 8)
+            return game_grade_responses_multianswer( $question, $responses, $maxgrade, $answertext);
         $name = "resp{$question->id}_";
         $value = $responses->$name;
         $answer = $question->options->answers[ $value];
@@ -1560,11 +1562,36 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext)
     }
 }
 
+function game_grade_responses_multianswer( $question, $responses, $maxgrade, &$answertext)
+{
+    $name = "resp{$question->id}_";
+
+    $len = strlen( $name);
+    $fraction = 0;
+    foreach( $responses as $key => $value)
+    {
+        $sub = substr( $key, 0, strlen( $name));
+        if( $sub != $name)
+            continue;
+
+        $name2 = $name.$value;
+        $value2 = $responses->$name2;
+        $answer = $question->options->answers[ $value2];
+        $fraction += $answer->fraction;
+    }
+
+    return $fraction * $maxgrade;
+}
+
 function game_print_question( $game, $question, $context)
 {
     if( $question->qtype == 'multichoice')
-        game_print_question_multichoice( $game, $question, $context);
-    else if( $question->qtype == 'shortanswer')
+    {
+        if( $question->category == 8)
+            game_print_question_multianswer( $game, $question, $context);
+        else
+            game_print_question_multichoice( $game, $question, $context);
+    }else if( $question->qtype == 'shortanswer')
         game_print_question_shortanswer( $game, $question, $context);
 }
 
@@ -1619,6 +1646,59 @@ function game_print_question_multichoice( $game, $question, $context)
 </div>
 <?php
 }
+
+function game_print_question_multianswer( $game, $question, $context)
+{
+    global $CFG;
+
+    $i=0;
+    $questiontext = $question->questiontext;
+    $answerprompt = get_string( 'singleanswer', 'quiz');
+    $feedback = '';
+    $anss = array();
+    foreach( $question->options->answers as $a)
+    {
+        $answer = new stdClass();
+        if( substr( $a->answer, 0, 3) == '<p>' or substr( $a->answer, 0, 3) == '<P>')
+        {
+            $a->answer = substr( $a->answer, 3);
+            $s = rtrim( $a->answer);
+            if( substr( $s, 0, -3) == '<p>' or substr( $s, 0, -3) == '<P>')
+                $a->answer = substr( $a->answer, 0, -3);
+        }
+        $a->answer = game_filterquestion_answer(str_replace( '\"', '"', $a->answer), $a->id, $context->id, $game->course);
+        $answer->control = "<input  id=\"resp{$question->id}_{$a->id}\" name=\"resp{$question->id}_{$a->id}\"  type=\"checkbox\" value=\"{$a->id}\" /> ".$a->answer;
+        $answer->class = 'radio';
+        $answer->id = $a->id;
+        $answer->text = $a->answer;
+        $answer->feedbackimg = '';
+        $answer->feedback = '';
+        $anss[] = $answer;
+    }
+?>
+<div class="qtext">
+    <?php echo game_filterquestion(str_replace( '\"', '"', $questiontext), $question->id, $context->id, $game->course); ?>
+</div>
+
+
+<div class="ablock clearfix">
+    <div class="prompt">
+        <?php echo $answerprompt; ?>
+    </div>
+
+    <table class="answer">
+        <?php $row = 1; foreach ($anss as $answer) { ?>
+        <tr class="<?php echo 'r'.$row = $row ? 0 : 1; ?>">
+            <td>
+                <?php echo $answer->control; ?>
+            </td>
+        </tr>
+        <?php } ?>        
+    </table>
+</div>
+<?php
+}
+
 
 function game_print_question_shortanswer( $game, $question, $context)
 {
