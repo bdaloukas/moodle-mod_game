@@ -51,16 +51,27 @@ function game_get_moodle_version()
 
 function game_upper( $str, $lang='')
 {
-    $str = game_strtoupper( $str);
+    if( $lang == 'user')
+        return $str;
 
+    $str = game_strtoupper( $str);
+/*
     $strings = get_string_manager()->load_component_strings( 'game', ($lang == '' ? 'en' : $lang));
     if( !isset( $strings[ 'convertfrom']))
         return $str;
     if( !isset( $strings[ 'convertto']))
         return $str;
+*/
+    switch( $lang)
+    {  
+    case 'el':
+        $from = 'ΆΈΉΊΌΎΏ';
+        $to = 'ΑΕΗΙΟΥΩ';
+        break;
+    default:
+        return $str;
+    }
 	
-    $from = $strings[ 'convertfrom'];
-    $to = $strings[ 'convertto'];
     $len = game_strlen( $from);
     for($i=0; $i < $len; $i++){
         $str = str_replace( game_substr( $from, $i, 1), game_substr( $to, $i, 1), $str);

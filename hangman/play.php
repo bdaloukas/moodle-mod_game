@@ -52,7 +52,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
         }
 
         $allletters = game_getallletters( $answer2, $game->language);
-		
+
         if( $allletters == ''){
             continue;
         }
