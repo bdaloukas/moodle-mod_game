@@ -304,11 +304,13 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 		    $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id".
 						" AND qqi.question=q.id";
 		    $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
+            $order = '';
         }else
         {
 		    $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id".
 						" AND qs.questionid=q.id";
 		    $table = "{quiz_slots} qs,{question} q, {qtype_multichoice_options} qmo";    
+            $order = 'qs.page,qs.slot';        
         }
 	}else
 	{
@@ -332,7 +334,7 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	if( $game->shuffle or $game->quizid == 0)
 		$questionid = game_question_selectrandom( $game, $table, $select, 'q.id as id', true);
 	else
-		$questionid = game_millionaire_select_serial_question( $game, $table, $select, 'q.id as id', $millionaire->level);
+		$questionid = game_millionaire_select_serial_question( $game, $table, $select, 'q.id as id', $millionaire->level, $order);
 	
 	if( $questionid == 0){
 		print_error( get_string( 'no_questions', 'game'));
@@ -397,28 +399,19 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 	game_update_queries( $game, $attempt, $query, $score, '');
 }
 
-function game_millionaire_select_serial_question( $game, $table, $select, $id_fields="id", $level)
+function game_millionaire_select_serial_question( $game, $table, $select, $id_fields="id", $level, $order)
 {
     global $DB, $USER;
     
-    if( $game->sourcemodule == 'quiz')
-    {
-        $rec = $DB->get_record( 'quiz', array( 'id' => $game->quizid));
-        if( $rec === false)
-            return false;
-
-        $questions = $rec->questions;
-        $questions = explode( ',', $rec->questions);
-        array_pop( $questions);
-    }else
-    {
-        $sql  = "SELECT $id_fields,$id_fields FROM ".$table." WHERE $select ORDER BY q.name";
-    	if( ($recs = $DB->get_records_sql( $sql)) == false)
-            return false;
-        $questions = array();
-        foreach( $recs as $rec)
-            $questions[] = $rec->id;            
-    }
+    $sql  = "SELECT $id_fields,$id_fields FROM ".$table." WHERE $select ";
+    if( $order != '')
+        $sql .= " ORDER BY $order";
+       
+    if( ($recs = $DB->get_records_sql( $sql)) == false)
+        return false;
+    $questions = array();
+    foreach( $recs as $rec)
+        $questions[] = $rec->id;            
          
     $count = count( $questions);
     if( $count == 0)
