@@ -1231,9 +1231,10 @@ function game_get_question_states(&$questions, $cmoptions, $attempt, $lastattemp
 
 function game_sudoku_getquestions( $questionlist)
 {
-    global $DB;
+    global $CFG, $DB;
 
     // Load the questions
+    $sql = "SELECT q.*,qmo.single FROM {$CFG->prefix}question LEFT JOIN {$CFG->prefix}qtype_multichoice_options qmo ON q.id=qmo.questionid AND q.qtype='multichoice' WHERE q.id IN ($questionlist)";
     if (!$questions = $DB->get_records_select( 'question', "id IN ($questionlist)")) {
         print_error( get_string( 'no_questions', 'game'));
     }
@@ -1550,7 +1551,7 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext)
 {
     if( $question->qtype == 'multichoice')
     {
-        if( $question->category == 8)
+        if( $question->options->single == 0)
             return game_grade_responses_multianswer( $question, $responses, $maxgrade, $answertext);
         $name = "resp{$question->id}_";
         $value = $responses->$name;
@@ -1598,7 +1599,7 @@ function game_print_question( $game, $question, $context)
 {
     if( $question->qtype == 'multichoice')
     {
-        if( $question->category == 8)
+        if( $question->options->single == 0)
             game_print_question_multianswer( $game, $question, $context);
         else
             game_print_question_multichoice( $game, $question, $context);

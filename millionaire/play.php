@@ -301,14 +301,14 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
 		}
         if( game_get_moodle_version() < '02.07')
         {
-		    $select = "qtype='multichoice' AND quiz='$game->quizid' ".
-						" AND qqi.question=q.id AND q.category=1";
-		    $table = "{question} q,{quiz_question_instances} qqi";
+		    $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id".
+						" AND qqi.question=q.id";
+		    $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
         }else
         {
-		    $select = "qtype='multichoice' AND qs.quizid='$game->quizid' ".
-						" AND qs.questionid=q.id AND q.category=1";
-		    $table = "{question} q,{quiz_slots} qs";    
+		    $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id".
+						" AND qs.questionid=q.id";
+		    $table = "{quiz_slots} qs,{question} q, {qtype_multichoice_options} qmo";    
         }
 	}else
 	{
@@ -324,9 +324,9 @@ function game_millionaire_SelectQuestion( &$aAnswer, $game, $attempt, &$milliona
                 $select = 'q.category in ('.implode(',', $cats).')';
             }            
         }  						
-		$select .= " AND qtype='multichoice' AND category=1";
+		$select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
 		
-		$table = '{question} q';
+		$table = '{question} q, {qtype_multichoice_options} qmo';
 	}
 	$select .= ' AND hidden=0';
 	if( $game->shuffle or $game->quizid == 0)
