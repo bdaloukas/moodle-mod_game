@@ -51,7 +51,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
             $answer2 = str_replace( '-', '', $answer2);
         }
 
-        $allletters = game_getallletters( $answer2, $game->language);
+        $allletters = game_getallletters( $answer2, $game->language, $game->userlanguage);
 
         if( $allletters == ''){
             continue;

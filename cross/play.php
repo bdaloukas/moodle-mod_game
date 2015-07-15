@@ -457,7 +457,7 @@ function WordEntryKeyPress(event)
 
 // Returns true if the string passed in contains any characters prone to evil.
 function ContainsBadChars(theirWord)
-{
+{return false;
 	for (var i = 0; i < theirWord.length; i++)
 		if (BadChars.indexOf(theirWord.charAt(i)) >= 0) return true;
 	return false;
@@ -693,7 +693,7 @@ function PackPuzzle( sData)
     s = s2.concat( s.substr( j));
   }
 
-  return s;
+  return encodeURIComponent( s);
 }
 
 // Called when the "check server" link is clicked.
@@ -735,7 +735,7 @@ function CheckServerClick( endofgame)
 		}
 		sData += UserEntry;
 	}
-		
+
 	sData = PackPuzzle( sData);
 	
 	if( endofgame)

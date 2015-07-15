@@ -241,6 +241,7 @@ $string[ 'hangman_showcorrectanswer'] = 'Show the correct answer after the end';
 $string[ 'hangman_showfirst'] = 'Show first letter of hangman';
 $string[ 'hangman_showlast'] = 'Show last letter of hangman';
 $string[ 'hangman_showquestion'] = 'Show the questions ?';
+$string[ 'language_user_defined'] = 'User defined language';
 $string[ 'hiddenpicture_across'] = 'Cells horizontal';
 $string[ 'hiddenpicture_down'] = 'Cells down';
 $string[ 'hiddenpicture_height'] = 'Set height of picture to (in pixels)';

@@ -508,25 +508,34 @@ function game_detectlanguage( $word){
 
 //The words maybe are in two languages e.g. greek or english
 //so I try to find the correct one.
-function game_getallletters( $word, $lang='')
+function game_getallletters( $word, $lang='', $userlanguage='')
 {
     for(;;)
     {
-        $strings = get_string_manager()->load_component_strings( 'game', ($lang == '' ? 'en' : $lang));
-        if( isset( $strings[ 'lettersall']))
+        if( $lang == 'user')
         {
-            $letters = $strings[ 'lettersall'];
-            $word2 = game_upper( $word, $lang);
-            if( hangman_existall( $word2, $letters))
+            $letters = $userlanguage;
+            if( hangman_existall( $word, $letters))
                 return $letters;
+            else
+                return '';
+        }else
+        {
+            $strings = get_string_manager()->load_component_strings( 'game', ($lang == '' ? 'en' : $lang));
+            if( isset( $strings[ 'lettersall']))
+            {
+                $letters = $strings[ 'lettersall'];
+                $word2 = game_upper( $word, $lang);
+                if( hangman_existall( $word2, $letters))
+                    return $letters;
+            }
+
+            if( $lang == '')
+                break;
+            else
+                $lang = '';   
         }
-
-        if( $lang == '')
-            break;
-        else
-            $lang = '';   
     }
-
     
     return '';
 }
