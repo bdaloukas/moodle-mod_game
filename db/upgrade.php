@@ -1492,6 +1492,17 @@ function xmldb_game_upgrade($oldversion) {
         // game savepoint reached
         upgrade_mod_savepoint(true, 2013072601, 'game');
     }         
+
+    if( $oldversion < 2015122105)
+    {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('userlanguage', XMLDB_TYPE_CHAR, '100');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2015122105, 'game');
+    }
     
     return true;
 }
