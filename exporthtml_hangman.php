@@ -1,4 +1,19 @@
-<?php  // $Id: exporthtml_hangman.php,v 1.10 2012/07/25 11:16:03 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This page export the game hangman to html
  * 
@@ -10,91 +25,102 @@
 ?>
 <script type="text/javascript">
 
-// Hangman for Moodle by Vasilis Daloukas
+// Hangman for Moodle by Vasilis Daloukas.
 // The script is based on HangMan II script- By Chris Fortey (http://www.c-g-f.net/)
 
 var can_play = true;
 <?php
-        $destdir = game_export_createtempdir();
 
-        $export_attachment = ( $html->type == 'hangmanp');
-        $map = game_exmportjavame_getanswers( $game, $context, $export_attachment, $destdir, $files);
-        if( $map == false){
-           print_error( 'No Questions');
-        }
-        
-        $questions = '';
-        $words = '';
-        $lang = '';
-        $allletters = '';
-        $images = '';
-        foreach( $map as $line)
-        {
-            $answer = game_upper( $line->answer);
-            if( $game->param7){
-                //Have to delete space
-                $answer = str_replace(' ', '', $answer);
-            }
-            if( $game->param8){
-                //Have to delete -
-                $answer = str_replace('-', '', $answer);
-            }                    
-            
-            if( $lang == ''){
-                $lang = $game->language;
-                
-                if( $lang == '')
-                    $lang = game_detectlanguage( $answer);
-                if( $lang == '')
-                    $lang = current_language();
-                $allletters = game_getallletters( $answer, $lang);
-            }  
+$destdir = game_export_createtempdir();
 
-            if( game_getallletters( $answer, $lang) != $allletters)
-                continue;
-            
-            if( $html->type == 'hangmanp'){
-                $file = $line->attachment;
-                $pos = strrpos( $file, '.');
-                if( $pos == false)
-                    continue;
-            }
-            
-            if( $html->type == 'hangmanp'){
-                $src = $line->attachment;
-                $pos = strrpos( $file, '.');
-                if( $pos == false)
-                    continue;
-            }
-            
-            if( $questions != '')
-                $questions .= ', ';
-            if( $words != '')
-                $words .= ', ';
-            $questions .= '"'.base64_encode( $line->question).'"';
-            $words .= '"'.base64_encode( $line->answer).'"';            
-            
-            if( $html->type == 'hangmanp'){
-                $file = $line->id.substr( $file, $pos);
-                game_export_javame_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth, $html->maxpictureheight);
-                
-                if( $images != '')
-                    $images .= ', ';
-                $images .= '"'.$file.'"';
-            }
-        }
+$exportattachment = ( $html->type == 'hangmanp');
+$map = game_exmportjavame_getanswers( $game, $context, $exportattachment, $destdir, $files);
+if ($map == false) {
+    print_error( 'No Questions');
+}
 
-        if($game->param7){
-            $allletters .= '_';
-        }        
-        if($game->param8){
-            $allletters .= '-';
+$questions = '';
+$words = '';
+$lang = '';
+$allletters = '';
+$images = '';
+foreach ($map as $line) {
+    $answer = game_upper( $line->answer);
+    if ($game->param7) {
+        // Have to delete space.
+        $answer = str_replace(' ', '', $answer);
+    }
+    if ($game->param8) {
+        // Have to deletε -.
+        $answer = str_replace('-', '', $answer);
+    }
+
+    if ($lang == '') {
+        $lang = $game->language;
+
+        if ($lang == '') {
+            $lang = game_detectlanguage( $answer);
         }
-        
-        echo "var questions = new Array($questions);\r";
-        echo "var words = new Array($words);\r";
-        if( $html->type == 'hangmanp')
-            echo "var images = new Array($images);\r";
+        if ($lang == '') {
+            $lang = current_language();
+        }
+        $allletters = game_getallletters( $answer, $lang);
+    }
+
+    if (game_getallletters( $answer, $lang) != $allletters) {
+        continue;
+    }
+
+    if ($html->type == 'hangmanp') {
+        $file = $line->attachment;
+        $pos = strrpos( $file, '.');
+        if ($pos == false) {
+            continue;
+        }
+    }
+
+    if ($html->type == 'hangmanp') {
+        $src = $line->attachment;
+        $pos = strrpos( $file, '.');
+        if ($pos == false) {
+            continue;
+        }
+    }
+
+    if ($questions != '') {
+        $questions .= ', ';
+    }
+
+    if ($words != '') {
+        $words .= ', ';
+    }
+    $questions .= '"'.base64_encode( $line->question).'"';
+    $words .= '"'.base64_encode( $line->answer).'"';
+
+    if ($html->type == 'hangmanp') {
+        $file = $line->id.substr( $file, $pos);
+        game_export_javame_smartcopyimage( $src, $destdir.'/'.$file, $html->maxpicturewidth, $html->maxpictureheight);
+
+        if ($images != '') {
+            $images .= ', ';
+        }
+        $images .= '"'.$file.'"';
+    }
+}
+
+if ($game->param7) {
+    $allletters .= '_';
+}
+
+if ($game->param8) {
+    $allletters .= '-';
+}
+
+echo "var questions = new Array($questions);\r";
+echo "var words = new Array($words);\r";
+if ($html->type == 'hangmanp') {
+    echo "var images = new Array($images);\r";
+}
 ?>
 
 var to_guess = "";
@@ -104,10 +130,10 @@ var wrong_guesses = 0;
 var used_letters_all = "";
 var all_letters = new Array(<?php 
 $len = game_strlen( $allletters);
-for( $i=0; $i < $len; $i++)
-{
-    if( $i > 0)
+for ($i = 0; $i < $len; $i++) {
+    if ($i > 0) {
         echo ',';
+    }
     echo '"'.game_substr( $allletters, $i, 1).'"';
 }
 ?>);
@@ -162,13 +188,14 @@ function selectLetter(l)
     }else
     {
         wrong_guesses++;
+
 <?php
-    if( $html->type != 'hangmanp'){
+if ($html->type != 'hangmanp') {
 ?>eval("document.hm.src=\"hangman_" + wrong_guesses + ".jpg\"");
-        // incortect letter guess
+        // Ιncortect letter guess.
         eval("document.hm.src=\"hangman_" + wrong_guesses + ".jpg\"");
-<?php        
-    }
+<?php
+}
 ?>
         if (wrong_guesses == <?php echo $game->param10 + 1;?>)
         {
@@ -197,11 +224,13 @@ function reset()
     used_letters_all = "";
     wrong_guesses = 0;
     showallletters();
+
 <?php
-    if( $html->type != 'hangmanp'){
-        echo '    document.hm.src="hangman_0.jpg"'."\r";
-    }
-?> 
+if ($html->type != 'hangmanp') {
+    echo '    document.hm.src="hangman_0.jpg"'."\r";
+}
+?>
+
 }
 
 function showallletters()
@@ -244,10 +273,11 @@ function selectWord()
     display_word = masked_word;
     
 <?php
-    if( $html->type == 'hangmanp')
-        echo "    document.hm.src = images[ random_number];\r"; 
-    else
-        echo "    document.getElementById('question').innerHTML=to_question;\r";
+if ($html->type == 'hangmanp') {
+    echo "    document.hm.src = images[ random_number];\r";
+} else {
+    echo "    document.getElementById('question').innerHTML=to_question;\r";
+}
 ?>
 }
 
@@ -349,7 +379,8 @@ var Base64 = {
 </head>
 
 <div id="question"></div>
-<img src="<?php echo ($html->type == 'hangmanp' ? '' : 'hangman_0.jpg');?>" name="hm"> <a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?></a>
+<img src="<?php echo ($html->type == 'hangmanp' ? '' : 'hangman_0.jpg');?>" name="hm"> 
+<a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?></a>
 <form name="game">
 <div id="displayWord"> </div>
 <div id="usedLetters"> </div>

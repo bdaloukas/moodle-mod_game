@@ -1,4 +1,19 @@
-<?php  // $Id: exporthtml_millionaire.php,v 1.14 2012/07/25 11:16:03 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This page export the game millionaire to html
  * 
@@ -6,93 +21,93 @@
  * @version $Id: exporthtml_millionaire.php,v 1.14 2012/07/25 11:16:03 bdaloukas Exp $
  * @package game
  **/
- 
-function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files)
-{
-	global $CFG, $DB, $USER;
-	
-	$maxanswers = 0;
-    $countofquestions = 0;
-    
-    $files = array();
-	
-	if( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')){
-		print_error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).' '.get_string( 'modulename', $game->sourcemodule));
-	}
-	
-	if( $game->sourcemodule == 'quiz'){
-		if( $game->quizid == 0){
-			print_error( get_string( 'must_select_quiz', 'game'));
-		}
-		$select = "qtype='multichoice' AND quiz='$game->quizid' ".
-						" AND qqi.question=q.id";
-		$table = "{question} q,{quiz_question_instances} qqi";
-	}else
-	{
-		if( $game->questioncategoryid == 0){
-			print_error( get_string( 'must_select_questioncategory', 'game'));
-		}
 
-		//include subcategories
-		$select = 'category='.$game->questioncategoryid;
-        if( $game->subcategories){
+function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files) {
+    global $CFG, $DB, $USER;
+
+    $maxanswers = 0;
+    $countofquestions = 0;
+
+    $files = array();
+
+    if ( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
+        print_error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).
+            ' '.get_string( 'modulename', $game->sourcemodule));
+    }
+
+    if ( $game->sourcemodule == 'quiz') {
+        if ( $game->quizid == 0) {
+            print_error( get_string( 'must_select_quiz', 'game'));
+        }
+        $select = "qtype='multichoice' AND quiz='$game->quizid' ".
+            " AND qqi.question=q.id";
+        $table = "{question} q,{quiz_question_instances} qqi";
+    } else {
+        if ( $game->questioncategoryid == 0) {
+            print_error( get_string( 'must_select_questioncategory', 'game'));
+        }
+
+        // Include subcategories.
+        $select = 'category='.$game->questioncategoryid;
+        if ( $game->subcategories) {
             $cats = question_categorylist( $game->questioncategoryid);
-            if( strpos( $cats, ',') > 0){
+            if (strpos( $cats, ',') > 0) {
                 $select = 'category in ('.$cats.')';
             }
         }
-		$select .= " AND qtype='multichoice'";
-		
-		$table = "{question} q";
-	}
-	$select .= " AND q.hidden=0";
-	$sql = "SELECT q.id as id, q.questiontext FROM $table WHERE $select";
-	$recs = $DB->get_records_sql( $sql);
-	$ret = '';
-    $retfeedback = '';
-	foreach( $recs as $rec){
-	    $recs2 = $DB->get_records( 'question_answers', array( 'question' => $rec->id), 'fraction DESC', 'id,answer,feedback');
-	    
-	    //Must parse the questiontext and get the name of files.	   
-	    $line = $rec->questiontext;
-	    $line = game_export_split_files( $game->course, $context, 'questiontext', $rec->id, $rec->questiontext, $destdir, $files);
-        $linefeedback = '';
-	    foreach( $recs2 as $rec2)
-	    {
-	        $line .= '#'.str_replace( array( '"', '#'), array( "'", ' '), game_export_split_files( $game->course, $context, 'answer', $rec2->id, $rec2->answer, $destdir, $files));
-            $linefeedback .= '#'.str_replace( array( '"', '#'), array( "'", ' '), $rec2->feedback);
-	    }
-	    if( $ret != '')
-	        $ret .= ",\r";
-	    $ret .= '"'.base64_encode( $line).'"';
-	    
-        if( $retfeedback != '')
-	        $retfeedback .= ",\r";
-	    $retfeedback .= '"'.base64_encode( $linefeedback).'"';    
+        $select .= " AND qtype='multichoice'";
 
-	    if( count( $recs2) > $maxanswers)
-	        $maxanswers = count( $recs2);
+        $table = "{question} q";
+    }
+    $select .= " AND q.hidden=0";
+    $sql = "SELECT q.id as id, q.questiontext FROM $table WHERE $select";
+    $recs = $DB->get_records_sql( $sql);
+    $ret = '';
+    $retfeedback = '';
+    foreach ($recs as $rec) {
+        $recs2 = $DB->get_records( 'question_answers', array( 'question' => $rec->id), 'fraction DESC', 'id,answer,feedback');
+
+        // Must parse the questiontext and get the name of files.
+        $line = $rec->questiontext;
+        $line = game_export_split_files( $game->course, $context, 'questiontext', $rec->id, $rec->questiontext, $destdir, $files);
+        $linefeedback = '';
+        foreach ($recs2 as $rec2) {
+            $line .= '#'.str_replace( array( '"', '#'), array( "'", ' '),
+                game_export_split_files( $game->course, $context, 'answer', $rec2->id, $rec2->answer, $destdir, $files));
+            $linefeedback .= '#'.str_replace( array( '"', '#'), array( "'", ' '), $rec2->feedback);
+        }
+        if ( $ret != '') {
+            $ret .= ",\r";
+        }
+        $ret .= '"'.base64_encode( $line).'"';
+
+        if ( $retfeedback != '') {
+            $retfeedback .= ",\r";
+        }
+        $retfeedback .= '"'.base64_encode( $linefeedback).'"';
+
+        if ( count( $recs2) > $maxanswers) {
+            $maxanswers = count( $recs2);
+        }
         $countofquestions++;
     }
-    
+
     return $ret;
 }
 
-function game_millionaire_html_print( $game,  $questions, $maxquestions)
-{
-	$color1 = 'black';
-	$color2 = 'DarkOrange';
-	$colorback="white";
-	$stylequestion = "background:$colorback;color:$color1";
-	$stylequestionselected = "background:$colorback;color:$color2";	
-
+function game_millionaire_html_print( $game,  $questions, $maxquestions) {
+    $color1 = 'black';
+    $color2 = 'DarkOrange';
+    $colorback = "white";
+    $stylequestion = "background:$colorback;color:$color1";
+    $stylequestionselected = "background:$colorback;color:$color2";
 ?>
 
 <body onload="Reset();">
 
 <script type="text/javascript">
 
-    //Millionaire for Moodle by Vasilis Daloukas    
+    // Millionaire for Moodle by Vasilis Daloukas.    
     <?php echo 'var questions = new Array('.$questions.");\r"; ?>
     var current_question = 0;
     var level = 0;
@@ -104,38 +119,31 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
     var countQuestions = 0;
     var maxQuestions = <?php echo $maxquestions;?>;
     
-	function Highlite( ans)
-	{	    
+	function Highlite( ans) {
 		document.getElementById( "btAnswer" + ans).style.backgroundColor = '<?php echo $color2;?>';
 	}
 
-	function Restore( ans)
-	{
+	function Restore( ans) {
 		document.getElementById( "btAnswer" + ans).style.backgroundColor = '<?php echo $colorback;?>';
 	}
-	
-	function OnSelectAnswer( ans)
-	{
-	    if( posCorrect == ans)
-	    {
-	        if( level+1 > 15)
-	        {
+
+	function OnSelectAnswer( ans) {
+	    if ( posCorrect == ans) {
+	        if( level+1 > 15) {
 	            alert( "<?php echo get_string( 'win', 'game');?>");
 	            Reset();
-	        }else
-	        {
+	        } else {
 	            UpdateLevel( level+1);
 	            SelectNextQuestion();
 	        }
-	    }else
-	    {
+	    } else {
 	        OnGameOver( ans);
 	    }
 	}
 	
-    function OnGameOver( ans)
-    {
-        document.getElementById( "info").innerHTML = "<?php echo get_string( 'millionaire_info_wrong_answer', 'game');?> "+document.getElementById( "lblAnswer" + posCorrect).innerHTML;
+    function OnGameOver( ans) {
+        document.getElementById( "info").innerHTML = "<?php echo get_string( 'millionaire_info_wrong_answer', 'game');?> " +
+            document.getElementById( "lblAnswer" + posCorrect).innerHTML;
         Highlite( posCorrect);
         Restore( ans);
         document.getElementById( "lblAnswer" + posCorrect).style.backgroundColor = '<?php echo $color2;?>';
@@ -148,10 +156,8 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
         Reset();
     }
     
-	function UpdateLevel( newlevel)
-	{
-	    if( level > 0)
-	    {
+	function UpdateLevel( newlevel) {
+	    if ( level > 0) {
 	        document.getElementById( "levela" + level).bgColor = "<?php echo $colorback;?>";
     	    document.getElementById( "levelb" + level).bgColor = "<?php echo $colorback;?>";
 	        document.getElementById( "levelc" + level).bgColor = "<?php echo $colorback;?>";
@@ -170,77 +176,73 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
 	    document.getElementById( "levelc" + level).style.color = "<?php echo $colorback;?>";
     }
 	
-	function OnHelp5050( ans)
-	{
-	    if( flag5050)
+	function OnHelp5050( ans) {
+	    if (flag5050) {
 	        return;
-	        
+        }
+   
         document.getElementById( "Help5050").src = "5050x.png";
         flag5050 = 1;
-        
-        for(pos = posCorrect;pos == posCorrect;pos = 1+Math.floor(Math.random()*countQuestions));
 
-        for( i=1; i <= countQuestions; i++)
-        {   
-            if( (i != pos) && (i != posCorrect))
-            {         
+        for (pos = posCorrect;pos == posCorrect;pos = 1+Math.floor(Math.random()*countQuestions));
+
+        for (i=1; i <= countQuestions; i++) {   
+            if( (i != pos) && (i != posCorrect)) {         
                 document.getElementById( "lblAnswer" + i).style.visibility = 'hidden';
         	    document.getElementById( "btAnswer" + i).style.visibility = 'hidden';
         	}
         }
 	}
-	
-	function OnHelpTelephone( ans)
-	{
-	    if( flagTelephone)
+
+	function OnHelpTelephone( ans) {
+	    if( flagTelephone) {
 	        return;
+        }
 	    flagTelephone = 1;
         document.getElementById( "HelpTelephone").src = "telephonex.png";
 	    
-		if( countQuestions < 2){
+		if (countQuestions < 2) {
 			wrong = posCorrect;
-		}else
-		{
-			for(;;)
-			{
-				wrong = 1+Math.floor(Math.random()*countQuestions);
-				if( wrong != posCorrect)
+		} else {
+			for(;;) {
+				wrong = 1 + Math.floor(Math.random() * countQuestions);
+				if ( wrong != posCorrect) {
 					break;
+                }
 			}
 		}
-		//with 80% gives the correct answer
-		if( Math.random() <= 0.8)
+
+		// With 80% gives the correct answer.
+		if (Math.random() <= 0.8) {
 			pos = posCorrect;
-		else
+		} else {
 			pos = wrong;
+        }
 			
-        info = "<?php echo get_string( 'millionaire_info_telephone','game').'<br><b>';?> ";
+        info = "<?php echo get_string( 'millionaire_info_telephone', 'game').'<br><b>';?> ";
         info += document.getElementById( "lblAnswer" + pos).innerHTML;
         document.getElementById( "info").innerHTML = info;
 	}
 
-	function OnHelpPeople( ans)
-	{
-        if( flagPeople)
+	function OnHelpPeople( ans) {
+        if( flagPeople) {
 	        return;
+        }
 	    flagPeople = 1;
         document.getElementById( "HelpPeople").src = "peoplex.png";
         
         sum = 0;
         var aPercent = new Array();
-        for( i = 0; i < countQuestions-1; i++)
-        {
+        for( i = 0; i < countQuestions-1; i++) {
 			percent = Math.floor(Math.random()*(100-sum));
 			aPercent[ i] = percent;
 			sum += percent;
         }
         aPercent[ countQuestions - 1] = 100 - sum;
-        if( Math.random() <= 0.8)
-        {
+        if( Math.random() <= 0.8) {
             //with percent 80% sets in the correct answer the biggest percent
             max_pos = 0;
-            for( i=1; i < countQuestions; i++)
-            {
+            for( i=1; i < countQuestions; i++) {
                 if( aPercent[ i] >= aPercent[ max_pos])
                     max_pos = i;
             }
@@ -251,22 +253,19 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
         
         var letters = "<?php echo get_string( 'lettersall', 'game');?>";
         info = "<?php echo '<br>'.get_string( 'millionaire_info_people', 'game').':<br>';?>";
-        for( i=0; i < countQuestions; i++){
+        for( i=0; i < countQuestions; i++) {
             info += "<br>" + letters.charAt( i) + " : " + aPercent[ i] + " %";
 		}
 	    
 	    document.getElementById( "info").innerHTML = info;
 	}
 
-	function OnQuit( ans)
-	{
+	function OnQuit( ans) {
 	    Reset();
 	}
 	
-	function Reset()
-	{
-	    for(i=1; i <= 15; i++)
-	    {
+	function Reset() {
+	    for(i=1; i <= 15; i++) {
 	        document.getElementById( "levela" + i).bgColor = "<?php echo $colorback;?>";
     	    document.getElementById( "levelb" + i).bgColor = "<?php echo $colorback;?>";	    
 	        document.getElementById( "levelc" + i).bgColor = "<?php echo $colorback;?>";
@@ -274,11 +273,11 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
 	        document.getElementById( "levelb" + i).style.color = "<?php echo $color1;?>";
 	        document.getElementById( "levelc" + i).style.color = "<?php echo $color1;?>";
 	    }
-	    
+
         flag5050 = 0;
         flagTelephone = 0;
         flagPeople = 0;
-        
+
         document.getElementById( "Help5050").src = "5050.png";
         document.getElementById( "HelpPeople").src = "people.png";
         document.getElementById( "HelpTelephone").src = "telephone.png";
@@ -288,17 +287,15 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions)
 	    SelectNextQuestion();
 	}
 
-    function RandomizeAnswers( elements)
-    {
+    function RandomizeAnswers( elements) {
         posCorrect = 1;
         countQuestions = elements.length-1;
 
-        for( i=1; i <= countQuestions; i++)
-        {
+        for( i=1; i <= countQuestions; i++) {
             pos = 1+Math.floor(Math.random()*countQuestions);
-            if( posCorrect == i)
+            if( posCorrect == i) {
                 posCorrect = pos;
-            else if( posCorrect == pos)
+            } else if ( posCorrect == pos)
                 posCorrect = i;
                 
             var temp = elements[ i];
@@ -418,19 +415,22 @@ var Base64 = {
 
 <table cellpadding=0 cellspacing=0 border=0>
 <tr style='background:#408080'>
-<td rowspan=<?php echo 17+$maxquestions;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td rowspan=<?php echo 17 + $maxquestions;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td colspan=6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-<td rowspan=<?php echo 17+$maxquestions;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td rowspan=<?php echo 17 + $maxquestions;?>>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </tr>
 
 <tr height=10%>
 <td style='background:#408080' rowspan=3 colspan=2>
 <input type="image"  name="Help5050" id="Help5050" Title="50 50" src="5050.png" alt="" border="0" onmousedown=OnHelp5050();>&nbsp;
-<input type="image" name="HelpTelephone"  id="HelpTelephone" Title="<?php echo get_string( 'millionaire_telephone', 'game');?>" src="telephone.png" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;
-<input type="image" name="HelpPeople"  id="HelpPeople" Title="<?php echo get_string( 'millionaire_helppeople', 'game');?>" src="people.png" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;
-<input type="image" name="Quit" id="Quit" Title="<?php echo get_string( 'millionaire_quit', 'game');?>" src="x.png" alt="" border="0" onmousedown=OnQuit();>&nbsp;
+<input type="image" name="HelpTelephone"  id="HelpTelephone" Title="<?php echo get_string( 'millionaire_telephone', 'game');?>" 
+    src="telephone.png" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;
+<input type="image" name="HelpPeople"  id="HelpPeople" Title="<?php echo get_string( 'millionaire_helppeople', 'game');?>" 
+    src="people.png" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;
+<input type="image" name="Quit" id="Quit" Title="<?php echo get_string( 'millionaire_quit', 'game');?>" 
+    src="x.png" alt="" border="0" onmousedown=OnQuit();>&nbsp;
 </td>
-<td rowspan=<?php echo 16+$maxquestions;?> style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+<td rowspan=<?php echo 16 + $maxquestions;?> style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td id="levela15" align=right>15</td>
 <td id="levelb15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 <td id="levelc15" align=right>    150000</td>
@@ -444,7 +444,8 @@ var Base64 = {
 <td id="levelb13"></td><td id="levelc13" align=right>       400000</td>
 </tr>
 
-<tr><td rowspan=12 colspan=2 valign=top style='background:<?php echo $colorback;?>;color:<?php echo $color1;?>'><div id="question">aa</div></td>
+<tr><td rowspan=12 colspan=2 valign=top style='background:<?php echo $colorback;?>;color:<?php echo $color1;?>'>
+    <div id="question">aa</div></td>
 <td id="levela12" align=r0ight>12</div></td>
 <td id="levelb12"></td><td id="levelc12" align=right>       200000</td>
 </tr>
@@ -497,22 +498,23 @@ var Base64 = {
 </tr>
 
 <?php
-$letters = get_string( 'lettersall', 'game');
-for($i=1 ; $i <= $maxquestions; $i++)
-{
-    $s = game_substr( $letters, $i-1, 1);
-    echo "<tr>\n";
-    echo "<td style='background:$colorback;color:$color1'>";
-    echo "<input style=\"background:$colorback;color:$color1;\" type=\"submit\" name=\"btAnswer$i\" value=\"$s\" id=\"btAnswer$i\"";
-    echo " onmouseover=\"Highlite( $i);\" onmouseout=\"Restore( $i);\"  onmousedown=\"OnSelectAnswer( $i);\">";
-    echo "</td>\n";
-    echo "<td style=\"background:$colorback;color:$color1;\" width=100%> &nbsp; <span id=lblAnswer$i style=\"background:$colorback;color:$color1\" onmouseover=\"Highlite($i);\r \n\" onmouseout=\"Restore( $i);\" onmousedown=\"OnSelectAnswer( $i);\"></span></td>\n";
-    if( $i == 1)
-    {
-        echo "<td style='background:#408080' rowspan=".$maxquestions." colspan=3><div id=\"info\"></div></td>\n";
+    $letters = get_string( 'lettersall', 'game');
+    for ($i = 1; $i <= $maxquestions; $i++) {
+        $s = game_substr( $letters, $i - 1, 1);
+        echo "<tr>\n";
+        echo "<td style='background:$colorback;color:$color1'>";
+        echo "<input style=\"background:$colorback;color:$color1;\"
+            type=\"submit\" name=\"btAnswer$i\" value=\"$s\" id=\"btAnswer$i\"";
+        echo " onmouseover=\"Highlite( $i);\" onmouseout=\"Restore( $i);\"  onmousedown=\"OnSelectAnswer( $i);\">";
+        echo "</td>\n";
+        echo "<td style=\"background:$colorback;color:$color1;\" width=100%> &nbsp; <span id=lblAnswer$i
+            style=\"background:$colorback;color:$color1\"
+            onmouseover=\"Highlite($i);\r \n\" onmouseout=\"Restore( $i);\" onmousedown=\"OnSelectAnswer( $i);\"></span></td>\n";
+        if ( $i == 1) {
+            echo "<td style='background:#408080' rowspan=".$maxquestions." colspan=3><div id=\"info\"></div></td>\n";
+        }
+        echo "</tr>\n";
     }
-    echo "</tr>\n";
-}
 ?>
 
 <tr><td colspan=10 style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
