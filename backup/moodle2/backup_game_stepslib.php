@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -20,8 +19,8 @@
  * @subpackage backup-moodle2
  * @author bdaloukas
  * @version $Id: backup_game_stepslib.php,v 1.5 2012/07/25 11:16:04 bdaloukas Exp $
- */  
-  
+ */
+
 /**
  * Define all the backup steps that will be used by the backup_game_activity_task
  */
@@ -33,10 +32,10 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
 
     protected function define_structure() {
 
-        // To know if we are including userinfo
+        // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated
+        // Define each element separated.
         $game = new backup_nested_element('game', array('id'), array(
             'name', 'sourcemodule', 'timeopen', 'timeclose', 'quizid',
             'glossaryid', 'glossarycategoryid', 'questioncategoryid', 'bookid',
@@ -45,16 +44,17 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
             'shuffle', 'timemodified', 'toptext', 'bottomtext',
             'grademethod', 'grade', 'decimalpoints', 'popup',
             'review', 'attempts', 'glossaryid2', 'glossarycategoryid2',
-            'language', 'subcategories', 'maxattempts'            
+            'language', 'subcategories', 'maxattempts'
             ));
-            
+
         $exporthtmls = new backup_nested_element('game_export_htmls');
         $exporthtml = new backup_nested_element('game_export_html', array('id'), array(
-            'filename', 'title', 'checkbutton', 'printbutton', 'inputsize', 'maxpicturewidth', 'maxpictureheight'));            
+            'filename', 'title', 'checkbutton', 'printbutton', 'inputsize', 'maxpicturewidth', 'maxpictureheight'));
 
         $exportjavames = new backup_nested_element('game_export_javames');
         $exportjavame = new backup_nested_element('game_export_javame', array('id'), array(
-            'filename', 'icon', 'createdby', 'vendor', 'name', 'description', 'version', 'maxpicturewidth', 'maxpictureheight'));            
+            'filename', 'icon', 'createdby', 'vendor', 'name', 'description', 'version',
+            'maxpicturewidth', 'maxpictureheight'));
 
         $grades = new backup_nested_element('game_grades');
         $grade = new backup_nested_element('game_grade', array('id'), array(
@@ -63,122 +63,122 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         $repetitions = new backup_nested_element('game_repetitions');
         $repetition = new backup_nested_element('game_repetition', array('id'), array(
             'userid', 'questionid', 'glossaryentryid', 'repetitions'));
- 
-        $attempts = new backup_nested_element('game_attempts'); 
+
+        $attempts = new backup_nested_element('game_attempts');
         $attempt = new backup_nested_element('game_attempt', array('id'), array(
-           'userid', 'timestart','timefinish', 'timelastattempt', 'lastip',
-            'lastremotehost', 'preview', 'attempt','score', 'attempts', 'language'));
+           'userid', 'timestart', 'timefinish', 'timelastattempt', 'lastip',
+            'lastremotehost', 'preview', 'attempt', 'score', 'attempts', 'language'));
 
         $querys = new backup_nested_element('game_queries');
         $query = new backup_nested_element('game_query', array('id'), array(
-           'gamekind', 'userid','sourcemodule', 'questionid', 'glossaryentryid',
-            'questiontext', 'score', 'timelastattempt','studentanswer', 'col', 'row',
+           'gamekind', 'userid', 'sourcemodule', 'questionid', 'glossaryentryid',
+            'questiontext', 'score', 'timelastattempt', 'studentanswer', 'col', 'row',
             'horizontal', 'answertext', 'correct', 'attachment', 'answerid', 'tries'));
 
-        $bookquizs = new backup_nested_element('game_bookquizs'); 
+        $bookquizs = new backup_nested_element('game_bookquizs');
         $bookquiz = new backup_nested_element('game_bookquiz', array('id'), array('lastchapterid'));
 
-        $bookquiz_chapters = new backup_nested_element('game_bookquiz_chapters');
-        $bookquiz_chapter = new backup_nested_element('game_bookquiz_chapter', array('id'), array( 'chapterid'));
-            
-        $bookquiz_questions = new backup_nested_element('game_bookquiz_questions');
-        $bookquiz_question = new backup_nested_element('game_bookquiz_question', array('id'), array(
+        $bookquizchapters = new backup_nested_element('game_bookquiz_chapters');
+        $bookquizchapter = new backup_nested_element('game_bookquiz_chapter', array('id'), array( 'chapterid'));
+
+        $bookquizquestions = new backup_nested_element('game_bookquiz_questions');
+        $bookquizquestion = new backup_nested_element('game_bookquiz_question', array('id'), array(
             'chapterid', 'questioncategoryid'));
 
-        $crosss = new backup_nested_element('game_crosss'); 
+        $crosss = new backup_nested_element('game_crosss');
         $cross = new backup_nested_element('game_cross', array('id'), array(
-            'cols', 'rows', 'words', 'wordsall', 'createscore', 'createtries', 
+            'cols', 'rows', 'words', 'wordsall', 'createscore', 'createtries',
             'createtimelimit', 'createconnectors', 'createfilleds', 'createspaces', 'triesplay'));
 
-        $cryptexs = new backup_nested_element('game_cryptexs'); 
+        $cryptexs = new backup_nested_element('game_cryptexs');
         $cryptex = new backup_nested_element('game_cryptex', array('id'), array('letters'));
-        
-        $hangmans = new backup_nested_element('game_hangmans'); 
+
+        $hangmans = new backup_nested_element('game_hangmans');
         $hangman = new backup_nested_element('game_hangman', array('id'), array(
-            'queryid', 'letters', 'allletters', 'try', 'maxtries', 'finishedword', 
+            'queryid', 'letters', 'allletters', 'try', 'maxtries', 'finishedword',
             'corrects', 'iscorrect'));
 
-        $hiddenpictures = new backup_nested_element('game_hiddenpictures'); 
+        $hiddenpictures = new backup_nested_element('game_hiddenpictures');
         $hiddenpicture = new backup_nested_element('game_hiddenpicture', array('id'), array('correct', 'wrong', 'found'));
-        
-        $millionaires = new backup_nested_element('game_millionaires'); 
+
+        $millionaires = new backup_nested_element('game_millionaires');
         $millionaire = new backup_nested_element('game_millionaire', array('id'), array('queryid', 'state', 'level'));
 
-        $snakes = new backup_nested_element('game_snakes'); 
+        $snakes = new backup_nested_element('game_snakes');
         $snake = new backup_nested_element('game_snake', array('id'), array('snakesdatabaseid', 'position', 'queryid', 'dice'));
 
-        $sudokus = new backup_nested_element('game_sudokus'); 
+        $sudokus = new backup_nested_element('game_sudokus');
         $sudoku = new backup_nested_element('game_sudoku', array('id'), array('level', 'data', 'opened', 'guess'));
 
-        // Build the tree
-        $game->add_child($bookquiz_questions);       
-        $bookquiz_questions->add_child($bookquiz_question);
-        
+        // Build the tree.
+        $game->add_child( $bookquizquestions);
+        $bookquizquestions->add_child( $bookquizquestion);
+
         $game->add_child( $exporthtmls);
         $exporthtmls->add_child( $exporthtml);
 
         $game->add_child( $exportjavames);
         $exportjavames->add_child( $exportjavame);
-        
+
         $game->add_child( $grades);
         $grades->add_child( $grade);
-        
+
         $game->add_child( $repetitions);
         $repetitions->add_child( $repetition);
-        
-        // All these source definitions only happen if we are including user info
+
+        // All these source definitions only happen if we are including user info.
         if ($userinfo) {
-	        $game->add_child( $attempts);
-    	    $attempts->add_child( $attempt);
+            $game->add_child( $attempts);
+            $attempts->add_child( $attempt);
 
-    	    $attempts->add_child( $querys);
-    	    $querys->add_child( $query);
+            $attempts->add_child( $querys);
+            $querys->add_child( $query);
 
-    	    $attempts->add_child( $bookquizs);
-    	    $bookquizs->add_child( $bookquiz);
+            $attempts->add_child( $bookquizs);
+            $bookquizs->add_child( $bookquiz);
 
-    	    $game->add_child($bookquiz_chapters);
-    	    $bookquiz_chapters->add_child($bookquiz_chapter);        
+            $game->add_child( $bookquizchapters);
+            $bookquizchapters->add_child($bookquizchapter);
 
-    	    $attempts->add_child( $crosss);
-    	    $crosss->add_child( $cross);
+            $attempts->add_child( $crosss);
+            $crosss->add_child( $cross);
 
-    	    $attempts->add_child( $cryptexs);
-    	    $cryptexs->add_child( $cryptex);
+            $attempts->add_child( $cryptexs);
+            $cryptexs->add_child( $cryptex);
 
-    	    $attempts->add_child( $hangmans);
-    	    $hangmans->add_child( $hangman);
+            $attempts->add_child( $hangmans);
+            $hangmans->add_child( $hangman);
 
-    	    $attempts->add_child( $hiddenpictures);
-    	    $hiddenpictures->add_child( $hiddenpicture);
+            $attempts->add_child( $hiddenpictures);
+            $hiddenpictures->add_child( $hiddenpicture);
 
-	        $attempts->add_child( $millionaires);
-	        $millionaires->add_child( $millionaire);
+            $attempts->add_child( $millionaires);
+            $millionaires->add_child( $millionaire);
 
-	        $attempts->add_child( $snakes);
-	        $snakes->add_child( $snake);
-        
-	        $attempts->add_child( $sudokus);
-	        $sudokus->add_child( $sudoku);
-		}        
-    	
-		// Define sources
+            $attempts->add_child( $snakes);
+            $snakes->add_child( $snake);
+
+            $attempts->add_child( $sudokus);
+            $sudokus->add_child( $sudoku);
+        }
+
+        // Define sources.
         $game->set_source_table('game', array('id' => backup::VAR_ACTIVITYID));
-        $bookquiz_question->set_source_table('game_bookquiz_questions', array('gameid' => backup::VAR_ACTIVITYID));
+        $bookquizquestion->set_source_table('game_bookquiz_questions', array('gameid' => backup::VAR_ACTIVITYID));
         $exporthtml->set_source_table('game_export_html', array('id' => backup::VAR_ACTIVITYID));
         $exportjavame->set_source_table('game_export_javame', array('id' => backup::VAR_ACTIVITYID));
-        
-        // All the rest of elements only happen if we are including user info
+
+        // All the rest of elements only happen if we are including user info.
         if ($userinfo) {
             $grade->set_source_table('game_grades', array('gameid' => backup::VAR_ACTIVITYID));
             $repetition->set_source_table('game_repetitions', array('gameid' => backup::VAR_ACTIVITYID));
-        
+
             $attempt->set_source_table('game_attempts', array( 'gameid' => backup::VAR_ACTIVITYID));
             $attempt->set_source_table('game_queries', array( 'attemptid' => backup::VAR_PARENTID));
-            
+
             $bookquiz->set_source_table('game_bookquiz', array( 'id' => backup::VAR_ACTIVITYID));
-            $bookquiz_chapter->set_source_table('game_bookquiz_chapters', array( 'id' => backup::VAR_PARENTID));
-            
+            $bookquizchapter->set_source_table('game_bookquiz_chapters', array( 'id' => backup::VAR_PARENTID));
+
             $cross->set_source_table('game_cross', array( 'id' => backup::VAR_PARENTID));
             $cryptex->set_source_table('game_cryptex', array( 'id' => backup::VAR_PARENTID));
             $hangman->set_source_table('game_hangman', array( 'id' => backup::VAR_PARENTID));
@@ -187,7 +187,7 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
             $snake->set_source_table('game_snakes', array( 'id' => backup::VAR_PARENTID));
             $sudoku->set_source_table('game_sudoku', array( 'id' => backup::VAR_PARENTID));
         }
-        // Define id annotations
+        // Define id annotations.
         $attempt->annotate_ids('user', 'userid');
         $grade->annotate_ids('user', 'userid');
         $repetition->annotate_ids('user', 'userid');
@@ -198,17 +198,17 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         $query->annotate_ids('glossary_enrty', 'glossaryentryid');
         $query->annotate_ids('question_answer', 'answerid');
 
-        $bookquiz_question->annotate_ids('book_chapter', 'chapterid');
-        $bookquiz_question->annotate_ids('question_category', 'questioncategoryid');
-        $bookquiz_chapter->annotate_ids('book_chapter', 'chapterid');
+        $bookquizquestion->annotate_ids('book_chapter', 'chapterid');
+        $bookquizquestion->annotate_ids('question_category', 'questioncategoryid');
+        $bookquizchapter->annotate_ids('book_chapter', 'chapterid');
         $hangman->annotate_ids('game_query', 'queryid');
         $millionaire->annotate_ids('game_query', 'queryid');
- 
-        // Define file annotations
-        $game->annotate_files('mod_game', 'snakes_file', null); // This file area hasn't itemid        
-        $game->annotate_files('mod_game', 'snakes_board', null); // This file area hasn't itemid        
- 
-        // Return the root element (game), wrapped into standard activity structure        
+
+        // Define file annotations.
+        $game->annotate_files('mod_game', 'snakes_file', null); // This file area hasn't itemid.
+        $game->annotate_files('mod_game', 'snakes_board', null); // This file area hasn't itemid.
+
+        // Return the root element (game), wrapped into standard activity structure.
         return $this->prepare_activity_structure( $game);
     }
 }

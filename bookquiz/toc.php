@@ -1,33 +1,48 @@
-<?PHP // $Id: toc.php,v 1.1 2008/03/26 17:40:38 arborrow Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 defined('MOODLE_INTERNAL') or die('Direct access to this script is forbidden.');
- 
+
 define('NUM_NONE',     '0');
 define('NUM_NUMBERS',  '1');
 define('NUM_BULLETS',  '2');
 define('NUM_INDENTED', '3');
 
-/// included from mod/book/view.php and print.php
-///
-/// uses:
-///   $chapters - all book chapters
-///   $chapter - may be false
-///   $cm - course module
-///   $book - book
-///   $edit - force editing view
 
+/* Included from mod/book/view.php and print.php.
+ *
+ * uses:
+ *   $chapters - all book chapters
+ *   $chapter - may be false
+ *   $cm - course module
+ *   $book - book
+ *   $edit - force editing view
+ *
+ * fills:
+ *   $toc
+ *   $title (not for print)
+ */
 
-/// fills:
-///   $toc
-///   $title (not for print)
-
-$currtitle = '';    //active chapter title (plain text)
-$currsubtitle = ''; //active subchapter if any
+$currtitle = '';    // Active chapter title (plain text).
+$currsubtitle = ''; // Active subchapter if any.
 $prevtitle = '&nbsp;';
-$toc = '';          //representation of toc (HTML)
+$toc = '';          // Representation of toc (HTML).
 
-$nch = 0; //chapter number
-$ns = 0;  //subchapter number
+$nch = 0; // Chapter number.
+$ns = 0;  // Subchapter number.
 $title = '';
 $first = 1;
 
@@ -36,22 +51,22 @@ if (!isset($print)) {
 }
 
 switch ($book->numbering) {
-  case NUM_NONE:
-      $toc .= '<div class="book_toc_none">';
-      break;
-  case NUM_NUMBERS:
-      $toc .= '<div class="book_toc_numbered">';
-      break;
-  case NUM_BULLETS:
-      $toc .= '<div class="book_toc_bullets">';
-      break;
-  case NUM_INDENTED:
-      $toc .= '<div class="book_toc_indented">';
-      break;
+    case NUM_NONE:
+        $toc .= '<div class="book_toc_none">';
+        break;
+    case NUM_NUMBERS:
+        $toc .= '<div class="book_toc_numbered">';
+        break;
+    case NUM_BULLETS:
+        $toc .= '<div class="book_toc_bullets">';
+        break;
+    case NUM_INDENTED:
+        $toc .= '<div class="book_toc_indented">';
+        break;
 }
 
-
-if ($print) { ///TOC for printing
+if ($print) {
+    // TOC for printing.
     $toc .= '<a name="toc"></a>';
     if ($book->customtitles) {
         $toc .= '<h1>'.get_string('toc', 'book').'</h1>';
@@ -60,7 +75,7 @@ if ($print) { ///TOC for printing
     }
     $titles = array();
     $toc .= '<ul>';
-    foreach($chapters as $ch) {
+    foreach ($chapters as $ch) {
         $title = trim(strip_tags($ch->title));
         if (!$ch->hidden) {
             if (!$ch->subchapter) {
@@ -68,13 +83,13 @@ if ($print) { ///TOC for printing
                 $ns = 0;
                 $toc .= ($first) ? '<li>' : '</ul></li><li>';
                 if ($book->numbering == NUM_NUMBERS) {
-                      $title = "$nch $title";
+                    $title = "$nch $title";
                 }
             } else {
                 $ns++;
                 $toc .= ($first) ? '<li><ul><li>' : '<li>';
                 if ($book->numbering == NUM_NUMBERS) {
-                      $title = "$nch.$ns $title";
+                    $title = "$nch.$ns $title";
                 }
             }
             $titles[$ch->id] = $title;
@@ -84,9 +99,10 @@ if ($print) { ///TOC for printing
         }
     }
     $toc .= '</ul></li></ul>';
-} else { //normal students view
+} else {
+    // Normal students view.
     $toc .= '<font size="-1"><ul>';
-    foreach($chapters as $ch) {
+    foreach ($chapters as $ch) {
         $title = trim(strip_tags($ch->title));
         if (!$ch->hidden) {
             if (!$ch->subchapter) {
@@ -96,7 +112,7 @@ if ($print) { ///TOC for printing
                 if ($book->numbering == NUM_NUMBERS) {
                       $title = "$nch $title";
                 }
-            $prevtitle = $title;
+                $prevtitle = $title;
             } else {
                 $ns++;
                 $toc .= ($first) ? '<li><ul><li>' : '<li>';
@@ -114,12 +130,12 @@ if ($print) { ///TOC for printing
                     $currsubtitle = '&nbsp;';
                 }
             } else {
-				if( array_key_exists( $ch->id, $okchapters)){
-					$toc .= '<a title="'.htmlspecialchars($title).'" href="attempt.php?id='.$id.'&chapterid='.$ch->id.'">'.$title.'</a>';
-				}else
-				{
-					$toc .= htmlspecialchars($title);
-				}
+                if (array_key_exists( $ch->id, $okchapters)) {
+                    $toc .= '<a title="'.htmlspecialchars($title).'" href="attempt.php?id='
+                        $id.'&chapterid='.$ch->id.'">'.$title.'</a>';
+                } else {
+                    $toc .= htmlspecialchars($title);
+                }
             }
             $toc .= (!$ch->subchapter) ? '<ul>' : '</li>';
             $first = 0;
@@ -130,6 +146,4 @@ if ($print) { ///TOC for printing
 
 $toc .= '</div>';
 
-$toc = str_replace('<ul></ul>', '', $toc); //cleanup of invalid structures
-
-?>
+$toc = str_replace('<ul></ul>', '', $toc); // Cleanup of invalid structures.
