@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
@@ -38,7 +52,6 @@ class game_played extends \core\event\base {
             'context' => $context,
             'objectid' => $game->id
         );
-        /** @var chapter_viewed $event */
         $event = self::create($data);
         $event->add_record_snapshot('game', $game);
         return $event;
@@ -50,7 +63,8 @@ class game_played extends \core\event\base {
      * @return array|null
      */
     protected function get_legacy_logdata() {
-        return array($this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid, $this->objectid, $this->contextinstanceid);
+        return array($this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid,
+            $this->objectid, $this->contextinstanceid);
     }
 
     /**

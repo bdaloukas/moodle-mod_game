@@ -1,144 +1,163 @@
-<?php  // $Id: play.php,v 1.23 2012/08/15 14:38:06 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-// This files plays the game "Crossword"
+// This files plays the game "Crossword".
 
 require( "cross_class.php");
 require( "crossdb_class.php");
 
-function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $context)
-{
-	if( $endofgame){
-		if( $g == ''){
-			game_updateattempts( $game, $attempt, -1, true);
-			$endofgame = false;
-		}
-	}
+function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $context) {
+    if ($endofgame) {
+        if ($g == '') {
+            game_updateattempts( $game, $attempt, -1, true);
+            $endofgame = false;
+        }
+    }
 
-	if( $attempt != false and $cross != false){
-		return game_cross_play( $id, $game, $attempt, $cross, $g, false, false, $endofgame, false, false, false, false, true, $context);
-	}
-	
-	if( $attempt == false){
-		$attempt = game_addattempt( $game);
-	}
-	
-    game_cross_new( $game, $attempt->id, $crossm);		
-    game_updateattempts( $game, $attempt, 0, 0);		
+    if ($attempt != false and $cross != false) {
+        return game_cross_play( $id, $game, $attempt, $cross, $g, false, false, $endofgame,
+            false, false, false, false, true, $context);
+    }
+
+    if ($attempt == false) {
+        $attempt = game_addattempt( $game);
+    }
+
+    game_cross_new( $game, $attempt->id, $crossm);
+    game_updateattempts( $game, $attempt, 0, 0);
     return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false, false, false, false, false, true, $context);
 }
 
-function game_cross_new( $game, $attemptid, &$crossm)
-{
+function game_cross_new( $game, $attemptid, &$crossm) {
     global $DB, $USER;
-    
-	$cross = new CrossDB();
 
-	$questions = array();
-	$infos = array();
+    $cross = new CrossDB();
 
-	$answers = array();
-	$recs = game_questions_shortanswer( $game);
-	if( $recs == false){
-		print_error( 'game_cross_continue: '.get_string( 'no_words', 'game'));
-	}
-	$infos = array();
+    $questions = array();
+    $infos = array();
+
+    $answers = array();
+    $recs = game_questions_shortanswer( $game);
+    if ($recs == false) {
+        print_error( 'game_cross_continue: '.get_string( 'no_words', 'game'));
+    }
+    $infos = array();
     $reps = array();
-	foreach( $recs as $rec){
-	    if( $game->param7 == false){	        
-    		if( game_strpos( $rec->answertext, ' ')){
-	    		continue;		//spaces not allowed
-	    	}
-	    }
-		
-		$rec->answertext = game_upper( $rec->answertext);
-		$answers[ $rec->answertext] = game_repairquestion( $rec->questiontext);
-		$infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
+    foreach ($recs as $rec) {
+        if ($game->param7 == false) {
+            if (game_strpos( $rec->answertext, ' ')) {
+                continue;   // Spaces not allowed.
+            }
+        }
 
-        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
-        if(($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false){
+        $rec->answertext = game_upper( $rec->answertext);
+        $answers[ $rec->answertext] = game_repairquestion( $rec->questiontext);
+        $infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
+
+        $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
+            'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
             $reps[ $rec->answertext] = $rec2->r;
         }
-	}
-	
-	$cross->setwords( $answers, $game->param1, $reps);
-	
-	//game->param4 is minimum words in crossword
-	//game->param2 is maximum words in crossword
-	if( $cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2)){
-		$new_crossd = array();
-		foreach( $crossd as $rec)
-		{
-			$info = $infos[ $rec->answertext];
-			if( $info != false){
-				$rec->sourcemodule = $info[ 0];
-				$rec->questionid = $info[ 1];
-				$rec->glossaryentryid = $info[ 2];
-				$rec->attachment = $info[ 3];
-			}
-			$new_crossd[] = $rec;
-		}
-		$cross->savecross( $game, $crossm, $new_crossd, $attemptid);
-	}
-	
-	if( count( $crossd) == 0){
-		print_error( 'game_cross_continue: '.get_string( 'no_words', 'game'));
-	}
+    }
+
+    $cross->setwords( $answers, $game->param1, $reps);
+
+    // The game->param4 is minimum words in crossword.
+    // The game->param2 is maximum words in crossword.
+    if ($cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2)) {
+        $newcrossd = array();
+        foreach ($crossd as $rec) {
+            $info = $infos[ $rec->answertext];
+            if ($info != false) {
+                $rec->sourcemodule = $info[ 0];
+                $rec->questionid = $info[ 1];
+                $rec->glossaryentryid = $info[ 2];
+                $rec->attachment = $info[ 3];
+            }
+            $newcrossd[] = $rec;
+        }
+        $cross->savecross( $game, $crossm, $newcrossd, $attemptid);
+    }
+
+    if (count( $crossd) == 0) {
+        print_error( 'game_cross_continue: '.get_string( 'no_words', 'game'));
+    }
 }
 
-function showlegend( $legend, $title)
-{
-    if( count( $legend) == 0)
+function showlegend( $legend, $title) {
+    if (count( $legend) == 0) {
         return;
-    
+    }
+
     echo "<br><b>$title</b><br>";
-    foreach( $legend as $key => $line)
-    {
+    foreach ($legend as $key => $line) {
         $line = game_repairquestion( $line);
         echo game_filtertext( "$key: $line<br>", 0);
     }
 }
 
-function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution, $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,$showstudentguess, $context)
-{
-	global $CFG, $DB;
+function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
+    $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton, $showstudentguess, $context) {
+    global $CFG, $DB;
 
-	$cross = new CrossDB();
+    $cross = new CrossDB();
 
     $language = $attempt->language;
-	$info = $cross->loadcross( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow, $showsolution, $endofgame, $showhtmlsolutions, $attempt->language,$showstudentguess, $context);
+    $info = $cross->loadcross( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow,
+        $showsolution, $endofgame, $showhtmlsolutions, $attempt->language,
+        $showstudentguess, $context);
 
-    if( $language != $attempt->language){
-        if( !$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))){
-           print_error( "game_cross_play: Can't set language");
+    if ($language != $attempt->language) {
+        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))) {
+            print_error( "game_cross_play: Can't set language");
         }
     }
 
-	if( $done or $endofgame){
-		if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
-			print_error("Course Module ID was incorrect id=$id");
-		}
-		
-		if( $endofgame == false){
-			echo '<B>'.get_string( 'win', 'game').'</B><BR>';
-		}
-		if( game_can_start_new_attempt( $game))
-		{
-		    echo '<br>';	
-		    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id&forcenew=1\">".get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-		}
-	}else if( $info != ''){
-		echo "<br>$info<br>";
-	}
+    if ($done or $endofgame) {
+        if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
+            print_error("Course Module ID was incorrect id=$id");
+        }
 
-    if( $attempt->language != '')
+        if ($endofgame == false) {
+            echo '<B>'.get_string( 'win', 'game').'</B><BR>';
+        }
+        if (game_can_start_new_attempt( $game)) {
+            echo '<br>';
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id&forcenew=1\">".
+                get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+        }
+    } else if ($info != '') {
+        echo "<br>$info<br>";
+    }
+
+    if ($attempt->language != '') {
         $wordrtl = game_right_to_left( $attempt->language);
-    else
+    } else {
         $wordrtl = right_to_left();
+    }
+
     $reverseprint = ($wordrtl != right_to_left());
-    if( $reverseprint)
+    if ($reverseprint) {
         $textdir = 'dir="'.($wordrtl ? 'rtl' : 'ltr').'"';
-    else
+    } else {
         $textdir = '';
+    }
 
 ?>
 <style type="text/css"><!--
@@ -257,17 +276,16 @@ margin-top:	1em;
 </head>
 
 <?php
-if( $print){
-    echo '<body onload="window.print()">';
-}else{
-    echo '<body>';
-}
+    if ($print) {
+        echo '<body onload="window.print()">';
+    } else {
+        echo '<body>';
+    }
 
-	if( $game->toptext != ''){
-		echo $game->toptext.'<br>';
-	}
+    if ($game->toptext != '') {
+        echo $game->toptext.'<br>';
+    }
 ?>
-
 <h1></h1>
 
 <div id="waitmessage" class="answerboxstyle">
@@ -280,7 +298,7 @@ if( $print){
 <p><table cellpadding="0" cellspacing="0" border="0">
 
 <?php
-    if( $game->param3 == 2){
+    if ($game->param3 == 2) {
         echo "<tr>\r\n";
         game_cross_show_welcome( $game);
         echo "</tr>\r\n";
@@ -289,7 +307,8 @@ if( $print){
 ?>
 
 <tr>
-<td class="crosswordarea"><table id="crossword" cellpadding="3" cellspacing="0" style="display: none; border-collapse: collapse;" <?php echo $textdir;?>>
+<td class="crosswordarea">
+<table id="crossword" cellpadding="3" cellspacing="0" style="display: none; border-collapse: collapse;" <?php echo $textdir;?>>
 
 <script language="JavaScript" type="text/javascript"><!--
 
@@ -316,8 +335,8 @@ if (document.getElementById("waitmessage") != null)
 	CurrentWord = -1;
 	PrevWordHorizontal = false;
 	
-<?PHP
- 	echo $html;
+<?php
+    echo $html;
 ?>
 
 	OnlyCheckOnce = false;
@@ -419,7 +438,10 @@ if (document.getElementById("waitmessage") != null)
 		{
 			if (TableAcrossWord[x][y] >= 0 || TableDownWord[x][y] >= 0)
 			{
-				document.write("<td id=\"c" + PadNumber(x) + PadNumber(y) + "\" class=\"gamebox boxnormal_unsel\" onclick=\"SelectThisWord(event);\">");
+                var s;
+                s = "<td id=\"c" + PadNumber(x) + PadNumber(y);
+                s += "\" class=\"gamebox boxnormal_unsel\" onclick=\"SelectThisWord(event);\">";
+                document.write( s);
 
 				if( solu[x][y] != '')
 					document.write( solu[x][y]);
@@ -567,7 +589,7 @@ function SelectThisWord(event)
 		else
 			TableCell = CellAt(x, y + i);
 		// Add its contents to the word we're building.
-		if (TableCell.innerHTML != null && TableCell.innerHTML.length > 0 && TableCell.innerHTML != " " && TableCell.innerHTML.toLowerCase() != "&nbsp;")
+        if (TableCell.innerHTML != null && TableCell.innerHTML.length > 0 && TableCell.innerHTML != " " && TableCell.innerHTML.toLowerCase() != "&nbsp;")
 		{
 			TheirWord += TableCell.innerHTML.toUpperCase();
 			TheirWordLength++;
@@ -579,13 +601,13 @@ function SelectThisWord(event)
 	}
 	
 	document.getElementById("wordlabel").innerHTML = TheirWord;
-	<?php 
-		$msg = "\"".get_string( 'cross_across', 'game').", \" : \"".
-					get_string( 'cross_down', 'game').", \"";
-		$letters = "\" ".get_string( 'letter', 'game').".\" : \" ".
-					get_string( 'letters', 'game').".\"";
-	?>
-	document.getElementById("wordinfo").innerHTML = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>) + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
+<?php 
+    $msg = "\"".get_string( 'cross_across', 'game').", \" : \"".
+        get_string( 'cross_down', 'game').", \"";
+    $letters = "\" ".get_string( 'letter', 'game').".\" : \" ".
+        get_string( 'letters', 'game').".\"";
+?>
+    document.getElementById("wordinfo").innerHTML = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>) + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
 	document.getElementById("wordclue").innerHTML = Clue[CurrentWord];
 	document.getElementById("worderror").style.display = "none";
 	//document.getElementById("cheatbutton").style.display = (Word.length == 0) ? "none" : "";
@@ -630,13 +652,13 @@ function OKClick()
 	}
 	if (TheirWord.length < WordLength[CurrentWord])
 	{
-		document.getElementById("worderror").innerHTML  = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>" + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
+        document.getElementById("worderror").innerHTML  = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>" + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
 		document.getElementById("worderror").style.display = "block";
 		return;
 	}
 	if (TheirWord.length > WordLength[CurrentWord])
 	{
-		document.getElementById("worderror").innerHTML = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>" + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";;
+        document.getElementById("worderror").innerHTML = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>" + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";;
 		document.getElementById("worderror").style.display = "block";
 		return;
 	}
@@ -653,7 +675,7 @@ function OKClick()
 }
 
 <?php 
-if( $showhtmlsolutions == false){
+    if ($showhtmlsolutions == false) {
 ?>
 function PackPuzzle( sData)
 {
@@ -742,55 +764,54 @@ function CheckServerClick( endofgame)
 		sData += "&finishattempt=1";
 	
 <?php
-	if( $onlyshow == false){
-			global $CFG; 
-			$params = 'id='.$id.'&action=crosscheck&g=';
-			echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
-	}
+        if ($onlyshow == false) {
+            global $CFG;
+            $params = 'id='.$id.'&action=crosscheck&g=';
+            echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
+        }
 ?>
 }
-
 <?php
-}
+    }
 ?>
 
 function OnPrint()
 {
 <?php
-    global $CFG; 
+    global $CFG;
     $params = "id=$id&gameid=$game->id";
     echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";
 ?>
 }
 
 <?php
-if( $showhtmlprintbutton){
+    if ($showhtmlprintbutton) {
 ?>
     function PrintHtmlClick()
     {
     	document.getElementById("printhtmlbutton").style.display = "none";
     	
     	<?php
-    	    if( $showhtmlsolutions){
-        	    ?> document.getElementById("checkhtmlbutton").style.display = "none"; <?php
-        	}
+        if ($showhtmlsolutions) {
+            ?> document.getElementById("checkhtmlbutton").style.display = "none"; <?php
+        }
         ?>
         window.print();     
         <?php
-    	    if( $showhtmlsolutions){
-        	    ?> document.getElementById("checkhtmlbutton").style.display = "block"; <?php
-        	}
+        if ($showhtmlsolutions) {
+            ?> document.getElementById("checkhtmlbutton").style.display = "block"; <?php
+        }
         ?>
     	document.getElementById("printhtmlbutton").style.display = "block";	
     }
 <?php
-}
+    }
 
 ?>
 
 
 <?php
-if( $showhtmlprintbutton){
+    if ($showhtmlprintbutton) {
 ?>
 
 /**
@@ -905,11 +926,9 @@ function CheckHtmlClick()
 	}
 }
 <?php
-}
+    }
 
-
-if( $showhtmlsolutions)
-{
+    if ($showhtmlsolutions) {
 ?>
     function decodeutf8(utftext) {
         var string = "";
@@ -941,7 +960,7 @@ if( $showhtmlsolutions)
         return string;
     }
 <?php
-}
+    }
 ?>
 
 //-->
@@ -950,10 +969,10 @@ if( $showhtmlsolutions)
 </table></td>
 
 <?php 
-    if( $game->param3 == 2){
+    if ($game->param3 == 2) {
         echo '<td>&nbsp &nbsp &nbsp</td>';
         game_cross_show_legends( $cross);
-    }else{
+    } else {
         game_cross_show_welcome( $game);
     }
 ?>
@@ -962,80 +981,77 @@ if( $showhtmlsolutions)
 
 
 <?php 
-	if( $onlyshow == false){
-		echo '<div style="margin-top: 1em;">';
+    if ($onlyshow == false) {
+        echo '<div style="margin-top: 1em;">';
 
-		echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.get_string( 'cross_checkbutton', 'game');
-		echo '</button>';
-		
-		echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" type="button" onclick="CheckServerClick( 1);" style="display: none;">'.get_string( 'cross_endofgamebutton', 'game');
-		echo '</button>';
-        if( $game->param5 == 1 or $game->param5 == NULL)
-        {
-		    echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
-		    echo '</button>';
+        echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.
+            get_string( 'cross_checkbutton', 'game');
+        echo '</button>';
+
+        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
+            get_string( 'cross_endofgamebutton', 'game');
+        echo '</button>';
+        if ($game->param5 == 1 or $game->param5 == NULL) {
+            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
+            echo '</button>';
         }
-		
-		echo "</div>\r\n";
-	}	
-	
-	if( $showhtmlsolutions or $showhtmlprintbutton){
-	    echo '<br>';
-	} 
-	
-	if( $showhtmlsolutions){
-		echo '<button id="checkhtmlbutton" type="button" onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
-		echo '</button>';	    
-	}
 
-	if( $showhtmlprintbutton){
-	    if( $showhtmlsolutions){
-	        echo "&nbsp;&nbsp;&nbsp;&nbsp;";
-	    }
-		echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick( 0);" visible=true>'.get_string( 'print', 'game');
-		echo '</button>';	    
-	}
+        echo "</div>\r\n";
+    }
 
-    if( $game->param3 == 2){
+    if ($showhtmlsolutions or $showhtmlprintbutton) {
+        echo '<br>';
+    }
+
+    if ($showhtmlsolutions) {
+        echo '<button id="checkhtmlbutton" type="button" onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
+        echo '</button>';
+    }
+
+    if ($showhtmlprintbutton) {
+        if ($showhtmlsolutions) {
+            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
+        }
+        echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick( 0);" visible=true>'.get_string( 'print', 'game');
+        echo '</button>';
+    }
+
+    if ($game->param3 == 2) {
         echo '<td>&nbsp &nbsp &nbsp</td>';
         game_cross_show_welcome( $game);
-    }else{
+    } else {
         game_cross_show_legends( $cross);
     }
 
-	if( $game->bottomtext != ''){
-		echo '<br><br>'.$game->bottomtext;
-	}
+    if ($game->bottomtext != '') {
+        echo '<br><br>'.$game->bottomtext;
+    }
 
-
-if( $attempt != false){
-    if( $attempt->timefinish == 0 and $endofgame == 0)
-    {
-	    ?>
-
+    if ($attempt != false) {
+        if ($attempt->timefinish == 0 and $endofgame == 0) {
+?>
     	<script language="JavaScript" type="text/javascript"><!--
 	    if (Initialized)
 	    {
-	    <?php
-    	    if( $print == false){
-    	        echo "document.getElementById(\"welcomemessage\").style.display = \"\";";
-    	    }
-    	
-            if( $showsolution == false)
-            {
+<?php
+            if ($print == false) {
+                echo "document.getElementById(\"welcomemessage\").style.display = \"\";";
+            }
+
+            if ($showsolution == false) {
                 ?>
     	    	    document.getElementById("checkbutton").style.display = "";
 	        	    document.getElementById("finishattemptbutton").style.display = "";
 	        	    document.getElementById("printbutton").style.display = "";
 	        	<?php
-	        }
-	    ?>
+            }
+?>
 	    }
 	    //-->
 	    </script>
-	    <?php
+<?php
+        }
     }
-}
 
 ?>
 
@@ -1045,16 +1061,15 @@ if( $attempt != false){
 <?php
 }
 
-function game_cross_show_welcome( $game){
-    if( $game->param3 <> 2){
+function game_cross_show_welcome( $game) {
+    if ($game->param3 <> 2) {
         game_cross_show_welcome0( $game);
-    }else{
+    } else {
         game_cross_show_welcome1();
     }
-            
 }
 
-function game_cross_show_welcome0( $game){
+function game_cross_show_welcome0( $game) {
 ?>
 <td valign="top" style="padding-left: 1em;">
 
@@ -1071,7 +1086,7 @@ function game_cross_show_welcome0( $game){
  style="font-weight: bold; <?  if( $game->param6 == 0) echo 'text-transform:uppercase;';  ?>"
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
 <?php
-    if( $game->param3 == 2){
+    if ($game->param3 == 2) {
         game_cross_show_welcome( $game);
     }
 ?>
@@ -1090,7 +1105,7 @@ function game_cross_show_welcome0( $game){
 <?php
 }
 
-function game_cross_show_welcome1(){
+function game_cross_show_welcome1() {
 ?>
 <td valign="top" style="padding-left: 1em;">
 
@@ -1129,7 +1144,7 @@ function game_cross_show_welcome1(){
 <?php
 }
 
-function game_cross_show_legends( $cross){
+function game_cross_show_legends( $cross) {
     echo '<td>';
     ShowLegend( $cross->m_LegendH,  get_string( 'cross_across', 'game'));
     ShowLegend( $cross->m_LegendV, get_string( 'cross_down', 'game'));
