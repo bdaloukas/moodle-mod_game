@@ -1,4 +1,19 @@
-<?php  // $Id: mod_form.php,v 1.28 2012/07/26 05:38:58 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Form for creating and modifying a game 
  *
@@ -7,88 +22,84 @@
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require_once ($CFG->dirroot.'/course/moodleform_mod.php');
+require_once( $CFG->dirroot.'/course/moodleform_mod.php');
 require( 'locallib.php');
 
 class mod_game_mod_form extends moodleform_mod {
-    
-    function definition() {
-        global $CFG, $DB, $COURSE;
 
+    public function definition() {
+        global $CFG, $DB, $COURSE;
 
         $config = get_config('game');
 
         $mform =& $this->_form;
         $id = $this->_instance;
 
-        if(!empty($this->_instance)){
-            
-            if($g = $DB->get_record('game', array('id' => $id))){
+        if (!empty($this->_instance)) {
+            if ($g = $DB->get_record('game', array('id' => $id))) {
                 $gamekind = $g->gamekind;
+            } else {
+                print_error('incorrect game');
             }
-            else{
-               print_error('incorrect game');
-            }
-        } 
-        else {     
+        } else {
             $gamekind = required_param('type', PARAM_ALPHA);
         }
-    
-        //Hidden elements
+
+        // Hidden elements.
         $mform->addElement('hidden', 'gamekind', $gamekind);
         $mform->setDefault('gamekind', $gamekind);
         $mform->setType('gamekind', PARAM_ALPHA);
         $mform->addElement('hidden', 'type', $gamekind);
         $mform->setDefault('type', $gamekind);
         $mform->setType('type', PARAM_ALPHA);
-        
+
         $mform->addElement( 'hidden', 'gameversion', game_get_version());
         $mform->setType('gameversion', PARAM_INT);
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
-        
-        $mform->addElement('text', 'name', 'Name', array('size'=>'64'));
-        if (!empty($CFG->formatstringstriptags)){
+
+        $mform->addElement('text', 'name', 'Name', array('size' => '64'));
+        if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
-        }
-        else{
+        } else {
             $mform->setType('name', PARAM_CLEAN);
         }
-        if( !isset( $g))
+        if (!isset( $g)) {
             $mform->setDefault('name', get_string( 'game_'.$gamekind, 'game'));
+        }
         $mform->addRule('name', null, 'required', null, 'client');
 
-        $hasglossary = ($gamekind == 'hangman' || $gamekind == 'cross' || $gamekind == 'cryptex' || $gamekind == 'sudoku' || $gamekind == 'hiddenpicture' || $gamekind == 'snakes');
+        $hasglossary = ($gamekind == 'hangman' || $gamekind == 'cross' ||
+                $gamekind == 'cryptex' || $gamekind == 'sudoku' ||
+                $gamekind == 'hiddenpicture' || $gamekind == 'snakes');
 
         $questionsourceoptions = array();
-        if($hasglossary)
+        if ($hasglossary) {
             $questionsourceoptions['glossary'] = get_string('modulename', 'glossary');
-        //if( $gamekind != 'snakes' && $gamekind != 'sudoku' &&
-        //    $gamekind != 'hiddenpicture') {
-            $questionsourceoptions['question'] = get_string('sourcemodule_question', 'game');
-        //}
-        if( $gamekind != 'bookquiz')
+        }
+        $questionsourceoptions['question'] = get_string('sourcemodule_question', 'game');
+        if ($gamekind != 'bookquiz') {
             $questionsourceoptions['quiz'] = get_string('modulename', 'quiz');
-        $mform->addElement('select', 'sourcemodule', get_string('sourcemodule','game'), $questionsourceoptions);
+        }
+        $mform->addElement('select', 'sourcemodule', get_string('sourcemodule', 'game'), $questionsourceoptions);
 
-        if($hasglossary){
+        if ($hasglossary) {
             $a = array();
-            if($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')){
-                foreach($recs as $rec){
+            if ($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')) {
+                foreach ($recs as $rec) {
                     $a[$rec->id] = $rec->name;
-                }                                            
+                }
             }
             $mform->addElement('select', 'glossaryid', get_string('sourcemodule_glossary', 'game'), $a);
             $mform->disabledIf('glossaryid', 'sourcemodule', 'neq', 'glossary');
 
-            if( count( $a) == 0)
+            if (count( $a) == 0) {
                 $select = 'glossaryid=-1';
-            else if( count( $a) == 1)
+            } else if (count( $a) == 1) {
                 $select = 'glossaryid='.$rec->id;
-            else
-            {
+            } else {
                 $select = '';
-                foreach($recs as $rec){
+                foreach ($recs as $rec) {
                     $select .= ','.$rec->id;
                 }
                 $select = 'g.id IN ('.substr( $select, 1).')';
@@ -98,8 +109,8 @@ class mod_game_mod_form extends moodleform_mod {
             $a = array();
             $a[ ] = '';
             $sql = "SELECT gc.id,gc.name,g.name as name2 FROM $table WHERE $select ORDER BY g.name,gc.name";
-            if($recs = $DB->get_records_sql( $sql)){
-                foreach($recs as $rec){
+            if ($recs = $DB->get_records_sql( $sql)) {
+                foreach ($recs as $rec) {
                     $a[$rec->id] = $rec->name2.' -> '.$rec->name;
                 }
             }
@@ -107,41 +118,35 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->disabledIf('glossarycategoryid', 'sourcemodule', 'neq', 'glossary');
         }
 
-        
-        //*********************
-        // Question Category - Short Answer
-
-        if( $gamekind != 'bookquiz'){
+        // Question Category - Short Answer.
+        if ($gamekind != 'bookquiz') {
             $context = game_get_context_course_instance( $COURSE->id);
             $select = " contextid in ($context->id)";
 
             $a = array();
-            if($recs = $DB->get_records_select('question_categories', $select, null, 'id,name')){
-                foreach($recs as $rec){
+            if ($recs = $DB->get_records_select('question_categories', $select, null, 'id,name')) {
+                foreach ($recs as $rec) {
                     $s = $rec->name;
-                    if(($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0){
+                    if (($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0) {
                         $s .= " ($count)";
                     }
                     $a[$rec->id] = $s;
                 }
             }
-            
+
             $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
             $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
 
-            //subcategories
+            // Subcategories.
             $mform->addElement('selectyesno', 'subcategories', get_string('sourcemodule_include_subcategories', 'game'));
             $mform->disabledIf('subcategories', 'sourcemodule', 'neq', 'question');
         }
 
-
-        //***********************
-        // Quiz Category
-        
-        if( $gamekind != 'bookquiz'){
+        // Quiz Category.
+        if ($gamekind != 'bookquiz') {
             $a = array();
-            if( $recs = $DB->get_records('quiz', array( 'course' => $COURSE->id), 'id,name')){
-                foreach( $recs as $rec){
+            if ($recs = $DB->get_records('quiz', array( 'course' => $COURSE->id), 'id,name')) {
+                foreach ($recs as $rec) {
                     $a[$rec->id] = $rec->name;
                 }
             }
@@ -149,80 +154,74 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->disabledIf('quizid', 'sourcemodule', 'neq', 'quiz');
         }
 
-
-        //***********************
-        // Book
-        if($gamekind == 'bookquiz'){
+        // Book.
+        if ( $gamekind == 'bookquiz') {
             $a = array();
-            if($recs = $DB->get_records('book', array( 'course' => $COURSE->id), 'id,name')){
-                foreach($recs as $rec){
+            if ($recs = $DB->get_records('book', array( 'course' => $COURSE->id), 'id,name')) {
+                foreach ($recs as $rec) {
                     $a[$rec->id] = $rec->name;
-                }                                            
+                }
             }
             $mform->addElement('select', 'bookid', get_string('sourcemodule_book', 'game'), $a);
         }
-        
-//Common settings to all games                
-        $mform->addElement('text', 'maxattempts', get_string('cross_max_attempts','game'));
-        $mform->setType('maxattempts', PARAM_INT);              
 
-//---------------------------------------------------------------------------
-// Grade options 
+        // Common settings to all games.
+        $mform->addElement('text', 'maxattempts', get_string('cross_max_attempts', 'game'));
+        $mform->setType('maxattempts', PARAM_INT);
 
+        // Grade options.
         $mform->addElement('header', 'gradeoptions', get_string('grades', 'grades'));
         $mform->addElement('text', 'grade', get_string( 'grademax', 'grades'), array('size' => 4));
         $mform->setType('grade', PARAM_INT);
         $gradingtypeoptions = array();
-        $gradingtypeoptions[ GAME_GRADEHIGHEST] = get_string('gradehighest','game');
-        $gradingtypeoptions[ GAME_GRADEAVERAGE] = get_string('gradeaverage','game');
-        $gradingtypeoptions[ GAME_ATTEMPTFIRST] = get_string('attemptfirst','game');
-        $gradingtypeoptions[ GAME_ATTEMPTLAST] = get_string('attemptlast','game');
-        $mform->addElement('select', 'grademethod', get_string('grademethod','game'), $gradingtypeoptions);
-        
+        $gradingtypeoptions[ GAME_GRADEHIGHEST] = get_string('gradehighest', 'game');
+        $gradingtypeoptions[ GAME_GRADEAVERAGE] = get_string('gradeaverage', 'game');
+        $gradingtypeoptions[ GAME_ATTEMPTFIRST] = get_string('attemptfirst', 'game');
+        $gradingtypeoptions[ GAME_ATTEMPTLAST] = get_string('attemptlast', 'game');
+        $mform->addElement('select', 'grademethod', get_string('grademethod', 'game'), $gradingtypeoptions);
+
         // Open and close dates.
         $mform->addElement('date_time_selector', 'timeopen', get_string('gameopen', 'game'),
                 array('optional' => true, 'step' => 1));
         $mform->addHelpButton('timeopen', 'gameopenclose', 'game');
 
         $mform->addElement('date_time_selector', 'timeclose', get_string('gameclose', 'game'),
-                array('optional' => true, 'step' => 1));              
-                        
-//---------------------------------------------------------------------------
-// Bookquiz options
+                array('optional' => true, 'step' => 1));
 
-        if($gamekind == 'bookquiz'){
+        // Bookquiz options.
+        if ($gamekind == 'bookquiz') {
             $mform->addElement('header', 'bookquiz', get_string( 'bookquiz_options', 'game'));
             $bookquizlayoutoptions = array();
             $bookquizlayoutoptions[0] = get_string('bookquiz_layout0', 'game');
             $bookquizlayoutoptions[1] = get_string('bookquiz_layout1', 'game');
-            $mform->addElement('select','param3', get_string('bookquiz_layout', 'game'), $bookquizlayoutoptions);
+            $mform->addElement('select', 'param3',
+                get_string('bookquiz_layout', 'game'), $bookquizlayoutoptions);
         }
-                
-//---------------------------------------------------------------------------
-// Hangman options
 
-        if($gamekind == 'hangman'){
+        // Hangman options.
+        if ($gamekind == 'hangman') {
             $mform->addElement('header', 'hangman', get_string( 'hangman_options', 'game'));
             $mform->addElement('text', 'param4', get_string('hangman_maxtries', 'game'), array('size' => 4));
             $mform->setType('param4', PARAM_INT);
             $mform->addElement('selectyesno', 'param1', get_string('hangman_showfirst', 'game'));
             $mform->addElement('selectyesno', 'param2', get_string('hangman_showlast', 'game'));
-            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
+            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces', 'game'));
             $mform->addElement('selectyesno', 'param8', get_string('hangman_allowsub', 'game'));
 
             $mform->addElement('text', 'param10', get_string( 'hangman_maximum_number_of_errors', 'game'), array('size' => 4));
             $mform->setType('param10', PARAM_INT);
 
-            if( !isset( $config->hangmanimagesets))
+            if (!isset( $config->hangmanimagesets)) {
                 $number = 1;
-            else
+            } else {
                 $number = $config->hangmanimagesets;
-            if( $number > 1)
-            {            
+            }
+            if ($number > 1) {
                 $a = array();
-                for( $i=1; $i <= $number; $i++)
+                for ($i = 1; $i <= $number; $i++) {
                     $a[ $i] = $i;
-                $mform->addElement('select', 'param3', get_string('hangman_imageset','game'), $a);
+                }
+                $mform->addElement('select', 'param3', get_string('hangman_imageset', 'game'), $a);
             }
 
             $mform->addElement('selectyesno', 'param5', get_string('hangman_showquestion', 'game'));
@@ -231,40 +230,36 @@ class mod_game_mod_form extends moodleform_mod {
 
             $a = array();
             $a = get_string_manager()->get_list_of_translations();
-		    $a[ ''] = '----------';
+            $a[ ''] = '----------';
             $a[ 'user'] = get_string('language_user_defined', 'game');
             ksort( $a);
-            $mform->addElement('select', 'language', get_string('hangman_language','game'), $a);
+            $mform->addElement('select', 'language', get_string('hangman_language', 'game'), $a);
 
-            $mform->addElement('text', 'userlanguage', get_string('language_user_defined','game'));
+            $mform->addElement('text', 'userlanguage', get_string('language_user_defined', 'game'));
             $mform->setType('userlanguage', PARAM_TEXT);
             $mform->disabledIf('userlanguage', 'language', 'neq', 'user');
         }
 
-//---------------------------------------------------------------------------
-// Crossword options
-
-        if($gamekind == 'cross'){ 
+        // Crossword options.
+        if ($gamekind == 'cross') {
             $mform->addElement('header', 'cross', get_string( 'cross_options', 'game'));
             $mform->addElement('text', 'param1', get_string('cross_maxcols', 'game'));
             $mform->setType('param1', PARAM_INT);
             $mform->addElement('text', 'param4', get_string('cross_minwords', 'game'));
-            $mform->setType('param4', PARAM_INT);            
+            $mform->setType('param4', PARAM_INT);
             $mform->addElement('text', 'param2', get_string('cross_maxwords', 'game'));
             $mform->setType('param2', PARAM_INT);
-            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
+            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces', 'game'));
             $crosslayoutoptions = array();
             $crosslayoutoptions[0] = get_string('cross_layout0', 'game');
             $crosslayoutoptions[1] = get_string('cross_layout1', 'game');
-            $mform->addElement('select','param3', get_string('cross_layout', 'game'), $crosslayoutoptions);
+            $mform->addElement('select', 'param3', get_string('cross_layout', 'game'), $crosslayoutoptions);
             $mform->setType('param5', PARAM_INT);
-            $mform->addElement('selectyesno', 'param6', get_string('cross_disabletransformuppercase','game'));
+            $mform->addElement('selectyesno', 'param6', get_string('cross_disabletransformuppercase', 'game'));
         }
 
-//---------------------------------------------------------------------------
-// Cryptex options
-
-        if($gamekind == 'cryptex'){
+        // Cryptex options.
+        if ($gamekind == 'cryptex') {
             $mform->addElement('header', 'cryptex', get_string( 'cryptex_options', 'game'));
             $mform->addElement('text', 'param1', get_string('cross_maxcols', 'game'));
             $mform->setType('param1', PARAM_INT);
@@ -272,15 +267,13 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setType('param4', PARAM_INT);
             $mform->addElement('text', 'param2', get_string('cross_maxwords', 'game'));
             $mform->setType('param2', PARAM_INT);
-            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
-            $mform->addElement('text', 'param8', get_string('cryptex_maxtries','game'));
+            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces', 'game'));
+            $mform->addElement('text', 'param8', get_string('cryptex_maxtries', 'game'));
             $mform->setType('param8', PARAM_INT);
         }
-        
-//---------------------------------------------------------------------------
-// Millionaire options
 
-        if($gamekind == 'millionaire'){
+        // Millionaire options.
+        if ($gamekind == 'millionaire') {
             global $OUTPUT, $PAGE;
 
             $mform->addElement('header', 'millionaire', get_string( 'millionaire_options', 'game'));
@@ -288,44 +281,36 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setDefault('param8', '#408080');
             $mform->setType('param8', PARAM_TEXT);
 
-            //$mform->addElement('colorpicker', 'param8', get_string('millionaire_background', 'game'));
-            //$mform->registerRule('color','regex','/^#([a-fA-F0-9]{6})$/');
-            //$mform->addRule('config_bgcolor','Enter a valid RGB color - # and then 6 characters','color');
-
-            $mform->addElement('selectyesno', 'shuffle', get_string('millionaire_shuffle','game'));
+            $mform->addElement('selectyesno', 'shuffle', get_string('millionaire_shuffle', 'game'));
         }
 
-//---------------------------------------------------------------------------
-// Sudoku options
-
-        if($gamekind == 'sudoku'){
+        // Sudoku options.
+        if ($gamekind == 'sudoku') {
             $mform->addElement('header', 'sudoku', get_string( 'sudoku_options', 'game'));
             $mform->addElement('text', 'param2', get_string('sudoku_maxquestions', 'game'));
             $mform->setType('param2', PARAM_INT);
         }
 
-//---------------------------------------------------------------------------
-// Snakes and Ladders options
-
-        if($gamekind == 'snakes'){
+        // Snakes and Ladders options.
+        if ($gamekind == 'snakes') {
             $mform->addElement('header', 'snakes', get_string( 'snakes_options', 'game'));
             $snakesandladdersbackground = array();
-            if($recs = $DB->get_records( 'game_snakes_database', null, 'id,name')){
-                foreach( $recs as $rec){
+            if ($recs = $DB->get_records( 'game_snakes_database', null, 'id,name')) {
+                foreach ($recs as $rec) {
                     $snakesandladdersbackground[$rec->id] = $rec->name;
                 }
             }
-            
+
             $snakeslayoutoptions = array();
             $snakeslayoutoptions[0] = get_string('snakes_layout0', 'game');
             $snakeslayoutoptions[1] = get_string('snakes_layout1', 'game');
-            $mform->addElement('select','param8', get_string('bookquiz_layout', 'game'), $snakeslayoutoptions);
-                        
-            if(count($snakesandladdersbackground) == 0){
+            $mform->addElement('select', 'param8', get_string('bookquiz_layout', 'game'), $snakeslayoutoptions);
+
+            if (count($snakesandladdersbackground) == 0) {
                 require("{$CFG->dirroot}/mod/game/db/importsnakes.php");
 
-                if($recs = $DB->get_records('game_snakes_database', null, 'id,name')){
-                    foreach($recs as $rec){
+                if ($recs = $DB->get_records('game_snakes_database', null, 'id,name')) {
+                    foreach ($recs as $rec) {
                         $snakesandladdersbackground[$rec->id] = $rec->name;
                     }
                 }
@@ -334,14 +319,14 @@ class mod_game_mod_form extends moodleform_mod {
             ksort( $snakesandladdersbackground);
             $mform->addElement('select', 'param3', get_string('snakes_background', 'game'), $snakesandladdersbackground);
 
-            //param3 = background
-            //param4 = itemid for file_storage
-            //param5 (=1 means dirty file and and have to be computed again)
-            //param6 = width of autogenerated picture
-            //param7 = height of autogenerated picture
-            //param8 = layout
+            // Param3 = background.
+            // Param4 = itemid for file_storage.
+            // Param5 (=1 means dirty file and and have to be computed again).
+            // Param6 = width of autogenerated picture.
+            // Param7 = height of autogenerated picture.
+            // Param8 = layout.
 
-            $attachmentoptions = array('subdirs'=>false, 'maxfiles'=>1);
+            $attachmentoptions = array('subdirs' => false, 'maxfiles' => 1);
             $mform->addElement('filepicker', 'param4', get_string('snakes_file', 'game'), $attachmentoptions);
             $mform->disabledIf('param4', 'param3', 'neq', '0');
 
@@ -379,10 +364,8 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setType('snakes_height', PARAM_INT);
         }
 
-//---------------------------------------------------------------------------
-// Hidden Picture options
-
-        if($gamekind == 'hiddenpicture'){
+        // Hidden Picture options.
+        if ($gamekind == 'hiddenpicture') {
             $mform->addElement('header', 'hiddenpicture', get_string( 'hiddenpicture_options', 'game'));
             $mform->addElement('text', 'param1', get_string('hiddenpicture_across', 'game'));
             $mform->setType('param1', PARAM_INT);
@@ -392,14 +375,14 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setDefault('param2', 3);
 
             $a = array();
-            if($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')){
-                foreach($recs as $rec){
+            if ($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')) {
+                foreach ($recs as $rec) {
                     $cmg = get_coursemodule_from_instance('glossary', $rec->id, $COURSE->id);
                     $context = game_get_context_module_instance( $cmg->id);
-                    if( $DB->record_exists( 'files', array( 'contextid' => $context->id))){
+                    if ($DB->record_exists( 'files', array( 'contextid' => $context->id))) {
                         $a[$rec->id] = $rec->name;
                     }
-                }                                            
+                }
             }
             $mform->addElement('select', 'glossaryid2', get_string('hiddenpicture_pictureglossary', 'game'), $a);
 
@@ -407,104 +390,98 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setType('param4', PARAM_INT);
             $mform->addELement('text', 'param5', get_string('hiddenpicture_height', 'game'));
             $mform->setType('param5', PARAM_INT);
-            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces','game'));
+            $mform->addElement('selectyesno', 'param7', get_string('hangman_allowspaces', 'game'));
         }
 
-//---------------------------------------------------------------------------
-// Header/Footer options
-
+        // Header/Footer options.
         $mform->addElement('header', 'headerfooteroptions', 'Header/Footer Options');
-        $mform->addElement('htmleditor', 'toptext', get_string('toptext','game'));
-        $mform->addElement('htmleditor', 'bottomtext', get_string('bottomtext','game'));
+        $mform->addElement('htmleditor', 'toptext', get_string('toptext', 'game'));
+        $mform->addElement('htmleditor', 'bottomtext', get_string('bottomtext', 'game'));
 
-//---------------------------------------------------------------------------
         $features = new stdClass;
         $this->standard_coursemodule_elements($features);
 
-//---------------------------------------------------------------------------
-// buttons
+        // Buttons.
         $this->add_action_buttons();
     }
 
-
-    function validation($data, $files){
+    public function validation($data, $files) {
         $errors = parent::validation($data, $files);
-        
+
         // Check open and close times are consistent.
         if ($data['timeopen'] != 0 && $data['timeclose'] != 0 &&
                 $data['timeclose'] < $data['timeopen']) {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
-        
+
         return $errors;
     }
 
 
-    function set_data($default_values) {
+    public function set_data($defaultvalues) {
         global $DB;
 
-        if( isset( $default_values->type))
-        {
-            //Default values for every game.
-            if( $default_values->type == 'hangman')
-            {
-                $default_values->param10 = 6;    //maximum number of wrongs
-            }else if( $default_values->type == 'snakes')
-            {
-                $default_values->gamekind = $default_values->type;
-                $default_values->param3 = 1;
-                $default_values->questioncategoryid = 0;
-            }else if( $default_values->type == 'millionaire')
-            {
-                $default_values->shuffle = 1;
+        if (isset( $defaultvalues->type)) {
+            // Default values for every game.
+            if ($defaultvalues->type == 'hangman') {
+                $defaultvalues->param10 = 6;    // Maximum number of wrongs.
+            } else if ($defaultvalues->type == 'snakes') {
+                $defaultvalues->gamekind = $defaultvalues->type;
+                $defaultvalues->param3 = 1;
+                $defaultvalues->questioncategoryid = 0;
+            } else if ($defaultvalues->type == 'millionaire') {
+                $defaultvalues->shuffle = 1;
             }
-        }        
+        }
 
-        if( isset( $default_values->gamekind)){
-            if( $default_values->gamekind == 'hangman'){
-                if( $default_values->param10 == 0)
-                    $default_values->param10 = 6;
-            }else if( $default_values->gamekind == 'millionaire'){
-                if( isset( $default_values->param8))
-                    $default_values->param8 = '#'.substr( '000000'.strtoupper( dechex( $default_values->param8)),-6);
-            }else if( $default_values->gamekind == 'cross')
-            {
-                if( $default_values->param5 == NULL)
-                    $default_values->param5 = 1;
+        if (isset( $defaultvalues->gamekind)) {
+            if ($defaultvalues->gamekind == 'hangman') {
+                if ($defaultvalues->param10 == 0) {
+                    $defaultvalues->param10 = 6;
+                }
+            } else if ($defaultvalues->gamekind == 'millionaire') {
+                if (isset( $defaultvalues->param8)) {
+                    $defaultvalues->param8 = '#'.substr( '000000'.strtoupper( dechex( $defaultvalues->param8)), -6);
+                }
+            } else if ($defaultvalues->gamekind == 'cross') {
+                if ($defaultvalues->param5 == null) {
+                    $defaultvalues->param5 = 1;
+                }
             }
-            
-            if( $default_values->gamekind == 'snakes'){
-                if( isset( $default_values->param9)){
-                    $a = explode( '#',$default_values->param9);
-                    foreach( $a as $s){
+
+            if ($defaultvalues->gamekind == 'snakes') {
+                if (isset( $defaultvalues->param9)) {
+                    $a = explode( '#', $defaultvalues->param9);
+                    foreach ($a as $s) {
                         $pos = strpos( $s, ':');
-                        if( $pos){
+                        if ($pos) {
                             $name = substr( $s, 0, $pos);
-                            $default_values->$name = substr( $s, $pos+1);
+                            $defaultvalues->$name = substr( $s, $pos + 1);
                         }
                     }
                 }
             }
         }
 
-        if( !isset( $default_values->gamekind))
-            $default_values->gamekind = $default_values->type;
-        if( $default_values->gamekind == 'snakes'){
-            if( isset( $default_values->param3)){
-                $board = $default_values->param3;
-                if( $board != 0){
+        if (!isset( $defaultvalues->gamekind)) {
+            $defaultvalues->gamekind = $defaultvalues->type;
+        }
+        if ($defaultvalues->gamekind == 'snakes') {
+            if (isset( $defaultvalues->param3)) {
+                $board = $defaultvalues->param3;
+                if ($board != 0) {
                     $rec = $DB->get_record( 'game_snakes_database', array( 'id' => $board));
-                    $default_values->snakes_data = $rec->data;
-                    $default_values->snakes_cols = $rec->cols;
-                    $default_values->snakes_rows = $rec->rows;
-                    $default_values->snakes_headerx = $rec->headerx;
-                    $default_values->snakes_headery = $rec->headery;
-                    $default_values->snakes_footerx = $rec->footerx;
-                    $default_values->snakes_footery = $rec->footery;
+                    $defaultvalues->snakes_data = $rec->data;
+                    $defaultvalues->snakes_cols = $rec->cols;
+                    $defaultvalues->snakes_rows = $rec->rows;
+                    $defaultvalues->snakes_headerx = $rec->headerx;
+                    $defaultvalues->snakes_headery = $rec->headery;
+                    $defaultvalues->snakes_footerx = $rec->footerx;
+                    $defaultvalues->snakes_footery = $rec->footery;
                 }
             }
         }
-        
-        parent::set_data($default_values);
+
+        parent::set_data($defaultvalues);
     }
 }

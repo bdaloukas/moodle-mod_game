@@ -1,4 +1,19 @@
-<?php  // $Id: translate.php,v 1.10 2012/07/25 23:07:43 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * Check translation of module Game
  *
@@ -21,8 +36,9 @@ require( 'locallib.php');
 
 $moodle19dir = '/var/www/moodle19';
 $context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
-if (!has_capability('mod/game:viewreports', $context))
+if (!has_capability('mod/game:viewreports', $context)) {
     error( get_string( 'only_teachers', 'game'));
+}
 
 $langname = array();
 $langname['ca'] = 'Català (ca)';
@@ -45,16 +61,16 @@ $langname['uk'] = 'Українська (uk)';
 $langname['pt_br'] = 'Português - Brasil (pt_br)';
 $langname['zh_cn'] = '简体中文 (zh_cn)';
 ksort( $langname);
-$a = read_dir( $CFG->dirroot.'/mod/game','php');
+$a = read_dir( $CFG->dirroot.'/mod/game', 'php');
 $strings = array();
 $files = array();
-foreach( $a as $file)
+foreach ($a as $file) {
     $files[] = $file;
+}
 sort( $files);
 
-foreach( $files as $file)
-{
-    readsourcecode( $file, $strings);    
+foreach ($files as $file) {
+    readsourcecode( $file, $strings);
 }
 
 $strings[ 'game:attempt'] = '/db/access.php * game:attempt';
@@ -86,150 +102,151 @@ unset( $en[ 'convertto']);
 $langs = computelangs();
 $sum = array();
 $destdir = game_export_createtempdir();
-foreach( $langs as $lang)
-{
-    if($lang != 'en' and $lang != 'CVS' and strpos( $lang, '_utf8') == 0 and strpos( $lang, '_uft8') == 0)
-    {
+foreach ($langs as $lang) {
+    if ($lang != 'en' and $lang != 'CVS' and strpos( $lang, '_utf8') == 0 and strpos( $lang, '_uft8') == 0) {
         computediff( $en, $lang, $strings, $langname, $sum, $destdir, $untranslated);
         $auntranslated[ $lang] = $untranslated;
     }
 }
-$file_no_translation = 'game_lang_no_translation.zip';
-$filezip=game_create_zip( $destdir, $COURSE->id, $file_no_translation);
+$filenotranslation = 'game_lang_no_translation.zip';
+$filezip = game_create_zip( $destdir, $COURSE->id, $filenotranslation);
 remove_dir( $destdir);
-$ilang=0;
+$ilang = 0;
 echo '<table border=1>';
 echo "<tr><td><b>Counter</td><td><b>Language</td><td><b>Missing words</td><td><b>Percent completed</td></tr>";
-foreach($sum as $s)
-  echo '<tr><td>'.(++$ilang).'</td>'.$s."\r\n";
+foreach ($sum as $s) {
+    echo '<tr><td>'.(++$ilang).'</td>'.$s."\r\n";
+}
 echo "</table>";
 
-echo "<br><a href=\"{$CFG->wwwroot}/file.php/1/export/$file_no_translation\">Words that is not translated yet in each language</a>";
+echo "<br><a href=\"{$CFG->wwwroot}/file.php/1/export/$filenotranslation\">Words that is not translated yet in each language</a>";
 
-//Find missing strings on en/game.php
+// Find missing strings on en/game.php.
 $not = array();
 $prevfile = '';
-foreach( $strings as $info)
-{
+foreach ($strings as $info) {
     $pos = strpos( $info, '*');
-    $name = substr( $info, $pos+2);
-    $file = substr( $info, 0, $pos-1);
-    if( substr( $file, 0, 1) == '/')
+    $name = substr( $info, $pos + 2);
+    $file = substr( $info, 0, $pos - 1);
+    if (substr( $file, 0, 1) == '/') {
         $file = substr( $file, 1);
-    if( $file != $prevfile)
-    {
+    }
+    if ($file != $prevfile) {
         $prevfile = $file;
     }
-    if( !array_key_exists( $name, $en))
+    if (!array_key_exists( $name, $en)) {
         $not[ $info] = $info;
+    }
 }
-$oldfile='';
+$oldfile = '';
 unset( $not[ 'tabs.php * $report']);
 unset( $not[ 'mod_form.php * game_\'.$gamekin']);
 unset( $not[ 'mod.html * game_\'.$form->gamekin']);
 unset( $not[ '/report/overview/report.php * fullname\')."\t".get_string(\'startedon']);
 unset( $not[ '/hangman/play.php * hangman_correct_\'.$ter']);
 
-if( count( $not))
+if (count( $not)) {
     echo "<br><br>Missing strings on en/game.php<br>";
-foreach( $not as $key => $value)
-{
+}
+foreach ($not as $key => $value) {
     $pos = strpos( $value, '*');
     $file = trim( substr( $value, 0, $pos));
-    $key = trim( substr( $value, $pos+1));
-    if( $key == 'convertfrom' or $key == 'convertto')
+    $key = trim( substr( $value, $pos + 1));
+    if ($key == 'convertfrom' or $key == 'convertto') {
         continue;
-    
-    if( substr( $file, 0, 1) == '/')
+    }
+
+    if (substr( $file, 0, 1) == '/') {
         $file = substr( $file, 1);
-    if( $file != $oldfile)
-    {
+    }
+    if ($file != $oldfile) {
         echo "<br>//$file<br>\r\n";
-        $fileold=$file;
+        $fileold = $file;
     }
     echo '$'."string[ '$key'] = \"\";<br>";
 }
 
-//Finds translations to en that are not used now
+// Finds translations to en that are not used now.
 $ret = '';
-foreach( $en as $key => $value)
-{
-    if( !array_key_exists( $key, $strings))
+foreach ($en as $key => $value) {
+    if (!array_key_exists( $key, $strings)) {
         $ret .= "$key = $value<br>";
+    }
 }
-if( $ret != '')
+if ($ret != '') {
     echo '<hr><b><center>Translations that are not used</center></b><br>'.$ret;
+}
 
-//Creates the zip files of translations
+// Creates the zip files of translations.
 $destdir = game_export_createtempdir();
 sort( $strings);
-foreach( $langname as $lang => $name)
-{
-    $strings_lang = readlangfile( $lang, $header);
-    if (empty($string_lang)) {
+foreach ($langname as $lang => $name) {
+    $stringslang = readlangfile( $lang, $header);
+    if (empty($stringlang)) {
         continue;
     }
     $ret = '';
-    
-    foreach( $strings_lang as $key => $value)
-    {
-        if( !array_key_exists( $key, $en))
-        {
-            if( $key != 'convertfrom' and $key != 'convertto')
+
+    foreach ($stringslang as $key => $value) {
+        if (!array_key_exists( $key, $en)) {
+            if ($key != 'convertfrom' and $key != 'convertto') {
                 $ret .= '<br>'.$key."\r\n";
+            }
         }
     }
-    if( $ret != '')
+    if ($ret != '') {
         echo '<hr><b><center>Unused translation for lang '.$lang.'</center></b><br>'.substr( $ret, 4)."\r\n";
+    }
 
     $ret = $header;
-    foreach( $strings as $info)
-    {
+    foreach ($strings as $info) {
         $pos = strpos( $info, '*');
-        $name = substr( $info, $pos+2);
-        $file = substr( $info, 0, $pos-1);
-        if( substr( $file, 0, 1) == '/')
+        $name = substr( $info, $pos + 2);
+        $file = substr( $info, 0, $pos - 1);
+        if (substr( $file, 0, 1) == '/') {
             $file = substr( $file, 1);
-        if( $file != $prevfile)
-        {
+        }
+        if ($file != $prevfile) {
             $prevfile = $file;
             $ret .= "\r\n//".$file."\r\n";
         }
-        if( array_key_exists( $name, $strings_lang))
-            $ret .= '$string'."[ '$name'] = ".$strings_lang[ $name]."\r\n";
+        if (array_key_exists( $name, $stringslang)) {
+            $ret .= '$string'."[ '$name'] = ".$stringslang[ $name]."\r\n";
+        }
     }
-    if( $lang != 'en')
-    {
+    if ($lang != 'en') {
         $untranslated = $auntranslated[ $lang];
-        if( $untranslated != '')
+        if ($untranslated != '') {
             $ret .= "\r\n//Untranslated\r\n".$untranslated;
+        }
     }
     mkdir( $destdir.'/'.$lang);
     $file = $destdir.'/'.$lang.'/game.php';
     file_put_contents( $file, $ret);
 }
 
-$file_sorted = 'game_lang_sorted.zip';
-$filezip=game_create_zip( $destdir, $COURSE->id, $file_sorted);
+$filesorted = 'game_lang_sorted.zip';
+$filezip = game_create_zip( $destdir, $COURSE->id, $filesorted);
 remove_dir( $destdir);
-echo "<br><a href=\"{$CFG->wwwroot}/file.php/1/export/$file_sorted\">Sorted translation files</a>";
+echo "<br><a href=\"{$CFG->wwwroot}/file.php/1/export/$filesorted\">Sorted translation files</a>";
 
 asort( $en);
 $sprev = '';
 $keyprev = '';
 $ret = '';
-foreach( $en as $key => $s)
-{
-    if( $s == $sprev)
+foreach ($en as $key => $s) {
+    if ($s == $sprev) {
         $ret .= "<tr><td>$key</td><td>$keyprev</td><td>$s</td></tr>\r\n";
+    }
     $sprev = $s;
     $keyprev = $key;
 }
-if( $ret != '')
-    echo '<br><center><b>Same translations<center></b><br><table border=1><tr><td><b>Word1</td><td><b>Word2</td><td><b>Translation</td></tr>'.$ret.'</table>';
+if ($ret != '') {
+    echo '<br><center><b>Same translations<center></b><br>';
+    echo '<table border=1><tr><td><b>Word1</td><td><b>Word2</td><td><b>Translation</td></tr>'.$ret.'</table>';
+}
 
-function readlangfile( $lang, &$header)
-{
+function readlangfile( $lang, &$header) {
     global $CFG;
 
     $file = $CFG->dirroot.'/mod/game/lang/'.$lang.'/game.php';
@@ -242,45 +259,45 @@ function readlangfile( $lang, &$header)
     $lines = file( $file);
     $header = '';
     $endofheader = false;
-    foreach( $lines as $line)
-    {
-        if( $endofheader == false)
-        {
-            if( strpos( $line, '//') === false)
+    foreach ($lines as $line) {
+        if ($endofheader == false) {
+            if (strpos( $line, '//') === false) {
                 $endofheader = true;
-            else
+            } else {
                 $header .= $line;
+            }
         }
-        if( splitlangdefinition($line,$name,$trans))
+        if (splitlangdefinition($line, $name, $trans)) {
             $a[ $name] = $trans;
+        }
     }
-    
-    if( $lang != 'en')
+
+    if ($lang != 'en') {
         readlangfile_repairmoodle19( $lang, $a);
+    }
 
     return $a;
 }
 
-function splitlangdefinition($line,&$name,&$trans)
-{
+function splitlangdefinition($line, &$name, &$trans) {
     $pos1 = strpos( $line, '=');
-    if( $pos1 == 0)
+    if ($pos1 == 0) {
         return false;
+    }
 
     $pos2 = strpos( $line, '//');
-    if( $pos2 != 0 or substr( $line, 0, 2) == '//')
-    {
-        if( $pos2 < $pos1)
-            return false;   //Commented line
+    if ($pos2 != 0 or substr( $line, 0, 2) == '//') {
+        if ($pos2 < $pos1) {
+            return false;   // Commented line.
+        }
     }
- 
-    $name = trim(substr( $line, 0, $pos1-1));
-    $trans = trim(substr( $line, $pos1+1));
+
+    $name = trim(substr( $line, 0, $pos1 - 1));
+    $trans = trim(substr( $line, $pos1 + 1));
 
     $pos = strpos( $name, '\'');
-    if( $pos)
-    {
-        $name = substr( $name, $pos+1);
+    if ($pos) {
+        $name = substr( $name, $pos + 1);
         $pos = strrpos( $name, '\'');
         $name = substr( $name, 0, $pos);
     }
@@ -288,122 +305,124 @@ function splitlangdefinition($line,&$name,&$trans)
     return true;
 }
 
-function readsourcecode( $file, &$strings)
-{
+function readsourcecode( $file, &$strings) {
     global $CFG;
 
     $lines = file( $file);
-    foreach( $lines as $line)
-    {
+    foreach ($lines as $line) {
         parseline( $strings, $line, $file);
     }
 
     return $strings;
 }
 
-function parseline( &$strings, $line, $filename)
-{
+function parseline( &$strings, $line, $filename) {
     global $CFG;
-    
+
     $filename = substr( $filename, strlen( $CFG->dirroot.'/mod/game/'));
-    if( strpos($filename, '/'))
+    if (strpos($filename, '/')) {
         $filename = '/'.$filename;
+    }
     $pos0 = 0;
-    for(;;)
-    {
+    for (;;) {
         $pos = strpos( $line, 'get_string', $pos0);
-        if( $pos == false)
+        if ($pos == false) {
             $pos = strpos( $line, 'print_string', $pos0);
-        if( $pos === false)        
+        }
+        if ($pos === false) {
             break;
+        }
         $pos1 = strpos( $line, '(', $pos);
         $pos2 = strpos( $line, ',', $pos);
         $pos3 = strpos( $line, ')', $pos);
-        if( $pos1 == 0 or $pos2 == 0 or $pos3 == 0)
-        {
-            $pos0 = $pos+1;
+        if ($pos1 == 0 or $pos2 == 0 or $pos3 == 0) {
+            $pos0 = $pos + 1;
             continue;
         }
-        $name = gets( substr( $line, $pos1+1, $pos2-$pos1-1));
-        $file = gets( substr( $line, $pos2+1, $pos3-$pos2-1));
+        $name = gets( substr( $line, $pos1 + 1, $pos2 - $pos1 - 1));
+        $file = gets( substr( $line, $pos2 + 1, $pos3 - $pos2 - 1));
 
-        if( $file == 'game')
-        {
-            if( !array_key_exists( $name, $strings))
+        if ($file == 'game') {
+            if (!array_key_exists( $name, $strings)) {
                 $strings[ $name] = $filename.' * '.$name;
-        }else
-        {
+            }
+        } else {
             $pos4 = strpos($file, '\'');
-            if( $pos4)
+            if ($pos4) {
                 $file = substr( $file, 0, $pos4);
-
+            }
             $pos4 = strpos($file, '"');
-            if($pos4)
+            if ($pos4) {
                 $file = substr( $file, 0, $pos4);
+            }
 
-            if( $file == 'game')
-            {
-                if( !array_key_exists( $name, $strings))
+            if ($file == 'game') {
+                if (!array_key_exists( $name, $strings)) {
                     $strings[ $name] = $filename.' * '.$name;
+                }
             }
         }
 
-        $pos0 = $pos+1;
+        $pos0 = $pos + 1;
     }
 }
 
-function gets( $s)
-{
+function gets( $s) {
     $s = trim( $s);
-    if( substr( $s, 0, 1) == '"')
+    if (substr( $s, 0, 1) == '"') {
         $s = substr( $s, 1, -1);
-    if( substr( $s, 0, 1) == '\'')
+    }
+    if (substr( $s, 0, 1) == '\'') {
         $s = substr( $s, 1, -1);
+    }
+
     return $s;
 }
 
 function read_dir($dir, $ext) {
-    if( $ext != '')
+    if ($ext != '') {
         $ext = '.' .$ext;
+    }
     $len = strlen( $ext);
 
     $a = array( $dir);
     $ret = array();
-    while( count( $a)){
+    while (count( $a)) {
         $dir = array_pop( $a);
-        if( strpos( $dir, '/lang/') != 0)
+        if (strpos( $dir, '/lang/') != 0) {
             continue;
+        }
 
         $d = dir($dir);
         while (false !== ($entry = $d->read())) {
-            if($entry!='.' && $entry!='..') {
+            if ($entry != '.' && $entry != '..') {
                 $entry = $dir.'/'.$entry;
-                if(is_dir($entry)) {
+                if (is_dir($entry)) {
                     $a[] = $entry;
                 } else {
-                    if( $len == 0)
+                    if ($len == 0) {
                         $ret[] = $entry;
-                    else if( substr( $entry, -$len) == $ext)
+                    } else if (substr( $entry, -$len) == $ext) {
                         $ret[] = $entry;
+                    }
                 }
             }
         }
         $d->close();
-   }
+    }
 
-   return $ret;
+    return $ret;
 }
 
-function computelangs()
-{
+function computelangs() {
     global $CFG;
 
     $dir = $CFG->dirroot.'/mod/game/lang';
     $ret = array();
     $d = dir( $dir);
     while (false !== ($entry = $d->read())) {
-        if( $entry != '.' and $entry != '..'){
-            if(is_dir($dir.'/'.$entry)) {
+        if ($entry != '.' and $entry != '..') {
+            if (is_dir($dir.'/'.$entry)) {
                 $ret[] = $entry;
             }
         }
@@ -412,14 +431,12 @@ function computelangs()
     return $ret;
 }
 
-function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated)
-{
+function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated) {
     global $CFG;
     $untranslated = '';
-    $counten=count($en);
+    $counten = count($en);
     $trans = readlangfile( $lang, $header);
-    foreach( $trans as $s => $key)
-    {
+    foreach ($trans as $s => $key) {
         unset( $en[ $s]);
     }
 
@@ -427,69 +444,69 @@ function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untrans
     $lines = file( $file);
     $count = 0;
     $s = '';
-    foreach( $lines as $line)
-    {
+    foreach ($lines as $line) {
         $s .= $line;
-        if( ++$count >= 3)
+        if (++$count >= 3) {
             break;
+        }
     }
-   
+
     $a = array();
-    foreach( $en as $name => $t)
-    {       
-        if( array_key_exists( $name, $strings))
+    foreach ($en as $name => $t) {
+        if (array_key_exists( $name, $strings)) {
             $file = $strings[ $name];
-        else
+        } else {
             $file = '';
+        }
         $t = strip_tags( $t);
         $a[ $file.' * '.$name] = '$'."string[ '$name'] = $t\r\n";
     }
     ksort( $a);
 
-    if( array_key_exists( $lang, $langname))
+    if (array_key_exists( $lang, $langname)) {
         $langprint = $langname[ $lang];
-    else
+    } else {
         $langprint = $lang;
+    }
 
-    $sum[]="<td>$langprint</td><td><center>".count($a)."</td><td><center>".round(100*($counten-count($a))/$counten,0)." %</td>";
-    $prev_file = '';
-    foreach( $a as $key => $line)
-    {
+    $sum[] = "<td>$langprint</td><td><center>".count($a)."</td><td><center>".
+        round(100 * ($counten - count($a)) / $counten, 0)." %</td>";
+    $prevfile = '';
+    foreach ($a as $key => $line) {
         $pos = strpos( $key, '*');
-        $file = trim( substr( $key, 0, $pos-1));
-        if( substr( $file, 0, 1) == '/')
+        $file = trim( substr( $key, 0, $pos - 1));
+        if (substr( $file, 0, 1) == '/') {
             $file = substr( $file, 1);
-        if( $file != $prev_file)
-        {
+        }
+        if ($file != $prevfile) {
             $s .= "\r\n//$file\r\n";
-            $prev_file = $file;
+            $prevfile = $file;
         }
         $s .= $line;
-        $untranslated .= "//$prev_file ".$line;
+        $untranslated .= "//$prevfile ".$line;
     }
     $file = $outdir.'/'.$lang.'.php';
     file_put_contents( $file, $s);
 }
 
-//Copies the translation from Moodle 19
-function readlangfile_repairmoodle19( $lang, &$strings_lang)
-{
+// Copies the translation from Moodle 19.
+function readlangfile_repairmoodle19( $lang, &$stringslang) {
     global $moodle19dir;
-    
-    if( $moodle19dir == '')
+
+    if ($moodle19dir == '') {
         return;
-    
+    }
+
     $file = $moodle19dir.'/mod/game/lang/'.$lang.'_utf8/game.php';
 
     $a = array();
 
     $lines = file( $file);
-    foreach( $lines as $line)
-    {
-        if( splitlangdefinition($line,$name,$trans))
-        {
-            if( !array_key_exists( $name, $strings_lang))
-                $strings_lang[ $name] = $trans;
+    foreach ($lines as $line) {
+        if (splitlangdefinition($line, $name, $trans)) {
+            if (!array_key_exists( $name, $stringslang)) {
+                $stringslang[ $name] = $trans;
+            }
         }
     }
 }
