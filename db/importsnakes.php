@@ -1,15 +1,28 @@
-<?php  // $Id: importsnakes.php,v 1.5 2012/07/25 11:16:05 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 game_importsnakes();
 
-function game_importsnakes()
-{
+function game_importsnakes() {
     global $DB;
 
-    if( $DB->count_records( 'game_snakes_database') != 0){
+    if ($DB->count_records( 'game_snakes_database') != 0) {
         return;
     }
-    
+
     $newrec = new stdClass();
     $newrec->name = '8x8 - 4 Snakes - 4 Ladders';
     $newrec->cols = 8;
@@ -39,15 +52,12 @@ function game_importsnakes()
     $newrec->height = 436;
     $newrec->data = 'L2-25,S4-23,L8-18,S16-20,L19-29,S27-33';
     game_importsnakes_do( $newrec);
- }
+}
 
-
-function game_importsnakes_do( $newrec)
-{
+function game_importsnakes_do( $newrec) {
     global $DB;
 
-	if( !$DB->insert_record( 'game_snakes_database', $newrec)){
-		print_object( $newrec);
-		print_error( "Can't insert to table game_snakes_database");
-	}
+    if (!$DB->insert_record( 'game_snakes_database', $newrec)) {
+        print_error( "Can't insert to table game_snakes_database");
+    }
 }

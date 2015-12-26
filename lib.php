@@ -868,7 +868,7 @@ function game_get_types() {
     $type->typestr = '--'.get_string( 'modulenameplural', 'game');
     $types[] = $type;
 
-    $hide = ( isset( $config->hidehangman)) ? ($config->hidehangman != 0) : false);
+    $hide = ( isset( $config->hidehangman) ? ($config->hidehangman != 0) : false);
 
     if ($hide == false) {
         $type = new object();
@@ -906,7 +906,7 @@ function game_get_types() {
         $types[] = $type;
     }
 
-    $hide = (isset( $config->hidemillionaire)) ? ($config->hidemillionaire != 0) : false);
+    $hide = (isset( $config->hidemillionaire) ? ($config->hidemillionaire != 0) : false);
     if ($hide == false) {
         $type = new object();
         $type->modclass = MOD_CLASS_ACTIVITY;
@@ -915,7 +915,7 @@ function game_get_types() {
         $types[] = $type;
     }
 
-    $hide = (isset( $config->hidesudoku)) ? ($config->hidesudoku != 0) : false);
+    $hide = (isset( $config->hidesudoku) ? ($config->hidesudoku != 0) : false);
     if ($hide == false) {
         $type = new object();
         $type->modclass = MOD_CLASS_ACTIVITY;
@@ -924,7 +924,7 @@ function game_get_types() {
         $types[] = $type;
     }
 
-    $hide = (isset( $config->hidesnakes)) ? ($config->hidesnakes != 0) : false);
+    $hide = (isset( $config->hidesnakes) ? ($config->hidesnakes != 0) : false);
     if ($hide == false) {
         $type = new object();
         $type->modclass = MOD_CLASS_ACTIVITY;
@@ -933,7 +933,7 @@ function game_get_types() {
         $types[] = $type;
     }
 
-    $hide = (isset( $config->hidehiddenpicture)) ? ($config->hidehiddenpicture != 0) : false);
+    $hide = (isset( $config->hidehiddenpicture) ? ($config->hidehiddenpicture != 0) : false);
     if ($hide == false) {
         $type = new object();
         $type->modclass = MOD_CLASS_ACTIVITY;
@@ -942,7 +942,7 @@ function game_get_types() {
         $types[] = $type;
     }
 
-    $hide = (isset( $config->hidebookquiz)) ? ($config->hidebookquiz != 0) : false);
+    $hide = (isset( $config->hidebookquiz) ? ($config->hidebookquiz != 0) : false);
     if ($hide == false) {
         if ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id')) {
             $type = new object();
