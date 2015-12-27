@@ -73,7 +73,7 @@ function game_showusers($game) {
                 function onselectuser()
                 {
                     var groupid = document.getElementById('menugroup').value;
-                    window.location.href = "<?php echo href;?>" + document.getElementById('menuuser').value + '&groupid=' + groupid;
+                    window.location.href = "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid=' + groupid;
                 }
             </script>
 <?php

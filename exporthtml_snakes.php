@@ -1,4 +1,19 @@
-<?php  // $Id: exporthtml_snakes.php,v 1.4 2011/07/23 12:34:08 bdaloukas Exp $
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
  * This page export the game snakes to html
  * 
@@ -46,7 +61,7 @@ background: #999 url('images/backdropJungle.png') no-repeat fixed left top;
 <body>
 
 <script language="JavaScript">
-//Snakes for Moodle by Maria Rigkou
+// Snakes for Moodle by Maria Rigkou.
 
 var boards = 1;
 var board_images = new Array( boards);
@@ -93,29 +108,31 @@ pawn_height [0]= 40;
 
 <?php
 
-echo "var countofquestionsM=$countofquestionsM;\r\n";
-echo 'var countofquestionsS='.count($questionsS).";\r\n";
+echo "var countofquestionsM=$countofquestionsm;\r\n";
+echo 'var countofquestionsS='.count($questionss).";\r\n";
 
-    foreach( $questionsS as $line)
-    {
-        $s = $line->question.'#'.str_replace( array( '"', '#'), array( "'", ' '), $line->answer);
-	    if( $questionsM != '')
-	        $questionsM .= ",\r";
-	    $questionsM .= '"'.base64_encode( game_upper( $s)).'"';
-
-        $s = '#'.str_replace( array( '"', '#'), array( "'", ' '), $line->feedback);
-	    if( $retfeedback != '')
-	        $retfeedback .= ",\r";
-	    $retfeedback .= '"'.base64_encode( $s).'"';
+foreach ($questionss as $line) {
+    $s = $line->question.'#'.str_replace( array( '"', '#'), array( "'", ' '), $line->answer);
+    if ($questionsm != '') {
+        $questionsm .= ",\r";
     }
-    $rettimesasked = '';
-    for($i=0;$i<$countofquestionsM+count($questionsS);$i++)
-        $rettimesasked .= ',0';
-    $rettimesasked = substr( $rettimesasked, 1);
-    
-echo "var questions=new Array( $questionsM);\r\n";
+    $questionsm .= '"'.base64_encode( game_upper( $s)).'"';
+
+    $s = '#'.str_replace( array( '"', '#'), array( "'", ' '), $line->feedback);
+    if ($retfeedback != '') {
+        $retfeedback .= ",\r";
+    }
+    $retfeedback .= '"'.base64_encode( $s).'"';
+}
+$rettimesasked = '';
+for ($i = 0; $i < $countofquestionsm + count($questionss); $i++) {
+    $rettimesasked .= ',0';
+}
+$rettimesasked = substr( $rettimesasked, 1);
+
+echo "var questions=new Array( $questionsm);\r\n";
 echo "var feedbacks=new Array( $retfeedback);\r\n";
-echo "var quest_times_asked=new Array( $rettimesasked);//How many times is used a question\r\n";
+echo "var quest_times_asked=new Array( $rettimesasked); //How many times is used a question\r\n";
 
 ?>
 var current_dice=0;
@@ -365,10 +382,14 @@ function display_quest()
 
 function display_quest_M() 
 {	
-	s = '<table width="250px"><tr><td><div id="show_dice"> <img src = "images/dice' + current_dice + '.png"> </div> </td><td align=right><div id="show_score" style="color: #FFFFFF; font-weight:bold; font-size: 20px;"><strong>'+str_score+': </strong><strong class="score">' +score+ '</strong></div></td></tr></table>';
+	s = '<table width="250px"><tr><td><div id="show_dice"> ';
+    s = s + '<img src = "images/dice' + current_dice + '.png"> </div> </td>';
+    s = s + '<td align=right><div id="show_score" style="color: #FFFFFF; font-weight:bold; font-size: 20px;">';
+    s = s + '<strong>'+str_score+': </strong>';
+    s = s + '<strong class="score">' +score+ '</strong></div></td></tr></table>';
 	s = s + '<div id="question_area">' + quest_text+'</div>';
 	s = s + '<form name="snakesform">';
-		
+
 	mchoice_count = quest_resp.length-1;
 	mchoice_positions = new Array( mchoice_count);
 	for(i=0; i < mchoice_count ; i++)
@@ -381,10 +402,17 @@ function display_quest_M()
 		mchoice_positions[ j] = temp;
 	}		
 	
-	for(i=0; i < mchoice_count;i++)
-		s = s + '<input type="radio" name="radio_answer" id="radio_answer" value="'+i+'" />'+quest_resp[ mchoice_positions[ i]] + '<br />';
+	for(i=0; i < mchoice_count;i++) {
+		s = s + '<input type="radio" name="radio_answer" id="radio_answer" value="';
+        s = s + i+'" />'+quest_resp[ mchoice_positions[ i]] + '<br />';
+    }
 	
-	s = s + '<br /><input type="button" id="check_btn" value="'+str_check+'" onclick="check_answer();">  <br /> <div id="feedb_area"> <div id="feedb_wrong" style="display:none; color:yellow;"> '+quest_feedb+' </div> <br /><div id="feedb" style="display:none; color:yellow;"> '+quest_feedb+'. Θα προχωρήσεις '+current_dice+' τετράγωνα μπροστά!</div><br /> <div id="OK_btn" style="display:none;"><input type="button" onclick="display_quest();" value="OK"/></div> </div></form>';
+    s = s + '<br /><input type="button" id="check_btn" value="'+str_check;
+    s = s + '" onclick="check_answer();">  <br/><div id="feedb_area"> <div id="feedb_wrong" style="display:none; color:yellow;"> ';
+    s = s + quest_feedb+' </div> <br /><div id="feedb" style="display:none; color:yellow;"> ';
+    s = s + quest_feedb+'. Θα προχωρήσεις ';
+    s = s + current_dice+' τετράγωνα μπροστά!</div><br /> <div id="OK_btn"';   
+    s = s + 'style="display:none;"><input type="button" onclick="display_quest();" value="OK"/></div> </div></form>';
 
 	document.getElementById("dicecont").innerHTML = s;
 	
@@ -394,8 +422,19 @@ function display_quest_M()
 
 function display_quest_S() 
 {
-	document.getElementById("dicecont").innerHTML = '<table width="250px"><tr><td><div id="show_dice"> <img src = "images/dice' + current_dice + '.png"> </div> </td><td align=right><div id="show_score" style="color: #FFFFFF; font-weight:bold; font-size: 20px;"><strong>'+str_score+': </strong><strong class="score">' +score+ '</strong></div></td></tr></table><div id="question_area">' +quest_text+'</div> <br /><input type="text" id="answer"/><br /><br /> <input type="button" id="check_btn" value="'+str_check+'" onclick="check_answer();"> <br /> <div id="feedb_area"> <div id="feedb_wrong" style="display:none; color:yellow;"> '+feedb_wrong_S+' </div> <div id="feedb" style="display:none; color:yellow;"> '+feedb_correct_S+'</div> <br /><div id="OK_btn" style="display:none;"><input type="button" onclick="display_quest();" value="OK"/></div> </div>';
-	
+    var s = "";
+
+	s = '<table width="250px"><tr><td><div id="show_dice"> <img src = "images/dice';
+    s = s + current_dice + '.png"> </div> </td><td align=right>';
+    s = s + '<div id="show_score" style="color: #FFFFFF; font-weight:bold; font-size: 20px;"><strong>';
+    s = s + str_score+': </strong><strong class="score">' +score+ '</strong></div></td></tr></table><div id="question_area">';
+    s = s + quest_text+'</div> <br /><input type="text" id="answer"/><br /><br /> <input type="button" id="check_btn" value="';
+    s = s + str_check+'" onclick="check_answer();"> <br /> <div id="feedb_area">';
+    s = s + ' <div id="feedb_wrong" style="display:none; color:yellow;"> ';
+    s = s + feedb_wrong_S+' </div> <div id="feedb" style="display:none; color:yellow;"> ';
+    s = s + feedb_correct_S+'</div> <br /><div id="OK_btn" style="display:none;">';
+    s = s + '<input type="button" onclick="display_quest();" value="OK"/></div> </div>';
+	document.getElementById("dicecont").innerHTML = s;
 	document.getElementById("question_area").style.display = "block";
 	document.getElementById("check_btn").style.display = "block";
 }

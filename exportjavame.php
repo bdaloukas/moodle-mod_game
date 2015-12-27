@@ -206,6 +206,7 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
     $map = array();
     foreach ($questions as $question) {
         unset( $ret);
+        $ret = new stdClass();
         $ret->qtype = $question->qtype;
         $ret->question = $question->questiontext;
         $ret->question = str_replace( array( '"', '#'), array( "'", ' '),
@@ -248,7 +249,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
         $fields .= ',attachment';
     }
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY definition";
-    if ($questions = $DB->get_records_sql( $sql)) === false) {
+    if( ($questions = $DB->get_records_sql( $sql)) === false) {
         return false;
     }
 

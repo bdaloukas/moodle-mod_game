@@ -159,7 +159,7 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
         $params = array( 'component' => $component, 'filearea' => $filearea,
             'itemid' => $id, 'filename' => $fileimage, 'contextid' => $context, 'contextid' => $contextcourse->id);
         $rec = $DB->get_record( 'files', $params);
-        if ( $rec == false {
+        if ( $rec == false) {
             break;
         }
 
@@ -350,7 +350,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
     $board = game_snakes_get_board( $game);
 
     if ( ($game->sourcemodule == 'quiz') or ($game->sourcemodule == 'question')) {
-        $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions, $countofquestionsm, $retfeedback, $files);
+        $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions, $countofquestionsm, $retfeedback, $destdir, $files);
     } else {
         $questionsm = array();
         $countofquestionsm = 0;

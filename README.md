@@ -1,5 +1,5 @@
 Game module for Moodle
-Copyright (C) 2004-2012  Vasilis Daloukas (http://bdaloukas.gr)
+Copyright (C) 2004-2015 by Vasilis Daloukas (http://bdaloukas.gr)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -66,3 +66,16 @@ Upgrade
 
     * Delete the files from mod/game
     * Copy the new files to mod/game
+
+To install it using git, type this command in the root of your Moodle install:
+```
+git clone  https://github.com/bdaloukas/moodle-mod_game.git mod
+mv moodle-mod_game game
+cd game
+git checkout MOODLE_20_STABLE
+
+```
+
+Alternatively, download the zip from
+<https://codeload.github.com/bdaloukas/moodle-mod_game/zip/MOODLE_20_STABLE>,
+unzip it into the local folder, and then rename the new folder to "game".

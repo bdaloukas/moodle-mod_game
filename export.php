@@ -128,7 +128,7 @@ class mod_game_exporthtml_form extends moodleform {
         }
 
         $cm = get_coursemodule_from_instance('game', $game->id, $game->course);
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $context = game_get_context_module_instance( $cm->id);
 
         require_once("exporthtml.php");
         game_OnExportHTML( $game, $context, $html);
