@@ -1,26 +1,30 @@
-<?php  // $Id: createboard.php,v 1.5 2012/07/25 11:16:07 bdaloukas Exp $
-// This file creates a board for "Snakes and Ladders"
-/*
-require( "../../../config.php");
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-$im=game_createsnakesboard( $_GET[ 'file'], $_GET[ 'colsx'], $_GET[ 'colsy'], $_GET[ 'ofstop'], $_GET[ 'ofsbottom'], $_GET[ 'ofsright'], $_GET[ 'ofsleft'], $_GET[ 'aboard']);
-
-header('Content-type: image/jpg');
-imagejpeg($im);
-imagedestroy($im);
-*/
-
-function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom, $ofsright, $ofsleft, $board, $setwidth, $setheight)
-{
+// This file creates a board for "Snakes and Ladders".
+function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom,
+        $ofsright, $ofsleft, $board, $setwidth, $setheight) {
     global $CFG;
 
     $dir = $CFG->dirroot.'/mod/game/snakes/1';
 
     $im = imagecreatefromstring($imageasstring);
 
-    //check if need resize
-    if( $setwidth >0 or $setheight > 0)
-    {
+    // Check if need resize.
+    if ( $setwidth > 0 or $setheight > 0) {
         $source = $im;
         $width = imagesx($source);
         $height = imagesy($source);
@@ -39,36 +43,31 @@ function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbot
     $cy = imagesy($im) - $ofstop - $ofsbottom;
 
     $color = 0xFF0000;
-    for( $i=0; $i <= $colsx; $i++)
-    {
-        imageline( $im, $ofsleft+$i * $cx / $colsx, $ofstop, $ofsleft+$i * $cx / $colsx, $cy+$ofstop, $color);
+    for ($i = 0; $i <= $colsx; $i++) {
+        imageline( $im, $ofsleft + $i * $cx / $colsx, $ofstop, $ofsleft + $i * $cx / $colsx, $cy + $ofstop, $color);
     }
 
-    for( $i=0; $i <= $colsy; $i++)
-    {
-        imageline( $im, $ofsleft, $ofstop+$i * $cy / $colsy, $cx+$ofsleft, $ofstop+$i * $cy / $colsy, $color);
+    for ($i = 0; $i <= $colsy; $i++) {
+        imageline( $im, $ofsleft, $ofstop + $i * $cy / $colsy, $cx + $ofsleft, $ofstop + $i * $cy / $colsy, $color);
     }
 
-    $filenamenumbers=$dir.'/numbers.png';
-    $img_numbers = imageCreateFrompng( $filenamenumbers);
-    $size_numbers = getimagesize ($filenamenumbers);
+    $filenamenumbers = $dir.'/numbers.png';
+    $imgnumbers = imagecreatefrompng( $filenamenumbers);
+    $sizenumbers = getimagesize ($filenamenumbers);
 
-    for( $iy=0; $iy < $colsy; $iy++)
-    {
-        if( $iy % 2 == 0){
-            $inc=false;
-            $num = ($colsy-$iy)*$colsy;
-        }else
-        {
-            $inc=true;
-            $num = ($colsy-$iy)*$colsy-($colsy-1);
-        } 
-        $ypos = $iy * $cy / $colsy+$ofstop;
-        for( $ix=0; $ix < $colsx; $ix++)
-        {
+    for ($iy = 0; $iy < $colsy; $iy++) {
+        if ($iy % 2 == 0) {
+            $inc = false;
+            $num = ($colsy - $iy) * $colsy;
+        } else {
+            $inc = true;
+            $num = ($colsy - $iy) * $colsy - ($colsy - 1);
+        }
+        $ypos = $iy * $cy / $colsy + $ofstop;
+        for ($ix = 0; $ix < $colsx; $ix++) {
             $xpos = $ix * $cx / $colsx + $ofsleft;
-            shownumber( $im, $img_numbers, $num, $xpos, $ypos, $cx/4, $cy/4, $size_numbers);
-            $num = ($inc ? $num+1 : $num-1);
+            shownumber( $im, $imgnumbers, $num, $xpos, $ypos, $cx / 4, $cy / 4, $sizenumbers);
+            $num = ($inc ? $num + 1 : $num - 1);
         }
     }
 
@@ -77,36 +76,33 @@ function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbot
     return $im;
 }
 
-function computexy( $pos, &$x, &$y, $colsx, $colsy)
-{
+function computexy( $pos, &$x, &$y, $colsx, $colsy) {
     $x = ($pos - 1) % $colsx;
-    $y = ($colsy-1) - floor( ($pos - 1) / $colsy);
-    if($y % 2 == 0)
-        $x = ($colsx-1) - $x;
-}
-
-function makeboard( $im, $dir, $cx, $cy, $board, $colsx, $colsy, $ofsleft, $ofstop)
-{
-    $a = explode( ',', $board);
-    foreach( $a as $s)
-    {    
-        if( substr( $s,0,1) == 'L')
-            makeboardL( $im, $dir, $cx, $cy, substr( $s, 1), $colsx, $colsy, $ofsleft, $ofstop);
-        else
-            makeboardS( $im, $dir, $cx, $cy, substr( $s, 1), $colsx, $colsy, $ofsleft, $ofstop);
+    $y = ($colsy - 1) - floor( ($pos - 1) / $colsy);
+    if ($y % 2 == 0) {
+        $x = ($colsx - 1) - $x;
     }
 }
 
-function makeboardL( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
-{
+function makeboard( $im, $dir, $cx, $cy, $board, $colsx, $colsy, $ofsleft, $ofstop) {
+    $a = explode( ',', $board);
+    foreach ($a as $s) {
+        if (substr( $s, 0, 1) == 'L') {
+            makeboardL( $im, $dir, $cx, $cy, substr( $s, 1), $colsx, $colsy, $ofsleft, $ofstop);
+        } else {
+            makeboardS( $im, $dir, $cx, $cy, substr( $s, 1), $colsx, $colsy, $ofsleft, $ofstop);
+        }
+    }
+}
+
+function makeboardl( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) {
     $pos = strpos( $s, '-');
     $from = substr( $s, 0, $pos);
-    $to = substr( $s, $pos+1);
+    $to = substr( $s, $pos + 1);
 
     computexy( $from, $startx, $starty, $colsx, $colsy);
     computexy( $to, $x2, $y2, $colsx, $colsy);
-    if( ($x2 < $startx) and ($y2 < $starty))
-    {
+    if (($x2 < $startx) and ($y2 < $starty)) {
         $temp = $x2; $x2 = $startx; $startx = $temp;
         $temp = $y2; $y2 = $starty; $starty = $temp;
     }
@@ -115,201 +111,193 @@ function makeboardL( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
 
     $letter = ( $movex * $movey < 0 ? 'b' : 'a');
 
-    $_startx = $startx; $_movex=$movex; $_starty = $starty; $_movey=$movey;
+    $oldstartx = $startx; $oldmovex = $movex; $oldstarty = $starty; $oldmovey = $movey;
 
-            if( $movex < 0)
-            {
-                $startx += $movex;
-                $movex = -$movex;
-            } 
-            if( $movey < 0)
-            {
-                $starty += $movey;
-                $movey = -$movey;
-            }
+    if ($movex < 0) {
+        $startx += $movex;
+        $movex = -$movex;
+    }
+    if ($movey < 0) {
+        $starty += $movey;
+        $movey = -$movey;
+    }
     $stamp = 0;
-    if( $letter == 'b'){
+    if ($letter == 'b') {
         $file = $dir.'/l'.$letter.$movey.$movex.'.png';
-        if( file_exists( $file)){
+        if (file_exists( $file)) {
             $stamp = game_imagecreatefrompng( $file);
-        }else
-        {
+        } else {
             $file = $dir.'/la'.$movey.$movex.'.png';
 
             $source = game_imagecreatefrompng( $file);
-            if( $source != 0)
+            if ( $source != 0) {
                 $stamp = imagerotate($source, 90, 0);
+            }
         }
-    }else
-    {
+    } else {
         $file = $dir.'/la'.$movex.$movey.'.png';
         $stamp = game_imagecreatefrompng( $file);
     }
-    
-    $dst_x = $startx*$cx/$colsx;
-    $dst_y = $starty*$cy/$colsy;
-    $dst_w = ($movex+1) * $cx / $colsx;
-    $dst_h = ($movey+1) * $cy / $colsy;
 
-    if( $stamp == 0)
-    {
-        game_printladder( $im, $file, $dst_x+$ofsleft, $dst_y+$ofstop, $dst_w, $dst_h, $cx/$colsx, $cy/$colsy);
-    }else
-    {
-        imagecopyresampled( $im, $stamp, $ofsleft+$dst_x, $ofstop+$dst_y, 0, 0, $dst_w, $dst_h, 100*$movex+100, 100*$movey+100);
+    $dstx = $startx * $cx / $colsx;
+    $dsty = $starty * $cy / $colsy;
+    $dstw = ($movex + 1) * $cx / $colsx;
+    $dsth = ($movey + 1) * $cy / $colsy;
+
+    if ($stamp == 0) {
+        game_printladder( $im, $file, $dstx + $ofsleft, $dsty + $ofstop, $dstw, $dsth, $cx / $colsx, $cy / $colsy);
+    } else {
+        imagecopyresampled( $im, $stamp, $ofsleft + $dstx, $ofstop + $dsty, 0, 0, $dstw, $dsth,
+            100 * $movex + 100, 100 * $movey + 100);
     }
 }
 
-function makeboardS( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
-{
+function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) {
     $pos = strpos( $s, '-');
     $from = substr( $s, 0, $pos);
-    $to = substr( $s, $pos+1);
+    $to = substr( $s, $pos + 1);
 
     computexy( $from, $startx, $starty, $colsx, $colsy);
     computexy( $to, $x2, $y2, $colsx, $colsy);
-    $swap=0;
-    if( ($x2 < $startx) and ($y2 < $starty))
-    {
+    $swap = 0;
+    if (($x2 < $startx) and ($y2 < $starty)) {
         $temp = $x2; $x2 = $startx; $startx = $temp;
         $temp = $y2; $y2 = $starty; $starty = $temp;
-        $swap=1;
+        $swap = 1;
     }
     $movex = $x2 - $startx;
     $movey = $y2 - $starty;
 
-    //a*d
-    //***
-    //b*c
+    /*  a*d
+     *
+     *  b*c
+     */
     $stamp = $rotate = 0;
-    if( $movex >= 0 and $movey < 0){
+    if ($movex >= 0 and $movey < 0) {
         $letter = 'b';
         $file = $dir.'/sa'.$movey.$movex.'.png';
         $source = game_imagecreatefrompng( $file);
-        if( $source != 0)
-        {
+        if ($source != 0) {
             $stamp = imagerotate($source, 270, 0);
             $starty += $movey; $movey = -$movey;
-        }else
+        } else {
             $rotate = 270;
-    }else if( $movex < 0 and $movey < 0){
+        }
+    } else if ($movex < 0 and $movey < 0) {
         $letter = 'c';
         $file = $dir.'/sa'.$movey.$movex.'.png';
         $source = game_imagecreatefrompng( $file);
-        if( $source != 0)
-        {
+        if ($source != 0) {
             $stamp = imagerotate($source, 180, 0);
             $startx += $movex; $movex = -$movex;
             $starty += $movey; $movey = -$movey;
-        }else
+        } else {
             $rotate = 180;
-    }else if( ($movex < 0) and ($movey >= 0)){
+        }
+    } else if (($movex < 0) and ($movey >= 0)) {
         $letter = 'd';
         $file = $dir.'/sa'.$movey.$movex.'.png';
         $source = game_imagecreatefrompng( $file);
-        if( $source != 0)
-        {
+        if ($source != 0) {
             $stamp = imagerotate($source, 270, 0);
             $startx += $movex; $movex = -$movex;
-        }else
-            $rotate=270;
-    }else
-    {
+        } else {
+            $rotate = 270;
+        }
+    } else {
         $file = $dir.'/sa'.$movex.$movey.'.png';
         $stamp = game_imagecreatefrompng( $file);
     }
 
-        if( ($swap != 0) and ($stamp == 0))
-        {
-            $temp = $x2; $x2 = $startx; $startx = $temp;
-            $temp = $y2; $y2 = $starty; $starty = $temp;
-            $movex = $x2 - $startx;
-            $movey = $y2 - $starty;
-        }
+    if (($swap != 0) and ($stamp == 0)) {
+        $temp = $x2; $x2 = $startx; $startx = $temp;
+        $temp = $y2; $y2 = $starty; $starty = $temp;
+        $movex = $x2 - $startx;
+        $movey = $y2 - $starty;
+    }
 
-    $dst_x = $startx*$cx/$colsx;
-    $dst_y = $starty*$cy/$colsy;
-    $dst_w = ($movex+1) * $cx / $colsx;
-    $dst_h = ($movey+1) * $cy / $colsy;
+    $dstx = $startx * $cx / $colsx;
+    $dsty = $starty * $cy / $colsy;
+    $dstw = ($movex + 1) * $cx / $colsx;
+    $dsth = ($movey + 1) * $cy / $colsy;
 
-    if( $stamp == 0)
-    {
-        game_printsnake( $im, $file, $dst_x+$ofsleft, $dst_y+$ofstop, $dst_w, $dst_h, $cx/$colsx, $cy/$colsy);
-    }else
-        imagecopyresampled( $im, $stamp, $dst_x+$ofsleft, $dst_y+$ofstop, 0, 0, $dst_w, $dst_h, 100*$movex+100, 100*$movey+100);
+    if ($stamp == 0) {
+        game_printsnake( $im, $file, $dstx + $ofsleft, $dsty + $ofstop, $dstw, $dsth, $cx / $colsx, $cy / $colsy);
+    } else {
+        imagecopyresampled( $im, $stamp, $dstx + $ofsleft, $dsty + $ofstop, 0, 0, $dstw, $dsth,
+            100 * $movex + 100, 100 * $movey + 100);
+    }
 }
 
-function game_imagecreatefrompng( $file){
-    if( file_exists( $file))
+function game_imagecreatefrompng( $file) {
+    if (file_exists( $file)) {
         return imagecreatefrompng( $file);
+    }
 
     return 0;
 }
 
-function shownumber( $img_handle, $img_numbers, $number, $x1 , $y1, $width, $height, $size_numbers){
-    if( $number < 10){
-        $width_number = $size_numbers[ 0] / 10;
-        $dstX = $x1 + $width / 10;
-        $dstY = $y1 + $height / 10;
-        $srcX = $number * $size_numbers[ 0] / 10;
-        $srcW = $size_numbers[ 0]/10;
-        $srcH = $size_numbers[ 1];
-        $dstW = $width / 10;
-        $dstH = $dstW * $srcH / $srcW;
-        imagecopyresampled( $img_handle, $img_numbers, $dstX, $dstY, $srcX, 0, $dstW, $dstH, $srcW, $srcH);
-    }else
-    {
+function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
+    if ($number < 10) {
+        $widthnumber = $sizenumbers[ 0] / 10;
+        $dstx = $x1 + $width / 10;
+        $dsty = $y1 + $height / 10;
+        $srcx = $number * $sizenumbers[ 0] / 10;
+        $srcw = $sizenumbers[ 0] / 10;
+        $srch = $sizenumbers[ 1];
+        $dstw = $width / 10;
+        $dsth = $dstw * $srch / $srcw;
+        imagecopyresampled( $imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);
+    } else {
         $number1 = floor( $number / 10);
         $number2 = $number % 10;
-        shownumber( $img_handle, $img_numbers, $number1, $x1-$width/20, $y1, $width, $height, $size_numbers);
-        shownumber( $img_handle, $img_numbers, $number2, $x1+$width/20, $y1, $width, $height, $size_numbers);
+        shownumber( $imghandle, $imgnumbers, $number1, $x1 - $width / 20, $y1, $width, $height, $sizenumbers);
+        shownumber( $imghandle, $imgnumbers, $number2, $x1 + $width / 20, $y1, $width, $height, $sizenumbers);
     }
 }
 
-function returnRotatedPoint($x,$y,$cx,$cy,$a)
-    {
-             // radius using distance formula
-            $r = sqrt(pow(($x-$cx),2)+pow(($y-$cy),2));
-            // initial angle in relation to center
-            $iA = rad2deg(atan2(($y-$cy),($x-$cx)));
+function returnrotatedpoint($x, $y, $cx, $cy, $a) {
+    // Radius using distance formula.
+    $r = sqrt(pow(($x - $cx), 2) + pow(($y - $cy), 2));
 
-            $nx = $r * cos(deg2rad($a + $iA));
-            $ny = $r * sin(deg2rad($a + $iA));
+    // Initial angle in relation to center.
+    $ia = rad2deg(atan2(($y - $cy), ($x - $cx)));
 
-    return array("x"=>$cx+$nx,"y"=>$cy+$ny);
-    }
+    $nx = $r * cos(deg2rad($a + $ia));
+    $ny = $r * sin(deg2rad($a + $ia));
 
-function game_printladder( $im, $file, $x, $y, $width, $height, $cellx, $celly)
-{
+    return array("x" => $cx + $nx, "y" => $cy + $ny);
+}
+
+function game_printladder( $im, $file, $x, $y, $width, $height, $cellx, $celly) {
     $color = imagecolorallocate($im, 0, 0, 255);
-    $x2 = $x+$width-$cellx/2;
-    $y2 = $y+$height-$celly/2;
-    $x1 = $x+$cellx/2;
-    $y1 = $y+$celly/2;
+    $x2 = $x + $width - $cellx / 2;
+    $y2 = $y + $height - $celly / 2;
+    $x1 = $x + $cellx / 2;
+    $y1 = $y + $celly / 2;
     imageline( $im, $x1, $y1, $x2, $y2, $color);
-    $r = sqrt(pow(($x2-$x1),2)+pow(($y2-$y1),2));
+    $r = sqrt(pow(($x2 - $x1), 2) + pow(($y2 - $y1), 2));
     $mul = 100 / $r;
-    $x1 = $x2 - ($x2-$x1) * $mul;
-    $y1 = $y2 - ($y2-$y1) * $mul;
+    $x1 = $x2 - ($x2 - $x1) * $mul;
+    $y1 = $y2 - ($y2 - $y1) * $mul;
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, 20);
     imageline( $im, $x2, $y2, $a[ 'x'], $a[ 'y'], $color);
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, -20);
     imageline( $im, $x2, $y2, $a[ 'x'], $a[ 'y'], $color);
 }
 
-function game_printsnake( $im, $file, $x, $y, $width, $height, $cellx, $celly)
-{
+function game_printsnake( $im, $file, $x, $y, $width, $height, $cellx, $celly) {
     $color = imagecolorallocate($im, 0, 255, 0);
-    $x2 = $x+$width-$cellx/2;
-    $y2 = $y+$height-$celly/2;
-    $x1 = $x+$cellx/2;
-    $y1 = $y+$celly/2;
+    $x2 = $x + $width - $cellx / 2;
+    $y2 = $y + $height - $celly / 2;
+    $x1 = $x + $cellx / 2;
+    $y1 = $y + $celly / 2;
     imageline( $im, $x1, $y1, $x2, $y2, $color);
-    
-    $r = sqrt(pow(($x2-$x1),2)+pow(($y2-$y1),2));
+
+    $r = sqrt(pow(($x2 - $x1), 2) + pow(($y2 - $y1), 2));
     $mul = 100 / $r;
-    $x2 = $x1 + ($x2-$x1) * $mul;
-    $y2 = $y1 + ($y2-$y1) * $mul;
+    $x2 = $x1 + ($x2 - $x1) * $mul;
+    $y2 = $y1 + ($y2 - $y1) * $mul;
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, 80);
     imageline( $im, $x1, $y1, $a[ 'x'], $a[ 'y'], $color);
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, -80);
