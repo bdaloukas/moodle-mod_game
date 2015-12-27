@@ -312,7 +312,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
         $query = new stdClass();
         $query->id = $snakes->queryid;
 
-        $grade = game_grade_responses( $question, $responses, 100, $answertext);
+        $grade = game_grade_responses( $question, $responses, 100, $answertext, $answered);
         if ($grade < 99) {
             // Wrong answer.
             game_update_queries( $game, $attempt, $query, 0, $answertext);

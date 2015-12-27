@@ -527,7 +527,10 @@ function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishatte
             continue;
         }
 
-        $grade = game_grade_responses( $question, $responses, 100, $answertext);
+        $grade = game_grade_responses( $question, $responses, 100, $answertext, $answered);
+        if( $answered == false) {
+            continue;
+        }
         if ($grade < 99) {
             // Wrong answer.
             game_update_queries( $game, $attempt, $query, $grade / 100, $answertext);
@@ -555,7 +558,7 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
     if (!($entries = $DB->get_records_select( 'glossary_entries', "id IN ($entrieslist)"))) {
         print_error( get_string('noglossaryentriesfound', 'game'));
     }
-    foreach (entries as $entry) {
+    foreach ($entries as $entry) {
         $answerundefined = optional_param('resp'.$entry->id, 'undefined', PARAM_TEXT);
         if ($answerundefined == 'undefined') {
             continue;

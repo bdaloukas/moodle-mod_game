@@ -56,7 +56,7 @@
 
 @require_once("SDD/class.SDD.php");
 
-/**
+/*
  * @author Dick Munroe <munroe@csworks.com>
  * @copyright copyright @ 2005 by Dick Munroe, Cottage Software Works, Inc.
  * @license http://www.csworks.com/publications/ModifiedNetBSD.html
@@ -64,7 +64,7 @@
  * @package Sudoku
  */
 
-/**
+/*
  * Basic functionality needed for ObjectSs in the Sudoku solver.
  *
  * Technically speaking these aren't restricted to the Sudoku classes
@@ -73,7 +73,7 @@
  * @package Sudoku
  */
 
-class ObjectS {
+class objects {
     /**
      * @desc Are two array's equal (have the same contents).
      * @param array
@@ -95,11 +95,11 @@ class ObjectS {
         return (count($xxx) == 0);
     }
 
-    /**
+    /*
      * Deep copy anything.
-     * 
+     *
      * @access public
-     * @param array $theArray [optional] Something to be deep copied.  [Default is the current
+     * @param array $theArray [optional] Something to be deep copied.  Default is the current
      *                        ObjectS.
      * @return mixed The deep copy of the input.  All references embedded within
      *               the array have been resolved into copies allowing things like the
@@ -126,7 +126,7 @@ class ObjectS {
     }
 }
 
-/**
+/*
  * The individual cell on the Sudoku board.
  *
  * These cells aren't restricted to 9x9 Sudoku (although pretty much everything else
@@ -135,7 +135,7 @@ class ObjectS {
  *
  * @package Sudoku
  */
-class Cell extends ObjectS {
+class cell extends objects {
     protected $r;
     protected $c;
 
@@ -226,7 +226,7 @@ class Cell extends ObjectS {
         }
     }
 
-    /**
+    /*
      * Used to make sure that solved positions show up at print time.
      * The value is used as a candidate for "slicing and dicing" by elimination in
      * Sudoku::_newSolvedPosition.
@@ -240,7 +240,7 @@ class Cell extends ObjectS {
         $this->state = array($value => $value);
     }
 
-    /**
+    /*
      * @desc return the state of a cell.
      * @access protected
      * @return mixed Either solved state or array of state pending solution.
@@ -250,7 +250,7 @@ class Cell extends ObjectS {
         return $this->state;
     }
 
-    /**
+    /*
      * @desc Has the state of this cell been applied to the board.
      * @access public
      * @return boolean True if it has, false otherwise.  Implies that IsSolved is true as well.
@@ -260,7 +260,7 @@ class Cell extends ObjectS {
         return $this->applied;
     }
 
-     /**
+     /*
       * @desc Has this cell been solved?
       * @access public
       * @return boolean True if this cell has hit a single state.
@@ -270,7 +270,7 @@ class Cell extends ObjectS {
         return !is_array($this->state);
     }
 
-    /**
+    /*
      * This is used primarily by the pretty printer, but has other applications
      * in the code.
      *
@@ -293,7 +293,7 @@ class Cell extends ObjectS {
         }
     }
 
-    /**
+    /*
      * This is the negative inference of Sudoku.  By eliminating values the
      * cells approach solutions.  Once a cell has been completely eliminated,
      * the value causing the complete elimination must be the solution and the
@@ -1360,7 +1360,7 @@ class sudoku extends ObjectS {
          * Pick a spot on the board and get the clues set up.
          */
 
-        $thechoice = mt_rand(0, count($thecouplings[$themaximumcoupling]) - 1;
+        $thechoice = mt_rand(0, count($thecouplings[$themaximumcoupling]) - 1);
         $thecluespositions[] = $thecouplings[$themaximumcoupling][$thechoice];
         $therow = $thecouplings[$themaximumcoupling][$thechoice][0];
         $thecolumn = $thecouplings[$themaximumcoupling][$thechoice][1];
@@ -1911,7 +1911,7 @@ class sudoku extends ObjectS {
 
 class SudokuTemplates extends Sudoku
 {
-    public function sudokutemplates($theDebug = false) {
+    public function sudokutemplates($thedebug = false) {
         $this->sudoku($thedebug);
     }
 

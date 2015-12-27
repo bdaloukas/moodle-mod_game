@@ -109,7 +109,7 @@ function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $heigh
         $srch = $sizenumbers[ 1];
         $dstw = $width / 10;
         $dsth = $dstw * $srch / $srcw;
-        imagecopyresized( $imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srchh);
+        imagecopyresized( $imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);
     } else {
         $number1 = floor( $number / 10);
         $number2 = $number % 10;

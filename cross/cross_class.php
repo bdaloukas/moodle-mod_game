@@ -96,8 +96,8 @@ class Cross
             $this->mn20min = $this->mn20max;
         }
 
-        $this->m_words = array();
-        foreach ($this->m_input_answers as $word => $answer) {
+        $this->mwords = array();
+        foreach ($this->minputanswers as $word => $answer) {
             $len = game_strlen( $word);
 
             if ($len <= $this->mn20max) {
@@ -218,7 +218,7 @@ class Cross
 
         if ($score > $this->mbestscore) {
             $this->mbestcrosspos = $crosspos;
-            $this->m_best_cross_dir = $crossdir;
+            $this->mbestcrossdir = $crossdir;
             $this->mbestcrossword = $crossword;
             $this->mbestpuzzle = $puzzle;
 
@@ -622,7 +622,7 @@ class Cross
         $ssolutions = '';
         $shtmlsolutions = '';
         $swordx = "";
-        $ssordy = "";
+        $swordy = "";
         $sclue = "";
         $lasthorizontalword = -1;
         $i = -1;

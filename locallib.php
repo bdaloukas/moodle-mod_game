@@ -1517,12 +1517,18 @@ function game_select_from_repetitions( $game, $recs, $need) {
     return $ret;
 }
 
-function game_grade_responses( $question, $responses, $maxgrade, &$answertext) {
+function game_grade_responses( $question, $responses, $maxgrade, &$answertext, &$answered) {
+    $answered = true;
+
     if ($question->qtype == 'multichoice') {
         if ($question->options->single == 0) {
             return game_grade_responses_multianswer( $question, $responses, $maxgrade, $answertext);
         }
         $name = "resp{$question->id}_";
+        if( !isset( $responses->$name)) {
+            $answered = false;
+            return 0;
+        }
         $value = $responses->$name;
         $answer = $question->options->answers[ $value];
         $answertext = $answer->answer;

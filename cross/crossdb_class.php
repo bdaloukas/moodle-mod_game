@@ -85,12 +85,12 @@ class CrossDB extends Cross {
         $this->mmaxrow = $crossrec->rows;
 
         if ($g == "") {
-            $g = str_repeat( ' ', $this->m_maxcol * $this->m_maxrow);
+            $g = str_repeat( ' ', $this->mmaxcol * $this->mmaxrow);
         }
 
         $load = false;
 
-        $puzzle = str_repeat('.', $this->m_maxrow * $this->m_maxcol);
+        $puzzle = str_repeat('.', $this->mmaxrow * $this->mmaxcol);
         if ($recs = $DB->get_records( 'game_queries', array( 'attemptid' => $crossrec->id))) {
             $a = array();
             foreach ($recs as $rec) {

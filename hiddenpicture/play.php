@@ -140,6 +140,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
         }
     }
     if (count( $ids) == 0) {
+        $a = new stdClass();
         $a->name = "'".$DB->get_field( 'glossary', 'name', array( 'id' => $game->glossaryid2))."'";
         print_error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
         return false;
