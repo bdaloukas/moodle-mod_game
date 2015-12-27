@@ -1,47 +1,60 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-//
-// Edit History:
-//
-//  Dick Munroe (munroe@csworks.com) 02-Nov-2005
-//      Initial version created.
-//
-//  Dick Munroe (munroe@csworks.com) 12-Nov-2005
-//      Allow initialzePuzzle to accept a file name in addition
-//      to a resource.  Windows doesn't do file redirection properly
-//      so the examples have to be able to handle a file NAME as
-//      input as well as a redirected file.
-//      Allow initializePuzzle to accept a string of 81 characters.
-//
-//  Dick Munroe (munroe@csworks.com) 13-Nov-2005
-//	It appears that getBoardAsString screws up somehow.  Rewrite it.
-//
-//  Dick Munroe (munroe@csworks.com) 16-Nov-2005
-//      Add a "pair" inference.
-//
-//	Dick Munroe (munroe@csworks.com) 17-Nov-2005
-//		Add comments to input files.
-//		There was a bug in _applyTuple that caused premature exiting of the inference
-//		engine.
-//		If SDD isn't present, don't display error.
-//
-//	Dick Munroe (munroe@csworks.com) 19-Nov-2005
-//		Add a new tuple inference.
-//		Do a ground up ObjectS oriented redesign to make the addition of arbitrary
-//		inferences MUCH easier.
-//		Get the printing during solving right.
-//		Somehow array_equal developed a "bug".
-//
-//	Dick Munroe (munroe@csworks.com) 22-Nov-2005
-//		Add n,n+1 tuple recognition for n=2.
-//		Restructure inference engine to get maximum benefit out of each pass.
-//
-//	Dick Munroe (munroe@csworks.com) 28-Nov-2005
-//		Attempt to build harder Sudoku by implementing a coupling coefficient
-//		attempting to distribute clues more optimally.
-//
+/*
+ * Edit History:
+ *
+ *  Dick Munroe (munroe@csworks.com) 02-Nov-2005
+ *      Initial version created.
+ *
+ *  Dick Munroe (munroe@csworks.com) 12-Nov-2005
+ *      Allow initialzePuzzle to accept a file name in addition
+ *      to a resource.  Windows doesn't do file redirection properly
+ *      so the examples have to be able to handle a file NAME as
+ *      input as well as a redirected file.
+ *      Allow initializePuzzle to accept a string of 81 characters.
+ *
+ *  Dick Munroe (munroe@csworks.com) 13-Nov-2005
+ *	It appears that getBoardAsString screws up somehow.  Rewrite it.
+ *
+ *  Dick Munroe (munroe@csworks.com) 16-Nov-2005
+ *     Add a "pair" inference.
+ *	Dick Munroe (munroe@csworks.com) 17-Nov-2005
+ *		Add comments to input files.
+ *		There was a bug in _applyTuple that caused premature exiting of the inference
+ *		engine.
+ *		If SDD isn't present, don't display error.
+ *
+ *	Dick Munroe (munroe@csworks.com) 19-Nov-2005
+ *		Add a new tuple inference.
+ *		Do a ground up ObjectS oriented redesign to make the addition of arbitrary
+ *		inferences MUCH easier.
+ *		Get the printing during solving right.
+ *		Somehow array_equal developed a "bug".
+ *
+ *	Dick Munroe (munroe@csworks.com) 22-Nov-2005
+ *		Add n,n+1 tuple recognition for n=2.
+ *		Restructure inference engine to get maximum benefit out of each pass.
+ *
+ *	Dick Munroe (munroe@csworks.com) 28-Nov-2005
+ *		Attempt to build harder Sudoku by implementing a coupling coefficient
+ *		attempting to distribute clues more optimally.
+ */
 
-@include_once "SDD/class.SDD.php" ;
+@require_once("SDD/class.SDD.php");
 
 /**
  * @author Dick Munroe <munroe@csworks.com>
@@ -60,32 +73,28 @@
  * @package Sudoku
  */
 
-class ObjectS
-{
-	/**
-	 * @desc Are two array's equal (have the same contents).
-	 * @param array
-	 * @param array
-	 * @return boolean
-	 */
-	
-	function array_equal($theArray1, $theArray2)
-	{
-		if (!(is_array($theArray1) && is_array($theArray2)))
-		{
-			return false ;
-		}
-		
-		if (count($theArray1) != count($theArray2))
-		{
-			return false ;
-		}
-		
-		$xxx = array_diff($theArray1, $theArray2) ;
-		
-	    return (count($xxx) == 0) ;
-	}
-	
+class ObjectS {
+    /**
+     * @desc Are two array's equal (have the same contents).
+     * @param array
+     * @param array
+     * @return boolean
+     */
+
+    public function array_equal($thearray1, $thearray2) {
+        if (!(is_array($thearray1) && is_array($thearray2))) {
+            return false;
+        }
+
+        if (count($thearray1) != count($thearray2)) {
+            return false;
+        }
+
+        $xxx = array_diff($thearray1, $thearray2);
+
+        return (count($xxx) == 0);
+    }
+
     /**
      * Deep copy anything.
      * 
@@ -96,29 +105,24 @@ class ObjectS
      *               the array have been resolved into copies allowing things like the
      *               board array to be copied.
      */
-    
-    function deepCopy($theArray = NULL)
-    {
-    	if ($theArray === NULL)
-    	{
-    		return unserialize(serialize($this)) ;
-    	}
-    	else
-		{
-    		return unserialize(serialize($theArray)) ;
-    	}
-    }
-    
-	/**
-	 * @desc Debugging output interface.
-	 * @access public
-	 * @param mixed $theValue The "thing" to be pretty printed.
-	 * @param boolean $theHTMLFlag True if the output will be seen in a browser, false otherwise.
-	 */
 
-    function print_d(&$theValue, $theHTMLFlag = true)
-    {
-    	print SDD::dump($theValue, $theHTMLFlag) ;
+    public function deepcopy($thearray = null) {
+        if ($thearray === null) {
+            return unserialize(serialize($this));
+        } else {
+            return unserialize(serialize($thearray));
+        }
+    }
+
+    /**
+     * @desc Debugging output interface.
+     * @access public
+     * @param mixed $theValue The "thing" to be pretty printed.
+     * @param boolean $theHTMLFlag True if the output will be seen in a browser, false otherwise.
+     */
+
+    public function print_d(&$thevalue, $thehtmlflag = true) {
+        print SDD::dump($thevalue, $thehtmlflag);
     }
 }
 
@@ -131,121 +135,97 @@ class ObjectS
  *
  * @package Sudoku
  */
+class Cell extends ObjectS {
+    protected $r;
+    protected $c;
 
-class Cell extends ObjectS
-{
-	var $r ;
-	var $c ;
-	
-	var $state = array() ;
-	var $applied = false ;
-	
+    protected $state = array();
+    protected $applied = false;
 
-	/**
-	 * @desc Constructor
-	 * @param integer $r row address of this cell (not used, primarily for debugging purposes).
-	 * @param integer $c column address of this cell (ditto).
-	 * @param integer $nStates The number of states each cell can have.  Looking forward to
-	 *                         implementing Super-doku.
-	 */
-	 
-	function Cell($r, $c, $nStates = 9)
-	{
-	
-		$this->r = $r ;
-		$this->c = $c ;
-		
-		for ($i = 1; $i <= $nStates; $i++)
-		{
-			$this->state[$i] = $i ;
-		}
-	}
-	
-	/**
-	 * @desc This cell has been "applied", i.e., solved, to the board.
-	 */
-	 
-	function applied()
-	{
-		$this->applied = true ;
-	}
-	
-	/**
-	 * Only those cells which are not subsets of the tuple have the
-	 * contents of the tuple removed.
-	 *
-	 * @desc apply a 23Tuple to a cell.
-	 * @access public
-	 * @param array $aTuple the tuple to be eliminated.
-	 */
-	 
-	function apply23Tuple($aTuple)
-	{
-		if (is_array($this->state))
-		{
-			$xxx = array_intersect($this->state, $aTuple) ;
-			if ((count($xxx) > 0) && (count($xxx) != count($this->state)))
-			{
-				return $this->un_set($aTuple) ;
-			}
-			else
-			{
-				return false ;
-			}
-		}
-		else
-		{
-			return false ;
-		}
-	}
-	
-	/**
-	 * For more details on the pair tuple algorithm, see RCS::_pairSolution.
-	 *
-	 * @desc Remove all values in the tuple, but only if the cell is a superset.
-	 * @access public
-	 * @param array A tuple to be eliminated from the cell's state.
-	 */
-	 
-	function applyTuple($aTuple)
-	{
-		if (is_array($this->state))
-		{
-			if (!$this->array_equal($aTuple, $this->state))
-			{
-				return $this->un_set($aTuple) ;
-			}
-		}
-		
-		return false ;
-	}
-	
-	/**
-	 * @desc Return the string representation of the cell.
-	 * @access public
-	 * @param boolean $theFlag true if the intermediate states of the cell are to be visible.
-	 * @return string
-	 */
-	 
-	function asString($theFlag = false)
-	{
-		if (is_array($this->state))
-		{
-			if (($theFlag) || (count($this->state) == 1))
-			{
-				return implode(", ", $this->state) ;
-			}
-			else
-			{
-				return " " ;
-			}
-		}
-		else
-		{
-			return $this->state ;
-		}
-	}
-	
+    /**
+     * @desc Constructor
+     * @param integer $r row address of this cell (not used, primarily for debugging purposes).
+     * @param integer $c column address of this cell (ditto).
+     * @param integer $nStates The number of states each cell can have.  Looking forward to
+     *                         implementing Super-doku.
+     */
+
+    public function cell($r, $c, $nstates = 9) {
+        $this->r = $r;
+        $this->c = $c;
+
+        for ($i = 1; $i <= $nstates; $i++) {
+            $this->state[$i] = $i;
+        }
+    }
+
+    /**
+     * @desc This cell has been "applied", i.e., solved, to the board.
+     */
+
+    public function applied() {
+        $this->applied = true;
+    }
+
+    /**
+     * Only those cells which are not subsets of the tuple have the
+     * contents of the tuple removed.
+     *
+     * @desc apply a 23Tuple to a cell.
+     * @access public
+     * @param array $aTuple the tuple to be eliminated.
+     */
+
+    public function apply23tuple($atuple) {
+        if (is_array($this->state)) {
+            $xxx = array_intersect($this->state, $atuple);
+            if ((count($xxx) > 0) && (count($xxx) != count($this->state))) {
+                return $this->un_set($atuple);
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * For more details on the pair tuple algorithm, see RCS::_pairSolution.
+     *
+     * @desc Remove all values in the tuple, but only if the cell is a superset.
+     * @access public
+     * @param array A tuple to be eliminated from the cell's state.
+     */
+
+    public function applytuple($atuple) {
+        if (is_array($this->state)) {
+            if (!$this->array_equal($atuple, $this->state)) {
+                return $this->un_set($atuple);
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * @desc Return the string representation of the cell.
+     * @access public
+     * @param boolean $theFlag true if the intermediate states of the cell are to be visible.
+     * @return string
+     */
+
+    public function asstring($theflag = false) {
+        if (is_array($this->state)) {
+            if (($theflag) || (count($this->state) == 1)) {
+                return implode(", ", $this->state);
+            } else {
+                return " ";
+            }
+        } else {
+            return $this->state;
+        }
+    }
+
     /**
      * Used to make sure that solved positions show up at print time.
      * The value is used as a candidate for "slicing and dicing" by elimination in
@@ -255,45 +235,41 @@ class Cell extends ObjectS
      * @access public
      * @param integer $value The value for the solved position.
      */
-    
-    function flagSolvedPosition($value)
-    {
-        $this->state = array($value => $value) ;
+
+    public function flagsolvedposition($value) {
+        $this->state = array($value => $value);
     }
-    
+
     /**
      * @desc return the state of a cell.
      * @access protected
      * @return mixed Either solved state or array of state pending solution.
      */
-     
-    function &getState()
-    {
-    	return $this->state ;
+
+    public function &getstate() {
+        return $this->state;
     }
-    
-	/**
-	 * @desc Has the state of this cell been applied to the board.
-	 * @access public
-	 * @return boolean True if it has, false otherwise.  Implies that IsSolved is true as well.
-	 */
-	 
-    function IsApplied()
-    {
-    	return $this->applied ;
-    }
-    
+
     /**
-     * @desc Has this cell been solved?
+     * @desc Has the state of this cell been applied to the board.
      * @access public
-     * @return boolean True if this cell has hit a single state.
+     * @return boolean True if it has, false otherwise.  Implies that IsSolved is true as well.
      */
-     
-    function IsSolved()
-    {
-    	return !is_array($this->state) ;
+
+    public function isapplied() {
+        return $this->applied;
     }
-    
+
+     /**
+      * @desc Has this cell been solved?
+      * @access public
+      * @return boolean True if this cell has hit a single state.
+      */
+
+    public function issolved() {
+        return !is_array($this->state);
+    }
+
     /**
      * This is used primarily by the pretty printer, but has other applications
      * in the code.
@@ -304,67 +280,53 @@ class Cell extends ObjectS
      *                 1 => the cell has been solved but not seen a solved.
      *                 2 => the cell has not been solved.
      */
-     
-	function solvedState()
-	{
-		if (is_array($this->state))
-		{
-			if (count($this->state) == 1)
-			{
-				return 1 ;
-			}
-			else
-			{
-				return 2 ;
-			}
-		}
-		else
-		{
-			return 0 ;
-		}
-	}
-	
-	/**
-	 * This is the negative inference of Sudoku.  By eliminating values the
-	 * cells approach solutions.  Once a cell has been completely eliminated,
-	 * the value causing the complete elimination must be the solution and the
-	 * cell is promoted into the solved state.
-	 *
-	 * @desc Eliminate one or more values from the state information of the cell.
-	 * @access public
-	 * @param mixed The value or values to be removed from the cell state.
-	 * @return boolean True if the cell state was modified, false otherwise.
-	 */
-	 
-	function un_set($theValues)
-	{
-		if (is_array($theValues))
-		{
-			$theReturn = FALSE ;
-			
-			foreach ($theValues as $theValue)
-			{
-				$theReturn |= $this->un_set($theValue) ;
-			}
-			
-			return $theReturn ;
-		}
-		
-		if (is_array($this->state))
-		{
-			$theReturn = isset($this->state[$theValues]) ;
-			unset($this->state[$theValues]) ;
-			if (count($this->state) == 0)
-			{
-				$this->state = $theValues ;
-			}
-			return $theReturn ;
-		}
-		else
-		{
-			return false ;
-		}
-	}
+
+    public function solvedstate() {
+        if (is_array($this->state)) {
+            if (count($this->state) == 1) {
+                return 1;
+            } else {
+                return 2;
+            }
+        } else {
+            return 0;
+        }
+    }
+
+    /**
+     * This is the negative inference of Sudoku.  By eliminating values the
+     * cells approach solutions.  Once a cell has been completely eliminated,
+     * the value causing the complete elimination must be the solution and the
+     * cell is promoted into the solved state.
+     *
+     * @desc Eliminate one or more values from the state information of the cell.
+     * @access public
+     * @param mixed The value or values to be removed from the cell state.
+     * @return boolean True if the cell state was modified, false otherwise.
+     */
+
+    public function un_set($thevalues) {
+        if (is_array($thevalues)) {
+            $thereturn = false;
+
+            foreach ($thevalues as $thevalue) {
+                $thereturn |= $this->un_set($thevalue);
+            }
+
+            return $thereturn;
+        }
+
+        if (is_array($this->state)) {
+            $thereturn = isset($this->state[$thevalues]);
+            unset($this->state[$thevalues]);
+            if (count($this->state) == 0) {
+                $this->state = $thevalues;
+            }
+            return $thereturn;
+        } else {
+            return false;
+        }
+    }
 }
 
 /**
@@ -373,147 +335,133 @@ class Cell extends ObjectS
  * @package Sudoku
  */
 
-class RCS extends ObjectS
-{
-	var $theIndex ;
-	
-	var $theRow = array() ;
-	
-	var $theHeader = "" ;
-	
-	var $theTag = "" ;
-	
-	/**
-	 * This 
-	 * @desc Constructor
-	 * @access public
-	 * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
-	 * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
-	 *                          left, ending bottom right
-	 * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
-	 *                                      limts things to 9x9 Sudoku currently.
-	 */
-	 
-	function RCS($theTag, $theIndex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9)
-	{
-		$this->theTag = $theTag ;
-		$this->theIndex = $theIndex ;
-		$this->theRow[1] = &$a1 ;
-		$this->theRow[2] = &$a2 ;
-		$this->theRow[3] = &$a3 ;
-		$this->theRow[4] = &$a4 ;
-		$this->theRow[5] = &$a5 ;
-		$this->theRow[6] = &$a6 ;
-		$this->theRow[7] = &$a7 ;
-		$this->theRow[8] = &$a8 ;
-		$this->theRow[9] = &$a9 ;
-	}
+class rcs extends ObjectS{
+    protected $theindex;
 
-	/**
-	 * There is a special case that comes up a lot in Sudoku.  If there
-	 * are values i, j, k and cells of the form (i, j), (j, k), (i, j, k)
-	 * the the values i, j, and k cannot appear in any other cells.  The
-	 * proof is a simple "by contradiction" proof.  Assume that the values
-	 * do occur elsewhere and you always get a contradiction for these
-	 * three cells.  I'm pretty sure that this is a general rule, but for
-	 * 9x9 Sudoku, they probably aren't of interested.
-	 *
-	 * @desc
-	 * @access private
-	 * @return boolean True if a 23 solution exists and has been applied.
-	 */
-	 
-	function _23Solution()
-	{
-        $theCounts = array() ;
-        $theTuples = array() ;
-		$theUnsolved = 0 ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-          $j = count($this->theRow[$i]->getState());
-        	$theCounts[ $j][] = $i ;
-        	$theUnsolved++ ;
+    protected $therow = array();
+
+    protected $theheader = "";
+
+    protected $thetag = "";
+
+    /**
+     * This 
+     * @desc Constructor
+     * @access public
+     * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
+     * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
+     *                          left, ending bottom right
+     * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     */
+
+    public function rcs($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
+        $this->thetag = $thetag;
+        $this->theindex = $theindex;
+        $this->therow[1] = &$a1;
+        $this->therow[2] = &$a2;
+        $this->therow[3] = &$a3;
+        $this->therow[4] = &$a4;
+        $this->therow[5] = &$a5;
+        $this->therow[6] = &$a6;
+        $this->therow[7] = &$a7;
+        $this->therow[8] = &$a8;
+        $this->therow[9] = &$a9;
+    }
+
+    /**
+     * There is a special case that comes up a lot in Sudoku.  If there
+     * are values i, j, k and cells of the form (i, j), (j, k), (i, j, k)
+     * the the values i, j, and k cannot appear in any other cells.  The
+     * proof is a simple "by contradiction" proof.  Assume that the values
+     * do occur elsewhere and you always get a contradiction for these
+     * three cells.  I'm pretty sure that this is a general rule, but for
+     * 9x9 Sudoku, they probably aren't of interested.
+     *
+     * @desc
+     * @access private
+     * @return boolean True if a 23 solution exists and has been applied.
+     */
+
+    public function _23solution() {
+        $thecounts = array();
+        $thetuples = array();
+        $theunsolved = 0;
+
+        for ($i = 1; $i <= 9; $i++) {
+            $j = count($this->theRow[$i]->getState());
+            $thecounts[ $j][] = $i;
+            $theunsolved++;
         }
 
-    if( array_key_exists( 2, $theCounts) and array_key_exists( 3, $theCounts))
-    {
-  		if ((count($theCounts[2]) < 2) || (count($theCounts[3]) < 1))
-  			return false ;
-		}
-		
-		/*
-		 * Look at each pair of 2 tuples and see if their union exists in the 3 tuples.
-		 * If so, eliminate everything from the set and bail.
-		 */
+        if (array_key_exists( 2, $thecounts) and array_key_exists( 3, $thecounts)) {
+            if ((count($thecounts[2]) < 2) || (count($thecounts[3]) < 1)) {
+                return false;
+            }
+        }
 
-		$the2Tuples = &$theCounts[2] ;
-		$the3Tuples = &$theCounts[3] ;		 
-		$theCount2 = count($the2Tuples) ;
-		$theCount3 = count($the3Tuples) ;
-		
-		for ($i = 0; $i < $theCount2 - 1; $i++)
-		{
-			for ($j = $i + 1; $j < $theCount2; $j++)
-			{
-				$xxx = array_unique(array_merge($this->theRow[$the2Tuples[$i]]->getState(),
-												$this->theRow[$the2Tuples[$j]]->getState())) ;
-				for ($k = 0; $k < $theCount3; $k++)
-				{
-					if ($this->array_equal($xxx, $this->theRow[$the3Tuples[$k]]->getState()))
-					{
-						$theTuples[] = $xxx ;
-						break ;
-					}
-				}
-			}
-		}
-		
-		/*
-		 * Since it takes 3 cells to construct the 23 tuple, unless there are more than 3
-		 * unsolved cells, further work doesn't make any sense.
-		 */
-		 
-		$theReturn = false ;
-		
-		if ((count($theTuples) != 0) && ($theUnsolved > 3))
-		{
-			foreach ($theTuples as $aTuple)
-			{
-				foreach($this->theRow as $theCell)
-				{
-					$theReturn |= $theCell->apply23Tuple($aTuple) ;
-				}
-			}
-		}
-		
-		if ($theReturn) 
-		{
-			$this->theHeader[] = sprintf("<br />Apply %s[%d] 23 Tuple Inference:", $this->theTag, $this->theIndex) ;
-		}
-		
-        return $theReturn ;
-	}
-	
+        /*
+         * Look at each pair of 2 tuples and see if their union exists in the 3 tuples.
+         * If so, eliminate everything from the set and bail.
+         */
+
+        $the2tuples = &$thecounts[2];
+        $the3tuples = &$thecounts[3];
+        $thecount2 = count($the2tuples);
+        $thecount3 = count($the3tuples);
+
+        for ($i = 0; $i < $thecount2 - 1; $i++) {
+            for ($j = $i + 1; $j < $thecount2; $j++) {
+                $xxx = array_unique(array_merge($this->therow[$the2tuples[$i]]->getstate(),
+                    $this->therow[$the2tuples[$j]]->getstate()));
+                for ($k = 0; $k < $thecount3; $k++) {
+                    if ($this->array_equal($xxx, $this->therow[$the3tuples[$k]]->getstate())) {
+                        $thetuples[] = $xxx;
+                        break;
+                    }
+                }
+            }
+        }
+
+        /*
+         * Since it takes 3 cells to construct the 23 tuple, unless there are more than 3
+         * unsolved cells, further work doesn't make any sense.
+         */
+
+        $thereturn = false;
+
+        if ((count($thetuples) != 0) && ($theunsolved > 3)) {
+            foreach ($thetuples as $atuple) {
+                foreach ($this->therow as $thecell) {
+                    $thereturn |= $thecell->apply23tuple($atuple);
+                }
+            }
+        }
+
+        if ($thereturn) {
+            $this->theheader[] = sprintf("<br />Apply %s[%d] 23 Tuple Inference:", $this->thetag, $this->theindex);
+        }
+
+        return $thereturn;
+    }
+
     /**
      * @desc apply a tuple to exclude items from within the row/column/square.
      * @param array $aTuple the tuple to be excluded.
      * @access private
-	 * @return boolean true if anything changes.
+     * @return boolean true if anything changes.
      */
-    
-    function _applyTuple(&$aTuple)
-    {
-        $theReturn = FALSE ;
-        
-        for ($i = 1; $i <=9; $i++)
-        {
-        	$theReturn |= $this->theRow[$i]->applyTuple($aTuple) ;
+
+    protected function _applytuple(&$atuple) {
+        $thereturn = false;
+
+        for ($i = 1; $i <= 9; $i++) {
+            $thereturn |= $this->therow[$i]->applytuple( $atuple);
         }
-        
-        return $theReturn ;
+
+        return $thereturn;
     }
-    
+
     /**
      * This is a placeholder to be overridden to calculate the "coupling" for
      * a cell.  Coupling is defined to be the sum of the sizes of the intersection
@@ -532,12 +480,11 @@ class RCS extends ObjectS
      * @return integer the degree of coupling between the cell and the rest of the cells
      *				   within the row/column/square.
      */
-    
-    function coupling($theRow, $theColumn)
-    {
-    	return 0 ;
+
+    public function coupling($therow, $thecolumn) {
+        return 0;
     }
-    
+
     /**
      * I think that the goal of the inference engine is to eliminate
      * as much "junk" state as possible on each pass.  Therefore the
@@ -552,78 +499,70 @@ class RCS extends ObjectS
      *               intermediate solution printing.
      * @return boolean True when at least one inference has succeeded.
      */
-     
-    function doAnInference()
-    {
-    	$this->theHeader = NULL ;
-    	
-		$theReturn = $this->_23Solution() ;
-		$theReturn |= $this->_pairSolution() ;
- 		$theReturn |= $this->_uniqueSolution() ;
- 		
- 		return $theReturn ;
- 	}
+
+    public function doaninference() {
+        $this->theheader = null;
+
+        $thereturn = $this->_23solution();
+        $thereturn |= $this->_pairsolution();
+        $thereturn |= $this->_uniquesolution();
+
+        return $thereturn;
+    }
 
     /**
      * @desc Find all tuples with the same contents.
      * @param array Array of n size tuples.
      * @returns array of tuples that appear the same number of times as the size of the contents
      */
-    
-    function _findTuples(&$theArray)
-    {
-        $theReturn = array() ;
-        for ($i = 0; $i < count($theArray); $i++)
-        {
-            $theCount = 1 ;
 
-            for ($j = $i + 1; $j < count($theArray); $j++)
-            {
-            	$s1 = &$this->theRow[$theArray[$i]] ;
-            	$s1 =& $s1->getState() ;
-            	
-            	$s2 = &$this->theRow[$theArray[$j]] ;
-            	$s2 =& $s2->getState() ;
-            	
-            	$aCount = count($s1) ;
-            	
-                if ($this->array_equal($s1, $s2))
-                {
-                    $theCount++ ;
+    public function _findtuples(&$thearray) {
+        $thereturn = array();
+        for ($i = 0; $i < count($thearray); $i++) {
+            $thecount = 1;
 
-                    if ($theCount == $aCount)
-                    {
-                        $theReturn[] = $s1 ;
-                        break ;
+            for ($j = $i + 1; $j < count($thearray); $j++) {
+                $s1 = &$this->theRow[$thearray[$i]];
+                $s1 =& $s1->getstate();
+
+                $s2 = &$this->therow[$thearray[$j]];
+                $s2 =& $s2->getstate();
+
+                $acount = count($s1);
+
+                if ($this->array_equal($s1, $s2)) {
+                    $thecount++;
+
+                    if ($thecount == $acount) {
+                        $thereturn[] = $s1;
+                        break;
                     }
                 }
             }
         }
 
-        return $theReturn ;
+        return $thereturn;
     }
-    
+
     /**
      * @desc Get a reference to the specified cell.
      * @access public
      * @return reference to ObjectS of class Cell.
      */
-    
-	function &getCell($i)
-	{
-		return $this->theRow[$i] ;
-	}
-	
-	/**
-	 * @desc Get the header set by the last call to doAnInference.
-	 * 
-	 */
-	
-	function getHeader()
-	{
-		return $this->theHeader ;
-	}
-	
+
+    public function &getcell($i) {
+        return $this->therow[$i];
+    }
+
+    /**
+     * @desc Get the header set by the last call to doAnInference.
+     * 
+     */
+
+    public function getheader() {
+        return $this->theheader;
+    }
+
     /**
      * Turns out if you every find a position of n squares which can only contain
      * the same values, then those values cannot appear elsewhere in the structure.
@@ -633,82 +572,71 @@ class RCS extends ObjectS
      * 
      * @desc Eliminate tuple-locked alternatives.
      * @access private
-	 * @return boolean True if something changed.
+     * @return boolean True if something changed.
      */
-    
-    function _pairSolution()
-    {
-        $theCounts = array() ;
-        $theTuples = array() ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-        	$c = &$this->theRow[$i] ;
-        	$theCounts[count($c->getState())][] = $i ;
+
+    protected function _pairsolution() {
+        $thecounts = array();
+        $thetuples = array();
+
+        for ($i = 1; $i <= 9; $i++) {
+            $c = &$this->therow[$i];
+            $thecounts[count($c->getstate())][] = $i;
         }
-        
-		unset($theCounts[1]) ;
-		
+
+        unset($thecounts[1]);
+
         /*
-        ** Get rid of any set of counts which cannot possibly meet the
-        ** requirements.
-        */
-        
-        $thePossibilities = $theCounts ;
-        
-        foreach ($theCounts as $theKey => $theValue)
-        {
-            if (count($theValue) < $theKey)
-            {
-                unset($thePossibilities[$theKey]) ;
+         ** Get rid of any set of counts which cannot possibly meet the
+         ** requirements.
+         */
+
+        $thepossibilities = $thecounts;
+
+        foreach ($thecounts as $thekey => $thevalue) {
+            if (count($thevalue) < $thekey) {
+                unset($thepossibilities[$thekey]);
             }
         }
-        
-        if (count($thePossibilities) == 0)
-        {
-            return false ;
+
+        if (count($thepossibilities) == 0) {
+            return false;
         }
-        
+
         /*
          * At this point there are 1 or more tuples which MAY satisfy the conditions.
          */
 
-		$theReturn = false ;
-		
-        foreach ($thePossibilities as $theValue)
-        {
-            $theTuples = $this->_findTuples($theValue) ;
-            
-            if (count($theTuples) != 0)
-            {
-                foreach ($theTuples as $aTuple)
-                {
-                    $theReturn |= $this->_applyTuple($aTuple) ;
+        $thereturn = false;
+
+        foreach ($thepossibilities as $thevalue) {
+            $thetuples = $this->_findtuples($thevalue);
+
+            if (count($thetuples) != 0) {
+                foreach ($thetuples as $atuple) {
+                    $thereturn |= $this->_applyruple($atuple);
                 }
             }
         }
 
-		if ($theReturn) 
-		{
-			$this->theHeader[] = sprintf("<br />Apply %s[%d] Pair Inference:", $this->theTag, $this->theIndex) ;
-		}
-		
-        return $theReturn ;
+        if ($thereturn) {
+            $this->theheader[] = sprintf("<br />Apply %s[%d] Pair Inference:", $this->thetag, $this->theindex);
+        }
+
+        return $thereturn;
     }
 
-	function un_set($theValues)
-	{
-		$theReturn = false ;
-		
-		for ($i = 1; $i <= 9; $i++)
-		{
-			$c = &$this->theRow[$i] ;
-			$theReturn |= $c->un_set($theValues) ;
-		}
-		
-		return $theReturn ;
-	}
-	
+    public function un_set($thevalues) {
+        $thereturn = false;
+
+        for ($i = 1; $i <= 9; $i++) {
+            $c = &$this->therow[$i];
+            $thereturn |= $c->un_set($thevalues);
+        }
+
+        return $thereturn;
+    }
+
     /**
      * Find a solution to a row/column/square.
      * 
@@ -725,88 +653,76 @@ class RCS extends ObjectS
      * @access private
      * @return boolean True if one or more values in the RCS has changed state.
      */
-    
-    function _uniqueSolution()
-    {
-        $theSet = array() ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-        	$c = &$this->theRow[$i] ;
-            if (!$c->IsSolved())
-            {
-            	foreach ($c->getState() as $theValue)
-            	{
-            		$theSet[$theValue][] = $i ;
-            	}
+
+    protected function _uniquesolution() {
+        $theset = array();
+
+        for ($i = 1; $i <= 9; $i++) {
+            $c = &$this->therow[$i];
+            if (!$c->issolved()) {
+                foreach ($c->getstate() as $thevalue) {
+                    $theset[$thevalue][] = $i;
+                }
             }
         }
-        
-		/*
-		 * If there were no unsolved positions, then we're done and nothing has
-		 * changed.
-		 */
-		 
-        if (count($theSet) == 0)
-        {
-            return false ;
-        }
-        		
-		/*
-		 * Pull out all those keys having only one occurrance in the RCS.
-		 */
-		 
-		foreach ($theSet as $theKey => $theValues)
-		{
-			if (count($theValues) != 1)
-			{
-				unset($theSet[$theKey]) ;
-			}
-		}
 
-		/*
-		 * If there aren't any unique values, we're done.
-		 */
-		 
-		if (count($theSet) == 0)
-		{
-			return false ;
-		}
-		
-		foreach ($theSet as $theValue => $theIndex)
-		{
-			$this->theRow[$theIndex[0]]->flagSolvedPosition($theValue) ;
-		}
-				
-		$this->theHeader[] = sprintf("<br />Apply %s[%d] Unique Inference:", $this->theTag, $this->theIndex) ;
-		
-		return true ;
+        /*
+         * If there were no unsolved positions, then we're done and nothing has
+         * changed.
+         */
+
+        if (count($theset) == 0) {
+            return false;
+        }
+
+        /*
+         * Pull out all those keys having only one occurrance in the RCS.
+         */
+
+        foreach ($theset as $thekey => $thevalues) {
+            if (count($thevalues) != 1) {
+                unset($theset[$thekey]);
+            }
+        }
+
+        /*
+         * If there aren't any unique values, we're done.
+         */
+
+        if (count($theset) == 0) {
+            return false;
+        }
+
+        foreach ($theset as $thevalue => $theindex) {
+            $this->therow[$theindex[0]]->flagsolvedposition($thevalue);
+        }
+
+        $this->theheader[] = sprintf("<br />Apply %s[%d] Unique Inference:", $this->thetag, $this->theindex);
+
+        return true;
     }
 
-	/**
-	 * @desc Check to see if the RCS contains a valid state.
-	 * @access public
-	 * @return boolean True if the state of the RCS could be part of a valid
-	 *				   solution, false otherwise.
-	 */
-	 
-	function validateSolution()
-	{
-		$theNewSet = array() ;
-		
-		foreach ($this->theRow as $theCell)
-		{
-			if ($theCell->solvedState() == 0)
-			{
-				$theNewSet[] = $theCell->getState() ;
-			}
-		}
-		
-		$xxx = array_unique($theNewSet) ;
-		
-		return (count($xxx) == count($this->theRow)) ;
-	}
-	
+    /*
+     * @desc Check to see if the RCS contains a valid state.
+     * @access public
+     * @return boolean True if the state of the RCS could be part of a valid
+     *				   solution, false otherwise.
+     */
+
+    public function validatesolution() {
+        $thenewset = array();
+
+        foreach ($this->therow as $thecell) {
+            if ($thecell->solvedstate() == 0) {
+                $thenewset[] = $thecell->getstate();
+            }
+        }
+
+        $xxx = array_unique($thenewset);
+
+        return (count($xxx) == count($this->therow));
+    }
+
     /**
      * Validate a part of a trial solution.
      * 
@@ -817,22 +733,19 @@ class RCS extends ObjectS
      * @access public
      * @return True if the input parameter contains a valid solution, false otherwise.
      */
-    
-    function validateTrialSolution()
-    {
-        $theNewSet = array() ;
-        
-        foreach($this->theRow as $theCell)
-        {
-        	if ($theCell->solvedState() == 0)
-        	{
-        		$theNewSet[] = $theCell->getState() ;
-        	}
-        }
-        
-        $xxx = array_unique($theNewSet) ;
 
-        return ((count($xxx) == count($theNewSet) ? TRUE : FALSE)) ;
+    public function validatetrialsolution() {
+        $thenewset = array();
+
+        foreach ($this->therow as $thecell) {
+            if ($thecell->solvedstate() == 0) {
+                $thenewset[] = $thecell->getstate();
+            }
+        }
+
+        $xxx = array_unique($thenewset);
+
+        return ((count($xxx) == count($thenewset) ? true : false));
     }
 }
 
@@ -842,63 +755,56 @@ class RCS extends ObjectS
  * @package Sudoku
  */
 
-class R extends RCS
-{
-	/**
-	 * @desc Constructor
-	 * @access public
-	 * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
-	 * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
-	 *                          left, ending bottom right
-	 * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
-	 *                                      limts things to 9x9 Sudoku currently.
-	 */
-	 
-	function R($theTag, $theIndex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9)
-	{
-		$this->RCS($theTag, $theIndex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9) ;
-	}
+class r extends rcs {
+    /**
+     * @desc Constructor
+     * @access public
+     * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
+     * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
+     *                          left, ending bottom right
+     * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     */
 
-	/**
-	 * @see RCS::coupling
-	 */
-	 
-	function coupling($theRow, $theColumn)
-	{
-		return $theState = $this->_coupling($theColumn) ;
-	}
-	
-	/**
-	 * @see RCS::coupling
-	 * @desc Heavy lifting for row/column coupling calculations.
-	 * @access private
-	 * @param integer $theIndex the index of the cell within the row or column.
-	 * @return integer the "coupling coefficient" for the cell.  The sum of the
-	 *    			   sizes of the intersection between this and all other
-	 *				   cells in the row or column.
-	 */
-	 
-	function _coupling($theIndex)
-	{
-		$theCommonState =& $this->getCell($theIndex) ;
-		$theCommonState =& $theCommonState->getState() ;
+    public function r($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
+        $this->rcs($thetag, $theindex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9);
+    }
 
-		$theCoupling = 0 ;
-		
-		for ($i = 1; $i <= count($this->theRow); $i++)
-		{
-			if ($i != $theIndex)
-			{
-				$theCell =& $this->getCell($i) ;
-				if ($theCell->solvedState() != 0)
-				{
-					$theCoupling += count(array_intersect($theCommonState, $theCell->getState())) ;
-				}
-			}
-		}
-		
-		return $theCoupling ;
-	}
+    /**
+     * @see RCS::coupling
+     */
+
+    public function coupling($therow, $thecolumn) {
+        return $thestate = $this->_coupling($thecolumn);
+    }
+
+    /**
+     * @see RCS::coupling
+     * @desc Heavy lifting for row/column coupling calculations.
+     * @access private
+     * @param integer $theIndex the index of the cell within the row or column.
+     * @return integer the "coupling coefficient" for the cell.  The sum of the
+     *    			   sizes of the intersection between this and all other
+     *				   cells in the row or column.
+     */
+
+    protected function _coupling($theindex) {
+        $thecommonstate =& $this->getCell($theindex);
+        $thecommonstate =& $thecommonstate->getstate();
+
+        $thecoupling = 0;
+
+        for ($i = 1; $i <= count($this->therow); $i++) {
+            if ($i != $theindex) {
+                $thecell =& $this->getcell($i);
+                if ($thecell->solvedstate() != 0) {
+                    $thecoupling += count(array_intersect($thecommonstate, $thecell->getstate()));
+                }
+            }
+        }
+
+        return $thecoupling;
+    }
 }
 
 /**
@@ -907,32 +813,28 @@ class R extends RCS
  * @package Sudoku
  */
 
-class C extends R
-{
-	/**
-	 * @desc Constructor
-	 * @access public
-	 * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
-	 * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
-	 *                          left, ending bottom right
-	 * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
-	 *                                      limts things to 9x9 Sudoku currently.
-	 */
-	 
-	function C($theTag, $theIndex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9)
-	{
-		$this->R($theTag, $theIndex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9) ;
-	}
+class c extends r {
+    /**
+     * @desc Constructor
+     * @access public
+     * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
+     * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
+     *                          left, ending bottom right
+     * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
+     *          limts things to 9x9 Sudoku currently.
+     */
 
-	/**
-	 * @see R::coupling
-	 */
-	 
-	function coupling($theRow, $theColumn)
-	{
-		return $theState = $this->_coupling($theRow) ;
-	}
-	
+    public function c($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
+        $this->r($thetag, $theindex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9);
+    }
+
+    /**
+     * @see R::coupling
+     */
+
+    public function coupling($therow, $thecolumn) {
+        return $thestate = $this->_coupling($therow);
+    }
 }
 
 /**
@@ -941,66 +843,60 @@ class C extends R
  * @package Sudoku
  */
 
-class S extends RCS
-{
-	/**
-	 * The cells within the 3x3 sudoku which participate in the coupling calculation for a square.
-	 * Remember that the missing cells have already participated in the row or column coupling
-	 * calculation.
-	 *
-	 * @access private
-	 * @var array
-	 */
-	 
-	var $theCouplingOrder =
-		array( 1 => array(5, 6, 8, 9),
-			   2 => array(4, 6, 7, 9),
-			   3 => array(4, 5, 7, 8),
-			   4 => array(2, 3, 8, 9),
-			   5 => array(1, 3, 7, 9),
-			   6 => array(1, 2, 7, 8),
-			   7 => array(2, 3, 5, 6),
-			   8 => array(1, 3, 4, 6),
-			   9 => array(1, 2, 4, 5)) ;
-			   
-	/**
-	 * @desc Constructor
-	 * @access public
-	 * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
-	 * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
-	 *                          left, ending bottom right
-	 * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
-	 *                                      limts things to 9x9 Sudoku currently.
-	 */
-	 
-	function S($theTag, $theIndex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9)
-	{
-		$this->RCS($theTag, $theIndex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9) ;
-	}
+class s extends rcs {
+    /*
+     * The cells within the 3x3 sudoku which participate in the coupling calculation for a square.
+     * Remember that the missing cells have already participated in the row or column coupling
+     * calculation.
+     *
+     * @access private
+     * @var array
+     */
 
-	/**
-	 * @see RCS::coupling
-	 */
-	 
-	function coupling($theRow, $theColumn)
-	{
-		$theIndex = ((($theRow - 1) % 3) * 3) + (($theColumn - 1) % 3) + 1 ;
-		$theCommonState =& $this->getCell($theIndex) ;
-		$theCommonState =& $theCommonState->getState() ;
-		
-		$theCoupling = 0 ;
-		
-		foreach ($this->theCouplingOrder[$theIndex] as $i)
-		{
-			$theCell =& $this->getCell($i) ;
-			if ($theCell->solvedState() != 0)
-			{
-				$theCoupling += count(array_intersect($theCommonState, $theCell->getState())) ;
-			}
-		}
-		
-		return $theCoupling ;
-	}
+    protected $thecouplingorder = array( 1 => array(5, 6, 8, 9),
+        2 => array(4, 6, 7, 9),
+        3 => array(4, 5, 7, 8),
+        4 => array(2, 3, 8, 9),
+        5 => array(1, 3, 7, 9),
+        6 => array(1, 2, 7, 8),
+        7 => array(2, 3, 5, 6),
+        8 => array(1, 3, 4, 6),
+        9 => array(1, 2, 4, 5));
+
+    /**
+     * @desc Constructor
+     * @access public
+     * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
+     * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
+     *                          left, ending bottom right
+     * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     */
+
+    public function s($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
+        $this->rcs($thetag, $theindex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9);
+    }
+
+    /**
+     * @see RCS::coupling
+     */
+
+    public function coupling($therow, $thecolumn) {
+        $theindex = ((($therow - 1) % 3) * 3) + (($thecolumn - 1) % 3) + 1;
+        $thecommonstate =& $this->getcell($theindex);
+        $thecommonstate =& $thecommonstate->getstate();
+
+        $thecoupling = 0;
+
+        foreach ($this->thecouplingorder[$theindex] as $i) {
+            $thecell =& $this->getcell($i);
+            if ($thecell->solvedstate() != 0) {
+                $thecoupling += count(array_intersect($thecommonstate, $thecell->getstate()));
+            }
+        }
+
+        return $thecoupling;
+    }
 }
 
 /**
@@ -1034,239 +930,224 @@ class S extends RCS
  * @example ./example1.php
  * @example ./example2.php
  * @example ./example3.php
-*/
+ */
 
-class Sudoku extends ObjectS
-{
-	/**
-	 * An array of Cell ObjectSs, organized into rows and columns.
-	 *
-	 * @access private
-	 * @var array of ObjectSs of type Cell.
-	 */
-	 
-	var $theBoard = array() ;
+class sudoku extends ObjectS {
+    /*
+     * An array of Cell ObjectSs, organized into rows and columns.
+     *
+     * @access private
+     * @var array of ObjectSs of type Cell.
+     */
 
-    /**
+    protected $theboard = array();
+
+    /*
      * True if debugging output is to be provided during a run.
      *
      * @access private
      * @var boolean
      */
 
-    var $theDebug = FALSE ;
+    protected $thedebug = false;
 
-    /**
+    /*
      * An array of RCS ObjectSs, one ObjectS for each row.
      *
      * @access private
      * @var ObjectS of type R
-    */
+     */
 
-    var $theRows = array() ;
-	
-    /**
+    protected $therows = array();
+
+    /*
      * An array of RCS ObjectSs, one ObjectS for each Column.
      *
      * @access private
      * @var ObjectS of type C
-    */
+     */
 
-	var $theColumns = array() ;
-	
+    private $thecolumns = array();
+
     /**
      * An array of RCS ObjectSs, one ObjectS for each square.
      *
      * @access private
      * @var ObjectS of type S
-    */
+     */
 
-	var $theSquares = array() ;
-		
-    /**
+    protected $thesquares = array();
+
+    /*
      * Used during puzzle generation for debugging output.  There may
      * eventually be some use of theLevel to figure out where to stop
      * the backtrace when puzzle generation fails.
-     * 
+     *
      * @access private
      * @var integer.
      */
 
-    var $theLevel = 0 ;
+    protected $thelevel = 0;
 
-    /**
+    /*
      * Used during puzzle generation to determine when the generation
      * will fail.  Failure, in this case, means to take a LONG time.  The
      * backtracing algorithm used in the puzzle generator will always find
      * a solution, it just might take a very long time.  This is a way to
      * limit the damage before taking another guess.
-     * 
+     *
      * @access private
      * @var integer.
      */
 
-    var $theMaxIterations = 50 ;
-    
-    /**
+    protected $themaxiterations = 50;
+
+    /*
      * Used during puzzle generation to limit the number of trys at
      * generation a puzzle in the event puzzle generation fails
      * (@see Suduko::$theMaxIterations).  I've never seen more than
      * a couple of failures in a row, so this should be sufficient
      * to get a puzzle generated.
-     * 
+     *
      * @access private
      * @var integer.
      */
 
-    var $theTrys = 10 ;
-    
-    /**
+    protected $thetrys = 10;
+
+    /*
      * Used during puzzle generation to count the number of iterations
      * during puzzle generation.  It the number gets above $theMaxIterations,
      * puzzle generation has failed and another try is made.
-     * 
+     *
      * @access private
      * @var integer.
      */
 
-    var $theGenerationIterations = 0 ;
-        
-	function Sudoku($theDebug = FALSE)
-	{
-		$this->theDebug = $theDebug ;
+    protected $thegenerationiterations = 0;
 
-		for ($i = 1; $i <= 9; $i++)
-		{
-			for ($j = 1; $j <= 9; $j++)
-			{
-				$this->theBoard[$i][$j] = new Cell($i, $j) ;
-			}
-		}
+    public function sudoku($thedebug = false) {
+        $this->thedebug = $thedebug;
 
-		$this->_buildRCS() ;
-	}
-	
-    /**
+        for ($i = 1; $i <= 9; $i++) {
+            for ($j = 1; $j <= 9; $j++) {
+                $this->theboard[$i][$j] = new cell($i, $j);
+            }
+        }
+
+        $this->_buildrcs();
+    }
+
+    /*
      * Apply a pending solved position to the row/square/column.
-     * 
+     *
      * At this point, the board has been populated with any pending solutions.
-     * This applies the "negative" inference that no row, column, or square 
+     * This applies the "negative" inference that no row, column, or square
      * containing the value within the cell.
      *
      * @access private
      * @param integer $row The row of the board's element whose value is now fixed.
      * @param integer $col The column of the board's element whose value is now fixed.
      */
-    
-    function _applySolvedPosition($row, $col)
-    {
-        $theValue = $this->theBoard[$row][$col]->getState() ;
-		
-        /*
-        ** No other cell in the row, column, or square can take on the value "value" any longer.
-        */
-        
-        $i = (((int)(($row - 1) / 3)) * 3) ;
-        $i = $i + ((int)(($col - 1) / 3)) + 1 ;
 
-        $this->theRows[$row]->un_set($theValue) ;
-        
-        $this->theColumns[$col]->un_set($theValue) ;
-        
-        $this->theSquares[$i]->un_set($theValue) ;
+    protected function _applysolvedposition($row, $col) {
+        $thevalue = $this->theboard[$row][$col]->getstate();
+
+        /*
+         * No other cell in the row, column, or square can take on the value "value" any longer.
+         */
+
+        $i = (((int)(($row - 1) / 3)) * 3);
+        $i = $i + ((int)(($col - 1) / 3)) + 1;
+
+        $this->therows[$row]->un_set($thevalue);
+
+        $this->thecolumns[$col]->un_set($thevalue);
+
+        $this->thesquares[$i]->un_set($thevalue);
     }
-    
-    /**
+
+    /*
      * @desc Apply all pending solved positions to the board.
      * @access private
      * @return boolean True if at least one solved position was applied, false
      *                 otherwise.
      */
-    
-    function _applySolvedPositions()
-    {
-        $theReturn = false ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-            for ($j = 1; $j <= 9; $j++)
-            {
-            	if (!$this->theBoard[$i][$j]->IsApplied())
-                {
-                    if ($this->theBoard[$i][$j]->solvedState() == 0)
-                    {
-                        $this->_applySolvedPosition($i, $j) ;
-        
+
+    protected function _applysolvedpositions() {
+        $thereturn = false;
+
+        for ($i = 1; $i <= 9; $i++) {
+            for ($j = 1; $j <= 9; $j++) {
+                if (!$this->theboard[$i][$j]->isapplied()) {
+                    if ($this->theboard[$i][$j]->solvedstate() == 0) {
+                        $this->_applysolvedposition($i, $j);
+
                         /*
-                        ** Update the solved position matrix and make sure that the board actually
-                        ** has a value in place.
-                        */
-        
-                        $this->theBoard[$i][$j]->applied() ;
-                        $theReturn = TRUE ;
+                         * Update the solved position matrix and make sure that the board actually
+                         * has a value in place.
+                         */
+
+                        $this->theboard[$i][$j]->applied();
+                        $thereturn = true;
                     }
                 }
             }
         }
-        
-        return $theReturn ;
+
+        return $thereturn;
     }
-    
-    /**
+
+    /*
      * @desc build the row/column/square structures for the board.
      * @access private
      */
-     
-	function _buildRCS()
-	{
-		for ($i = 1; $i <= 9; $i++)
-		{
-			$this->theRows[$i] = 
-				new R("Row",
-						$i,
-						$this->theBoard[$i][1],
-						$this->theBoard[$i][2],
-						$this->theBoard[$i][3],
-						$this->theBoard[$i][4],
-						$this->theBoard[$i][5],
-						$this->theBoard[$i][6],
-						$this->theBoard[$i][7],
-						$this->theBoard[$i][8],
-						$this->theBoard[$i][9]) ;
-			$this->theColumns[$i] = 
-				new C("Column",
-						$i,
-						$this->theBoard[1][$i],
-						$this->theBoard[2][$i],
-						$this->theBoard[3][$i],
-						$this->theBoard[4][$i],
-						$this->theBoard[5][$i],
-						$this->theBoard[6][$i],
-						$this->theBoard[7][$i],
-						$this->theBoard[8][$i],
-						$this->theBoard[9][$i]) ;
-			
-			$r = ((int)(($i - 1) / 3)) * 3 ;
-			$c = (($i - 1) % 3) * 3 ;
-			
-			$this->theSquares[$i] = 
-				new S("Square",
-						$i,
-						$this->theBoard[$r + 1][$c + 1],
-						$this->theBoard[$r + 1][$c + 2],
-						$this->theBoard[$r + 1][$c + 3],
-						$this->theBoard[$r + 2][$c + 1],
-						$this->theBoard[$r + 2][$c + 2],
-						$this->theBoard[$r + 2][$c + 3],
-						$this->theBoard[$r + 3][$c + 1],
-						$this->theBoard[$r + 3][$c + 2],
-						$this->theBoard[$r + 3][$c + 3]) ;
-		}
-	}
-	
-    /**
+
+    protected function _buildrcs() {
+        for ($i = 1; $i <= 9; $i++) {
+            $this->therows[$i] = new r("Row",
+                $i,
+                $this->theboard[$i][1],
+                $this->theboard[$i][2],
+                $this->theboard[$i][3],
+                $this->theboard[$i][4],
+                $this->theboard[$i][5],
+                $this->theboard[$i][6],
+                $this->theboard[$i][7],
+                $this->theboard[$i][8],
+                $this->theboard[$i][9]);
+            $this->thecolumns[$i] = new C("Column",
+                $i,
+                $this->theboard[1][$i],
+                $this->theboard[2][$i],
+                $this->theboard[3][$i],
+                $this->theboard[4][$i],
+                $this->theboard[5][$i],
+                $this->theboard[6][$i],
+                $this->theboard[7][$i],
+                $this->theboard[8][$i],
+                $this->theboard[9][$i]);
+
+            $r = ((int)(($i - 1) / 3)) * 3;
+            $c = (($i - 1) % 3) * 3;
+
+            $this->thesquares[$i] = new S("Square",
+                $i,
+                $this->theboard[$r + 1][$c + 1],
+                $this->theboard[$r + 1][$c + 2],
+                $this->theboard[$r + 1][$c + 3],
+                $this->theboard[$r + 2][$c + 1],
+                $this->theboard[$r + 2][$c + 2],
+                $this->theboard[$r + 2][$c + 3],
+                $this->theboard[$r + 3][$c + 1],
+                $this->theboard[$r + 3][$c + 2],
+                $this->theboard[$r + 3][$c + 3]);
+        }
+    }
+
+    /*
      * Seek alternate solutions in a solution set.
-     * 
+     *
      * Given a solution, see if there are any alternates within the solution.
      * In theory this should return the "minimum" solution given any solution.
      *
@@ -1274,33 +1155,30 @@ class Sudoku extends ObjectS
      * @param array $theInitialState (@see Sudoku::initializePuzzleFromArray)
      * @return array A set of triples containing the minimum solution.
      */
-    
-    function findAlternateSolution($theInitialState)
-    {
-        $j = count($theInitialState) ;
 
-        for ($i = 0; $i < $j; $i++)
-        {
-            $xxx = $theInitialState ;
-            
-            $xxx = array_splice($xxx, $i, 1) ;
-            
-            $this->Sudoku() ;
-            
-            $this->initializePuzzleFromArray($xxx) ;
-            
-            if ($this->solve())
-            {
-                return $this->findAlternateSolution($xxx) ;
+    public function findalternatesolution($theinitialstate) {
+        $j = count($theinitialstate);
+
+        for ($i = 0; $i < $j; $i++) {
+            $xxx = $theinitialstate;
+
+            $xxx = array_splice($xxx, $i, 1);
+
+            $this->sudoku();
+
+            $this->initializepuzzlefromarray($xxx);
+
+            if ($this->solve()) {
+                return $this->findalternatesolution($xxx);
             }
         }
 
-        return $theInitialState ;
+        return $theinitialstate;
     }
-    
-    /**
+
+    /*
      * Initialize Sudoku puzzle generation and generate a puzzle.
-     * 
+     *
      * Turns out that while the solution of Sudoku is mechanical, the creation of
      * Sudoku is an NP-Complete problem.  Which means that I can use the inference
      * engine to help generate puzzles, but I need to test the solution to see if
@@ -1322,86 +1200,80 @@ class Sudoku extends ObjectS
      * @return array A set of triples suitable for initializing a new Sudoku class
      *               (@see Sudoku::initializePuzzleFromArray).
      */
-    
-    function generatePuzzle($theDifficultyLevel = 10, $theMaxIterations = 50, $theTrys = 10)
-    {
-        $theDifficultyLevel = min($theDifficultyLevel, 10) ;
-        $theDifficultyLevel = max($theDifficultyLevel, 1) ;
-        
-        $this->theLevel = 0 ;
-        $this->theTrys = $theTrys ;
-        $this->theMaxIterations = $theMaxIterations ;
-        $this->theGenerationIterations = 0 ;
-        
-        for ($theTrys = 0; $theTrys < $this->theTrys ; $theTrys++)
-        {
-            $theAvailablePositions = array() ;
-            $theCluesPositions = array() ;
-            $theClues = array() ;
-            
-            for ($i = 1; $i <= 9; $i++)
-            {
-                for ($j = 1; $j <= 9; $j++)
-                    $theAvailablePositions[] = array($i, $j) ;
+
+    public function generatepuzzle($thedifficultylevel = 10, $themaxiterations = 50, $thetrys = 10) {
+        $thedifficultylevel = min($thedifficultylevel, 10);
+        $thedifficultylevel = max($thedifficultylevel, 1);
+
+        $this->thelevel = 0;
+        $this->thetrys = $thetrys;
+        $this->themaxiterations = $themaxiterations;
+        $this->thegenerationiterations = 0;
+
+        for ($thetrys = 0; $thetrys < $this->thetrys; $thetrys++) {
+            $theavailablepositions = array();
+            $thecluespositions = array();
+            $theclues = array();
+
+            for ($i = 1; $i <= 9; $i++) {
+                for ($j = 1; $j <= 9; $j++) {
+                    $theavailablepositions[] = array($i, $j);
+                }
             }
-            
-            $theInitialState = $this->_generatePuzzle($theAvailablePositions, $theCluesPositions, $theClues) ;
-        
-            if ($theInitialState)
-            {
-                if ($theDifficultyLevel != 10)
-                {
-                    $xxx = array() ;
-                
-                    foreach ($theInitialState as $yyy)
-                        $xxx[] = (($yyy[0] - 1) * 9) + ($yyy[1] - 1) ;
+
+            $theinitialstate = $this->_generatepuzzle($theavailablepositions, $thecluespositions, $theclues);
+
+            if ($theinitialstate) {
+                if ($thedifficultylevel != 10) {
+                    $xxx = array();
+
+                    foreach ($theinitialstate as $yyy) {
+                        $xxx[] = (($yyy[0] - 1) * 9) + ($yyy[1] - 1);
+                    }
+                    /*
+                     * Get rid of the available positions already used in the initial state.
+                     */
+
+                    sort($xxx);
+                    $xxx = array_reverse($xxx);
+
+                    foreach ($xxx as $i) {
+                        array_splice($theavailablepositions, $i, 1);
+                    }
 
                     /*
-                    ** Get rid of the available positions already used in the initial state.
-                    */
-                    
-                    sort($xxx) ;
-                    $xxx = array_reverse($xxx) ;
-                    
-                    foreach ($xxx as $i)
-                        array_splice($theAvailablePositions, $i, 1) ;
+                     * Easy is defined as the number of derivable clues added to the minimum
+                     * required information to solve the puzzle as returned by _generatePuzzle.
+                     */
 
-                    /*
-                    ** Easy is defined as the number of derivable clues added to the minimum
-                    ** required information to solve the puzzle as returned by _generatePuzzle.
-                    */
-                    
-                    for ($i = 0; $i < (10 - $theDifficultyLevel); $i++)
-                    {
-                        $xxx = mt_rand(0, count($theAvailablePositions)-1) ;
-                        $row = $theAvailablePositions[$xxx][0] ;
-                        $col = $theAvailablePositions[$xxx][1] ;
-                        $theInitialState[] = array($row, $col, $this->theBoard[$row][$col]) ;
-                        array_splice($theAvailablePositions, $xxx, 1) ;
+                    for ($i = 0; $i < (10 - $thedifficultylevel); $i++) {
+                        $xxx = mt_rand(0, count($theavailablepositions) - 1);
+                        $row = $theavailablepositions[$xxx][0];
+                        $col = $theavailablepositions[$xxx][1];
+                        $theinitialstate[] = array($row, $col, $this->theboard[$row][$col]);
+                        array_splice($theavailablepositions, $xxx, 1);
                     }
                 }
-                
-                //echo "found $theTrys<br>";
-                return $theInitialState ;
+
+                return $theinitialstate;
             }
 
-            if ($this->theDebug)
-              printf("<br>Too many iterations (%d), %d\n", $this->theMaxIterations, $theTrys);
-            
-            $this->Sudoku($this->theDebug) ;      
+            if ($this->thedebug) {
+                printf("<br>Too many iterations (%d), %d\n", $this->themaxiterations, $thetrys);
+            }
+            $this->sudoku($this->thedebug);
         }
-        
+
         /*
-        ** No solution possible, we guess wrong too many times.
-        */
-        
-        //echo "try=$theTrys<br>";
-        return array() ;
+         * No solution possible, we guess wrong too many times.
+         */
+
+        return array();
     }
-    
-    /**
+
+    /*
      * Sudoku puzzle generator.
-     * 
+     *
      * This is the routine that does the heavy lifting
      * for the puzzle generation.  It works by taking a guess for a value of a cell, applying
      * the solver, testing the solution, and if it's a valid solution, calling itself
@@ -1421,210 +1293,195 @@ class Sudoku extends ObjectS
      * @return array NULL array if no solution is possible, otherwise a set of triples
      *               suitable for feeding to {@link Sudoku::initializePuzzleFromArray}
      */
-    
-    function _generatePuzzle($theAvailablePositions, $theCluesPositions, $theClues)
-    {
-        $this->theLevel++ ;
-        
-        $this->theGenerationIterations++ ;
-        
+
+    protected function _generatepuzzle($theavailablepositions, $thecluespositions, $theclues) {
+        $this->thelevel++;
+
+        $this->thegenerationiterations++;
+
         /*
-        ** Since the last solution sequence may have eliminated one or more positions by
-        ** generating forced solutions for them, go through the list of available positions
-        ** and get rid of any that have already been solved.
-        */
-        
-        $j = count($theAvailablePositions) ;
-        
-        for ($i = 0; $i < $j; $i++)
-        {
-        	if ($this->theBoard[$theAvailablePositions[$i][0]][$theAvailablePositions[$i][1]]->IsApplied())
-        	{
-                array_splice($theAvailablePositions, $i, 1) ;
+         * Since the last solution sequence may have eliminated one or more positions by
+         * generating forced solutions for them, go through the list of available positions
+         * and get rid of any that have already been solved.
+         */
+
+        $j = count($theavailablepositions);
+
+        for ($i = 0; $i < $j; $i++) {
+            if ($this->theboard[$theavailablepositions[$i][0]]
+                [$theavailablepositions[$i][1]]->isapplied()) {
+                array_splice($theavailablepositions, $i, 1);
                 $i = $i - 1;
                 $j = $j - 1;
             }
         }
 
-        if (count($theAvailablePositions) == 0)
-        {
+        if (count($theavailablepositions) == 0) {
             /*
-            ** We're done, so we can return the clues and their positions to the caller.
-            ** This test is being done here to accommodate the eventual implementation of
-            ** generation from templates in which partial boards will be fed to the solver
-            ** and then the remaining board fed in.
-            */
-            
-            for ($i = 0; $i < count($theCluesPositions); $i++)
-                array_push($theCluesPositions[$i], $theClues[$i]) ;
+             * We're done, so we can return the clues and their positions to the caller.
+             * This test is being done here to accommodate the eventual implementation of
+             * generation from templates in which partial boards will be fed to the solver
+             * and then the remaining board fed in.
+             */
 
-            return $theCluesPositions ;
+            for ($i = 0; $i < count($thecluespositions); $i++) {
+                array_push($thecluespositions[$i], $theclues[$i]);
+            }
+
+            return $thecluespositions;
         }
 
-		/*
-		** Calculate the coupling for each available position.
-		**
-		** "coupling" is a measure of the amount of state affected by any change
-		** to a given cell.  In effect, the larger the coupling, the less constrained
-		** the state of the cell is and the greater the effect of any change made to
-		** the cell.  There is some literature to this effect associated with Roku puzzles
-		** (4x4 grid).  I'm trying this attempting to find a way to generate consistently
-		** more difficult Sudoku and it seems to have worked; the clue count drops to 25 or
-		** fewer, more in line with the numbers predicted by the literature.  The remainder
-		** of the work is likely to be associated with finding better algorithms to solve
-		** Sudoku (which would have the effect of generating harder ones).
-		*/
-		
-		$theCouplings = array() ;
-		
-		foreach ($theAvailablePositions as $xxx)
-		{
-			$theRowCoupling = $this->theRows[$xxx[0]]->coupling($xxx[0], $xxx[1]) ;
-			$theColumnCoupling = $this->theColumns[$xxx[1]]->coupling($xxx[0], $xxx[1]) ;
-			$theSquareCoupling = $this->theSquares[$this->_squareIndex($xxx[0], $xxx[1])]->coupling($xxx[0], $xxx[1]) ;
-			$theCouplings[$theRowCoupling + $theColumnCoupling + $theSquareCoupling][] = $xxx ;
-		}
+        /*
+         * Calculate the coupling for each available position.
+         *
+         * "coupling" is a measure of the amount of state affected by any change
+         * to a given cell.  In effect, the larger the coupling, the less constrained
+         * the state of the cell is and the greater the effect of any change made to
+         * the cell.  There is some literature to this effect associated with Roku puzzles
+         * (4x4 grid).  I'm trying this attempting to find a way to generate consistently
+         * more difficult Sudoku and it seems to have worked; the clue count drops to 25 or
+         * fewer, more in line with the numbers predicted by the literature.  The remainder
+         * of the work is likely to be associated with finding better algorithms to solve
+         * Sudoku (which would have the effect of generating harder ones).
+         */
 
-		$theMaximumCoupling = max(array_keys($theCouplings)) ;
-		
+        $thecouplings = array();
+
+        foreach ($theavailablepositions as $xxx) {
+            $therowcoupling = $this->therows[$xxx[0]]->coupling($xxx[0], $xxx[1]);
+            $thecolumncoupling = $this->thecolumns[$xxx[1]]->coupling($xxx[0], $xxx[1]);
+            $thesquarecoupling = $this->thesquares[$this->_squareindex($xxx[0], $xxx[1])]->coupling($xxx[0], $xxx[1]);
+            $thecouplings[$therowcoupling + $thecolumncoupling + $thesquarecoupling][] = $xxx;
+        }
+
+        $themaximumcoupling = max(array_keys($thecouplings));
+
         /*
-        ** Pick a spot on the board and get the clues set up.
-        */
-        
-        $theChoice = mt_rand(0, count($theCouplings[$theMaximumCoupling])-1) ;
-        $theCluesPositions[] = $theCouplings[$theMaximumCoupling][$theChoice] ;
-        $theRow = $theCouplings[$theMaximumCoupling][$theChoice][0] ;
-        $theColumn = $theCouplings[$theMaximumCoupling][$theChoice][1] ;
-        
+         * Pick a spot on the board and get the clues set up.
+         */
+
+        $thechoice = mt_rand(0, count($thecouplings[$themaximumcoupling]) - 1;
+        $thecluespositions[] = $thecouplings[$themaximumcoupling][$thechoice];
+        $therow = $thecouplings[$themaximumcoupling][$thechoice][0];
+        $thecolumn = $thecouplings[$themaximumcoupling][$thechoice][1];
+
         /*
-        ** Capture the necessary global state of the board
-        */
-        
-        $theCurrentBoard = $this->deepCopy($this->theBoard) ;
-        
+         * Capture the necessary global state of the board
+         */
+
+        $thecurrentboard = $this->deepcopy($this->theboard);
+
         /*
-        ** This is all possible states for the chosen cell.  All values will be
-        ** randomly tried to see if a solution results.  If all solutions fail,
-        ** the we'll back up in time and try again.
-        */
-        
-        $thePossibleClues = array_keys($this->theBoard[$theRow][$theColumn]->getState()) ;
-        
-        while (count($thePossibleClues) != 0)
-        {
-            if ($this->theGenerationIterations > $this->theMaxIterations)
-            {
-                $this->theLevel = $this->theLevel - 1 ;
-                return array() ;
+         * This is all possible states for the chosen cell.  All values will be
+         * randomly tried to see if a solution results.  If all solutions fail,
+         * the we'll back up in time and try again.
+         */
+
+        $thepossibleclues = array_keys($this->theboard[$therow][$thecolumn]->getstate());
+
+        while (count($thepossibleclues) != 0) {
+            if ($this->thegenerationiterations > $this->themaxiterations) {
+                $this->thelevel = $this->thelevel - 1;
+                return array();
             }
-            
-            $theClueChoice = mt_rand(0, count($thePossibleClues)-1) ;
-            $theValue = $thePossibleClues[$theClueChoice] ;
-            array_splice($thePossibleClues, $theClueChoice, 1) ;
-        
-            $theClues[] = $theValue ;
-                    
-            $this->theBoard[$theRow][$theColumn]->flagSolvedPosition($theValue) ;
-            
-            if ($this->theDebug ) { printf("<br>(%03d, %03d) Trying (%d, %d) = %d\n", $this->theLevel, $this->theGenerationIterations, $theRow, $theColumn, $theValue) ; } ;
-            
-            $theFlag = $this->solve(false) ;
-        
-            if ($this->_validateTrialSolution())
-            {
-                if ($theFlag)
-                {
+
+            $thecluechoice = mt_rand(0, count($thepossibleclues) - 1);
+            $thevalue = $thepossibleclues[$thecluechoice];
+            array_splice($thepossibleclues, $thecluechoice, 1);
+
+            $theclues[] = $thevalue;
+
+            $this->theboard[$therow][$thecolumn]->flagsolvedposition($thevalue);
+
+            if ($this->thedebug) {
+                printf("<br>(%03d, %03d) Trying (%d, %d) = %d\n", $this->theLevel,
+                    $this->thegenerationiterations, $therow, $thecolumn, $thevalue);
+            }
+
+            $theflag = $this->solve(false);
+
+            if ($this->_validatetrialsolution()) {
+                if ($theflag) {
                     /*
-                    ** We're done, so we can return the clues and their positions to the caller.
-                    */
-                    
-                    for ($i = 0; $i < count($theCluesPositions); $i++)
-                    {
-                        array_push($theCluesPositions[$i], $theClues[$i]) ;
+                     * We're done, so we can return the clues and their positions to the caller.
+                     */
+
+                    for ($i = 0; $i < count($thecluespositions); $i++) {
+                        array_push($thecluespositions[$i], $theclues[$i]);
                     }
-                    
-                    return $theCluesPositions ;
-                }
-                else
-                {
-                    $xxx = $this->_generatePuzzle($theAvailablePositions, $theCluesPositions, $theClues) ;
-                    
-                    if ($xxx)
-                    {
-                        return $xxx ;
+
+                    return $thecluespositions;
+                } else {
+                    $xxx = $this->_generatepuzzle($theavailablepositions, $thecluespositions, $theclues);
+                    if ($xxx) {
+                        return $xxx;
                     }
                 }
             }
-            
+
             /*
-            ** We failed of a solution, back out the state and try the next possible value
-            ** for this position.
+            * We failed of a solution, back out the state and try the next possible value
+            * for this position.
             */
-            
-            $this->theBoard = $theCurrentBoard ;
-            $this->_buildRCS() ;
-            array_pop($theClues) ;
+
+            $this->theboard = $thecurrentboard;
+            $this->_buildrcs();
+            array_pop($theclues);
         }
-                
-        $this->theLevel = $this->theLevel - 1 ;
+
+        $this->thelevel = $this->thelevel - 1;
 
         /*
-        ** If we get here, we've tried all possible values remaining for the chosen
-        ** position and couldn't get a solution.  Back out and try something else.
+        * If we get here, we've tried all possible values remaining for the chosen
+        * position and couldn't get a solution.  Back out and try something else.
         */
-        
-        return array() ;
+
+        return array();
     }
-    
-    /**
+
+    /*
      * Return the contents of the board as a string of digits and blanks.  Blanks
      * are used where the corresponding board item is an array, indicating the cell
      * has not yet been solved.
-     * 
+     *
      * @desc Get the current state of the board as a string.
      * @access public
      */
-    
-    function getBoardAsString()
-    {
-    	$theString = "" ;
-    	
-    	for ($i = 1; $i <= 9; $i++)
-    	{
-    		for ($j = 1; $j <= 9; $j++)
-    		{
-    			$theString .= $this->theBoard[$i][$j]->asString() ;
-			}
-    	}
-		
-		return $theString ;
-    }
-    
-	function &getCell($r, $c)
-	{
-		return $this->theBoard[$r][$c] ;
-	}
 
-    /**
+    public function getboardasstring() {
+        $thestring = "";
+
+        for ($i = 1; $i <= 9; $i++) {
+            for ($j = 1; $j <= 9; $j++) {
+                $thestring .= $this->theboard[$i][$j]->asstring();
+            }
+        }
+
+        return $thestring;
+    }
+
+    public function &getcell($r, $c) {
+        return $this->theboard[$r][$c];
+    }
+
+    /*
      * Each element of the input array is a triple consisting of (row, column, value).
      * Each of these values is in the range 1..9.
      *
      * @access public
      * @param array $theArray
      */
-    
-    function initializePuzzleFromArray($theArray)
-    {
-        foreach ($theArray as $xxx)
-        {
-        	$c =& $this->getCell($xxx[0], $xxx[1]) ;
-        	$c->flagSolvedPosition($xxx[2]) ;
+
+    public function initializepuzzlefromarray($thearray) {
+        foreach ($thearray as $xxx) {
+            $c =& $this->getcell($xxx[0], $xxx[1]);
+            $c->flagsolvedposition($xxx[2]);
         }
     }
-    
-    /**
+
+    /*
      * Initialize puzzle from an input file.
-     * 
+     *
      * The input file is a text file, blank or tab delimited, with each line being a
      * triple consisting of "row column value".  Each of these values is in the range
      * 1..9.  Input lines that are blank (all whitespace) or which begin with whitespace
@@ -1634,52 +1491,44 @@ class Sudoku extends ObjectS
      * @param mixed $theHandle [optional] defaults to STDIN.  If a string is passed
      *              instead of a file handle, the file is opened.
      */
-    
-    function initializePuzzleFromFile($theHandle = STDIN)
-    {
-        $theOpenedFileFlag = FALSE ;
-        
-        /*
-        ** If a file name is passed instead of a resource, open the
-        ** file and process it.
-        */
-        
-        if (is_string($theHandle))
-        {
-            $theHandle = fopen($theHandle, "r") ;
-            if ($theHandle === FALSE)
-            {
-                exit() ;
-            }
-        }
-        
-        $yyy = array() ;
-        
-        if ($theHandle)
-        {
-            while (!feof($theHandle))
-            {
-                $theString = trim(fgets($theHandle)) ;
-                if (($theString != "") &&
-                	(!preg_match('/^\s*#/', $theString)))
-                {
-	                $xxx = preg_split('/\s+/', $theString) ;
-	                if (!feof($theHandle))
-	                {
-	                    $yyy[] = array((int)$xxx[0], (int)$xxx[1], (int)$xxx[2]) ;
-	                }
-	        	}
-            }
-        }
-        
-        $this->initializePuzzleFromArray($yyy) ;
 
-        if ($theOpenedFileFlag)
-        {
-            fclose($theHandle) ;
+    public function initializepuzzlefromfile($thehandle = STDIN) {
+        $theopenedfileflag = false;
+
+        /*
+         * If a file name is passed instead of a resource, open the
+         * file and process it.
+         */
+
+        if (is_string($thehandle)) {
+            $thehandle = fopen($thehandle, "r");
+            if ($thehandle === false) {
+                exit();
+            }
+        }
+
+        $yyy = array();
+
+        if ($thehandle) {
+            while (!feof($thehandle)) {
+                $thestring = trim(fgets($thehandle));
+                if (($thestring != "") &&
+                    (!preg_match('/^\s*#/', $thestring))) {
+                    $xxx = preg_split('/\s+/', $thestring);
+                    if (!feof($thehandle)) {
+                        $yyy[] = array((int)$xxx[0], (int)$xxx[1], (int)$xxx[2]);
+                    }
+                }
+            }
+        }
+
+        $this->initializepuzzlefromarray($yyy);
+
+        if ($theopenedfileflag) {
+            fclose( $thehandle);
         }
     }
-    
+
     /**
      * The input parameter consists of a string of 81 digits and blanks.  If fewer characters
      * are provide, the string is padded on the right.
@@ -1688,44 +1537,37 @@ class Sudoku extends ObjectS
      * @access public
      * @param string $theString The initial state of each cell in the puzzle.  
      */
-    
-    function initializePuzzleFromString($theString)
-    {
-        $theString = str_pad($theString, 81, " ") ;
-        
-        for ($i = 0; $i < 81; $i++)
-        {
-            if ($theString{$i} != " ")
-            {
-                $theArray[] = array((int)($i/9) + 1, ($i % 9) + 1, (int)$theString{$i}) ;
+
+    public function initializepuzzlefromstring($thestring) {
+        $thestring = str_pad($thestring, 81, " ");
+
+        for ($i = 0; $i < 81; $i++) {
+            if ($thestring{$i} != " ") {
+                $thearray[] = array((int)($i / 9) + 1, ($i % 9) + 1, (int)$thestring{$i});
             }
         }
-        
-        $this->initializePuzzleFromArray($theArray) ;
+
+        $this->initializepuzzlefromrray($therray);
     }
-    
-    /**
+
+    /*
      * @desc predicate to determine if the current puzzle has been solved.
      * @access public
      * @return boolean true if the puzzle has been solved.
      */
-     
-	function isSolved()
-	{
-		for ($i = 1; $i <= 9; $i++)
-		{
-			for ($j = 1; $j <=9; $j++)
-			{
-				if (!$this->theBoard[$i][$j]->IsSolved())
-				{
-					return false ;
-				}
-			}
-		}
-		
-		return true ;
-	}
-	
+
+    public function issolved() {
+        for ($i = 1; $i <= 9; $i++) {
+            for ($j = 1; $j <= 9; $j++) {
+                if (!$this->theboard[$i][$j]->issolved()) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
     /**
      * Convert pending to actual solutions.
      * 
@@ -1735,26 +1577,22 @@ class Sudoku extends ObjectS
      * @access private
      * @return boolean True if at least on pending solution existed, false otherwise.
      */
-    
-    function _newSolvedPosition()
-    {
-        $theReturn = false ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-            for ($j = 1; $j <= 9; $j++)
-            {
-                if ($this->theBoard[$i][$j]->solvedState() == 1)
-                {
-                	$this->theBoard[$i][$j]->un_set($this->theBoard[$i][$j]->getState()) ;
-                    $theReturn = true ;
+
+    protected function _newsolvedposition() {
+        $thereturn = false;
+
+        for ($i = 1; $i <= 9; $i++) {
+            for ($j = 1; $j <= 9; $j++) {
+                if ($this->theboard[$i][$j]->solvedstate() == 1) {
+                    $this->theboard[$i][$j]->un_set($this->theboard[$i][$j]->getstate());
+                    $thereturn = true;
                 }
             }
         }
-        
-        return $theReturn ;
+
+        return $thereturn;
     }
-    
+
     /**
      * Print the contents of the board in HTML format.
      * 
@@ -1767,13 +1605,13 @@ class Sudoku extends ObjectS
      * @param string $theHeader [optional] The header line to be output along
      *               with the intermediate solution.
      */
-    
-    function _printIntermediateSolution($theHeader = NULL)
-    {
-    	if ($this->theDebug)
-        $this->printSolution($theHeader) ;
+
+    protected function _printintermediatesolution($theheader = null) {
+        if ($this->thedebug) {
+            $this->printsolution( $theheader);
+        }
     }
-    
+
     /**
      * Print the contents of the board in HTML format.
      *
@@ -1784,69 +1622,69 @@ class Sudoku extends ObjectS
      * @param mixed $theHeader [optional] The header line[s] to be output along
      *               with the solution.
      */
-    
-    function printSolution($theHeader = NULL)
-    {
-    	if (($this->theDebug) && ($theHeader != NULL))
-    	{
-    		if (is_array($theHeader))
-    		{
-    			foreach ($theHeader as $aHeader)
-    				print $aHeader ;
-    		}
-    		else
-	    		print $theHeader ;
-    	}
-    	
-    	$theColors = array("green", "blue", "red") ;
-    	$theFontSize = array("1em", "1em", ".8em") ;
-    	$theFontWeight = array("bold", "bold", "lighter") ;
-    	
-        printf("<br /><table border=\"1\" style=\"border-collapse: separate; border-spacing: 0px;\">\n") ;
-        
-        $theLast = 2 ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-        	if ($theLast == 2)
-        		printf("<tr>\n") ;
-        	
-            printf("<td><table border=\"1\" width=\"100%%\">\n") ;
 
-			$theLast1 = 2 ;
-			
-        	for ($j = 1; $j <=9; $j++)
-        	{
-        		if ($theLast1 == 2)
-        			printf("<tr>\n") ;
-        		
-        		$c = &$this->theSquares[$i] ;
-        		$c =& $c->getCell($j) ; ;
-        		$theSolvedState = $c->solvedState() ;
-        		
-                printf("<td style=\"text-align: center; padding: .6em; color: %s; font-weight: %s; font-size: %s;\">",
-                	   $theColors[$theSolvedState],
-                	   $theFontWeight[$theSolvedState],
-                	   $theFontSize[$theSolvedState]) ;
-               	$xxx = $c->asString($this->theDebug) ;
-                print ($xxx == " " ? "&nbsp;" : $xxx) ;
-		       	printf("</td>\n") ;
-	        		
-				$theLast1 = ($j - 1) % 3 ;
-        		if ($theLast1 == 2)
-        			printf("</tr>\n") ;
-        	}
-        	
-			printf("</table></td>\n") ;
-			
-			$theLast = ($i - 1) % 3 ;
-        	if ($theLast == 2)
-        		printf("</tr>\n") ;
+    public function printsolution($theheader = null) {
+        if (($this->thedebug) && ($theheader != null)) {
+            if (is_array($theheader)) {
+                foreach ($theheader as $aheader) {
+                    print $aheader;
+                }
+            } else {
+                print $theheader;
+            }
         }
 
-        printf("</table>\n") ;
+        $thecolors = array("green", "blue", "red");
+        $thefontsize = array("1em", "1em", ".8em");
+        $thefontweight = array("bold", "bold", "lighter");
+
+        printf("<br /><table border=\"1\" style=\"border-collapse: separate; border-spacing: 0px;\">\n");
+
+        $thelast = 2;
+
+        for ($i = 1; $i <= 9; $i++) {
+            if ($thelast == 2) {
+                printf("<tr>\n");
+            }
+
+            printf("<td><table border=\"1\" width=\"100%%\">\n");
+
+            $thelast1 = 2;
+
+            for ($j = 1; $j <= 9; $j++) {
+                if ($thelast1 == 2) {
+                    printf("<tr>\n");
+                }
+
+                $c = &$this->thesquares[$i];
+                $c =& $c->getcell($j);
+                $thesolvedstate = $c->solvedstate();
+
+                printf("<td style=\"text-align: center; padding: .6em; color: %s; font-weight: %s; font-size: %s;\">",
+                $thecolors[$thesolvedstate],
+                $thefontweight[$thesolvedstate],
+                $thefontsize[$thesolvedstate]);
+                $xxx = $c->asstring($this->thedebug);
+                print ($xxx == " " ? "&nbsp;" : $xxx);
+                printf("</td>\n");
+
+                $thelast1 = ($j - 1) % 3;
+                if ($thelast1 == 2) {
+                    printf("</tr>\n");
+                }
+            }
+
+            printf("</table></td>\n");
+
+            $thelast = ($i - 1) % 3;
+            if ($thelast == 2) {
+                printf("</tr>\n");
+            }
+        }
+
+        printf("</table>\n");
     }
-    
+
     /**
      * Solve a Sudoku.
      *
@@ -1875,72 +1713,58 @@ class Sudoku extends ObjectS
      *                otherwise.  [Default = true]
      * @return boolean true if a solution was possible, false otherwise.
      */
-    
-    function solve($theInitialStateFlag = true)
-    {
-		$theHeader = "<br />Initial Position:" ;
-		
-        do
-        {
-	        do
-	        {
-	            $this->_applySolvedPositions() ;
-				if ($theInitialStateFlag)
-				{
-					$this->_printIntermediateSolution($theHeader) ;
-					$theHeader = NULL ;
-				}
-				else
-				{
-					$theInitialStateFlag = true ;
-					$theHeader = "<br />Apply Slice and Dice:" ;
-				}
-	        } while ($this->_newSolvedPosition()) ;
 
-            $theRowIteration = FALSE ;
-            
-            for ($i = 1; $i <= 9; $i++)
-            {
-				if ($this->theRows[$i]->doAnInference())
-				{
-					$theHeader = $this->theRows[$i]->getHeader() ;
-					$theRowIteration = TRUE ;
-					break ;
-				}
+    public function solve($theinitialstateflag = true) {
+        $theheader = "<br />Initial Position:";
+
+        do {
+            do {
+                $this->_applysolvedpositions();
+                if ($theinitialstateflag) {
+                    $this->_printintermediatesolution($theheader);
+                    $theheader = null;
+                } else {
+                    $theinitialstateflag = true;
+                    $theheader = "<br />Apply Slice and Dice:";
+                }
+            } while ($this->_newsolvedposition());
+
+            $therowiteration = false;
+
+            for ($i = 1; $i <= 9; $i++) {
+                if ($this->theRows[$i]->doninference()) {
+                    $theheader = $this->therows[$i]->getheader();
+                    $therowiteration = true;
+                    break;
+                }
             }
-            
-            $theColumnIteration = FALSE ;
-            
-            if (!$theRowIteration)
-            {
-	            for ($i = 1; $i <= 9; $i++)
-	            {
-					if ($this->theColumns[$i]->doAnInference())
-					{
-						$theHeader = $this->theColumns[$i]->getHeader() ;
-						$theColumnIteration = TRUE ;
-						break ;
-					}
-	            }
-			}
-			
-            $theSquareIteration = FALSE ;
-            
-            if (!($theRowIteration || $theColumnIteration))
-            {
-	            for ($i = 1; $i <= 9; $i++)
-	            {
-					if ($this->theSquares[$i]->doAnInference())
-					{
-						$theHeader = $this->theSquares[$i]->getHeader() ;
-						$theSquareIteration = TRUE ;
-						break ;
-					}
-	            }
-			}
-        } while ($theRowIteration || $theColumnIteration || $theSquareIteration) ;
-        
-		return $this->IsSolved() ;
+
+            $thecolumniteration = false;
+
+            if (!$therowiteration) {
+                for ($i = 1; $i <= 9; $i++) {
+                    if ($this->thecolumns[$i]->doaninference()) {
+                        $theheader = $this->thecolumns[$i]->getheader();
+                        $thecolumniteration = true;
+                        break;
+                    }
+                }
+            }
+
+            $thesquareiteration = false;
+
+            if (!($therowiteration || $thecolumniteration)) {
+                for ($i = 1; $i <= 9; $i++) {
+                    if ($this->thesquares[$i]->doaninference()) {
+                        $theheader = $this->thesquares[$i]->getheader();
+                        $thesquareiteration = true;
+                        break;
+                    }
+                }
+            }
+        } while ($therowiteration || $thecolumniteration || $thesquareiteration);
+
+        return $this->issolved();
     }
 
     /**
@@ -1968,74 +1792,63 @@ class Sudoku extends ObjectS
      * @returns array The clues added sufficient to solve the puzzle.
      */
 
-    function solveBruteForce($i = 1, $j = 1)
-    {
-        for (; $i <= 9; $i++)
-        {
-            for (; $j <= 9; $j++)
-            {
-                if ($this->theBoard[$i][$j]->solvedState() != 0)
-                {
-			    	if ($this->theDebug)
-			    	{
-			    		printf("<br />Applying Brute Force to %d, %d\n", $i, $j) ;
-			    	}
-			    	
-                    $theCurrentBoard = $this->deepCopy($this->theBoard) ;
-                    $theValues = $this->theBoard[$i][$j]->getState() ;
-                    
-                    foreach ($theValues as $theValue)
-                    {
-                        $this->theBoard[$i][$j]->flagSolvedPosition($theValue) ;
-                        
-                        $theSolutionFlag = $this->solve() ;
-                        $theTrialSolutionFlag = $this->_validateTrialSolution() ;
-                        
-                        if ($theTrialSolutionFlag && $theSolutionFlag)
-                        {
-                            return array(array($i, $j, $theValue)) ;
+    public function solvebruteforce($i = 1, $j = 1) {
+        for (; $i <= 9; $i++) {
+            for (; $j <= 9; $j++) {
+                if ($this->theboard[$i][$j]->solvedstate() != 0) {
+                    if ($this->thedebug) {
+                        printf("<br />Applying Brute Force to %d, %d\n", $i, $j);
+                    }
+
+                    $thecurrentboard = $this->deepcopy($this->theboard);
+                    $thevalues = $this->theboard[$i][$j]->getstate();
+
+                    foreach ($thevalues as $thevalue) {
+                        $this->theboard[$i][$j]->flagsolvedposition($thevalue);
+
+                        $thesolutionflag = $this->solve();
+                        $thetrialsolutionflag = $this->_validatetrialsolution();
+
+                        if ($thetrialsolutionflag && $thesolutionflag) {
+                            return array(array($i, $j, $thevalue));
                         }
 
-                        if ($theTrialSolutionFlag)
-                        {
-                            $theNewGuesses = $this->solveBruteForce($i, $j+1) ;
-                                
-                            if ($theNewGuesses)
-                            {
-                                $theNewGuesses[] = array($i, $j, $theValue) ;
-                            
-                                return $theNewGuesses ;
+                        if ($thetrialsolutionflag) {
+                            $thenewguesses = $this->solvebruteForce($i, $j + 1);
+
+                            if ($thenewguesses) {
+                                $thenewguesses[] = array($i, $j, $thevalue);
+
+                                return $thenewguesses;
                             }
                         }
-                        
-           				if ($this->theDebug)
-           				{
-           					printf("<br />Backing out\n") ;
-           				}
-           				
-                        $this->theBoard = $theCurrentBoard ;
-                        $this->_buildRCS() ;
+
+                        if ($this->thedebug) {
+                            printf("<br />Backing out\n");
+                        }
+
+                        $this->theboard = $thecurrentboard;
+                        $this->_buildrcs();
                     }
-                    
-                    return array() ;
+
+                    return array();
                 }
             }
         }
     }
-    
-	/**
-	 * @desc Calculate the index of the square containing a specific cell.
-	 * @param integer $theRow the row coordinate.
-	 * @param integer $theColumn the column coordinate.
-	 * @return integer the square index in the range 1..9
-	 */
-	 
-    function _squareIndex($theRow, $theColumn)
-    {
-    	$theIndex = ((int)(($theRow - 1) / 3) * 3) + (int)(($theColumn - 1) / 3) + 1 ;
-    	return $theIndex ;
+
+    /**
+     * @desc Calculate the index of the square containing a specific cell.
+     * @param integer $theRow the row coordinate.
+     * @param integer $theColumn the column coordinate.
+     * @return integer the square index in the range 1..9
+     */
+
+    protected function _squareindex($therow, $thecolumn) {
+        $theindex = ((int)(($therow - 1) / 3) * 3) + (int)(($thecolumn - 1) / 3) + 1;
+        return $theindex;
     }
-    
+
     /**
      * Validate a complete solution.
      * 
@@ -2047,28 +1860,23 @@ class Sudoku extends ObjectS
      * @return mixed true if the solution is valid, an array containing the
      *               error details.
      */
-    
-    function validateSolution()
-    {
-        $theReturn = array() ;
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-            if (!$this->theRows[$i]->validateSolution())
-            {
-                $theReturn[0][] = $i ;
+
+    public function validatesolution() {
+        $thereturn = array();
+
+        for ($i = 1; $i <= 9; $i++) {
+            if (!$this->therows[$i]->validatesolution()) {
+                $thereturn[0][] = $i;
             }
-            if (!$this->theColumns[$i]->validateSolution())
-            {
-                $theReturn[1][] = $i ;
+            if (!$this->thecolumns[$i]->validatesolution()) {
+                $thereturn[1][] = $i;
             }
-            if (!$this->theSquares[$i]->validateSolution())
-            {
-                $theReturn[2][] = $i ;
+            if (!$this->thesquares[$i]->validatesolution()) {
+                $thereturn[2][] = $i;
             }
         }
 
-        return (count($theReturn) == 0 ? TRUE : $theReturn) ;
+        return (count($thereturn) == 0 ? true : $thereturn);
     }
 
     /**
@@ -2079,21 +1887,17 @@ class Sudoku extends ObjectS
      * @access private
      * @return True when the intermediate soltuion is valid, false otherwise.
      */
-    
-    function _validateTrialSolution()
-    {
-        
-        for ($i = 1; $i <= 9; $i++)
-        {
-        	if (!(($this->theRows[$i]->validateTrialSolution()) &&
-        		  ($this->theColumns[$i]->validateTrialSolution()) &&
-        		  ($this->theSquares[$i]->validateTrialSolution())))
-            {
-                return FALSE ;
+
+    protected function _validatetrialsolution() {
+        for ($i = 1; $i <= 9; $i++) {
+            if (!(($this->therows[$i]->validatetrialsolution()) &&
+                ($this->thecolumns[$i]->validatetrialsolution()) &&
+                ($this->thesquares[$i]->validatetrialsolution()))) {
+                return false;
             }
         }
-		
-		return TRUE ;
+
+        return true;
     }
 }
 
@@ -2107,49 +1911,42 @@ class Sudoku extends ObjectS
 
 class SudokuTemplates extends Sudoku
 {
-    function SudokuTemplates($theDebug = FALSE)
-    {
-        $this->Sudoku($theDebug) ;
+    public function sudokutemplates($theDebug = false) {
+        $this->sudoku($thedebug);
     }
-    
-    function generatePuzzleFromFile($theHandle = STDIN, $theDifficultyLevel = 10)
-    {
-        $yyy = array() ;
-        
-        if ($theHandle)
-        {
-            while (!feof($theHandle))
-            {
-                $theString = trim(fgets($theHandle)) ;
-                $xxx = preg_split("/\s+/", $theString) ;
-                if (!feof($theHandle))
-                {
-                    $yyy[] = array((int)$xxx[0], (int)$xxx[1]) ;
+
+    public function generatepuzzlefromfile($thehandle = STDIN, $thedifficultylevel = 10) {
+        $yyy = array();
+
+        if ($thehandle) {
+            while (!feof($thehandle)) {
+                $thestring = trim(fgets($thehandle));
+                $xxx = preg_split("/\s+/", $thestring);
+                if (!feof($thehandle)) {
+                    $yyy[] = array((int)$xxx[0], (int)$xxx[1]);
                 }
             }
         }
-        
-        return $this->generatePuzzleFromArray($yyy, $theDifficultyLevel) ;
+
+        return $this->generatepuzzlefromarray($yyy, $thedifficultylevel);
     }
-    
-    function generatePuzzleFromArray($theArray, $theDifficultyLevel = 10)
-    {
-        $this->_generatePuzzle($theArray, array(), array()) ;
-        
+
+    public function generatepuzzlefromarray($thearray, $thedifficultylevel = 10) {
+        $this->_generatepuzzle($thearray, array(), array());
+
         /*
         ** Because the generation process may infer values for some of the
         ** template cells, we construct the clues from the board and the
         ** input array before continuing to generate the puzzle.
         */
-        
-        foreach ($theArray as $theKey => $thePosition)
-        {
-            $theTemplateClues[] = array($thePosition[0], $thePosition[1], $this->theBoard[$thePosition[0]][$thePosition[1]]) ;
+
+        foreach ($thearray as $thekey => $theposition) {
+            $thetemplateclues[] = array($theposition[0], $theposition[1], $this->theboard[$theposition[0]][$theposition[1]]);
         }
 
-        $theOtherClues = $this->generatePuzzle($theDifficultyLevel) ;
+        $theotherclues = $this->generatepuzzle($thedifficultylevel);
 
-        return array_merge($theTemplateClues, $theOtherClues) ;
+        return array_merge($thetemplateclues, $theotherclues);
     }
 }
 
@@ -2159,23 +1956,17 @@ class SudokuTemplates extends Sudoku
  * @package Sudoku
  */
 
-class SudokuIntermediateSolution extends Sudoku
-{
-    function SudokuIntermediateResults($theDebug = FALSE)
-    {
-        $this->Sudoku($theDebug) ;
+class sudokuintermediatesolution extends sudoku {
+    public function sudokuintermediateresults($thedebug = false) {
+        $this->sudoku($thedebug);
     }
-    
-    function _printIntermediateSolution($theHeader = NULL)
-    {
-        $this->printSolution($theHeader) ;
+
+    protected function _printintermediatesolution($theheader = null) {
+        $this->printsolution($theheader);
     }
 }
 
-function make_seed()
-{
+function make_seed() {
     list($usec, $sec) = explode(' ', microtime());
     return (float) $sec + ((float) $usec * 100000);
 }
-
-?>

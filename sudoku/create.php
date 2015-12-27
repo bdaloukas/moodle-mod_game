@@ -1,23 +1,35 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require( "../../../config.php");
-include_once("class.Sudoku.php");
+require_once("class.Sudoku.php");
 require( '../header.php');
 
-$action = optional_param('action', PARAM_ALPHA);   // action
+$action = optional_param('action', PARAM_ALPHA);   // The action.
 
-if( $action == 'create'){
-	AppendSudokuB();
-}else
-{
-	showform();
+if ($action == 'create') {
+    AppendSudokuB();
+} else {
+    showform();
 }
 
-function showform()
-{
-	$id = required_param('id', PARAM_NUMBER);   // action
-	
-	?>
+function showform() {
+    $id = required_param('id', PARAM_NUMBER);   // The action.
+
+?>
 <form name="form" method="post" action="create.php">
 <center>
 <table cellpadding="5">
@@ -35,110 +47,98 @@ function showform()
 <input type="hidden" name=id        value="<?php  echo $id; ?>" />
 </form>
 
-	<?php
-	
+<?php
 }
 
-function AppendSudokuB()
-{
+function appendsudokub() {
     global $DB;
 
-	$level1 = required_param('level1', PARAM_NUMBER);   // action
-	$level2 = required_param('level2', PARAM_NUMBER);   // action
-	$count = required_param('count', PARAM_NUMBER);   // action
+    $level1 = required_param('level1', PARAM_NUMBER);
+    $level2 = required_param('level2', PARAM_NUMBER);
+    $count = required_param('count', PARAM_NUMBER);
 
-	$level = $level1;
-  
-	for( $i=1; $i <= $count; $i++)
-	{
-		//set_time_limit( 30);
-		Create( $si, $sp, $level);
-  
-		$newrec->data = PackSudoku( $si, $sp);
-		if( strlen( $newrec->data) != 81){
-			return 0;
-		}
-		$newrec->level = $level;
-		$newrec->opened = GetOpened( $si);
-  
-		$DB->insert_record( 'game_sudoku_database', $newrec, true);
-    
-		$level++;
-		if( $level > $level2){
-			$level = $level1;
-		}
-		
-		echo get_string( 'sudoku_creating', 'game', $i)."<br>\r\n";
-	}
+    $level = $level1;
+
+    for ($i = 1; $i <= $count; $i++) {
+        create( $si, $sp, $level);
+
+        $newrec->data = packsudoku( $si, $sp);
+        if (strlen( $newrec->data) != 81) {
+            return 0;
+        }
+        $newrec->level = $level;
+        $newrec->opened = GetOpened( $si);
+
+        $DB->insert_record( 'game_sudoku_database', $newrec, true);
+
+        $level++;
+        if ($level > $level2) {
+            $level = $level1;
+        }
+
+        echo get_string( 'sudoku_creating', 'game', $i)."<br>\r\n";
+    }
 }
 
-function PackSudoku( $si, $sp)
-{
-	$data = "";
+function packsudoku( $si, $sp) {
+    $data = '';
 
-	for ($i = 1; $i <= 9; $i++)
-	{
-		for ($j = 1; $j <= 9; $j++)
-		{	
-			$c = &$sp->theSquares[$i];
-			$c = &$c->getCell($j) ;
-			$solution = $c->asString( false);
+    for ($i = 1; $i <= 9; $i++) {
+        for ($j = 1; $j <= 9; $j++) {
+            $c = &$sp->thesquares[$i];
+            $c = &$c->getcell($j);
+            $solution = $c->asstring( false);
 
- 		   $c = &$si->theSquares[$i] ;
- 		   $c = &$c->getCell($j) ;
- 		   $theSolvedState = $c->solvedState() ;
- 		    		
-			if( $theSolvedState == 1) {  //hint
-				$solution = substr( 'ABCDEFGHI', $c->asString( false) - 1, 1);	
-			}
-	
-			$data .= $solution;
-		}
-	}
+            $c = &$si->thesquares[$i];
+            $c = &$c->getCell($j);
+            $thesolvedstate = $c->solvedstate();
 
-	return $data;
+            if ($thesolvedstate == 1) {
+                // Hint.
+                $solution = substr( 'ABCDEFGHI', $c->asString( false) - 1, 1);
+            }
+
+            $data .= $solution;
+        }
+    }
+
+    return $data;
 }
 
+function create( &$si, &$sp, $level=1) {
+    for ($i = 1; $i <= 40; $i++) {
+        $sp = new sudoku();
+        $theinitialposition = $sp->generatepuzzle( 10, 50, $level);
+        if (count( $theinitialposition)) {
+            break;
+        }
+    }
+    if ($i > 40) {
+        return false;
+    }
 
-function create( &$si, &$sp, $level=1)
-{
-	for( $i=1; $i <= 40; $i++)
-	{
-		//set_time_limit( 30);
-		$sp = new Sudoku() ;
-		$theInitialPosition = $sp->generatePuzzle( 10, 50, $level) ;
-		if( count( $theInitialPosition)){
-			break;
-		}
-	}
-	if( $i > 40){
-		return false;
-	}
+    $si = new sudoku();
 
-	$si = new Sudoku() ;
+    $si->initializepuzzlefromarray( $theinitialposition);
 
-	$si->initializePuzzleFromArray($theInitialPosition);
-  
-	return true;
+    return true;
 }
 
-function GetOpened( $si)
-{
-  $count = 0;
-  
-  for ($i = 1; $i <= 9; $i++)
-  {
-  	for ($j = 1; $j <= 9; $j++)
-  	{		    		
- 		   $c = &$si->theSquares[$i] ;
- 		   $c = &$c->getCell($j) ;
- 		   $theSolvedState = $c->solvedState() ;
- 		    		
-	     if( $theSolvedState == 1)   //hint
-          $count++;
-  	}
-  }
+function getopened( $si) {
+    $count = 0;
 
-  return $count;
+    for ($i = 1; $i <= 9; $i++) {
+        for ($j = 1; $j <= 9; $j++) {
+            $c = &$si->thesquares[$i];
+            $c = &$c->getcell($j);
+            $thesolvedstate = $c->solvedstate();
+
+            if ($thesolvedstate == 1) {
+                // Hint.
+                $count++;
+            }
+        }
+    }
+
+    return $count;
 }
-
