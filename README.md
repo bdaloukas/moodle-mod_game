@@ -50,29 +50,23 @@ Download for Moodle 1.9 http://download.moodle.org/download.php/plugins19/mod/ga
 Bugs and Issues http://tracker.moodle.org/browse/CONTRIB/component/10295
 
 Interface:
-
     * The interface is like a quiz. The student plays games and teacher can see the grades
     * You can set a text that will be visible at the bottom of the game. In this way will be a picture at the bottom and a crossword with questions about the picture
     * You can use pictures inside questions
 
 
 Restrictions:
-
     * You can only backup/restore the data of game not the user attempts. (not works backup now)
     * In the report overview you can see only what students said for questions not for glossaryentries
 
 
 Upgrade
-
     * Delete the files from mod/game
     * Copy the new files to mod/game
 
 To install it using git, type this command in the root of your Moodle install:
 ```
-git clone  https://github.com/bdaloukas/moodle-mod_game.git mod
-mv moodle-mod_game game
-cd game
-git checkout MOODLE_20_STABLE
+git clone -b MOODLE_20_STABLE https://github.com/bdaloukas/moodle-mod_game.git mod/game
 
 ```
 
