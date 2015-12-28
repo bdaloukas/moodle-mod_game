@@ -11,7 +11,7 @@
 	opacity: .4;
 	filter: alpha(opacity=50);
 	/* this hack is so it works in IE
-	 * I find setting the color in the css gives me more flexibility 
+     * I find setting the color in the css gives me more flexibility
 	 * than the PNG solution.
 	 */
 	background-color:transparent !important;

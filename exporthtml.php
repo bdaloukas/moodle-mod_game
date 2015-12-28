@@ -361,7 +361,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
 
     ob_start();
 
-    // Here is the code of hangman.
+    // Here is the code of Snakes and Ladders.
     require( "exporthtml_snakes.php");
 
     $outputstring = ob_get_contents();
@@ -384,6 +384,8 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
     mkdir( $destdir .'/js');
     $src = $CFG->dirroot.'/mod/game/export/html/snakes/js';
     game_copyfiles( $src, $destdir.'/js');
+    unzip_file($destdir.'/js/js.zip', $destdir.'/js', false);
+    unlink( $destdir.'/js/js.zip');
 
     mkdir( $destdir .'/images');
     $destfile = $destdir.'/images/'.$board->fileboard;
