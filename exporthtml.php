@@ -350,7 +350,8 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
     $board = game_snakes_get_board( $game);
 
     if ( ($game->sourcemodule == 'quiz') or ($game->sourcemodule == 'question')) {
-        $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions, $countofquestionsm, $retfeedback, $destdir, $files);
+        $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions,
+            $countofquestionsm, $retfeedback, $destdir, $files);
     } else {
         $questionsm = array();
         $countofquestionsm = 0;

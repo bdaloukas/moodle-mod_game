@@ -276,7 +276,7 @@ function game_compute_states( $game, $questions) {
         $state->responses = array( '' => $question->studentanswer);
         $state->attempt = $question->iid;
 
-        $states[ $question->id] = $state; 
+        $states[ $question->id] = $state;
     }
     return $states;
 }

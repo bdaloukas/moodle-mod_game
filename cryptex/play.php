@@ -32,7 +32,7 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
         $endofgame = false;
     }
 
-    if( $attempt != false and $cryptexrec != false) {
+    if ($attempt != false and $cryptexrec != false) {
         $crossm = $DB->get_record( 'game_cross', array( 'id' => $attempt->id));
         return game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context);
     }

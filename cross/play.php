@@ -589,17 +589,15 @@ function SelectThisWord(event)
 		else
 			TableCell = CellAt(x, y + i);
 		// Add its contents to the word we're building.
-        if (TableCell.innerHTML != null && TableCell.innerHTML.length > 0 && TableCell.innerHTML != " " && TableCell.innerHTML.toLowerCase() != "&nbsp;")
-		{
+        if (TableCell.innerHTML != null && TableCell.innerHTML.length > 0 &&
+            TableCell.innerHTML != " " && TableCell.innerHTML.toLowerCase() != "&nbsp;") {
 			TheirWord += TableCell.innerHTML.toUpperCase();
 			TheirWordLength++;
-		}
-		else
-		{
+		} else {
 			TheirWord += "&bull;";
 		}
 	}
-	
+
 	document.getElementById("wordlabel").innerHTML = TheirWord;
 <?php 
     $msg = "\"".get_string( 'cross_across', 'game').", \" : \"".
@@ -607,7 +605,10 @@ function SelectThisWord(event)
     $letters = "\" ".get_string( 'letter', 'game').".\" : \" ".
         get_string( 'letters', 'game').".\"";
 ?>
-    document.getElementById("wordinfo").innerHTML = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>) + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
+    var s = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>);
+    s = s + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
+    document.getElementById("wordinfo").innerHTML = s;
+
 	document.getElementById("wordclue").innerHTML = Clue[CurrentWord];
 	document.getElementById("worderror").style.display = "none";
 	//document.getElementById("cheatbutton").style.display = (Word.length == 0) ? "none" : "";
@@ -652,13 +653,17 @@ function OKClick()
 	}
 	if (TheirWord.length < WordLength[CurrentWord])
 	{
-        document.getElementById("worderror").innerHTML  = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>" + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
+        var s = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>";
+        s = s + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
+        document.getElementById("worderror").innerHTML  = s;
 		document.getElementById("worderror").style.display = "block";
 		return;
 	}
 	if (TheirWord.length > WordLength[CurrentWord])
 	{
-        document.getElementById("worderror").innerHTML = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>" + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";;
+        var s = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>";
+        s = s + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
+        document.getElementById("worderror").innerHTML = s;
 		document.getElementById("worderror").style.display = "block";
 		return;
 	}
@@ -988,11 +993,13 @@ function CheckHtmlClick()
             get_string( 'cross_checkbutton', 'game');
         echo '</button>';
 
-        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
+        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
+            ' type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
             get_string( 'cross_endofgamebutton', 'game');
         echo '</button>';
-        if ($game->param5 == 1 or $game->param5 == NULL) {
-            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
+        if ($game->param5 == 1 or $game->param5 == null) {
+            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" ';
+                ' onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
             echo '</button>';
         }
 
@@ -1004,7 +1011,8 @@ function CheckHtmlClick()
     }
 
     if ($showhtmlsolutions) {
-        echo '<button id="checkhtmlbutton" type="button" onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
+        echo '<button id="checkhtmlbutton" type="button" '.
+            ' onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
         echo '</button>';
     }
 

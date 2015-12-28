@@ -249,7 +249,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
         $fields .= ',attachment';
     }
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY definition";
-    if( ($questions = $DB->get_records_sql( $sql)) === false) {
+    if (($questions = $DB->get_records_sql( $sql)) === false) {
         return false;
     }
 

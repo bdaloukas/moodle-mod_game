@@ -1525,7 +1525,7 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext, &
             return game_grade_responses_multianswer( $question, $responses, $maxgrade, $answertext);
         }
         $name = "resp{$question->id}_";
-        if( !isset( $responses->$name)) {
+        if (!isset( $responses->$name)) {
             $answered = false;
             return 0;
         }
