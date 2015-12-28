@@ -506,7 +506,7 @@ function game_sudoku_checkanswers() {
 }
 
 function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishattempt, $course) {
-    global $QTYPES, $DB;
+    global $DB;
 
     $responses = data_submitted();
 
@@ -528,7 +528,7 @@ function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishatte
         }
 
         $grade = game_grade_responses( $question, $responses, 100, $answertext, $answered);
-        if( $answered == false) {
+        if ($answered == false) {
             continue;
         }
         if ($grade < 99) {
@@ -545,7 +545,7 @@ function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishatte
 }
 
 function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $finishattempt, $course) {
-    global $QTYPES, $DB;
+    global $DB;
 
     $responses = data_submitted();
 

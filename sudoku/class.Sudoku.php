@@ -150,9 +150,9 @@ class cell extends objects {
      *                         implementing Super-doku.
      */
 
-    public function cell($r, $c, $nstates = 9) {
-        $this->r = $r;
-        $this->c = $c;
+    public function init($inpr, $inpc, $nstates = 9) {
+        $this->r = $inpr;
+        $this->c = $inpc;
 
         for ($i = 1; $i <= $nstates; $i++) {
             $this->state[$i] = $i;
@@ -355,7 +355,7 @@ class rcs extends ObjectS{
      *                                      limts things to 9x9 Sudoku currently.
      */
 
-    public function rcs($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
+    public function init($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
         $this->thetag = $thetag;
         $this->theindex = $theindex;
         $this->therow[1] = &$a1;
@@ -766,10 +766,6 @@ class r extends rcs {
      *                                      limts things to 9x9 Sudoku currently.
      */
 
-    public function r($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
-        $this->rcs($thetag, $theindex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9);
-    }
-
     /**
      * @see RCS::coupling
      */
@@ -824,10 +820,6 @@ class c extends r {
      *          limts things to 9x9 Sudoku currently.
      */
 
-    public function c($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
-        $this->r($thetag, $theindex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9);
-    }
-
     /**
      * @see R::coupling
      */
@@ -870,12 +862,8 @@ class s extends rcs {
      * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
      * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
+     *                                      limits things to 9x9 Sudoku currently.
      */
-
-    public function s($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
-        $this->rcs($thetag, $theindex, $a1, $a2, $a3, $a4, $a5, $a6, $a7, $a8, $a9);
-    }
 
     /**
      * @see RCS::coupling
@@ -1026,12 +1014,13 @@ class sudoku extends ObjectS {
 
     protected $thegenerationiterations = 0;
 
-    public function sudoku($thedebug = false) {
+    public function init($thedebug = false) {
         $this->thedebug = $thedebug;
 
         for ($i = 1; $i <= 9; $i++) {
             for ($j = 1; $j <= 9; $j++) {
-                $this->theboard[$i][$j] = new cell($i, $j);
+                $this->theboard[$i][$j] = new cell;
+                $this->theboard[$i][$j].init( $i, $j);
             }
         }
 
@@ -1911,10 +1900,6 @@ class sudoku extends ObjectS {
 
 class SudokuTemplates extends Sudoku
 {
-    public function sudokutemplates($thedebug = false) {
-        $this->sudoku($thedebug);
-    }
-
     public function generatepuzzlefromfile($thehandle = STDIN, $thedifficultylevel = 10) {
         $yyy = array();
 
