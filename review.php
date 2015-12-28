@@ -44,13 +44,15 @@ $grade = game_score_to_grade( $attempt->score, $game);
 $feedback = game_feedback_for_grade( $grade, $attempt->gameid);
 
 require_login( $course->id, false, $cm);
-$context = get_context_instance( CONTEXT_MODULE, $cm->id);
-$coursecontext = get_context_instance( CONTEXT_COURSE, $cm->course);
-$isteacher = isteacher( $game->course, $USER->id);
+$context = game_get_context_module_instance( $cm->id);
+$coursecontext = game_get_context_course_instance( $cm->course);
+
+$isteacher = has_capability('mod/game:manage', $context);
+
 $options = game_get_reviewoptions( $game, $attempt, $context);
 $popup = $isteacher ? 0 : $game->popup; // Controls whether this is shown in a javascript-protected window.
 
-add_to_log($course->id, "game", "review", "review.php?id=$cm->id&amp;attempt=$attempt->id", "$game->id", "$cm->id");
+//add_to_log($course->id, "game", "review", "review.php?id=$cm->id&amp;attempt=$attempt->id", "$game->id", "$cm->id");
 
 // Print the page header.
 
@@ -68,6 +70,8 @@ $strupdatemodule = has_capability('moodle/course:manageactivities',
 $strgames = get_string("modulenameplural", "game");
 $strgame  = get_string("modulename", "game");
 
+require( "headergame.php");
+/*
 if (function_exists( 'build_navigation')) {
     $navigation = build_navigation('', $cm);
     echo $OUTPUT->heading("$course->shortname: $game->name", "$course->shortname: $game->name", $navigation,
@@ -85,7 +89,7 @@ if (function_exists( 'build_navigation')) {
         "", "", true, update_module_button($cm->id, $course->id, $strgame),
         navmenu($course, $cm));
 }
-
+*/
 echo '<div id="overDiv" style="position:absolute; visibility:hidden; z-index:1000;"></div>'; // For overlib.
 
 // Print heading and tabs if this is part of a preview.
@@ -282,6 +286,8 @@ function game_compute_states( $game, $questions) {
 }
 
 function game_print_questions( $pagelist, $attempt, $questions, $options, $states, $game) {
+    global $QTYPES;
+
     $pagequestions = explode(',', $pagelist);
     $number = game_first_questionnumber( $attempt->layout, $pagelist);
     foreach ($pagequestions as $i) {
@@ -307,8 +313,6 @@ function game_print_questions( $pagelist, $attempt, $questions, $options, $state
         $options->correct_responses = 0;
         $options->feedback = 0;
         $options->readonly = 0;
-
-        global $QTYPES;
 
         unset( $cmoptions);
         $cmoptions->course = $game->course;

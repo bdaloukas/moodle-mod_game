@@ -18,12 +18,15 @@
 
 require_once("../../config.php");
 require_once($CFG->dirroot.'/mod/game/locallib.php');
-require_once($CFG->dirroot.'/mod/game/report/reportlib.php');
 
+//require_login($course->id, false);
+
+require_once($CFG->dirroot.'/mod/game/headergame.php');
+//require_once($CFG->dirroot.'/mod/game/report/reportlib.php');
+/*
 $id = optional_param('id', 0, PARAM_INT);    // Course Module ID.
 $q = optional_param('q', 0, PARAM_INT);     // Game ID.
 
-$mode = optional_param('mode', 'overview', PARAM_ALPHA);        // Report mode.
 
 if ($id) {
     if (! $cm = get_coursemodule_from_id('game', $id)) {
@@ -48,14 +51,15 @@ if ($id) {
         print_error( "The course module for the game with id $q is missing");
     }
 }
+*/
 
-require_login($course->id, false);
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = game_get_context_module_instance( $cm->id);
 require_capability('mod/game:viewreports', $context);
 
-add_to_log($course->id, "game", "report", "report.php?id=$cm->id", "$game->id", "$cm->id");
+//add_to_log($course->id, "game", "report", "report.php?id=$cm->id", "$game->id", "$cm->id");
 
 // Open the selected game report and display it.
+$mode = optional_param('mode', 'overview', PARAM_ALPHA);        // Report mode.
 
 $mode = clean_param( $mode, PARAM_SAFEDIR);
 

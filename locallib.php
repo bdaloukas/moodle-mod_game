@@ -2132,3 +2132,15 @@ function game_use_events() {
 
     return( $version >= '02.07');
 }
+
+/**
+ * Get the feedback text that should be show to a student who
+ * got this grade on this game.
+ *
+ * @param float $grade a grade on this game.
+ * @param integer $gameid the id of the game object.
+ * @return string the comment that corresponds to this grade (empty string if there is not one.
+ */
+function game_feedback_for_grade($grade, $gameid) {
+    return '';
+}

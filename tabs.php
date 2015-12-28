@@ -35,7 +35,7 @@ if (!isset($course)) {
     $course = $DB->get_record('course', array( 'id' => $game->course));
 }
 
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = game_get_context_module_instance( $cm->id);
 
 $tabs = array();
 $row  = array();
@@ -50,7 +50,7 @@ if (has_capability('mod/game:view', $context)) {
 if (has_capability('mod/game:viewreports', $context)) {
     $row[] = new tabobject('reports', "{$CFG->wwwroot}/mod/game/report.php?q=$game->id", get_string('results', 'game'));
 }
-if (has_capability('mod/game:preview', $context)) {
+if (has_capability('mod/game:manage', $context)) {
     $row[] = new tabobject('preview', "{$CFG->wwwroot}/mod/game/attempt.php?a=$game->id", get_string('preview', 'game'));
 }
 if (has_capability('mod/game:manage', $context)) {

@@ -158,7 +158,7 @@ function game_before_add_or_update(&$game) {
             $draftitemid = $game->param4;
             if (isset( $game->id)) {
                 $cmg = get_coursemodule_from_instance('game', $game->id, $game->course);
-                $modcontext = get_context_instance(CONTEXT_MODULE, $cmg->id);
+                $modcontext = game_get_context_module_instance( $cmg->id);
                 $attachmentoptions = array('subdirs' => 0, 'maxbytes' => 9999999, 'maxfiles' => 1);
                 file_save_draft_area_files($draftitemid, $modcontext->id, 'mod_game', 'snakes_file', $game->id,
                     array('subdirs' => 0, 'maxbytes' => 9999999, 'maxfiles' => 1));
@@ -521,7 +521,7 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $course = $DB->get_record('course', array( 'id' => $courseid));
     }
 
-    $modinfo =& get_fast_modinfo($course);
+    $modinfo = get_fast_modinfo($course);
 
     $cm = $modinfo->cms[$cmid];
 
@@ -539,8 +539,7 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $groupjoin   = "";
     }
 
-    if (!$attempts = $DB->get_records_sql("SELECT qa.*, q.grade,
-                                             u.firstname, u.lastname, u.email, u.picture
+    if (!$attempts = $DB->get_records_sql("SELECT qa.*, qa.gameid, q.grade, u.lastname,u.firstname, firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename, u.lastnamephonetic, u.picture
                                         FROM {game_attempts} qa
                                              JOIN {game} q ON q.id = qa.gameid
                                              JOIN {user} u ON u.id = qa.userid
@@ -551,11 +550,10 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
          return;
     }
 
-    $cmcontext      = get_context_instance(CONTEXT_MODULE, $cm->id);
+    $cmcontext      = game_get_context_module_instance( $cm->id);
     $grader          = has_capability('moodle/grade:viewall', $cmcontext);
     $accessallgroups = has_capability('moodle/site:accessallgroups', $cmcontext);
     $viewfullnames   = has_capability('moodle/site:viewfullnames', $cmcontext);
-    $grader          = has_capability('mod/game:grade', $cmcontext);
     $groupmode       = groups_get_activity_groupmode($cm, $course);
 
     if (is_null($modinfo->groups)) {
@@ -586,31 +584,43 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $tmpactivity = new object();
 
         $tmpactivity->type      = 'game';
+        $tmpactivity->gameid    = $attempt->gameid;
         $tmpactivity->cmid      = $cm->id;
         $tmpactivity->name      = $aname;
         $tmpactivity->sectionnum = $cm->sectionnum;
         $tmpactivity->timestamp = $attempt->timefinish;
 
+        $tmpactivity->content = new object();
         $tmpactivity->content->attemptid = $attempt->id;
         $tmpactivity->content->sumgrades = $attempt->score * $attempt->grade;
         $tmpactivity->content->maxgrade  = $attempt->grade;
         $tmpactivity->content->attempt   = $attempt->attempt;
 
-        $tmpactivity->user->userid   = $attempt->userid;
+        $tmpactivity->user = new object();
+        $tmpactivity->user->userid   = $tmpactivity->user->id = $attempt->userid;
         $tmpactivity->user->fullname = fullname($attempt, $viewfullnames);
+        $tmpactivity->user->firstname = $attempt->firstname;
+        $tmpactivity->user->lastname = $attempt->lastname;
+        $tmpactivity->user->alternatename = $attempt->alternatename;
+        $tmpactivity->user->middlename = $attempt->middlename;
+        $tmpactivity->user->firstnamephonetic = $attempt->firstnamephonetic;
+        $tmpactivity->user->lastnamephonetic = $attempt->lastnamephonetic; 
         $tmpactivity->user->picture  = $attempt->picture;
+        $tmpactivity->user->imagealt  = $attempt->imagealt;
+        $tmpactivity->user->email  = $attempt->email;
 
         $activities[$index++] = $tmpactivity;
     }
 }
 
 function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames) {
-    global $CFG;
+    global $CFG, $OUTPUT;
 
     echo '<table border="0" cellpadding="3" cellspacing="0" class="forum-recent">';
 
     echo "<tr><td class=\"userpicture\" valign=\"top\">";
-    print_user_picture($activity->user->userid, $courseid, $activity->user->picture);
+    //print_user_picture($activity->user->userid, $courseid, $activity->user->picture);
+    echo $OUTPUT->user_picture($activity->user, array('courseid' => $courseid));
     echo "</td><td>";
 
     if ($detail) {
@@ -625,7 +635,8 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     echo '<div class="grade">';
     echo  get_string("attempt", "game")." {$activity->content->attempt}: ";
     $grades = "({$activity->content->sumgrades} / {$activity->content->maxgrade})";
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/review.php?attempt={$activity->content->attemptid}\">$grades</a>";
+
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/review.php?attempt={$activity->content->attemptid}&q={$activity->gameid}\">$grades</a>";
     echo '</div>';
 
     echo '<div class="user">';
@@ -975,7 +986,7 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         $questionid = $args[ 0];
         $file = $args[ 1];
         $a = explode( '/', $context->path);
-        if (!$contextcourse = get_context_instance(CONTEXT_COURSE, $course->id)) {
+        if (!$contextcourse = game_get_context_course_instance( $course->id)) {
             print_error('nocontext');
         }
         $a = array( 'component' => 'question', 'filearea' => 'questiontext',
@@ -993,7 +1004,7 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         $answerid = $args[ 0];
         $file = $args[ 1];
 
-        if (!$contextcourse = get_context_instance(CONTEXT_COURSE, $course->id)) {
+        if (!$contextcourse = game_get_context_course_instance( $course->id)) {
             print_error('nocontext');
         }
         $rec = $DB->get_record( 'files', array( 'component' => 'question', 'filearea' => 'answer',
