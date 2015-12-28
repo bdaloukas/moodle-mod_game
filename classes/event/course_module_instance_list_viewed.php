@@ -36,5 +36,12 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
-    // No code required here as the parent class handles it all.
+    public static function create_from_course(\stdClass $course) {
+        $params = array(
+            'context' => \context_course::instance($course->id)
+        );
+        $event = self::create( $params);
+        $event->add_record_snapshot('course', $course);
+        return $event;
+    }
 }

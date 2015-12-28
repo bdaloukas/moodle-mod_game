@@ -1219,3 +1219,11 @@ function game_get_context_module_instance( $moduleid) {
 
     return get_context_instance( CONTEXT_MODULE, $moduleid);
 }
+
+function game_get_context_course_instance( $courseid) {
+    if (class_exists( 'context_course')) {
+        return context_course::instance( $courseid);
+    }
+
+    return get_context_instance( CONTEXT_COURSE, $courseid);
+}

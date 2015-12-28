@@ -2117,14 +2117,6 @@ function game_strpos( $haystack, $needle, $offset = 0) {
     return textlib_get_instance()->strpos( $haystack, $needle, $offset);
 }
 
-function game_get_context_course_instance( $courseid) {
-    if (class_exists( 'context_course')) {
-        return context_course::instance( $courseid);
-    }
-
-    return get_context_instance( 50, $courseid);
-}
-
 function game_show_query( $game, $query, $text) {
     if ($game->glossaryid) {
         $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
