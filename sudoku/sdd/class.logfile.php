@@ -47,7 +47,7 @@ class logfile extends SDD {
      * @access public
      */
 
-    public function logfile($thefilename) {
+    public function init($thefilename) {
         if (file_exists($thefilename)) {
             $this->m_handle = fopen($thefilename, 'a');
         } else {

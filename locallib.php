@@ -1489,7 +1489,7 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext, &
         return $answer->fraction * $maxgrade;
     } else {
         $name = "resp{$question->id}_";
-        if( !isset( $responses->$name)) {
+        if (!isset( $responses->$name)) {
             $answered = false;
             return 0; // Not answered this question.
         }
@@ -1818,14 +1818,27 @@ function game_get_string_lang( $identifier, $module, $lang) {
 
     $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
 
-    if ($result = get_string_from_file( $identifier, $langfile, "\$ret")) {
-        eval($result);
-        if ($ret != '') {
-            return $ret;
+    $result = get_string_from_file( $identifier, $langfile, "\$ret");
+    if ($result != '') {
+        $pos = strpos( $result, '=');
+        if ($pos > 0) {
+            $result = substr( $result, $pos + 1);
+            $pos = strpos( $result, "'");
+            if ($pos > 0) {
+                $result = substr( $result, $pos + 1);
+                $pos = strpos( $result, "'");
+                if ($pos > 0) {
+                    $result = substr( $result, 0, $pos);
+                }
+            }
         }
     }
 
-    return get_string( $identifier, $module);
+    if ($result != '') {
+        return $result;
+    } else {
+        return get_string( $identifier, $module);
+    }
 }
 
 function get_string_from_file($identifier, $langfile, $destination) {

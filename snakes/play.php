@@ -294,7 +294,7 @@ function game_snakes_showquestion_glossary( $id, $snakes, $query, $game) {
 }
 
 function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
-    global $QTYPES, $CFG, $DB;
+    global $CFG, $DB;
 
     $responses = data_submitted();
 
@@ -330,7 +330,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
 }
 
 function game_snakes_check_glossary( $id, $game, $attempt, $snakes, $context) {
-    global $QTYPES, $CFG, $DB;
+    global $CFG, $DB;
 
     $responses = data_submitted();
 

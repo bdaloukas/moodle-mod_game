@@ -539,7 +539,9 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $groupjoin   = "";
     }
 
-    if (!$attempts = $DB->get_records_sql("SELECT qa.*, qa.gameid, q.grade, u.lastname,u.firstname, firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename, u.lastnamephonetic, u.picture
+    if (!$attempts = $DB->get_records_sql("SELECT qa.*, qa.gameid, q.grade, u.lastname,".
+            " u.firstname, firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename,".
+            " u.lastnamephonetic, u.picture
                                         FROM {game_attempts} qa
                                              JOIN {game} q ON q.id = qa.gameid
                                              JOIN {user} u ON u.id = qa.userid
@@ -604,7 +606,7 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $tmpactivity->user->alternatename = $attempt->alternatename;
         $tmpactivity->user->middlename = $attempt->middlename;
         $tmpactivity->user->firstnamephonetic = $attempt->firstnamephonetic;
-        $tmpactivity->user->lastnamephonetic = $attempt->lastnamephonetic; 
+        $tmpactivity->user->lastnamephonetic = $attempt->lastnamephonetic;
         $tmpactivity->user->picture  = $attempt->picture;
         $tmpactivity->user->imagealt  = $attempt->imagealt;
         $tmpactivity->user->email  = $attempt->email;
@@ -619,7 +621,6 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     echo '<table border="0" cellpadding="3" cellspacing="0" class="forum-recent">';
 
     echo "<tr><td class=\"userpicture\" valign=\"top\">";
-    //print_user_picture($activity->user->userid, $courseid, $activity->user->picture);
     echo $OUTPUT->user_picture($activity->user, array('courseid' => $courseid));
     echo "</td><td>";
 
@@ -636,7 +637,8 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     echo  get_string("attempt", "game")." {$activity->content->attempt}: ";
     $grades = "({$activity->content->sumgrades} / {$activity->content->maxgrade})";
 
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/review.php?attempt={$activity->content->attemptid}&q={$activity->gameid}\">$grades</a>";
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/review.php".
+        "?attempt={$activity->content->attemptid}&q={$activity->gameid}\">$grades</a>";
     echo '</div>';
 
     echo '<div class="user">';

@@ -172,7 +172,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $styletext = "style='$stylequestion'";
     }
 
-    $aval = array( 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 10000, 20000, 40000, 80000, 150000);    
+    $aval = array( 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 10000, 20000, 40000, 80000, 150000);
     for ($i = 15; $i >= 1; $i--) {
         $btr = false;
 

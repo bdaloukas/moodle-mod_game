@@ -88,7 +88,7 @@ class sdd {
      *                this object.  By default, logging is off.
      */
 
-    public function sdd($thehtmlflag = null, $theloggingflag = false) {
+    public function init($thehtmlflag = null, $theloggingflag = false) {
         if ($thehtmlflag === null) {
             $thehtmlflag = (!empty($_SERVER['DOCUMENT_ROOT']));
         }
@@ -160,7 +160,7 @@ class sdd {
                 $thestring = ssd::dArray($thevalue, $thehtmlflag, $theindent . "    ");
                 $theoutput[$theindex] = substr($thestring, 0, strlen($thestring) - 1);
             } else if (is_object($thevalue)) {
-                $theoutput[$theindex] = sdd::dobject($thevalue, $thehtmlflag);
+                $theoutput[$theindex] = $this->dobject($thevalue, $thehtmlflag);
             } else {
                 $theoutput[$theindex] = ($thehtmlflag ? preg_replace('|<|s', '&lt;',
                     var_export($thevalue, true)) : var_export($thevalue, true));
@@ -244,9 +244,9 @@ class sdd {
             foreach ($theclassvars[$theclass] as $thevariable => $value) {
                 if (array_key_exists($thevariable, $theobjectvars)) {
                     if (is_array($theobjectvars[$thevariable])) {
-                        $theoutput[$theclass][] = $thevariable . " = " .  sdd::darray($theobjectvars[$thevariable], $thehtmlflag);
+                        $theoutput[$theclass][] = $thevariable . " = " .$this->darray($theobjectvars[$thevariable], $thehtmlflag);
                     } else if (is_object($theobjectvars[$thevariable])) {
-                        $theoutput[$theclass][] = $thevariable . " = " .  sdd::dobject($theobjectvars[$thevariable], $thehtmlflag);
+                        $theoutput[$theclass][] = $thevariable . " = ".$this->dobject($theobjectvars[$thevariable], $thehtmlflag);
                     } else {
                         $theotput[$theclass][] = $thevariable . " = " .
                             ($thehtmlflag ? preg_replace('|<|s', '&lt;', var_export(

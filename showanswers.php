@@ -307,7 +307,6 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
                 foreach ($recs as $rec) {
                     if ($i++ > 0) {
                         echo '<br>';
-                    
                         if ($rec->fraction == 1) {
                             echo " <b>$rec->answer</b>";
                             if ($rec->feedback == '') {

@@ -21,8 +21,6 @@ define('PAGE_GAME_VIEW',   'mod-game-view');
 
 page_map_class( PAGE_GAME_VIEW, 'page_game');
 
-$DEFINEDPAGES = array( PAGE_GAME_VIEW);
-
 /**
  * Class that models the behavior of a game
  *
