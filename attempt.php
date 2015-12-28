@@ -171,10 +171,6 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
             $attempt = game_getattempt( $game, $detail);
             game_snakes_check_glossary( $id, $game, $attempt, $detail, $context);
             break;
-        case 'hiddenpicturecheck':  // The student tries to answer a question.
-            $attempt = game_getattempt( $game, $detail);
-            $continue = game_hiddenpicture_check_questions( $id, $game, $attempt, $detail, $finishattempt, $context);
-            break;
         case 'hiddenpicturecheckg': // The student tries to guess a glossaryentry.
             $attempt = game_getattempt( $game, $detail);
             game_hiddenpicture_check_mainquestion( $id, $game, $attempt, $detail, $endofgame, $context);

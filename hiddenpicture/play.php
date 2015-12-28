@@ -314,76 +314,8 @@ function game_hiddenpicture_showquestion_glossary( $game, $id, $query) {
     echo "</form><br>\n";
 }
 
-function game_hiddenpicture_check_questions( $id, $game, &$attempt, &$hiddenpicture, $finishattempt) {
-    global $QTYPES, $DB;
-
-    $responses = data_submitted();
-
-    $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
-
-    $questionlist = game_sudoku_getquestionlist( $offsetquestions);
-
-    $questions = game_sudoku_getquestions( $questionlist);
-
-    $actions = question_extract_responses($questions, $responses, QUESTION_EVENTSUBMIT);
-
-    $correct = $wrong = 0;
-    foreach ($questions as $question) {
-        if (!array_key_exists( $question->id, $actions)) {
-            // No answered.
-            continue;
-        }
-        unset( $state);
-        unset( $cmoptions);
-        $question->maxgrade = 100;
-        $state->responses = $actions[ $question->id]->responses;
-        $state->event = QUESTION_EVENTGRADE;
-
-        $cmoptions = array();
-        $QTYPES[$question->qtype]->grade_responses( $question, $state, $cmoptions);
-
-        unset( $query);
-
-        $select = "attemptid=$attempt->id";
-        $select .= " AND questionid=$question->id";
-        if (($query->id = $DB->get_field_select( 'game_queries', 'id', $select)) == 0) {
-            print_error("problem game_hiddenpicture_check_questions (select=$select)");
-        }
-
-        $answertext = $state->responses[ ''];
-        if ($answertext != '') {
-            $grade = $state->raw_grade;
-            if ($grade < 50) {
-                // Wrong answer.
-                game_update_queries( $game, $attempt, $query, $grade / 100, $answertext);
-                $wrong++;
-            } else {
-                // Correct answer.
-                game_update_queries( $game, $attempt, $query, 1, $answertext);
-                $correct++;
-            }
-        }
-    }
-
-    $hiddenpicture->correct += $correct;
-    $hiddenpicture->wrong += $wrong;
-
-    if (!$DB->update_record(  'game_hiddenpicture', $hiddenpicture)) {
-        print_error( 'game_hiddenpicture_check_questions: error updating in game_hiddenpicture');
-    }
-
-    $attempt->score = game_hidden_picture_computescore( $game, $hiddenpicture);
-    if (!$DB->update_record(  'game_attempts', $attempt)) {
-        print_error( 'game_hiddenpicture_check_questions: error updating in game_attempt');
-    }
-
-    game_sudoku_check_last( $id, $game, $attempt, $hiddenpicture, $finishattempt);
-
-    return true;
-}
-
 function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenpicture, $finishattempt, $context) {
-    global $QTYPES, $CFG, $DB;
+    global $CFG, $DB;
 
     $responses = data_submitted();
 

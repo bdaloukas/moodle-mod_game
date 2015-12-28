@@ -31,7 +31,7 @@ class game_report extends game_default_report {
      * Display the report.
      */
     public function display($game, $cm, $course) {
-        global $CFG, $SESSION, $db, $QTYPES;
+        global $CFG, $SESSION, $DB;
 
         // Define some strings.
         $strreallydel  = addslashes(get_string('deleteattemptcheck', 'game'));

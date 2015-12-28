@@ -18,7 +18,6 @@ if (!defined('MOODLE_INTERNAL')) {
     die('Direct access to this script is forbidden.'); // It must be included from a Moodle page.
 }
 
-
 // Include those library functions that are also used by core Moodle or other modules.
 require_once($CFG->dirroot . '/mod/game/lib.php');
 require_once($CFG->dirroot . '/mod/quiz/locallib.php');
@@ -1146,52 +1145,6 @@ function game_calculate_best_attempt($game, $attempts) {
     }
 }
 
-
-/**
- * Loads the most recent state of each question session from the database
- *
- * For each question the most recent session state for the current attempt
- * is loaded from the game_questions table and the question type specific data
- *
- * @return array           An array of state objects representing the most recent
- *                         states of the question sessions.
- * @param array $questions The questions for which sessions are to be restored or
- *                         created.
- * @param object $cmoptions
- * @param object $attempt  The attempt for which the question sessions are
- *                         to be restored or created.
- * @param mixed either the id of a previous attempt, if this attmpt is
- *                         building on a previous one, or false for a clean attempt.
- */
-function game_get_question_states(&$questions, $cmoptions, $attempt, $lastattemptid = false) {
-    global $DB, $QTYPES;
-
-    // Get the question ids.
-    $ids = array_keys( $questions);
-    $questionlist = implode(',', $ids);
-
-    $statefields = 'questionid as question, manualcomment, score as grade';
-
-    $sql = "SELECT $statefields".
-           "  FROM {game_questions} ".
-           " WHERE attemptid = '$attempt->id'".
-           "   AND questionid IN ($questionlist)";
-    $states = $DB->get_records_sql($sql);
-
-    // Loops through all questions and set the last_graded states.
-    foreach ($ids as $i) {
-        // Creates the empty question type specific information.
-        if (!$QTYPES[$questions[$i]->qtype]->create_session_and_responses(
-            $questions[$i], $states[$i], $cmoptions, $attempt)) {
-                return false;
-        }
-
-        $states[$i]->last_graded = clone($states[$i]);
-    }
-
-    return $states;
-}
-
 function game_sudoku_getquestions( $questionlist) {
     global $CFG, $DB;
 
@@ -1536,6 +1489,10 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext, &
         return $answer->fraction * $maxgrade;
     } else {
         $name = "resp{$question->id}_";
+        if( !isset( $responses->$name)) {
+            $answered = false;
+            return 0; // Not answered this question.
+        }
         $answertext = game_upper( $responses->$name);
 
         foreach ($question->options->answers as $answer) {
