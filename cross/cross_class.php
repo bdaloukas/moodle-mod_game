@@ -328,7 +328,7 @@ class Cross
         }
 
         if ($bprint) {
-            echo "mincol={$this->m_mincol} maxcol={$this->m_maxcol} minrow={$this->m_minrow} maxrow={$this->m_maxrow}<br>";
+            echo "mincol={$this->mmincol} maxcol={$this->mmaxcol} minrow={$this->mminrow} maxrow={$this->mmaxrow}<br>";
         }
 
         if ($this->mmincol > $this->mmaxcol) {
@@ -693,7 +693,7 @@ class Cross
         $this->mlegendh = array();
         foreach ($legendh as $key => $value) {
             if (count( $value) == 1) {
-                $this->m_LegendH[ $key] = $value[ 0];
+                $this->mlegendh[ $key] = $value[ 0];
             } else {
                 for ($i = 0; $i < count( $value); $i++) {
                     $this->mlegendh[ $key.game_substr( $letters, $i, 1)] = $value[ $i];
