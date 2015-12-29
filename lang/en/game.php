@@ -72,6 +72,7 @@ $string[ 'win'] = 'Congratulations !!!';
 $string[ 'finish'] = 'End of game';
 
 // File db/access.php.
+$string[ 'game:addinstance'] = 'Add a new game';
 $string[ 'game:attempt'] = 'Play game';
 $string[ 'game:deleteattempts'] = 'Delete attempts';
 $string[ 'game:grade'] = 'Grade games manually';
