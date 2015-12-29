@@ -198,11 +198,17 @@ function game_showanswers_question( $game, $context) {
 function game_showanswers_quiz( $game, $context) {
     global $CFG;
 
-    $select = "quiz='$game->quizid' ".
-        ' AND qqi.question=q.id'.
-        ' AND q.hidden=0'.
-        game_showanswers_appendselect( $game);
-    $table = '{question} q,{quiz_question_instances} qqi';
+    if (game_get_moodle_version() < '02.07') {
+        $select = "quiz='$game->quizid' ".
+            ' AND qqi.question=q.id'.
+            ' AND q.hidden=0'.
+            game_showanswers_appendselect( $game);
+        $table = '{question} q,{quiz_question_instances} qqi';
+    } else {
+        $select = "qs.quizid='$game->quizid' ".
+            " AND qs.questionid=q.id";
+        $table = "{question} q,{quiz_slots} qs";
+    }
 
     game_showanswers_question_select( $game, $table, $select, 'q.*', 'category,questiontext', false, $game->course, $context);
 }

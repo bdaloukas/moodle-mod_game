@@ -5,6 +5,7 @@ Changes in version 3.36.31.1 (2015123101)
 - Prevent Style Override of Crossword
 - Add missing language string game:addinstance
 - More RTL fixes
+- Fixing problems on Millionaire with quiz
 
 Changes in version 3.36.29.1 (2015122901)
 ------------------------------------------------------------------
