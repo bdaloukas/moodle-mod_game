@@ -247,27 +247,27 @@ border-width:	2px;
 padding:	.5em;
 }
 
-body  {
+#region-game.body  {
 background-color:	white;
 cursor:	default;
 }
 
-body, button, input, p, td  {
+#region-game.body, #region-game.button, #region-game.input, #region-game.p, #region-game.td  {
 font-family:	Verdana, Arial, Sans-Serif;
 font-size:	small;
 }
 
-button  {
+#region-game.button  {
 cursor:	pointer;
 }
 
-h1, h2, h3  {
+#region-game.h1, #region-game.h2, #region-game.h3  {
 color:	#5F78A2;
 font-family:	Franklin Gothic Medium, Arial, Sans-Serif;
 font-weight:	normal;
 }
 
-p  {
+#region-game.p  {
 margin-top:	1em;
 }
 
