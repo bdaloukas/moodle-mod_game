@@ -325,10 +325,11 @@ width:	240pt;
         $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
         $question2 = strip_tags($question); // ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question.
 
+        echo '<script>var msg='.json_encode( $question2).';</script>';
         if (($onlyshow == false) and ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
                 $question .= ' &nbsp;<input type="submit" value="'.
-                    get_string( 'answer').'" onclick="OnCheck( '.$q->id.',\''.$question2.'\');" />';
+                    get_string( 'answer').'" onclick="OnCheck( '.$q->id.',msg);" />';
             }
         }
         echo $question;
