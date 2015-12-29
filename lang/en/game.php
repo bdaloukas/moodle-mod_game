@@ -240,6 +240,7 @@ $string[ 'cross_options'] = 'Crossword options';
 $string[ 'cross_showprint'] = 'Show print button';
 $string[ 'cryptex_maxtries'] = 'Max tries';
 $string[ 'cryptex_options'] = 'Cryptex options';
+$string[ 'disablesummarize'] = 'Disable summarize';
 $string[ 'gameclose'] = 'Close the game';
 $string[ 'gameopen'] = 'Open the game';
 $string[ 'gameopenclose'] = 'Open and close dates';

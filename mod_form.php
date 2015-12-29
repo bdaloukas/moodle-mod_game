@@ -169,6 +169,9 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('text', 'maxattempts', get_string('cross_max_attempts', 'game'));
         $mform->setType('maxattempts', PARAM_INT);
 
+        // Disable summarize.
+        $mform->addElement('selectyesno', 'disablesummarize', get_string('disablesummarize', 'game'));
+
         // Grade options.
         $mform->addElement('header', 'gradeoptions', get_string('grades', 'grades'));
         $mform->addElement('text', 'grade', get_string( 'grademax', 'grades'), array('size' => 4));

@@ -1525,5 +1525,15 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2015122105, 'game');
     }
 
+   if ($oldversion < ($ver = 2015123101)) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('disablesummarize', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, null, null, '0');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }

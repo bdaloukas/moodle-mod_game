@@ -72,6 +72,14 @@ if (game_use_events()) {
 $completion = new completion_info($course);
 $completion->set_module_viewed($cm);
 
+// Here have to check if not need summarize
+if ($game->disablesummarize) {
+    if (game_can_start_new_attempt( $game)) {
+        require_once( 'attempt.php');
+        die;
+    }
+}
+
 // Initialize $PAGE, compute blocks.
 $PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
 
