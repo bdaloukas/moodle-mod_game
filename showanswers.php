@@ -206,7 +206,7 @@ function game_showanswers_quiz( $game, $context) {
         $table = '{question} q,{quiz_question_instances} qqi';
     } else {
         $select = "qs.quizid='$game->quizid' ".
-            " AND qs.questionid=q.id";
+            " AND qs.questionid=q.id ".game_showanswers_appendselect( $game);
         $table = "{question} q,{quiz_slots} qs";
     }
 
@@ -313,21 +313,17 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
                 foreach ($recs as $rec) {
                     if ($i++ > 0) {
                         echo '<br>';
-                        if ($rec->fraction == 1) {
-                            echo " <b>$rec->answer</b>";
-                            if ($rec->feedback == '') {
-                                $feedback .= '<br>';
-                            }
-                        } else {
-                            $feedback .= "<b>$rec->feedback</b><br>";
-                        }
+                    }
+                    if ($rec->fraction == 1) {
+                        echo " <b>$rec->answer</b>";
                     } else {
                         echo " $rec->answer";
-                        if ($rec->feedback == '') {
-                            $feedback .= '<br>';
-                        } else {
-                            $feedback .= "<br>";
-                        }
+                    }
+
+                    if ($rec->feedback == '') {
+                        $feedback .= '<br>';
+                    } else {
+                        $feedback .= "<b>{$rec->feedback}</b><br>";
                     }
                 }
                 echo '</td>';
