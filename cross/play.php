@@ -143,7 +143,9 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
                 get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     } else if ($info != '') {
-        echo "<br>$info<br>";
+        if ($print === false) {
+            echo "<br>$info<br>";
+        }
     }
 
     if ($attempt->language != '') {
