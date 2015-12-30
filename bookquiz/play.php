@@ -210,7 +210,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
     $modcontext = game_get_context_module_instance( $cmbook->id);
     $content .= game_filterbook( $chapter->content, $chapter->id, $modcontext->id, $game->course);
 
-    $nocleanoption = new object();
+    $nocleanoption = new stdClass;
     $nocleanoption->noclean = true;
     echo '<div>';
     if ($nextbutton != '') {

@@ -211,7 +211,7 @@ if (!$book->customtitles) {
 
 $content .= $chapter->content;
 
-$nocleanoption = new object();
+$nocleanoption = new stdClass;
 $nocleanoption->noclean = true;
 echo '<div class="book_content">';
 echo format_text($content, FORMAT_HTML, $nocleanoption, $course->id);

@@ -423,7 +423,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
             game_grade_item_update($game, $grades);
 
         } else if ($userid and $nullifnone) {
-            $grade = new object();
+            $grade = new stdClass;
             $grade->userid   = $userid;
             $grade->rawgrade = null;
             game_grade_item_update( $game, $grade);
@@ -583,7 +583,7 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
             }
         }
 
-        $tmpactivity = new object();
+        $tmpactivity = new stdClass;
 
         $tmpactivity->type      = 'game';
         $tmpactivity->gameid    = $attempt->gameid;
@@ -592,13 +592,13 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $tmpactivity->sectionnum = $cm->sectionnum;
         $tmpactivity->timestamp = $attempt->timefinish;
 
-        $tmpactivity->content = new object();
+        $tmpactivity->content = new stdClass;
         $tmpactivity->content->attemptid = $attempt->id;
         $tmpactivity->content->sumgrades = $attempt->score * $attempt->grade;
         $tmpactivity->content->maxgrade  = $attempt->grade;
         $tmpactivity->content->attempt   = $attempt->attempt;
 
-        $tmpactivity->user = new object();
+        $tmpactivity->user = new stdClass;
         $tmpactivity->user->userid   = $tmpactivity->user->id = $attempt->userid;
         $tmpactivity->user->fullname = fullname($attempt, $viewfullnames);
         $tmpactivity->user->firstname = $attempt->firstname;
@@ -875,7 +875,7 @@ function game_get_types() {
 
     $types = array();
 
-    $type = new object();
+    $type = new stdClass;
     $type->modclass = MOD_CLASS_ACTIVITY;
     $type->type = "game_group_start";
     $type->typestr = '--'.get_string( 'modulenameplural', 'game');
@@ -884,7 +884,7 @@ function game_get_types() {
     $hide = ( isset( $config->hidehangman) ? ($config->hidehangman != 0) : false);
 
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=hangman";
         $type->typestr = get_string('game_hangman', 'game');
@@ -898,7 +898,7 @@ function game_get_types() {
     }
 
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=cross";
         $type->typestr = get_string('game_cross', 'game');
@@ -912,7 +912,7 @@ function game_get_types() {
     }
 
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=cryptex";
         $type->typestr = get_string('game_cryptex', 'game');
@@ -921,7 +921,7 @@ function game_get_types() {
 
     $hide = (isset( $config->hidemillionaire) ? ($config->hidemillionaire != 0) : false);
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=millionaire";
         $type->typestr = get_string('game_millionaire', 'game');
@@ -930,7 +930,7 @@ function game_get_types() {
 
     $hide = (isset( $config->hidesudoku) ? ($config->hidesudoku != 0) : false);
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=sudoku";
         $type->typestr = get_string('game_sudoku', 'game');
@@ -939,7 +939,7 @@ function game_get_types() {
 
     $hide = (isset( $config->hidesnakes) ? ($config->hidesnakes != 0) : false);
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=snakes";
         $type->typestr = get_string('game_snakes', 'game');
@@ -948,7 +948,7 @@ function game_get_types() {
 
     $hide = (isset( $config->hidehiddenpicture) ? ($config->hidehiddenpicture != 0) : false);
     if ($hide == false) {
-        $type = new object();
+        $type = new stdClass;
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game&amp;type=hiddenpicture";
         $type->typestr = get_string('game_hiddenpicture', 'game');
@@ -958,7 +958,7 @@ function game_get_types() {
     $hide = (isset( $config->hidebookquiz) ? ($config->hidebookquiz != 0) : false);
     if ($hide == false) {
         if ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id')) {
-            $type = new object();
+            $type = new stdClass;
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=bookquiz";
             $type->typestr = get_string('game_bookquiz', 'game');
@@ -966,7 +966,7 @@ function game_get_types() {
         }
     }
 
-    $type = new object();
+    $type = new stdClass;
     $type->modclass = MOD_CLASS_ACTIVITY;
     $type->type = "game_group_end";
     $type->typestr = '--';

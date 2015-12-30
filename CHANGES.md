@@ -2,6 +2,7 @@ Changes in version 3.36.31.1 (2015123101)
 ------------------------------------------------------------------
 - Fix at backup.
 - Fix not to show how many correct letters are when printing the crossword.
+- Moodle 3.1 compatibility.
 
 Changes in version 3.36.30.1 (2015123001)
 ------------------------------------------------------------------
