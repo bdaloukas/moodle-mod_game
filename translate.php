@@ -34,8 +34,7 @@ require( 'locallib.php');
 <body>
 <?php
 
-$moodle19dir = '/var/www/moodle19';
-$context = get_context_instance(CONTEXT_COURSE, $COURSE->id);
+$context = game_get_context_course_instance( $COURSE->id);
 if (!has_capability('mod/game:viewreports', $context)) {
     error( get_string( 'only_teachers', 'game'));
 }
@@ -55,10 +54,12 @@ $langname['lt'] = 'Lietuviškai (lt)';
 $langname['nl'] = 'Nederlands (nl)';
 $langname['no'] = 'Norsk - bokmål (no)';
 $langname['pl'] = 'Polski (pl)';
+$langname['pt_br'] = 'Português - Brasil (pt_br)';
+$langname['ro'] = 'Română (ro)';
 $langname['ru'] = 'Русский (ru)';
 $langname['sq'] = 'Shqip (sq)';
+$langmane['sr_cr'] = 'Српски (sr_cr)';
 $langname['uk'] = 'Українська (uk)';
-$langname['pt_br'] = 'Português - Brasil (pt_br)';
 $langname['zh_cn'] = '简体中文 (zh_cn)';
 ksort( $langname);
 $a = read_dir( $CFG->dirroot.'/mod/game', 'php');
@@ -82,6 +83,7 @@ $strings[ 'game:preview'] = '/db/access.php * game:preview';
 $strings[ 'game:reviewmyattempts'] = '/db/access.php * game:reviewmyattempts';
 $strings[ 'game:view'] = '/db/access.php * game:view';
 $strings[ 'game:viewreports'] = '/db/access.php * game:viewreports';
+$strings[ 'game:addinstance'] = '/db/access.php * game:viewreports';
 $strings[ 'pluginname'] = 'index.php * pluginname';
 $strings[ 'pluginadministration'] = 'index.php * pluginadministration';
 $strings[ 'convertfrom'] = 'locallib.php * convertfrom';
@@ -99,11 +101,12 @@ $strings[ 'helpmillionaire'] = 'index.php * helpmillionaire';
 $en = readlangfile( 'en', $header);
 unset( $en[ 'convertfrom']);
 unset( $en[ 'convertto']);
-$langs = computelangs();
+$langs = array_keys( $langname);
 $sum = array();
 $destdir = game_export_createtempdir();
+$auntranslated = array();
 foreach ($langs as $lang) {
-    if ($lang != 'en' and $lang != 'CVS' and strpos( $lang, '_utf8') == 0 and strpos( $lang, '_uft8') == 0) {
+    if ($lang != 'en') {
         computediff( $en, $lang, $strings, $langname, $sum, $destdir, $untranslated);
         $auntranslated[ $lang] = $untranslated;
     }
@@ -119,7 +122,7 @@ foreach ($sum as $s) {
 }
 echo "</table>";
 
-echo "<br><a href=\"{$CFG->wwwroot}/file.php/1/export/$filenotranslation\">Words that is not translated yet in each language</a>";
+echo "<hr><br><font color=\"red\">Words that is not translated yet in each language are in $filezip</font></b>";
 
 // Find missing strings on en/game.php.
 $not = array();
@@ -182,7 +185,7 @@ $destdir = game_export_createtempdir();
 sort( $strings);
 foreach ($langname as $lang => $name) {
     $stringslang = readlangfile( $lang, $header);
-    if (empty($stringlang)) {
+    if ($stringslang === false) {
         continue;
     }
     $ret = '';
@@ -228,7 +231,7 @@ foreach ($langname as $lang => $name) {
 $filesorted = 'game_lang_sorted.zip';
 $filezip = game_create_zip( $destdir, $COURSE->id, $filesorted);
 remove_dir( $destdir);
-echo "<br><a href=\"{$CFG->wwwroot}/file.php/1/export/$filesorted\">Sorted translation files</a>";
+echo "<br><hr><b><font color=\"red\">The sorted translation files is $destdir/$filesorted</font></b>";
 
 asort( $en);
 $sprev = '';
@@ -246,12 +249,22 @@ if ($ret != '') {
     echo '<table border=1><tr><td><b>Word1</td><td><b>Word2</td><td><b>Translation</td></tr>'.$ret.'</table>';
 }
 
-function readlangfile( $lang, &$header) {
+function getlangfile( $lang) {
     global $CFG;
 
-    $file = $CFG->dirroot.'/mod/game/lang/'.$lang.'/game.php';
+    if ($lang == 'en') {
+        return $CFG->dirroot.'/mod/game/lang/'.$lang.'/game.php';
+    } else {
+        return $CFG->dataroot.'/lang/'.$lang.'/game.php';
+    }
+}
+
+function readlangfile( $lang, &$header) {
+
+    $file = getlangfile( $lang);
+
     if (!is_file($file)) {
-        return null;
+        return false;
     }
 
     $a = array();
@@ -270,10 +283,6 @@ function readlangfile( $lang, &$header) {
         if (splitlangdefinition($line, $name, $trans)) {
             $a[ $name] = $trans;
         }
-    }
-
-    if ($lang != 'en') {
-        readlangfile_repairmoodle19( $lang, $a);
     }
 
     return $a;
@@ -414,34 +423,23 @@ function read_dir($dir, $ext) {
     return $ret;
 }
 
-function computelangs() {
-    global $CFG;
-
-    $dir = $CFG->dirroot.'/mod/game/lang';
-    $ret = array();
-    $d = dir( $dir);
-    while (false !== ($entry = $d->read())) {
-        if ($entry != '.' and $entry != '..') {
-            if (is_dir($dir.'/'.$entry)) {
-                $ret[] = $entry;
-            }
-        }
-    }
-
-    return $ret;
-}
-
 function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated) {
     global $CFG;
     $untranslated = '';
     $counten = count($en);
     $trans = readlangfile( $lang, $header);
-    foreach ($trans as $s => $key) {
-        unset( $en[ $s]);
+    if ($trans != false) {
+        foreach ($trans as $s => $key) {
+            unset( $en[ $s]);
+        }
     }
 
-    $file = $CFG->dirroot.'/mod/game/lang/'.$lang.'/game.php';
-    $lines = file( $file);
+    $file = getlangfile( $lang);
+    if (file_exists( $file)) {
+        $lines = file( $file);
+    } else {
+        $lines = array();
+    }
     $count = 0;
     $s = '';
     foreach ($lines as $line) {
@@ -487,26 +485,4 @@ function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untrans
     }
     $file = $outdir.'/'.$lang.'.php';
     file_put_contents( $file, $s);
-}
-
-// Copies the translation from Moodle 19.
-function readlangfile_repairmoodle19( $lang, &$stringslang) {
-    global $moodle19dir;
-
-    if ($moodle19dir == '') {
-        return;
-    }
-
-    $file = $moodle19dir.'/mod/game/lang/'.$lang.'_utf8/game.php';
-
-    $a = array();
-
-    $lines = file( $file);
-    foreach ($lines as $line) {
-        if (splitlangdefinition($line, $name, $trans)) {
-            if (!array_key_exists( $name, $stringslang)) {
-                $stringslang[ $name] = $trans;
-            }
-        }
-    }
 }
