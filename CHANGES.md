@@ -1,4 +1,4 @@
-Changes in version 3.36.31.1 (2015123101)
+Changes in version 2015-12-31 (3) (2015123103)
 ------------------------------------------------------------------
 - Fix at backup.
 - Fix not to show how many correct letters are when printing the crossword.
