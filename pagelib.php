@@ -44,7 +44,7 @@ class page_game extends page_generic_activity {
         $this->init_full();
         $replacements = array(
             '%fullname%' => format_string($this->activityrecord->name)
-        )
+        );
         foreach ($replacements as $search => $replace) {
             $title = str_replace($search, $replace, $title);
         }
