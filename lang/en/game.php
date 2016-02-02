@@ -241,6 +241,7 @@ $string[ 'cryptex_options'] = 'Cryptex options';
 $string[ 'disablesummarize'] = 'Disable summarize';
 $string[ 'gameclose'] = 'Close the game';
 $string[ 'gameopen'] = 'Open the game';
+$string[ 'gameopenclose'] = 'Open and close dates';
 $string[ 'gameopenclose_help'] = 'Students can only start their attempt(s) after the open time and they must complete their attempts before the close time.';
 $string[ 'grademethod'] = 'Grading method';
 $string[ 'hangman_allowspaces'] = 'Allow spaces in words';
