@@ -312,7 +312,12 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
         if ($game->quizid == 0) {
             print_error( get_string( 'must_select_quiz', 'game'));
         }
-        if (game_get_moodle_version() < '02.07') {
+        if (game_get_moodle_version() < '02.06') {
+            $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.question=q.id".
+                " AND qqi.question=q.id";
+            $table = "{quiz_question_instances} qqi,{question} q, {question_multichoice} qmo";
+            $order = '';
+        } else if (game_get_moodle_version() < '02.07') {
             $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id".
                 " AND qqi.question=q.id";
             $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
@@ -324,6 +329,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $order = 'qs.page,qs.slot';
         }
     } else {
+    	// Source is questions.
         if ($game->questioncategoryid == 0) {
             print_error( get_string( 'must_select_questioncategory', 'game'));
         }
@@ -336,9 +342,14 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
                 $select = 'q.category in ('.implode(',', $cats).')';
             }
         }
-        $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
 
-        $table = '{question} q, {qtype_multichoice_options} qmo';
+        if (game_get_moodle_version() < '02.06') { 
+            $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
+            $table = '{question} q, {question_multichoice} qmo';
+        } else {
+            $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
+            $table = '{question} q, {qtype_multichoice_options} qmo';
+        }
     }
     $select .= ' AND hidden=0';
     if ($game->shuffle or $game->quizid == 0) {
