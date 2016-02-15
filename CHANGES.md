@@ -1,4 +1,7 @@
 Changes in version 2016-02-14 (20160214)
+- Fix syntax error (missed fullstop for concatenation)
+- Merge pull request #10 from grigory-catalyst/MOODLE_20_STABLE
+- Fix missing string gameopenclose at lang/en/game.php
 - Fix compatibility with Moodle 2.5
 
 Changes in version 2015-12-31 (4) (2015123104)

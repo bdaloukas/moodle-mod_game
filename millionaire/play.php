@@ -329,7 +329,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $order = 'qs.page,qs.slot';
         }
     } else {
-    	// Source is questions.
+        // Source is questions.
         if ($game->questioncategoryid == 0) {
             print_error( get_string( 'must_select_questioncategory', 'game'));
         }
@@ -343,7 +343,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             }
         }
 
-        if (game_get_moodle_version() < '02.06') { 
+        if (game_get_moodle_version() < '02.06') {
             $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
             $table = '{question} q, {question_multichoice} qmo';
         } else {
