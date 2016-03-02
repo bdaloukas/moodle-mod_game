@@ -28,7 +28,7 @@ class Cross
     public $minputanswers;   // Contains the words and the answers.
     public $mwords;           // The words that will be used.
 
-    public $mtimelimit = 30;
+    public $mtimelimit = 3;
 
     // Computed by computenextcross.
     public $mbestcrosspos;  // The best puzzle.
@@ -119,7 +119,7 @@ class Cross
         }
     }
 
-    public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords) {
+    public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
         $t1 = time();
 
         $ctries = 0;
@@ -129,6 +129,9 @@ class Cross
         $mbestn20 = 0;
 
         $nochange = 0;
+        $this->mtimelimit = $mtimelimit;
+        if( $this->mtimelimit == 30)
+            $this->mtimelimit = 27;
         for (;;) {
             // Selects the size of the cross.
             $n20 = mt_rand( $this->mn20min, $this->mn20max);
@@ -139,7 +142,7 @@ class Cross
 
             $ctries++;
 
-            if (time() - $t1 > $this->mtimelimit - 3) {
+            if (time() - $t1 > $this->mtimelimit) {
                 break;
             }
 
@@ -201,9 +204,6 @@ class Cross
                         break;
                     }
                 }
-            }
-            if (time() - $t1 > $this->mtimelimit - 3) {
-                return false;
             }
         }
 

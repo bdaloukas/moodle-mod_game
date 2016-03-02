@@ -76,7 +76,7 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
 
     // The game->param4 is minimum words.
     // The game->param2 is maximum words.
-    if ($cryptex->computedata( $crossm, $crossd, $letters, $game->param4, $game->param2)) {
+    if ($cryptex->computedata( $crossm, $crossd, $letters, $game->param4, $game->param2, $game->param3)) {
         $newcrossd = array();
         foreach ($crossd as $rec) {
             if (array_key_exists( $rec->answertext, $infos)) {

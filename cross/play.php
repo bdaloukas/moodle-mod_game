@@ -80,7 +80,7 @@ function game_cross_new( $game, $attemptid, &$crossm) {
 
     // The game->param4 is minimum words in crossword.
     // The game->param2 is maximum words in crossword.
-    if ($cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2)) {
+    if ($cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2, $game->param8)) {
         $newcrossd = array();
         foreach ($crossd as $rec) {
             $info = $infos[ $rec->answertext];
@@ -96,7 +96,7 @@ function game_cross_new( $game, $attemptid, &$crossm) {
     }
 
     if (count( $crossd) == 0) {
-        print_error( 'game_cross_continue: '.get_string( 'no_words', 'game'));
+        print_error( 'game_cross_continue: '.get_string( 'no_words', 'game').$game->id);
     }
 }
 

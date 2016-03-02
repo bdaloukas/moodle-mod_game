@@ -1,3 +1,7 @@
+Changes in version 2016-03-03 (20160302)
+------------------------------------------------------------------
+- New: Max compute time in crossword and cryptex
+
 Changes in version 2016-02-14 (20160214)
 ------------------------------------------------------------------
 - Fix syntax error (missed fullstop for concatenation)

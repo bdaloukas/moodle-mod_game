@@ -208,8 +208,8 @@ class CryptexDB extends CrossDB {
         return Cross::setwords( $answers, $maxcols, $reps);
     }
 
-    public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords) {
-        if (!cross::computedata( $crossm, $crossd, $letters, $minwords, $maxwords)) {
+    public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
+        if (!cross::computedata( $crossm, $crossd, $letters, $minwords, $maxwords, $mtimelimit)) {
             return false;
         }
 
