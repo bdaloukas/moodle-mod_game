@@ -233,6 +233,7 @@ $string[ 'cross_layout0'] = 'Phrases on the bottom of cross';
 $string[ 'cross_layout1'] = 'Phrases on the right of cross';
 $string[ 'cross_maxcols'] = 'Maximum number of cols/rows';
 $string[ 'cross_max_attempts'] = 'Maximum number of attempts';
+$string[ 'cross_maxcomputetime'] = 'Maximum compute time in seconds';
 $string[ 'cross_maxwords'] = 'Maximum number of words';
 $string[ 'cross_minwords'] = 'Minimum number of words';
 $string[ 'cross_options'] = 'Crossword options';
