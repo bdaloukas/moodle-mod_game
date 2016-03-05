@@ -130,8 +130,9 @@ class Cross
 
         $nochange = 0;
         $this->mtimelimit = $mtimelimit;
-        if( $this->mtimelimit == 30)
+        if ($this->mtimelimit == 30) {
             $this->mtimelimit = 27;
+        }
         for (;;) {
             // Selects the size of the cross.
             $n20 = mt_rand( $this->mn20min, $this->mn20max);

@@ -454,7 +454,7 @@ class mod_game_mod_form extends moodleform_mod {
                 if ($defaultvalues->param5 == null) {
                     $defaultvalues->param5 = 1;
                 }
-            }  
+            }
 
             if ($defaultvalues->gamekind == 'snakes') {
                 if (isset( $defaultvalues->param9)) {
