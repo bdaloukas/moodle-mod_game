@@ -116,6 +116,10 @@ class mod_game_mod_form extends moodleform_mod {
             }
             $mform->addElement('select', 'glossarycategoryid', get_string('sourcemodule_glossarycategory', 'game'), $a);
             $mform->disabledIf('glossarycategoryid', 'sourcemodule', 'neq', 'glossary');
+
+            // Only approved.
+            $mform->addElement('selectyesno', 'glossaryonlyapproved', get_string('glossary_only_approved', 'game'));
+            $mform->disabledIf('subcategories', 'sourcemodule', 'neq', 'glossary');
         }
 
         // Question Category - Short Answer.

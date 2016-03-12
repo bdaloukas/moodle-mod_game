@@ -245,6 +245,7 @@ $string[ 'gameopen'] = 'Open the game';
 $string[ 'gameopenclose'] = 'Open and close dates';
 $string[ 'gameopenclose_help'] = 'Students can only start their attempt(s) after the open time and they must complete their attempts before the close time.';
 $string[ 'grademethod'] = 'Grading method';
+$string[ 'glossary_only_approved'] = "Only approved or teacher's glossary entries";
 $string[ 'hangman_allowspaces'] = 'Allow spaces in words';
 $string[ 'hangman_allowsub'] = 'Allow the symbol - in words';
 $string[ 'hangman_imageset'] = 'Select the images of hangman';

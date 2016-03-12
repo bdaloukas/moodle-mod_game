@@ -362,6 +362,10 @@ function game_showanswers_glossary( $game) {
             " AND gec.categoryid = {$game->glossarycategoryid}";
         $table .= ",{glossary_entries_categories} gec";
     }
+    if ($game->glossaryonlyapproved) {
+        // Only approved glossary entries will be used.
+        $select .= ' AND (ge.approved=1 OR teacherentry=1)';
+    }
     $sql = "SELECT ge.id,definition,concept FROM $table WHERE $select ORDER BY definition";
     if (($questions = $DB->get_records_sql( $sql)) === false) {
         return;

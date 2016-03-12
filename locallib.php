@@ -139,6 +139,11 @@ function game_question_shortanswer_glossary( $game, $allowspaces, $userepetition
         $select .= " AND concept NOT LIKE '% %'  ";
     }
 
+    if ($game->glossaryonlyapproved) {
+        // Only approved glossary entries will be used.
+        $select .= ' AND (ge.approved=1 OR teacherentry=1)';
+    }
+
     if (($id = game_question_selectrandom( $game, $table, $select, 'ge.id', $userepetitions)) == false) {
         return false;
     }
