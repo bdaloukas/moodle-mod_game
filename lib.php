@@ -868,26 +868,26 @@ function game_extend_settings_navigation($settings, $gamenode) {
  * menu list when adding new game 
  *
  */
-function game_get_types() {
-    global $DB;
+function game_get_shortcuts($defaultitem) {
+    global $DB,$CFG;
 
     $config = get_config('game');
 
     $types = array();
 
-    $type = new stdClass;
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game_group_start";
-    $type->typestr = '--'.get_string( 'modulenameplural', 'game');
-    $types[] = $type;
-
     $hide = ( isset( $config->hidehangman) ? ($config->hidehangman != 0) : false);
 
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=hangman";
-        $type->typestr = get_string('game_hangman', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=hangman";
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->title = get_string('game_hangman', 'game');
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+        }
         $types[] = $type;
     }
 
@@ -899,9 +899,15 @@ function game_get_types() {
 
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=cross";
-        $type->typestr = get_string('game_cross', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=cross";
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->title = get_string('game_cross', 'game');
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+        }
         $types[] = $type;
     }
 
@@ -913,45 +919,75 @@ function game_get_types() {
 
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=cryptex";
-        $type->typestr = get_string('game_cryptex', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=cryptex";
+        $type->title = get_string('game_cryptex', 'game');
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+            }
         $types[] = $type;
     }
 
     $hide = (isset( $config->hidemillionaire) ? ($config->hidemillionaire != 0) : false);
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=millionaire";
-        $type->typestr = get_string('game_millionaire', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=millionaire";
+        $type->title = get_string('game_millionaire', 'game');
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+            }
         $types[] = $type;
     }
 
     $hide = (isset( $config->hidesudoku) ? ($config->hidesudoku != 0) : false);
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=sudoku";
-        $type->typestr = get_string('game_sudoku', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=sudoku";
+        $type->title = get_string('game_sudoku', 'game');
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+            }
         $types[] = $type;
     }
 
     $hide = (isset( $config->hidesnakes) ? ($config->hidesnakes != 0) : false);
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=snakes";
-        $type->typestr = get_string('game_snakes', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=snakes";
+        $type->title = get_string('game_snakes', 'game');
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+            }
         $types[] = $type;
     }
 
     $hide = (isset( $config->hidehiddenpicture) ? ($config->hidehiddenpicture != 0) : false);
     if ($hide == false) {
         $type = new stdClass;
-        $type->modclass = MOD_CLASS_ACTIVITY;
-        $type->type = "game&amp;type=hiddenpicture";
-        $type->typestr = get_string('game_hiddenpicture', 'game');
+        $type->archetype = MOD_CLASS_ACTIVITY;
+        $type->type = "game&type=hiddenpicture";
+        $type->title = get_string('game_hiddenpicture', 'game');
+        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+        if (empty($type->help) && !empty($type->name) &&
+            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                $type->help = get_string('help' . $type->name, 'game');
+            }
         $types[] = $type;
     }
 
@@ -959,18 +995,18 @@ function game_get_types() {
     if ($hide == false) {
         if ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id')) {
             $type = new stdClass;
-            $type->modclass = MOD_CLASS_ACTIVITY;
-            $type->type = "game&amp;type=bookquiz";
-            $type->typestr = get_string('game_bookquiz', 'game');
+            $type->archetype = MOD_CLASS_ACTIVITY;
+            $type->type = "game&type=bookquiz";
+            $type->title = get_string('game_bookquiz', 'game');
+            $type->name = preg_replace('/.*type=/', '', $type->type);
+            $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
+            if (empty($type->help) && !empty($type->name) &&
+                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                    $type->help = get_string('help' . $type->name, 'game');
+                }
             $types[] = $type;
         }
     }
-
-    $type = new stdClass;
-    $type->modclass = MOD_CLASS_ACTIVITY;
-    $type->type = "game_group_end";
-    $type->typestr = '--';
-    $types[] = $type;
 
     return $types;
 }
