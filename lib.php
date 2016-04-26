@@ -865,7 +865,7 @@ function game_extend_settings_navigation($settings, $gamenode) {
 
 /* Returns an array of game type objects to construct
    menu list when adding new game  */
-require_once($CFG->dirroot.'/version.php');
+require($CFG->dirroot.'/version.php');
 if ($branch >= '31') {
     define('USE_GET_SHORTCUTS', '1');
 }
