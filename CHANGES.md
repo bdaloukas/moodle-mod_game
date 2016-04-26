@@ -1,3 +1,7 @@
+Changes in version 2016-04-26 (20160426)
+----------------------------------------
+- Fix Use get_types or get_shortcuts depended on version of Moodle
+
 Changes in version 2016-03-03 (20160302)
 ------------------------------------------------------------------
 - New: Max compute time in crossword and cryptex
