@@ -106,7 +106,10 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
     if ($lang == '') {
         $lang = current_language();
     }
-    copy( $src. '/lang/'.$lang.'/language.txt',  $destdir."/$destmobiledir/language.txt");
+    $sourcefile = $src. '/lang/'.$lang.'/language.txt';
+    if( !file_exists( $sourcefile))
+	$sourcefile = $src. '/lang/'.$lang.'_utf8/language.txt';
+    copy( $sourcefile,  $destdir."/$destmobiledir/language.txt");
 
     $exportattachment = ( $destmobiledir == 'hangmanp');
 
@@ -342,7 +345,7 @@ function game_create_jar( $srcdir, $course, $javame) {
     $cmd = "cd $srcdir;jar cvfm $filejar META-INF/MANIFEST.MF *";
     exec( $cmd);
 
-    return (file_exists( $filejar) ? "{$javame->filename}.jar" : '');
+    return (file_exists( $filejar) ? $filejar : '');
 }
 
 function game_showanswers_appendselect( $form) {

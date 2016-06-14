@@ -1535,7 +1535,7 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
-    if ($oldversion < ($ver = 2016031202)) {
+    if ($oldversion < ($ver = 2016061402)) {
         $table = new xmldb_table('game');
         $field = new xmldb_field('glossaryonlyapproved', XMLDB_TYPE_INTEGER, '1', XMLDB_UNSIGNED, null, null, '0');
         if (!$dbman->field_exists($table, $field)) {

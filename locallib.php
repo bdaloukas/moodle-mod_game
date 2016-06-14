@@ -1780,7 +1780,7 @@ function game_export_createtempdir() {
 
     srand( (double)microtime() * 1000000);
     while (true) {
-        $rbasedir = "game/".date("Y-m-d H.i.s-").rand(0, 10000);
+        $rbasedir = "game/".date("Y-m-d-H.i.s-").rand(0, 10000);
         $newdir = $CFG->dataroot.'/temp/'.$rbasedir;
         if (!file_exists( $newdir)) {
             mkdir( $newdir);
