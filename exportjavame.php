@@ -107,8 +107,9 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
         $lang = current_language();
     }
     $sourcefile = $src. '/lang/'.$lang.'/language.txt';
-    if( !file_exists( $sourcefile))
-	$sourcefile = $src. '/lang/'.$lang.'_utf8/language.txt';
+    if (!file_exists( $sourcefile)) {
+        $sourcefile = $src. '/lang/'.$lang.'_utf8/language.txt';
+    }
     copy( $sourcefile,  $destdir."/$destmobiledir/language.txt");
 
     $exportattachment = ( $destmobiledir == 'hangmanp');

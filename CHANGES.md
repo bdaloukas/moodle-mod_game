@@ -1,3 +1,6 @@
+Changes in version 2016-06-14 (20160614)
+- Fix Moodle 31 compatibility
+
 Changes in version 2016-04-26 (20160426)
 ----------------------------------------
 - Fix Use get_types or get_shortcuts depended on version of Moodle
