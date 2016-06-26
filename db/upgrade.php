@@ -1544,5 +1544,15 @@ function xmldb_game_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, $ver, 'game');
     }
+    
+    if ($oldversion < ($ver = 2016062603)) {  
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('createscore', XMLDB_TYPE_FLOAT, null, null, XMLDB_NOTNULL, null, '0');
+
+        // Launch change of type for field thisfield
+        $dbman->change_field_type($table, $field);
+    }
+    
+    
     return true;
 }

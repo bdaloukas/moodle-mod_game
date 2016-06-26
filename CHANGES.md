@@ -1,3 +1,6 @@
+Changes in version 2016-06-26 (20160626)
+- Change type of game_cross.createscore to double
+
 Changes in version 2016-06-14 (20160614)
 - Fix Moodle 31 compatibility
 
