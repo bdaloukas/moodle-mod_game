@@ -235,7 +235,9 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
 
     $bfirst = true;
-    $letters = get_string( 'lettersall', 'game');
+    $letters = get_string( 'millionaire_lettersall', 'game');
+    if( ($letters == '') or ($letters == '-'))
+        $letters = get_string( 'lettersall', 'game');
     for ($i = 1; $i <= count( $aanswer); $i++) {
         $name = "btAnswer".$i;
         $s = game_substr( $letters, $i - 1, 1);

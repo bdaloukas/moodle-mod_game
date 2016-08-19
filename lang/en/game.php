@@ -103,6 +103,7 @@ $string[ 'noglossaryentriesfound'] = 'No glossary entries found';
 // File millionaire/play.php.
 $string[ 'millionaire_must_select_questioncategory'] = 'You must select one question category';
 $string[ 'millionaire_must_select_quiz'] = 'You must select one quiz';
+$string[ 'millionaire_lettersall'] = '-';
 
 // File report/overview/report.php.
 $string[ 'allattempts'] = 'Show all tries';

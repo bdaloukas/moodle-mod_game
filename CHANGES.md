@@ -1,3 +1,6 @@
+Changes in version 2016-08-19 (20160819)
+- New string (millionaire_lettersall) that will be used to Deutsch language
+
 Changes in version 2016-06-26 (20160626)
 - Change type of game_cross.createscore to double
 
