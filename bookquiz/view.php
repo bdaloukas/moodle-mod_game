@@ -39,7 +39,7 @@ if (!$book = $DB->get_record('book', array( 'id' => $cm->instance))) {
 
 require_course_login($course, true, $cm);
 
-$context = get_context_instance(CONTEXT_MODULE, $cm->id);
+$context = game_get_context_module_instance( $cm->id);
 
 // Read chapters.
 $select = $allowedit ? "bookid = $book->id" : "bookid = $book->id AND hidden = 0";

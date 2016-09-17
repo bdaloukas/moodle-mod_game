@@ -689,8 +689,6 @@ function game_supports($feature) {
             return true;
         case FEATURE_COMPLETION_HAS_RULES:
             return true;
-        case FEATURE_GRADE_HAS_GRADE:
-            return true;
         case FEATURE_GRADE_OUTCOMES:
             return true;
         case FEATURE_RATE:
