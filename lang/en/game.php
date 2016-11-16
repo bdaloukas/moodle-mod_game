@@ -268,6 +268,7 @@ $string[ 'hiddenpicture_width'] = 'Set width of picture to (in pixels)';
 $string[ 'millionaire_background'] = 'Background color';
 $string[ 'millionaire_options'] = 'Millionaire\' options';
 $string[ 'millionaire_shuffle'] = 'Randomize questions';
+$string[ 'name'] = 'Name';
 $string[ 'snakes_background'] = 'Background';
 $string[ 'snakes_cols'] = 'Cols';
 $string[ 'snakes_data'] = 'Positions of Snakes and Ladders';
