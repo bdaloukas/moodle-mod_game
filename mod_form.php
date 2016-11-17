@@ -405,7 +405,7 @@ class mod_game_mod_form extends moodleform_mod {
         }
 
         // Header/Footer options.
-        $mform->addElement('header', 'headerfooteroptions', get_string('Header/Footer Options', 'game'));
+        $mform->addElement('header', 'headerfooteroptions', get_string('headerfooteroptions', 'game'));
         $mform->addElement('htmleditor', 'toptext', get_string('toptext', 'game'));
         $mform->addElement('htmleditor', 'bottomtext', get_string('bottomtext', 'game'));
 
