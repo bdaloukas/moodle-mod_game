@@ -539,16 +539,11 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $groupjoin   = "";
     }
 
-    if (!$attempts = $DB->get_records_sql("SELECT qa.*, qa.gameid, q.grade, u.lastname,".
-            " u.firstname, firstnamephonetic, u.lastnamephonetic, u.middlename, u.alternatename,".
-            " u.lastnamephonetic, u.picture
-                                        FROM {game_attempts} qa
-                                             JOIN {game} q ON q.id = qa.gameid
-                                             JOIN {user} u ON u.id = qa.userid
-                                             $groupjoin
-                                       WHERE qa.timefinish > $timestart AND q.id = $cm->instance
-                                             $userselect $groupselect
-                                    ORDER BY qa.timefinish ASC")) {
+    $sql = "SELECT qa.*, qa.gameid, q.grade, u.lastname,u.firstname,u.picture ".
+    "FROM {game_attempts} qa JOIN {game} q ON q.id = qa.gameid JOIN {user} u ON u.id = qa.userid $groupjoin ".
+    "WHERE qa.timefinish > $timestart AND q.id = $cm->instance $userselect $groupselect ".
+    "ORDER BY qa.timefinish ASC";
+    if (!$attempts = $DB->get_records_sql( $sql)) {
          return;
     }
 
@@ -603,10 +598,6 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $tmpactivity->user->fullname = fullname($attempt, $viewfullnames);
         $tmpactivity->user->firstname = $attempt->firstname;
         $tmpactivity->user->lastname = $attempt->lastname;
-        $tmpactivity->user->alternatename = $attempt->alternatename;
-        $tmpactivity->user->middlename = $attempt->middlename;
-        $tmpactivity->user->firstnamephonetic = $attempt->firstnamephonetic;
-        $tmpactivity->user->lastnamephonetic = $attempt->lastnamephonetic;
         $tmpactivity->user->picture  = $attempt->picture;
         $tmpactivity->user->imagealt  = $attempt->imagealt;
         $tmpactivity->user->email  = $attempt->email;
