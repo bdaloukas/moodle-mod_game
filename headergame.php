@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->dirroot.'/mod/game/locallib.php');

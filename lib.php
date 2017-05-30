@@ -21,6 +21,8 @@
  * @package game
  **/
 
+defined('MOODLE_INTERNAL') || die();
+
 // Define CONSTANTS.
 
 /*
@@ -51,9 +53,9 @@ define('GAME_REVIEW_SOLUTIONS',  16 * 0x1041);      // Show solutions.
 define('GAME_REVIEW_GENERALFEEDBACK', 32 * 0x1041); // Show general feedback.
 
 /**
- * Given an object containing all the necessary data, 
- * (defined by the form in mod.html) this function 
- * will create a new instance and return the id number 
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod.html) this function
+ * will create a new instance and return the id number
  * of the new instance.
  *
  * @param object $instance An object from the form in mod.html
@@ -79,8 +81,8 @@ function game_add_instance($game) {
 }
 
 /**
- * Given an object containing all the necessary data, 
- * (defined by the form in mod.html) this function 
+ * Given an object containing all the necessary data,
+ * (defined by the form in mod.html) this function
  * will update an existing instance with new data.
  *
  * @param object $instance An object from the form in mod.html
@@ -178,8 +180,8 @@ function game_before_add_or_update(&$game) {
 
 /**
  * Given an ID of an instance of this module, 
- * this function will permanently delete the instance 
- * and any data that depends on it. 
+ * this function will permanently delete the instance
+ * and any data that depends on it.
  *
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
@@ -236,7 +238,7 @@ function game_delete_instance($gameid) {
 }
 
 /**
- * Return a small object with summary information about what a 
+ * Return a small object with summary information about what a
  * user has done with a given particular instance of this module
  * Used for user activity reports.
  * $return->time = the time they did it
@@ -287,8 +289,8 @@ function game_user_complete($course, $user, $mod, $game) {
 }
 
 /**
- * Given a course and a time, this module should find recent activity 
- * that has occurred in game activities and print it out. 
+ * Given a course and a time, this module should find recent activity
+ * that has occurred in game activities and print it out.
  * Return true if there was output, or false is there was none. 
  *
  * @uses $CFG
@@ -303,9 +305,10 @@ function game_print_recent_activity($course, $isteacher, $timestart) {
 
 /**
  * Function to be run periodically according to the moodle cron
- * This function searches for things that need to be done, such 
- * as sending out mail, toggling flags etc ... 
+ * This function searches for things that need to be done, such
+ * as sending out mail, toggling flags etc ...
  *
+
  * @uses $CFG
  * @return boolean
  * @todo Finish documenting this function

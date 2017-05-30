@@ -28,6 +28,8 @@
  *  Initial version created/
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once('SDD/class.SDD.php');
 
 class logfile extends SDD {

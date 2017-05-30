@@ -280,34 +280,34 @@ margin-top:	1em;
 </head>
 
 <?php
-    if ($print) {
-        echo '<body onload="window.print()">';
-    } else {
-        echo '<body>';
-    }
+if ($print) {
+    echo '<body onload="window.print()">';
+} else {
+    echo '<body>';
+}
 
-    if ($game->toptext != '') {
-        echo $game->toptext.'<br>';
-    }
+if ($game->toptext != '') {
+    echo $game->toptext.'<br>';
+}
 ?>
 <h1></h1>
 
 <div id="waitmessage" class="answerboxstyle">
-	This interactive crossword puzzle requires JavaScript and a reasonably recent web browser, such as Internet Explorer 5.5
-	or later, Netscape 7, Mozilla, Firefox, or Safari.  If you have disabled web page scripting, please re-enable it and refresh
-	the page.
+    This interactive crossword puzzle requires JavaScript and a reasonably recent web browser, such as Internet Explorer 5.5
+    or later, Netscape 7, Mozilla, Firefox, or Safari.  If you have disabled web page scripting, please re-enable it and refresh
+    the page.
 </div>
 
 
 <p><table cellpadding="0" cellspacing="0" border="0">
 
 <?php
-    if ($game->param3 == 2) {
-        echo "<tr>\r\n";
-        game_cross_show_welcome( $game);
-        echo "</tr>\r\n";
-        echo "<tr><tr><td>&nbsp</td></tr>\r\n";
-    }
+if ($game->param3 == 2) {
+    echo "<tr>\r\n";
+    game_cross_show_welcome( $game);
+    echo "</tr>\r\n";
+    echo "<tr><tr><td>&nbsp</td></tr>\r\n";
+}
 ?>
 
 <tr>
@@ -333,138 +333,125 @@ var CrosswordFinished, Initialized;
 // Check the user's browser and then initialize the puzzle.
 if (document.getElementById("waitmessage") != null)
 {
-	document.getElementById("waitmessage").innerHTML = "<?php echo get_string( 'cross_pleasewait', 'game'); ?>";
-	
-	// Current game variables
-	CurrentWord = -1;
-	PrevWordHorizontal = false;
-	
+    document.getElementById("waitmessage").innerHTML = "<?php echo get_string( 'cross_pleasewait', 'game'); ?>";
+
+    // Current game variables
+    CurrentWord = -1;
+    PrevWordHorizontal = false;
+
 <?php
     echo $html;
 ?>
+    OnlyCheckOnce = false;
 
-	OnlyCheckOnce = false;
-
-	// Create the cell-to-word arrays.
-	TableAcrossWord = new Array(CrosswordWidth);
-	for (var x = 0; x < CrosswordWidth; x++)
+    // Create the cell-to-word arrays.
+    TableAcrossWord = new Array(CrosswordWidth);
+    for (var x = 0; x < CrosswordWidth; x++)
     TableAcrossWord[x] = new Array(CrosswordHeight);
-	TableDownWord = new Array(CrosswordWidth);
-	for (var x = 0; x < CrosswordWidth; x++){ 
-		TableDownWord[x] = new Array(CrosswordHeight);
-	}
+    TableDownWord = new Array(CrosswordWidth);
+    for (var x = 0; x < CrosswordWidth; x++){ 
+        TableDownWord[x] = new Array(CrosswordHeight);
+    }
 	
-	GuessLeter = new Array(CrosswordWidth);
-	for (var x = 0; x < CrosswordWidth; x++) 
-	{
-		GuessLeter[x] = new Array(CrosswordHeight);
-		for (var y = 0; y < CrosswordHeight; y++) 
-		{
-			GuessLeter[ x][ y] = "_";
-		}
-	}
+    GuessLeter = new Array(CrosswordWidth);
+    for (var x = 0; x < CrosswordWidth; x++) {
+        GuessLeter[x] = new Array(CrosswordHeight);
+        for (var y = 0; y < CrosswordHeight; y++)  {
+            GuessLeter[ x][ y] = "_";
+        }
+    }
 
-	solu = new Array(CrosswordWidth);
-	for (var x = 0; x < CrosswordWidth; x++) 
-	{
-		solu[x] = new Array(CrosswordHeight);
-		for (var y = 0; y < CrosswordHeight; y++) 
-		{
-			solu[ x][ y] = "";
-		}
-	}
+    solu = new Array(CrosswordWidth);
+    for (var x = 0; x < CrosswordWidth; x++) {
+        solu[x] = new Array(CrosswordHeight);
+        for (var y = 0; y < CrosswordHeight; y++) {
+            solu[ x][ y] = "";
+        }
+    }
 	
-	for (var y = 0; y < CrosswordHeight; y++)
-		for (var x = 0; x < CrosswordWidth; x++)
-		{
-			TableAcrossWord[x][y] = -1;
-			TableDownWord[x][y] = -1;
-		}
-		
+    for (var y = 0; y < CrosswordHeight; y++) {
+        for (var x = 0; x < CrosswordWidth; x++) {
+            TableAcrossWord[x][y] = -1;
+            TableDownWord[x][y] = -1;
+        }
+	}
 	// First, add the horizontal words to the puzzle.
-	for (var i = 0; i <= LastHorizontalWord; i++)
-	{
-		x = WordX[i];
-		y = WordY[i];
-		s = Guess[ i];
-		so = Solutions[ i];
-		for (var j = 0; j < WordLength[i]; j++)
-		{
-			TableAcrossWord[x + j][y] = i;
-			if( j < s.length)
-				c = s.substr( j, 1);
-			else
-				c = '';
-			GuessLeter[ x+ j][ y] = c;
-			if( j < so.length)
-				c = so.substr(  j, 1);
-			else
-				c = '';
-			solu[ x+j][ y] = c;
-		}
-	}
+    for (var i = 0; i <= LastHorizontalWord; i++) {
+        x = WordX[i];
+        y = WordY[i];
+        s = Guess[ i];
+        so = Solutions[ i];
+        for (var j = 0; j < WordLength[i]; j++) {
+            TableAcrossWord[x + j][y] = i;
+            if( j < s.length)
+                c = s.substr( j, 1);
+            else
+                c = '';
+            GuessLeter[ x+ j][ y] = c;
+            if( j < so.length)
+                c = so.substr(  j, 1);
+            else
+                c = '';
+            solu[ x+j][ y] = c;
+        }
+    }
 	
-	// Second, add the vertical words to the puzzle.
-	for (var i = LastHorizontalWord + 1; i < Words; i++)
-	{
-		x = WordX[i];
-		y = WordY[i];
-		s = Guess[ i];
-		so = Solutions[ i];
-		for (var j = 0; j < WordLength[i]; j++)
-		{
-			TableDownWord[x][y + j] = i;
-			if( j < s.length)
-				c = s.substr( j, 1);
-			else
-				c = '';
-			GuessLeter[ x][ y+j] = c;
-			if( j < so.length)
-				c = so.substr( j, 1);
-			else
-				c = '';
-			solu[ x][ y+j] = c;
-		}
-	}
+    // Second, add the vertical words to the puzzle.
+    for (var i = LastHorizontalWord + 1; i < Words; i++) {
+        x = WordX[i];
+        y = WordY[i];
+        s = Guess[ i];
+        so = Solutions[ i];
+        for (var j = 0; j < WordLength[i]; j++) {
+            TableDownWord[x][y + j] = i;
+            if( j < s.length)
+                c = s.substr( j, 1);
+            else
+                c = '';
+            GuessLeter[ x][ y+j] = c;
+            if( j < so.length)
+                c = so.substr( j, 1);
+            else
+                c = '';
+            solu[ x][ y+j] = c;
+        }
+    }
 	
-	document.writeln("<tr><td></td>");
-	for (var x = 0; x < CrosswordWidth; x++)
-	{
-		document.write("<td align=center>" + (x+1) + " </td>");    //col numbers
-	}
+    document.writeln("<tr><td></td>");
+    for (var x = 0; x < CrosswordWidth; x++) {
+        document.write("<td align=center>" + (x+1) + " </td>");    //col numbers
+    }
 		
-	// Now, insert the row HTML into the table.
-	for (var y = 0; y < CrosswordHeight; y++)
-	{
-		document.writeln("<tr>");
-		document.write("<td>" + (y+1)+" </td>");    //line numbers
-		for (var x = 0; x < CrosswordWidth; x++)
-		{
-			if (TableAcrossWord[x][y] >= 0 || TableDownWord[x][y] >= 0)
-			{
+    // Now, insert the row HTML into the table.
+    for (var y = 0; y < CrosswordHeight; y++) {
+        document.writeln("<tr>");
+        document.write("<td>" + (y+1)+" </td>");    //line numbers
+        for (var x = 0; x < CrosswordWidth; x++) {
+            if (TableAcrossWord[x][y] >= 0 || TableDownWord[x][y] >= 0) {
                 var s;
                 s = "<td id=\"c" + PadNumber(x) + PadNumber(y);
                 s += "\" class=\"gamebox boxnormal_unsel\" onclick=\"SelectThisWord(event);\">";
                 document.write( s);
 
-				if( solu[x][y] != '')
-					document.write( solu[x][y]);
-				else if( GuessLeter[x][y]== "_")
-					document.write( "&nbsp;");
-				else
-					document.write( GuessLeter[x][y]);
-				
-				document.write("</td>");
-			}else
-				document.write("<td></td>");    //empty cell
-		}
-		document.writeln("</tr>");
-	}
+                if( solu[x][y] != '')
+                    document.write( solu[x][y]);
+                else if( GuessLeter[x][y]== "_")
+                    document.write( "&nbsp;");
+                else
+                    document.write( GuessLeter[x][y]);
+
+                document.write("</td>");
+            } else {
+                document.write("<td></td>");    //empty cell
+            }
+        }
+        document.writeln("</tr>");
+    }
 	
-	// Finally, show the crossword and hide the wait message.
-	Initialized = true;
-	document.getElementById("waitmessage").style.display = "none";
-	document.getElementById("crossword").style.display = "block";	
+    // Finally, show the crossword and hide the wait message.
+    Initialized = true;
+    document.getElementById("waitmessage").style.display = "none";
+    document.getElementById("crossword").style.display = "block";	
 }
 
 // ----------
@@ -815,9 +802,7 @@ function OnPrint()
     }
 <?php
     }
-
 ?>
-
 
 <?php
     if ($showhtmlprintbutton) {
@@ -988,7 +973,6 @@ function CheckHtmlClick()
 
 </tr></table>
 
-
 <?php 
     if ($onlyshow == false) {
         echo '<div style="margin-top: 1em;">';
@@ -1067,7 +1051,6 @@ function CheckHtmlClick()
 
 ?>
 
-
 </body>
 
 <?php
@@ -1137,7 +1120,6 @@ function game_cross_show_welcome1() {
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
 <div id="worderror" style="color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
 
-
 <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
 <td align="right">
 <button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;">OK</button> &nbsp;
@@ -1146,17 +1128,13 @@ function game_cross_show_welcome1() {
 
 </td><td>&nbsp</td><td>
 
-
 <div id="answerbox2" class="answerboxstyle" style="display:none;">
 <h3 id="wordlabel" style="text-transform:uppercase;margin:0;"> </h3>
 <div id="wordinfo" style="font-size:8pt;color:#808080"> </div>
 <div id="wordclue" class="cluebox"> </div>
 </div>
 
-
-
 </div>
-
 
 </td>
 <?php

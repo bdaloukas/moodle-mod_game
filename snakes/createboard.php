@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 // This file creates a board for "Snakes and Ladders".
 function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom,
         $ofsright, $ofsleft, $board, $setwidth, $setheight) {

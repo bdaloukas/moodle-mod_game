@@ -21,6 +21,8 @@
  * @package game
  **/
 
+defined('MOODLE_INTERNAL') || die();
+
 ?>
 <script type="text/javascript">
 

@@ -21,6 +21,8 @@
  * @package game
  **/
 
+defined('MOODLE_INTERNAL') || die();
+
 function game_onexportjavame( $game, $javame) {
     global $CFG, $DB;
 

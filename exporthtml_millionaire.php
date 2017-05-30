@@ -21,6 +21,8 @@
  * @package game
  **/
 
+defined('MOODLE_INTERNAL') || die();
+
 function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files) {
     global $CFG, $DB, $USER;
 

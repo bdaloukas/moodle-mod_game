@@ -54,6 +54,8 @@
  *		attempting to distribute clues more optimally.
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 @require_once("SDD/class.SDD.php");
 
 /*
@@ -477,7 +479,7 @@ class rcs extends ObjectS{
      * @param integer $theRow the row coordinate on the board of the cell.
      * @param integer $theColumn the column coordinate on the board of the cell.
      * @return integer the degree of coupling between the cell and the rest of the cells
-     *				   within the row/column/square.
+     *      within the row/column/square.
      */
 
     public function coupling($therow, $thecolumn) {

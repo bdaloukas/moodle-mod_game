@@ -16,7 +16,7 @@
 
 /**
  * This page export the game to html
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/

@@ -273,20 +273,19 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
     $href = $CFG->wwwroot.'/mod/game/attempt.php?action=sudokucheckn&id='.$id;
 
 ?>
-	<script language="javascript">
-			function OnCheck( pos)
-			{
-				s = window.prompt( "<?php echo get_string ( 'sudoku_guessnumber', 'game') ?>", "");
-				
-				if (s < "1")
-					return;
-				if (s > "9")
-					return;
+    <script language="javascript">
+        function OnCheck( pos) {
+            s = window.prompt( "<?php echo get_string ( 'sudoku_guessnumber', 'game') ?>", "");
 
-                window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
-			}
-		</script>
-	<?php
+            if (s < "1")
+                return;
+            if (s > "9")
+                return;
+
+            window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
+        }
+    </script>
+<?php
 
     // Here are the congratulations.
     if ($attempt->timefinish) {

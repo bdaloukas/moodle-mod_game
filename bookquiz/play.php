@@ -172,33 +172,33 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
         }
     }
 
-?>
-<table border="0" cellspacing="0" width="100%" valign="top" cellpadding="2">
+    ?>
+    <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="2">
 
-<!-- subchapter title and upper navigation row //-->
-<tr>
-    <td width="<?php echo  10;?>" valign="bottom">
-    </td>
-    <td valign="top">
-        <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">
-        <tr>
-            <td align="right"><?php echo $chnavigation ?></td>
-        </tr>
-        </table>
-    </td>
-</tr>
+    <!-- subchapter title and upper navigation row //-->
+    <tr>
+        <td width="<?php echo  10;?>" valign="bottom">
+        </td>
+        <td valign="top">
+            <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">
+            <tr>
+                <td align="right"><?php echo $chnavigation ?></td>
+            </tr>
+            </table>
+        </td>
+    </tr>
 
-<!-- toc and chapter row //-->
-<tr>
-    <td width="<?php echo $tocwidth ?>" valign="top" align="left">
-        <?php
-        echo $OUTPUT->box_start('generalbox');
-        echo $toc;
-        echo $OUTPUT->box_end();
-        ?>
-    </td>
-    <td valign="top" align="left">
-<?php
+    <!-- toc and chapter row //-->
+    <tr>
+        <td width="<?php echo $tocwidth ?>" valign="top" align="left">
+            <?php
+            echo $OUTPUT->box_start('generalbox');
+            echo $toc;
+            echo $OUTPUT->box_end();
+            ?>
+        </td>
+        <td valign="top" align="left">
+    <?php
     echo $OUTPUT->box_start('generalbox');
     $content = '';
     if (!$book->customtitles) {
@@ -227,12 +227,12 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
     echo $OUTPUT->box_end();
     // Lower navigation.
     echo '<p align="right">'.$chnavigation.'</p>';
-?>
-    </td>
-</tr>
-</table>
+    ?>
+        </td>
+    </tr>
+    </table>
 
-<?php
+    <?php
     if ($showquestions) {
         if ($game->param3 != 0) {
             game_bookquiz_showquestions( $id, $questionid, $chapter->id, $nextid, $scoreattempt, $game, $context);

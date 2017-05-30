@@ -16,7 +16,7 @@
 
 /**
  * This page shows the answers of the current game
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/

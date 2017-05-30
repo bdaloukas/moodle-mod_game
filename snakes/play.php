@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 // This files plays the game "Snakes and Ladders".
 
 function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
@@ -95,9 +97,9 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
     -->
     </script>
 
-	<table>
-	<tr>
-		<td>
+    <table>
+    <tr>
+        <td>
 
 <div id="board" STYLE="position:relative; left:0px;top:0px; 
     width:<?php p($board->width); ?>px; height:<?php p($board->height); ?>px;">
@@ -109,7 +111,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
         game_snakes_showdice( $snakes, $board);
     }
 ?>
-		</td>
+    </td>
 	</tr>
 	</table>
 <?php

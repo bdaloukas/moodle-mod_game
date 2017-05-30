@@ -17,7 +17,7 @@
 /**
  * This page lists all the instances of game module in a particular course
  *
- * @author 
+ * @author Vasilis Daloukas
  * @package game
  **/
 
