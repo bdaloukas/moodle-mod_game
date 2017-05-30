@@ -135,8 +135,8 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $gif = "5050";
         $disabled = "";
     }
-    echo '<input type="image" '.$disabled.' name="Help5050" id="Help5050" Title="50 50" src="'.
-        $OUTPUT->pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
+	$src = game_pix_url($dirgif.$gif, 'mod_game');
+    echo '<input type="image" '.$disabled.' name="Help5050" id="Help5050" Title="50 50" src="'.$src.'" alt="" border="0">&nbsp;';
 
     if ($state & 2) {
         $gif = "telephonex";
@@ -148,7 +148,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
 
     echo '<input type="image" name="HelpTelephone" '.$disabled.
         ' id="HelpTelephone" Title="'.get_string( 'millionaire_telephone', 'game').
-        '" src="'.$OUTPUT->pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
+        '" src="'.game_pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
 
     if ($state & 4) {
         $gif = "peoplex";
@@ -159,11 +159,11 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     }
     echo '<input type="image" name="HelpPeople" '.$disabled.' id="HelpPeople" Title="'.
         get_string( 'millionaire_helppeople', 'game').'" src="'.
-        $OUTPUT->pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
+        game_pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
 
     echo '<input type="image" name="Quit" id="Quit" Title="'.
         get_string( 'millionaire_quit', 'game').'" src="'.
-        $OUTPUT->pix_url($dirgif.'x', 'mod_game').'" alt="" border="0">&nbsp;';
+        game_pix_url($dirgif.'x', 'mod_game').'" alt="" border="0">&nbsp;';
     echo "\r\n";
     echo "</td>\r\n";
 

@@ -234,7 +234,7 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
         if ($game->param3 == 0) {
             $game->param3 = 1;
         }
-        echo "\r\n<br/><img src=\"".$OUTPUT->pix_url('hangman/'.$game->param3.'/hangman_'.$wrong, 'mod_game')."\"";
+        echo "\r\n<br/><img src=\"".game_pix_url('hangman/'.$game->param3.'/hangman_'.$wrong, 'mod_game')."\"";
         $message  = sprintf( get_string( 'hangman_wrongnum', 'game'), $wrong, $max);
         echo ' ALIGN="MIDDLE" BORDER="0" HEIGHT="100" alt="'.$message.'"/>';
 

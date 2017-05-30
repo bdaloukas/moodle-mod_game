@@ -984,7 +984,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=hangman";
             $type->name = preg_replace('/.*type=/', '', $type->type);
-            $type->title = get_string('game_hangman', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_hangman', 'game');
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
                 get_string_manager()->string_exists('help' . $type->name, 'game')) {
@@ -1002,7 +1002,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=cross";
             $type->name = preg_replace('/.*type=/', '', $type->type);
-            $type->title = get_string('game_cross', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_cross', 'game');
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
                 get_string_manager()->string_exists('help' . $type->name, 'game')) {
@@ -1019,7 +1019,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass;
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=cryptex";
-            $type->title = get_string('game_cryptex', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_cryptex', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
@@ -1033,7 +1033,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass;
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=millionaire";
-            $type->title = get_string('game_millionaire', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_millionaire', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
@@ -1047,7 +1047,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass;
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=sudoku";
-            $type->title = get_string('game_sudoku', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_sudoku', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
@@ -1061,7 +1061,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass;
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=snakes";
-            $type->title = get_string('game_snakes', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_snakes', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
@@ -1075,7 +1075,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass;
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=hiddenpicture";
-            $type->title = get_string('game_hiddenpicture', 'game');
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_hiddenpicture', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
             if (empty($type->help) && !empty($type->name) &&
@@ -1090,7 +1090,7 @@ if (defined('USE_GET_SHORTCUTS')) {
                 $type = new stdClass;
                 $type->archetype = MOD_CLASS_ACTIVITY;
                 $type->type = "game&type=bookquiz";
-                $type->title = get_string('game_bookquiz', 'game');
+                $type->title = get_string('pluginname', 'game').' - '.get_string('game_bookquiz', 'game');
                 $type->name = preg_replace('/.*type=/', '', $type->type);
                 $type->link = new moodle_url($defaultitem->link, array('type' => $type->name));
                 if (empty($type->help) && !empty($type->name) &&
@@ -1355,4 +1355,14 @@ function game_get_context_course_instance( $courseid) {
     }
 
     return get_context_instance( CONTEXT_COURSE, $courseid);
+}
+
+function game_pix_url( $filename) {
+	global $OUTPUT;
+
+	if (game_get_moodle_version() >= '03.03') {
+		return $OUTPUT->image_url($filename, 'mod_game');
+	} else {
+		return $OUTPUT->pix_url($filename, 'mod_game');
+	}
 }
