@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $context) {
     if ($attempt != false and $bookquiz != false) {
         return game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context);

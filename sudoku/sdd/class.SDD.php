@@ -26,36 +26,9 @@
  * @copyright copyright @ by Dick Munroe, 2004
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @package StructuredDataDumper
- * @version 1.0.4
  */
 
-//
-// Edit History:
-//
-//  Dick Munroe munroe@cworks.com 04-Dec-2004
-//      Initial version created.
-//
-//  Dick Munroe munroe@csworks.com 08-Dec-2004
-//      Translate < to &lt; for html output.
-//
-//  Dick Munroe munroe@csworks.com 23-Dec-2004
-//      Add interface for writing "stuff".  Extend SDD
-//      to get things "written".
-//
-//  Dick Munroe munroe@csworks.com 25-Dec-2004
-//      If a class extends a base class, but doesn't add
-//      data members, a warning winds up appearing when
-//      printing.
-//      Added a memeber to fetch the state of the logging
-//      flag.
-//
-//  Dick Munroe munroe@csworks.com 11-Mar-2006
-//      The test for html flag should have assumed that
-//      $this can be defined for objects calling SDD::dump.
-//
-//  Dick Munroe (munroe@csworks.com) 22-Mar-2006
-//      Add a function to generate "newlines".
-//
+defined('MOODLE_INTERNAL') || die();
 
 class sdd {
     /*

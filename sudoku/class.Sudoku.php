@@ -60,7 +60,6 @@
  * @author Dick Munroe <munroe@csworks.com>
  * @copyright copyright @ 2005 by Dick Munroe, Cottage Software Works, Inc.
  * @license http://www.csworks.com/publications/ModifiedNetBSD.html
- * @version 2.2.0
  * @package Sudoku
  */
 

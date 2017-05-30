@@ -18,7 +18,6 @@
  * This page export the game to javame for mobile phones
  * 
  * @author  bdaloukas
- * @version $Id: exportjavame.php,v 1.18 2012/07/25 11:16:03 bdaloukas Exp $
  * @package game
  **/
 

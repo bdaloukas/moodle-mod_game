@@ -16,9 +16,8 @@
 
 /**
  * This page prints a particular attempt of game
- * 
+ *
  * @author  bdaloukas
- * @version $Id: attempt.php,v 1.22 2012/07/25 23:07:43 bdaloukas Exp $
  * @package game
  **/
 require_once( "../../config.php");
@@ -39,6 +38,9 @@ $action  = optional_param('action', "", PARAM_ALPHANUM);  // Is the param action
 game_show_header( $id, $game, $course, $context);
 game_do_attempt( $id, $game, $action, $course, $context);
 
+/**
+ * Do the required checks and print header.
+ */
 function game_show_header( &$id, &$game, &$course, &$context) {
     global $DB, $USER, $PAGE, $OUTPUT;
 
@@ -114,6 +116,10 @@ function game_show_header( &$id, &$game, &$course, &$context) {
     echo $OUTPUT->header();
 }
 
+/**
+ * Do one attempt.
+ */
+
 function game_do_attempt( $id, $game, $action, $course, $context) {
     global $OUTPUT;
 
@@ -186,6 +192,9 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
     echo $OUTPUT->footer();
 }
 
+/**
+ * Creates one game.
+ */
 function game_create( $game, $id, $forcenew, $course, $context) {
     global $USER, $CFG, $DB;
 
@@ -225,6 +234,9 @@ function game_create( $game, $id, $forcenew, $course, $context) {
     }
 }
 
+/**
+ * Unpacks the cross.
+ */
 function game_cross_unpackpuzzle( $g) {
     $ret = "";
     $len = game_strlen( $g);

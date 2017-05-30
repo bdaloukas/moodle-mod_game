@@ -18,7 +18,6 @@
  * @package mod_game
  * @subpackage backup-moodle2
  * @author  bdaloukas
- * @version $Id: restore_game_activity_task.class.php,v 1.3 2012/07/25 11:16:04 bdaloukas Exp $
  */
 
 defined('MOODLE_INTERNAL') || die();

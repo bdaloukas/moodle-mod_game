@@ -18,11 +18,12 @@
 
 /**
  * This class is a cross that can load and save to a table
- * 
+ *
  * @author  bdaloukas
- * @version $Id: crossdb_class.php,v 1.17 2012/07/25 11:16:05 bdaloukas Exp $
  * @package game
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 class CrossDB extends Cross {
     public function savecross( $game, &$crossm, $crossd, $id) {

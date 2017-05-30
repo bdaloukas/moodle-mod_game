@@ -17,10 +17,11 @@
 /**
  * The script supports book
  *
- * @version $Id: questions.php,v 1.6 2012/07/25 11:16:05 bdaloukas Exp $
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once("../../../config.php");
 require_once( "../headergame.php");

@@ -23,6 +23,9 @@ Codewalkers PHP Coding Contest of July 2002
 
 Author Àngel Fenoy from Arenys de Mar, Barcelona.
 */
+
+defined('MOODLE_INTERNAL') || die();
+
 class Cross
 {
     public $minputanswers;   // Contains the words and the answers.

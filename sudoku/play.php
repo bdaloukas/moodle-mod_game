@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once( "../../lib/questionlib.php");
 
 function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $context) {
@@ -284,7 +286,7 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
                 window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
 			}
 		</script>
-	<?php	
+	<?php
 
     // Here are the congratulations.
     if ($attempt->timefinish) {

@@ -18,7 +18,6 @@
  * This page lists all the instances of game module in a particular course
  *
  * @author 
- * @version $Id: index.php,v 1.8 2012/08/29 20:55:25 bdaloukas Exp $
  * @package game
  **/
 

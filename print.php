@@ -18,7 +18,6 @@
  * This page export the game to html
  * 
  * @author  bdaloukas
- * @version $Id: print.php,v 1.7 2012/07/25 11:16:04 bdaloukas Exp $
  * @package game
  **/
 require_once("../../config.php");

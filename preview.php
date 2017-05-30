@@ -18,7 +18,6 @@
  * This page prints a particular attempt of game
  * 
  * @author  bdaloukas
- * @version $Id: preview.php,v 1.10 2012/07/25 11:16:04 bdaloukas Exp $
  * @package game
  **/
 

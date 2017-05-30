@@ -22,6 +22,8 @@
  * @package game
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 if (empty($game)) {
     print_error('You cannot call this script in that way');
 }
@@ -71,7 +73,7 @@ if ($currenttab == 'reports' and isset($mode)) {
 
     $allreports = get_list_of_plugins("mod/game/report");
     // Standard reports we want to show first
-    $reportlist = array ('overview' /*, 'regrade' , 'grading' , 'analysis'*/);
+    $reportlist = array ('overview');
 
     foreach ($allreports as $report) {
         if (!in_array($report, $reportlist)) {

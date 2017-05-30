@@ -19,7 +19,6 @@
  * @copyright copyright @ by Dick Munroe, 2004
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
  * @package StructuredDataDumper
- * @version 1.0.1
  */
 
 /*

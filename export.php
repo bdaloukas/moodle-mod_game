@@ -18,7 +18,6 @@
  * This page exports a game to another platform e.g. html, jar
  * 
  * @author  bdaloukas
- * @version $Id: export.php,v 1.22 2012/07/25 11:16:03 bdaloukas Exp $
  * @package game
  **/
 

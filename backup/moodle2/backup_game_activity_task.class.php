@@ -17,11 +17,12 @@
 /**
  * @package mod_game
  * @subpackage backup-moodle2
- * class backup_game_activity_task 
- * @author 
- * @version $Id: backup_game_activity_task.class.php,v 1.2 2012/07/25 11:16:04 bdaloukas Exp $
+ * class backup_game_activity_task
+ * @author
  * @package game
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/game/backup/moodle2/backup_game_stepslib.php'); // Because it exists (must).
 require_once($CFG->dirroot . '/mod/game/backup/moodle2/backup_game_settingslib.php'); // Because it exists (optional).

@@ -18,7 +18,6 @@
  * @package mod_game
  * @subpackage backup-moodle2
  * @author bdaloukas
- * @version $Id: backup_game_stepslib.php,v 1.5 2012/07/25 11:16:04 bdaloukas Exp $
  */
 
 /**
@@ -28,8 +27,14 @@
 /**
  * Define the complete game structure for backup, with file and id annotations
  */
+
+defined('MOODLE_INTERNAL') || die();
+
 class backup_game_activity_structure_step extends backup_activity_structure_step {
 
+    /**
+     * Defines the needed structures.
+     */
     protected function define_structure() {
 
         // To know if we are including userinfo.

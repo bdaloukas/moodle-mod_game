@@ -18,7 +18,6 @@
  * This page plays the cryptex game
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.20 2012/08/03 05:52:50 bdaloukas Exp $
  * @package game
  **/
 

@@ -18,8 +18,7 @@
  * Code fragment to define the version of game
  * This fragment is called by moodle_needs_upgrading() and /admin/index.php
  *
- * @author 
- * @version $Id: version.php,v 1.49 2012/07/25 22:46:42 bdaloukas Exp $
+ * @author
  * @package game
  **/
 
@@ -36,10 +35,10 @@ if (!isset( $plugin)) {
 }
 
 $plugin->component = 'mod_game';  // Full name of the plugin (used for diagnostics).
-$plugin->version   = 2017053001;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version   = 2017053002;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires  = 2010112400;  // Requires Moodle 2.0.
 $plugin->cron      = 0;           // Period for cron to check this module (secs).
-$plugin->release   = '2017-05-30';
+$plugin->release   = '2017-05-30-02';
 
 if ($useplugin != 2) {
     $module = $plugin;

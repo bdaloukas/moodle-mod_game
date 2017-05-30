@@ -18,7 +18,6 @@
  * This page export the game hangman to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_hangman.php,v 1.10 2012/07/25 11:16:03 bdaloukas Exp $
  * @package game
  **/
 

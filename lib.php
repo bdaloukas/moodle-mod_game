@@ -18,10 +18,8 @@
  * Library of functions and constants for module game
  *
  * @author 
- * @version $Id: lib.php,v 1.36 2012/07/25 11:16:03 bdaloukas Exp $
  * @package game
  **/
-
 
 // Define CONSTANTS.
 

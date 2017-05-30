@@ -18,7 +18,6 @@
  * This page shows the answers of the current game
  * 
  * @author  bdaloukas
- * @version $Id: showanswers.php,v 1.7 2012/07/25 22:46:42 bdaloukas Exp $
  * @package game
  **/
 

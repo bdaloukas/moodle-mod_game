@@ -17,7 +17,6 @@
 /**
  * This script lists student attempts
  *
- * @version $Id: report.php,v 1.5 2012/07/25 11:16:07 bdaloukas Exp $
  * @author bdaloukas.
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game

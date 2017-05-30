@@ -18,6 +18,8 @@
 
 // This files plays the game "Crossword".
 
+defined('MOODLE_INTERNAL') || die();
+
 require( "cross_class.php");
 require( "crossdb_class.php");
 

@@ -18,7 +18,6 @@
  * This page export the game to html for games: cross, hangman
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.23 2012/07/25 11:16:03 bdaloukas Exp $
  * @package game
  **/
 

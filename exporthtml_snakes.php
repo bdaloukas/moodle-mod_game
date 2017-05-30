@@ -18,7 +18,6 @@
  * This page export the game snakes to html
  * 
  * @author  bdaloukas
- * @version $Id: exporthtml_snakes.php,v 1.4 2011/07/23 12:34:08 bdaloukas Exp $
  * @package game
  **/
 

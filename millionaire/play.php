@@ -18,7 +18,6 @@
  * This file plays the game millionaire
  * 
  * @author  bdaloukas
- * @version $Id: play.php,v 1.31 2012/07/25 11:16:05 bdaloukas Exp $
  * @package game
  **/
 

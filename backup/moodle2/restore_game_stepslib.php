@@ -29,6 +29,9 @@
  */
 class restore_game_activity_structure_step extends restore_activity_structure_step {
 
+    /**
+     * Defines the neeeded structures.
+     */
     protected function define_structure() {
 
         $paths = array();
@@ -60,6 +63,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         return $this->prepare_activity_structure($paths);
     }
 
+    /**
+     * Restores the game table.
+     */
     protected function process_game($data) {
         global $DB;
 
@@ -75,6 +81,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $this->apply_activity_instance($newitemid);
     }
 
+    /**
+     * Restores the game_export_html table.
+     */
     protected function process_game_export_html($data) {
         global $DB;
 
@@ -86,6 +95,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         }
     }
 
+    /**
+     * Restores the game_export_javame table.
+     */
     protected function process_game_export_javame($data) {
         global $DB;
 
@@ -97,6 +109,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         }
     }
 
+    /**
+     * Restores the game_grades table.
+     */
     protected function process_game_grade($data) {
         global $DB;
 
@@ -109,6 +124,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_grades', $data);
     }
 
+    /**
+     * Restores the game_repetitions table.
+     */
     protected function process_game_repetition($data) {
         global $DB;
 
@@ -121,6 +139,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_repetitions', $data);
     }
 
+    /**
+     * Restores the game_attempts table.
+     */
     protected function process_game_attempt($data) {
         global $DB;
 
@@ -148,6 +169,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $this->set_mapping('game_attempt', $oldid, $newitemid);
     }
 
+    /**
+     * Restores the game_queries table.
+     */
     protected function process_game_query($data) {
         global $DB;
 
@@ -162,6 +186,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $this->set_mapping('game_query', $oldid, $newitemid);
     }
 
+    /**
+     * Restores the game_bookquiz table.
+     */
     protected function process_game_bookquiz($data) {
         global $DB;
 
@@ -172,6 +199,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_bookquiz', $data);
     }
 
+    /**
+     * Restores the game_bookauiz_chapters table.
+     */
     protected function process_game_bookquiz_chapter($data) {
         global $DB;
 
@@ -182,6 +212,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_bookquiz_chapters', $data);
     }
 
+    /**
+     * Restores the game_bookquiz_questions table.
+     */
     protected function process_game_bookquiz_question($data) {
         global $DB;
 
@@ -192,6 +225,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_bookquiz_questions', $data);
     }
 
+    /**
+     * Restores the game_cross table.
+     */
     protected function process_game_cross($data) {
         global $DB;
 
@@ -202,6 +238,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_cross', $data);
     }
 
+    /**
+     * Restores the game_cryptex table.
+     */
     protected function process_game_cryptex($data) {
         global $DB;
 
@@ -212,6 +251,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_cryptex', $data);
     }
 
+    /**
+     * Restores the game_hangman table.
+     */
     protected function process_game_hangman($data) {
         global $DB;
 
@@ -223,6 +265,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_hangman', $data);
     }
 
+    /**
+     * Restores the game_hiddenpicture table.
+     */
     protected function process_game_hiddenpicture($data) {
         global $DB;
 
@@ -233,6 +278,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_hiddenpicture', $data);
     }
 
+    /**
+     * Restores the game_millionaire table.
+     */
     protected function process_game_millionaire($data) {
         global $DB;
 
@@ -244,6 +292,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_millionaire', $data);
     }
 
+    /**
+     * Restores the game_snakes table.
+     */
     protected function process_game_snake($data) {
         global $DB;
 
@@ -255,6 +306,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_snakes', $data);
     }
 
+    /**
+     * Restores the game_sudoku table.
+     */
     protected function process_game_sudoku($data) {
         global $DB;
 
@@ -265,8 +319,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_sudoku', $data);
     }
 
+    // Add Game related files, no need to match by itemname (just internally handled context).
     protected function after_execute() {
-        // Add Game related files, no need to match by itemname (just internally handled context).
         $this->add_related_files('mod_game', 'snakes_file', null);
         $this->add_related_files('mod_game', 'snakes_board', null);
     }
