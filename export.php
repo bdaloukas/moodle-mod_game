@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * This page exports a game to another platform e.g. html, jar
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/

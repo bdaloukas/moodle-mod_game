@@ -6,7 +6,7 @@ $(document).ready(function () {
 });
 
 
-//Global Variables
+// Global Variables.
 var totblocks = 0;
 var data = "";
 var currentblock = 0;
@@ -20,12 +20,12 @@ var destsnake = new Array(4);
 
 var ladsrc = new Array(3);
 var laddest = new Array(3);
-var quest = new Array(); //available questions along with multiple answers
-var COR_answered = new Array(); //record all questions (along with answers) the user responded CORRECTLY
-var WRO_answered = new Array(); //record all questions (along with answers) the user responded WRONGLY
+var quest = new Array(); // Available questions along with multiple answers.
+var COR_answered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
+var WRO_answered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
 var user = new Array();
 
-//Constract table with questions and answers and pick question to display
+// Constract table with questions and answers and pick question to display.
 
 quest[0] = "Spell 1";
 quest[1] = "one";
@@ -45,30 +45,29 @@ quest[14] = "three";
 quest[15] = "one";
 z = 0;
 for (z = 0; quest[z] != null; z++) {
-    // Do nothing
+    // Do nothing.
 }
 allQuest = z / 4;
 
-function selectQuest(all)
-{
+function selectQuest(all) {
     pickOne = Math.floor((Math.random() * all));
     return pickOne;
 }
 
-//The Below Function will hide all the snakes
+// The Below Function will hide all the snakes.
 
 function hideAll() {
-	document.getElementById("img1").style.display = "none";
-	document.getElementById("img2").style.display = "none";
-	document.getElementById("img3").style.display = "none";
-	document.getElementById("img4").style.display = "none";
+    document.getElementById("img1").style.display = "none";
+    document.getElementById("img2").style.display = "none";
+    document.getElementById("img3").style.display = "none";
+    document.getElementById("img4").style.display = "none";
 
-	document.getElementById("lad1").style.display = "none";
-	document.getElementById("lad2").style.display = "none";
+    document.getElementById("lad1").style.display = "none";
+    document.getElementById("lad2").style.display = "none";
     document.getElementById("lad3").style.display = "none";
 }
 
-//The Below Function will Render The Main Board
+// The Below Function will Render The Main Board.
 
 function paintBoard(a) {
     totblocks = (a * a);
@@ -88,42 +87,42 @@ function paintBoard(a) {
             currentblock -= (a - 1);
         }
     } else {
-            currentblock = (a * a);
-            for (j = 0; j < (a / 2); j++) {
-                for (i = 0; i < a; i++) {
-                    data += "<div class='blocks' id='" + currentblock + "'>" + currentblock + "</div>";
-                    currentblock--;
-                }
+        currentblock = (a * a);
+        for (j = 0; j < (a / 2); j++) {
+            for (i = 0; i < a; i++) {
+                data += "<div class='blocks' id='" + currentblock + "'>" + currentblock + "</div>";
+                currentblock--;
+            }
 
-                currentblock -= (a - 1);
+            currentblock -= (a - 1);
 
-                if (currentblock < 2) {
-                    break;
-                }
+            if (currentblock < 2) {
+                break;
+            }
 
-                for (i = 0; i < a; i++) {
-                    data += "<div id='" + currentblock + "' class ='blocks'>" + currentblock + "</div>";
-                    currentblock++;
-				}
-                currentblock -= (a + 1);
-		}
-	}
+            for (i = 0; i < a; i++) {
+                data += "<div id='" + currentblock + "' class ='blocks'>" + currentblock + "</div>";
+                currentblock++;
+            }
+            currentblock -= (a + 1);
+        }
+    }
     document.getElementById("cont").style.width = (a * 52 + 52) + "px"
 
-	document.getElementById("cont").innerHTML = data;
-	$("#cont").slideDown("slow");
-	$("#cont").effect("shake",3000);
-	$("img:hidden").fadeIn(5000);
+    document.getElementById("cont").innerHTML = data;
+    $("#cont").slideDown("slow");
+    $("#cont").effect("shake",3000);
+    $("img:hidden").fadeIn(5000);
 
-	if (a == 6) {
-	    registerSnake(158, 196, "img1", 14, 3, 0);
-	    registerSnake(62, 183, "img2", 27, 24, 1);
-	    registerSnake(175, 18, "img3", 18, 4, 2);
-	    registerSnake(10, 45, "img4", 32, 23, 3);
+    if (a == 6) {
+        registerSnake(158, 196, "img1", 14, 3, 0);
+        registerSnake(62, 183, "img2", 27, 24, 1);
+        registerSnake(175, 18, "img3", 18, 4, 2);
+        registerSnake(10, 45, "img4", 32, 23, 3);
 
-	    registerLadder(27, 132, "lad1", 28, 34, 0);
-	    registerLadder(90, 22, "lad2", 19, 30, 1);
-	    registerLadder(179, 137, "lad3", 2, 16, 2);
+        registerLadder(27, 132, "lad1", 28, 34, 0);
+        registerLadder(90, 22, "lad2", 19, 30, 1);
+        registerLadder(179, 137, "lad3", 2, 16, 2);
     } else if (a == 8) {
         registerSnake(300, 380, "img1", 44, 29, 0);
         registerSnake(180, 550, "img2", 51, 46, 1);
@@ -136,98 +135,97 @@ function paintBoard(a) {
     }
 }
 
-//The below Function will simulate throwing of a dice
+// The below Function will simulate throwing of a dice.
 function throwDice(i) {
-	randomno = Math.floor((Math.random() * 6)) + 1;
-	document.getElementById("diceimg").src = "images/dice_" + randomno + ".PNG";
+    randomno = Math.floor((Math.random() * 6)) + 1;
+    document.getElementById("diceimg").src = "images/dice_" + randomno + ".PNG";
     document.getElementById("diceimg").style.display = "block";
-	if (lastposition[i] > 0) {
+    if (lastposition[i] > 0) {
         document.getElementById(lastposition[i]).style.background = "url(images/square52.png)";
-	}
-	tots[i] += randomno;
+    }
+    tots[i] += randomno;
 
-	if (totblocks - tots[i] >= 0) {
+    if (totblocks - tots[i] >= 0) {
         lastposition[i] = tots[i];
         document.getElementById(tots[i]).style.background = "url(images/pawn1.png)";
-	} else {
+    } else {
         tots[i] -= randomno;
         document.getElementById(tots[i]).style.background = "url(images/pawn1.png)";
-	}
+    }
 }
 
 // The below Function Checks The Snake Biting for a user.
 function snakescheck(k) {
-	i = 0;
+    i = 0;
 
-	for(i = 0; i <= srcsnake.length; i++) {
-		if (srcsnake[i] == tots[k]) {
-			alert("Ωχ! Σε τσίμπησε φίδι στο τετράγωνο " + srcsnake[i] + " και θα πρέπει να γυρίσεις στο τετράγωνο " + destsnake[i] + ", εκτός κι αν απαντήσεις σωστά στην ερώτηση που ακολουθεί.");
-			document.getElementById(destsnake[i]).style.background = "url(images/pawn1.png)";
-			document.getElementById(tots[k]).style.background = "url(images/square52.png)";
-			lastposition[k] = destsnake[i];
-			tots[k] = destsnake[i];
-			break;
-		}
-	}
+    for(i = 0; i <= srcsnake.length; i++) {
+        if (srcsnake[i] == tots[k]) {
+            alert("Ωχ! Σε τσίμπησε φίδι στο τετράγωνο " + srcsnake[i] + " και θα πρέπει να γυρίσεις στο τετράγωνο " + destsnake[i] + ", εκτός κι αν απαντήσεις σωστά στην ερώτηση που ακολουθεί.");
+            document.getElementById(destsnake[i]).style.background = "url(images/pawn1.png)";
+            document.getElementById(tots[k]).style.background = "url(images/square52.png)";
+            lastposition[k] = destsnake[i];
+            tots[k] = destsnake[i];
+            break;
+        }
+    }
 
     if (!checkWin(k)) {
-		alert("???d?se?!S???a??t???a!");
+        alert("???d?se?!S???a??t???a!");
     }
 }
 
-//The below function checks the ladders for a user
+// The below function checks the ladders for a user.
 function laddercheck(k) {
-	i = 0;
+    i = 0;
 
-	for(i = 0; i <= ladsrc.length; i++) {
-		if (ladsrc[i] == tots[k]) {
+    for(i = 0; i <= ladsrc.length; i++) {
+        if (ladsrc[i] == tots[k]) {
             alert("Υπάρχει μια σκάλα στο τετράγωνο " + ladsrc[i] + " και θα σας οδηγήσει κατευθείαν στο τετράγωνο " + laddest[i] + "αν απαντήσεις σωστά στην ερώτηση που ακολουθεί.");
-			document.getElementById(laddest[i]).style.background = "url(images/pawn1.png)";
-			document.getElementById(tots[k]).style.background = "url(images/square52.png)";
-			lastposition[k] = laddest[i];
-			tots[k] = laddest[i];
-			break;
-		}
-	}
-	if(!checkWin(k)) {
-		alert("You have won!");
+            document.getElementById(laddest[i]).style.background = "url(images/pawn1.png)";
+            document.getElementById(tots[k]).style.background = "url(images/square52.png)";
+            lastposition[k] = laddest[i];
+            tots[k] = laddest[i];
+            break;
+        }
+    }
+    if(!checkWin(k)) {
+        alert("You have won!");
     }
 }
 
-//The below Function checks for pythons
+// The below Function checks for pythons.
 
 function pythoncheck(k) {
     i = 0;
 
-	for (i = 0; i < pythons.length; i++) {
-
-		if (pythons[i] == tots[k]) {
-			alert("You have been eaten up by a python.Your game is over");
-			document.getElementById(tots[k]).style.background = "url(images/csnake.gif) #000000";
-			lastposition[k] = null;
-			tots[k] = null;
-			break;
-		}
-	}
+    for (i = 0; i < pythons.length; i++) {
+        if (pythons[i] == tots[k]) {
+            alert("You have been eaten up by a python.Your game is over");
+            document.getElementById(tots[k]).style.background = "url(images/csnake.gif) #000000";
+            lastposition[k] = null;
+            tots[k] = null;
+            break;
+        }
+    }
 }
 
 // The below function will register a snake.
 function registerSnake(tp, lft, dv, src, dest, i) {
-	document.getElementById(dv).style.top = tp + "px";
-	document.getElementById(dv).style.left = lft + "px";
-	srcsnake[i] = src;
-	destsnake[i] = dest;
+    document.getElementById(dv).style.top = tp + "px";
+    document.getElementById(dv).style.left = lft + "px";
+    srcsnake[i] = src;
+    destsnake[i] = dest;
 }
 
-// The below function will register a ladder..
+// The below function will register a ladder.
 function registerLadder(tp, lft, dv, src, dest, i) {
-	document.getElementById(dv).style.top = tp + "px";
-	document.getElementById(dv).style.left = lft + "px";
-	ladsrc[i] = src;
-	laddest[i] = dest;
+    document.getElementById(dv).style.top = tp + "px";
+    document.getElementById(dv).style.left = lft + "px";
+    ladsrc[i] = src;
+    laddest[i] = dest;
 }
 
-//The below function checks the change in the boardtype selection combobox
+// The below function checks the change in the boardtype selection combobox.
 function selectBoard() {
     totblocks = 0;
     data = "";
@@ -244,24 +242,24 @@ function selectBoard() {
 function selectPlayer() {
     if (document.getElementById("players").value != null) {
         user[document.getElementById("players").value - 1] = 0;
-		tots[document.getElementById("players").value - 1] = 0;
-		lastposition[document.getElementById("players").value - 1] = 0;
-		for(var j = 0; j < lastposition.length; j++) {
+        tots[document.getElementById("players").value - 1] = 0;
+        lastposition[document.getElementById("players").value - 1] = 0;
+        for(var j = 0; j < lastposition.length; j++) {
             lastposition[j] = 0;
             tots[j] = 0;
-		}
-	}
+        }
+    }
 }
 
 // The below function starts the play.
 function play() {
-	if (tots[l] != null) {
+    if (tots[l] != null) {
         disableField();
         document.getElementById("status").innerHTML = "<ul class='nodis'><li>O Paiktis " + (l + 1) + " </li><li>brisketai sto tetragwno " + tots[l] + "</li><li></li></ul>";
 
         Question();
         document.getElementById("status").innerHTML = "<ul class='nodis'><li>O Paiktis " + (l + 1) + " </li><li>vrisketai sto tetragwno " + tots[l] + "</li></ul>";
-	} else {
+    } else {
         document.getElementById("status").innerHTML = "<ul class='nodis'><li>Molis exases...</li></ul>";
     }
 
@@ -277,7 +275,7 @@ function doit(i) {
     throwDice(i);
     if (checkWin(i)) {
         snakescheck(i);
-		laddercheck(i);
+        laddercheck(i);
     } else {
         alert("ÏëïêëÞñùóåò ôçí ðßóôá, óõã÷áñçôÞñéá!!!");
     }
@@ -285,7 +283,7 @@ function doit(i) {
 
 // The below function checks whether the player has won or not.
 function checkWin(i) {
-	if( tots[i] == totblocks) {
+    if( tots[i] == totblocks) {
         return false;
     } else {
         return true;
@@ -294,8 +292,8 @@ function checkWin(i) {
 
 // The below function will disable both the combobox .
 function disableField() {
-	document.getElementById("players").disabled = "disabled";
-	document.getElementById("boardtype").disabled = "disabled";
+    document.getElementById("players").disabled = "disabled";
+    document.getElementById("boardtype").disabled = "disabled";
 }
 
 function Question() {
@@ -312,6 +310,6 @@ function Question() {
         WRO_answered.concat(quest.splice(picked * 4, 4));
     }
 
-    // Remove question and answers from available questions - (thus not allowing to have a Repeated question) ---XOXOXO
+    // Remove question and answers from available questions - (thus not allowing to have a Repeated question).
     allQuest--;
 }

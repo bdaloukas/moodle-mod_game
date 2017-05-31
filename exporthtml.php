@@ -14,12 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * This page export the game to html for games: cross, hangman
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once( "locallib.php");
 require_once( "exportjavame.php");

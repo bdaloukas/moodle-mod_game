@@ -14,6 +14,8 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+defined('MOODLE_INTERNAL') || die();
+
 $DB->execute( "INSERT INTO {game_sudoku_database}( level, opened, data) VALUES (1, 26, ".
     "'A73IEDB8642I16875CF85237A94539712D6HBGFC849158415FI3G28913BE64GFDB89753175C41692H')");
 $DB->execute( "INSERT INTO {game_sudoku_database}( level, opened, data) VALUES (1, 29, ".

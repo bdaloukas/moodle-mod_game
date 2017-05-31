@@ -16,7 +16,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
+/*
  * Capability definitions for the game module.
  *
  * For naming conventions, see lib/db/access.php.

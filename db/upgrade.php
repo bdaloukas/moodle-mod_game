@@ -33,6 +33,8 @@
  * before any action that may take longer time to finish.
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 function xmldb_game_upgrade($oldversion) {
 
     global $CFG, $DB;
@@ -1544,15 +1546,14 @@ function xmldb_game_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, $ver, 'game');
     }
-    
-    if ($oldversion < ($ver = 2016062603)) {  
+
+    if ($oldversion < ($ver = 2016062603)) {
         $table = new xmldb_table('game_cross');
         $field = new xmldb_field('createscore', XMLDB_TYPE_FLOAT, null, null, null, null, '0');
 
-        // Launch change of type for field thisfield
+        // Launch change of type for field thisfield.
         $dbman->change_field_type($table, $field);
     }
-    
-    
+
     return true;
 }

@@ -352,7 +352,7 @@ if (document.getElementById("waitmessage") != null)
     for (var x = 0; x < CrosswordWidth; x++){ 
         TableDownWord[x] = new Array(CrosswordHeight);
     }
-	
+
     GuessLeter = new Array(CrosswordWidth);
     for (var x = 0; x < CrosswordWidth; x++) {
         GuessLeter[x] = new Array(CrosswordHeight);
@@ -368,14 +368,14 @@ if (document.getElementById("waitmessage") != null)
             solu[ x][ y] = "";
         }
     }
-	
+
     for (var y = 0; y < CrosswordHeight; y++) {
         for (var x = 0; x < CrosswordWidth; x++) {
             TableAcrossWord[x][y] = -1;
             TableDownWord[x][y] = -1;
         }
-	}
-	// First, add the horizontal words to the puzzle.
+    }
+    // First, add the horizontal words to the puzzle.
     for (var i = 0; i <= LastHorizontalWord; i++) {
         x = WordX[i];
         y = WordY[i];
@@ -395,7 +395,7 @@ if (document.getElementById("waitmessage") != null)
             solu[ x+j][ y] = c;
         }
     }
-	
+
     // Second, add the vertical words to the puzzle.
     for (var i = LastHorizontalWord + 1; i < Words; i++) {
         x = WordX[i];
@@ -416,12 +416,12 @@ if (document.getElementById("waitmessage") != null)
             solu[ x][ y+j] = c;
         }
     }
-	
+
     document.writeln("<tr><td></td>");
     for (var x = 0; x < CrosswordWidth; x++) {
         document.write("<td align=center>" + (x+1) + " </td>");    //col numbers
     }
-		
+
     // Now, insert the row HTML into the table.
     for (var y = 0; y < CrosswordHeight; y++) {
         document.writeln("<tr>");
@@ -447,11 +447,11 @@ if (document.getElementById("waitmessage") != null)
         }
         document.writeln("</tr>");
     }
-	
+
     // Finally, show the crossword and hide the wait message.
     Initialized = true;
     document.getElementById("waitmessage").style.display = "none";
-    document.getElementById("crossword").style.display = "block";	
+    document.getElementById("crossword").style.display = "block";
 }
 
 // ----------
@@ -460,315 +460,319 @@ if (document.getElementById("waitmessage") != null)
 // Raised when a key is pressed in the word entry box.
 function WordEntryKeyPress(event)
 {
-	if (CrosswordFinished) return;
-	// Treat an Enter keypress as an OK click.
-	if (CurrentWord >= 0 && event.keyCode == 13) OKClick();
+    if (CrosswordFinished) return;
+    // Treat an Enter keypress as an OK click.
+    if (CurrentWord >= 0 && event.keyCode == 13) OKClick();
 }
 
 // ----------
 // Helper functions
 
 // Returns true if the string passed in contains any characters prone to evil.
-function ContainsBadChars(theirWord)
-{return false;
-	for (var i = 0; i < theirWord.length; i++)
-		if (BadChars.indexOf(theirWord.charAt(i)) >= 0) return true;
-	return false;
+function ContainsBadChars(theirWord) {
+    return false;
+
+    for (var i = 0; i < theirWord.length; i++) {
+        if (BadChars.indexOf(theirWord.charAt(i)) >= 0) return true;
+    }
+    return false;
 }
 
 // Pads a number out to three characters.
-function PadNumber(number)
-{
-	if (number < 10)
-		return "00" + number;
-	else if (number < 100)
-		return "0" + number;
-	else
-		return "" +  number;
+function PadNumber(number) {
+    if (number < 10) }
+        return "00" + number;
+    } else if (number < 100) {
+        return "0" + number;
+    } else {
+        return "" +  number;
+    }
 }
 
 // Returns the table cell at a particular pair of coordinates.
-function CellAt(x, y)
-{
-	return document.getElementById("c" + PadNumber(x) + PadNumber(y));
+function CellAt(x, y) {
+    return document.getElementById("c" + PadNumber(x) + PadNumber(y));
 }
 
 // Deselects the current word, if there's a word selected.  DOES not change the value of CurrentWord.
-function DeselectCurrentWord()
-{
-	if (CurrentWord < 0) return;
-	var x, y, i;
-	
-	document.getElementById("answerbox").style.display = "none";
-	document.getElementById("answerbox2").style.display = "none";
-	ChangeCurrentWordSelectedStyle(false);
-	CurrentWord = -1;
-	
+function DeselectCurrentWord() {
+    if (CurrentWord < 0) {
+        return;
+    }
+
+    var x, y, i;
+
+    document.getElementById("answerbox").style.display = "none";
+    document.getElementById("answerbox2").style.display = "none";
+    ChangeCurrentWordSelectedStyle( false);
+    CurrentWord = -1;
 }
 
 // Changes the style of the cells in the current word.
-function ChangeWordStyle(WordNumber, NewStyle)
-{
-	if (WordNumber< 0) return;
-	var x = WordX[WordNumber];
-	var y = WordY[WordNumber];
-	
-	if (WordNumber<= LastHorizontalWord)
-		for (i = 0; i < WordLength[WordNumber]; i++)
-			CellAt(x + i, y).className = NewStyle;
-	else
-		for (i = 0; i < WordLength[WordNumber]; i++)
-			CellAt(x, y + i).className = NewStyle;
+function ChangeWordStyle(WordNumber, NewStyle) {
+    if (WordNumber< 0) {
+        return;
+    }
+    var x = WordX[WordNumber];
+    var y = WordY[WordNumber];
+
+    if (WordNumber<= LastHorizontalWord) {
+        for (i = 0; i < WordLength[WordNumber]; i++) {
+            CellAt(x + i, y).className = NewStyle;
+        }        
+    } else {
+        for (i = 0; i < WordLength[WordNumber]; i++) {
+            CellAt(x, y + i).className = NewStyle;
+        }
+    }
 }
 
 // Changes the style of the cells in the current word between the selected/unselected form.
-function ChangeCurrentWordSelectedStyle(IsSelected)
-{
-	if (CurrentWord < 0) return;
-	var x = WordX[CurrentWord];
-	var y = WordY[CurrentWord];
-	
-	if (CurrentWord <= LastHorizontalWord)
-		for (i = 0; i < WordLength[CurrentWord]; i++)
-			CellAt(x + i, y).className = CellAt(x + i, y).className.replace(IsSelected ? "_unsel" : "_sel", IsSelected ? "_sel" : "_unsel");
-	else
-		for (i = 0; i < WordLength[CurrentWord]; i++)
-			CellAt(x, y + i).className = CellAt(x, y + i).className.replace(IsSelected ? "_unsel" : "_sel", IsSelected ? "_sel" : "_unsel");
+function ChangeCurrentWordSelectedStyle(IsSelected) {
+    if (CurrentWord < 0) {
+        return;
+    }
+    var x = WordX[CurrentWord];
+    var y = WordY[CurrentWord];
+
+    if (CurrentWord <= LastHorizontalWord) {
+        for (i = 0; i < WordLength[CurrentWord]; i++) {
+            CellAt(x + i, y).className = CellAt(x + i, y).className.
+            replace(IsSelected ? "_unsel" : "_sel", IsSelected ? "_sel" : "_unsel");
+        }
+    } else {
+        for (i = 0; i < WordLength[CurrentWord]; i++) {
+            CellAt(x, y + i).className = CellAt(x, y + i).className.
+            replace(IsSelected ? "_unsel" : "_sel", IsSelected ? "_sel" : "_unsel");
+        }
+    }
 }
 
 // Selects the new word by parsing the name of the TD element referenced by the 
 // event object, and then applying styles as necessary.
-function SelectThisWord(event)
-{
-	if (CrosswordFinished) return;
-	var x, y, i, TheirWord, TableCell;
-	
-	// Deselect the previous word if one was selected.
-	document.getElementById("welcomemessage").style.display = "none";
-	if (CurrentWord >= 0) OKClick();
-	DeselectCurrentWord();
-	
-	// Determine the coordinates of the cell they clicked, and then the word that
-	// they clicked.
-	var target = (event.srcElement ? event.srcElement: event.target);
-	x = parseInt(target.id.substring(1, 4), 10);
-	y = parseInt(target.id.substring(4, 7), 10);
-	
-	// If they clicked an intersection, choose the type of word that was NOT selected last time.
-	if (TableAcrossWord[x][y] >= 0 && TableDownWord[x][y] >= 0)
-		CurrentWord = PrevWordHorizontal ? TableDownWord[x][y] : TableAcrossWord[x][y];
-	else if (TableAcrossWord[x][y] >= 0)
-		CurrentWord = TableAcrossWord[x][y];
-	else if (TableDownWord[x][y] >= 0)
-		CurrentWord = TableDownWord[x][y];
+function SelectThisWord(event) {
+    if (CrosswordFinished) {
+        return;
+    }
+    var x, y, i, TheirWord, TableCell;
 
-	PrevWordHorizontal = (CurrentWord <= LastHorizontalWord);
-	
-	// Now, change the style of the cells in this word.
-	ChangeCurrentWordSelectedStyle(true);
-	
-	// Then, prepare the answer box.
-	x = WordX[CurrentWord];
-	y = WordY[CurrentWord];
-	TheirWord = "";
-	var TheirWordLength = 0;
-	for (i = 0; i < WordLength[CurrentWord]; i++)
-	{
-		// Find the appropriate table cell.
-		if (CurrentWord <= LastHorizontalWord)
-			TableCell = CellAt(x + i, y);
-		else
-			TableCell = CellAt(x, y + i);
-		// Add its contents to the word we're building.
+    // Deselect the previous word if one was selected.
+    document.getElementById("welcomemessage").style.display = "none";
+    if (CurrentWord >= 0) {
+        OKClick();
+    }
+    DeselectCurrentWord();
+
+    // Determine the coordinates of the cell they clicked, and then the word that
+    // they clicked.
+    var target = (event.srcElement ? event.srcElement: event.target);
+    x = parseInt(target.id.substring(1, 4), 10);
+    y = parseInt(target.id.substring(4, 7), 10);
+
+    // If they clicked an intersection, choose the type of word that was NOT selected last time.
+    if (TableAcrossWord[x][y] >= 0 && TableDownWord[x][y] >= 0) {
+        CurrentWord = PrevWordHorizontal ? TableDownWord[x][y] : TableAcrossWord[x][y];
+    } else if (TableAcrossWord[x][y] >= 0) {
+        CurrentWord = TableAcrossWord[x][y];
+    } else if (TableDownWord[x][y] >= 0) {
+        CurrentWord = TableDownWord[x][y];
+    }
+
+    PrevWordHorizontal = (CurrentWord <= LastHorizontalWord);
+
+    // Now, change the style of the cells in this word.
+    ChangeCurrentWordSelectedStyle(true);
+
+    // Then, prepare the answer box.
+    x = WordX[CurrentWord];
+    y = WordY[CurrentWord];
+    TheirWord = "";
+    var TheirWordLength = 0;
+    for (i = 0; i < WordLength[CurrentWord]; i++) {
+        // Find the appropriate table cell.
+        if (CurrentWord <= LastHorizontalWord) {
+            TableCell = CellAt(x + i, y);
+        } else {
+            TableCell = CellAt(x, y + i);
+        }
+        // Add its contents to the word we're building.
         if (TableCell.innerHTML != null && TableCell.innerHTML.length > 0 &&
             TableCell.innerHTML != " " && TableCell.innerHTML.toLowerCase() != "&nbsp;") {
-			TheirWord += TableCell.innerHTML.toUpperCase();
-			TheirWordLength++;
-		} else {
-			TheirWord += "&bull;";
-		}
-	}
+            TheirWord += TableCell.innerHTML.toUpperCase();
+            TheirWordLength++;
+        } else {
+            TheirWord += "&bull;";
+        }
+    }
 
-	document.getElementById("wordlabel").innerHTML = TheirWord;
-<?php 
-    $msg = "\"".get_string( 'cross_across', 'game').", \" : \"".
-        get_string( 'cross_down', 'game').", \"";
-    $letters = "\" ".get_string( 'letter', 'game').".\" : \" ".
-        get_string( 'letters', 'game').".\"";
-?>
+    document.getElementById("wordlabel").innerHTML = TheirWord;
+    <?php
+    $msg = "\"".get_string( 'cross_across', 'game').", \" : \"".get_string( 'cross_down', 'game').", \"";
+    $letters = "\" ".get_string( 'letter', 'game').".\" : \" ".get_string( 'letters', 'game').".\"";
+    ?>
     var s = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>);
     s = s + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
     document.getElementById("wordinfo").innerHTML = s;
 
-	document.getElementById("wordclue").innerHTML = Clue[CurrentWord];
-	document.getElementById("worderror").style.display = "none";
-	//document.getElementById("cheatbutton").style.display = (Word.length == 0) ? "none" : "";
-	if (TheirWordLength == WordLength[CurrentWord])
-		document.getElementById("wordentry").value = TheirWord;
-	else
-		document.getElementById("wordentry").value = "";
-	
-	// Finally, show the answer box.
-	document.getElementById("answerbox").style.display = "block";
-	document.getElementById("answerbox2").style.display = "block";
-	try
-	{
-		document.getElementById("wordentry").focus();
-		document.getElementById("wordentry").select();
-	}
-	catch (e)
-	{
-	}
-	
+    document.getElementById("wordclue").innerHTML = Clue[CurrentWord];
+    document.getElementById("worderror").style.display = "none";
+
+    if (TheirWordLength == WordLength[CurrentWord]) {
+        document.getElementById("wordentry").value = TheirWord;
+    } else {
+        document.getElementById("wordentry").value = "";
+    }
+
+    // Finally, show the answer box.
+    document.getElementById("answerbox").style.display = "block";
+    document.getElementById("answerbox2").style.display = "block";
+    try {
+        document.getElementById("wordentry").focus();
+        document.getElementById("wordentry").select();
+    }
+    catch (e) {
+    }
 }
 
 // Called when the user clicks the OK link.
-function OKClick()
-{
-	var TheirWord, x, y, i, TableCell;
-	if (CrosswordFinished) return;
-	if (document.getElementById("okbutton").disabled) return;
-	
-	// First, validate the entry.
-	TheirWord = document.getElementById("wordentry").value.toUpperCase();
-	if (TheirWord.length == 0)
-	{
-		DeselectCurrentWord();
-		return;
-	}
-	if (ContainsBadChars(TheirWord))
-	{
-		document.getElementById("worderror").innerHTML = "<?php echo get_string( 'cross_error_containsbadchars', 'game');?>";
-		document.getElementById("worderror").style.display = "block";
-		return;
-	}
-	if (TheirWord.length < WordLength[CurrentWord])
-	{
+function OKClick() {
+    var TheirWord, x, y, i, TableCell;
+    if (CrosswordFinished) {
+        return;
+    }
+    if (document.getElementById("okbutton").disabled) {
+        return;
+    }
+
+    // First, validate the entry.
+    TheirWord = document.getElementById("wordentry").value.toUpperCase();
+    if (TheirWord.length == 0) {
+        DeselectCurrentWord();
+        return;
+    }
+    if (ContainsBadChars(TheirWord)) {
+        document.getElementById("worderror").innerHTML = "<?php echo get_string( 'cross_error_containsbadchars', 'game');?>";
+        document.getElementById("worderror").style.display = "block";
+        return;
+    }
+    if (TheirWord.length < WordLength[CurrentWord]) {
         var s = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>";
         s = s + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
         document.getElementById("worderror").innerHTML  = s;
-		document.getElementById("worderror").style.display = "block";
-		return;
-	}
-	if (TheirWord.length > WordLength[CurrentWord])
-	{
+        document.getElementById("worderror").style.display = "block";
+        return;
+    }
+    if (TheirWord.length > WordLength[CurrentWord]) {
         var s = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>";
         s = s + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
         document.getElementById("worderror").innerHTML = s;
-		document.getElementById("worderror").style.display = "block";
-		return;
-	}
-	
-	// If we made it this far, they typed an acceptable word, so add these letters to the puzzle and hide the entry box.
-	x = WordX[CurrentWord];
-	y = WordY[CurrentWord];
-	for (i = 0; i < TheirWord.length; i++)
-	{
-		TableCell = CellAt(x + (CurrentWord <= LastHorizontalWord ? i : 0), y + (CurrentWord > LastHorizontalWord ? i : 0));
-		TableCell.innerHTML = TheirWord.substring(i, i + 1);
-	}
-	DeselectCurrentWord();
+        document.getElementById("worderror").style.display = "block";
+        return;
+    }
+
+    // If we made it this far, they typed an acceptable word, so add these letters to the puzzle and hide the entry box.
+    x = WordX[CurrentWord];
+    y = WordY[CurrentWord];
+    for (i = 0; i < TheirWord.length; i++) {
+        TableCell = CellAt(x + (CurrentWord <= LastHorizontalWord ? i : 0), y + (CurrentWord > LastHorizontalWord ? i : 0));
+        TableCell.innerHTML = TheirWord.substring(i, i + 1);
+    }
+    DeselectCurrentWord();
 }
 
-<?php 
-    if ($showhtmlsolutions == false) {
+<?php
+if ($showhtmlsolutions == false) {
 ?>
-function PackPuzzle( sData)
-{
-  var i;
-  var s;
-  var s2;
-  var n;
-  var j;
-  
-  s = "";
-  len = sData.length;
-  for(i=0; i < len; i++)
-  {
-    c = sData.charAt( i);
-    if( (c > "0") && (c <= "9"))
-    {
-        s = s.concat( '/');
+function PackPuzzle( sData) {
+    var i, s, s2, n, j;
+
+    s = "";
+    len = sData.length;
+    for(i=0; i < len; i++) {
+        c = sData.charAt( i);
+        if( (c > "0") && (c <= "9")) {
+            s = s.concat( '/');
+        }
+        s = s.concat( c);
     }
-    s = s.concat( c);
-  }
 
-  for(;;)
-  {
-    i = s.indexOf( "__");
-    if( i == -1)
-      break;
-    len = s.length;
+    for(;;) {
+        i = s.indexOf( "__");
+        if( i == -1) {
+            break;
+        }
+        len = s.length;
 
-    for( j=i ; j < len; j++)
-    {
-      if( s.charAt( j) != "_")
-        break;
+        for( j=i ; j < len; j++) {
+            if( s.charAt( j) != "_") {
+                break;
+            }
+        }
+        n = j - i;
+        s2 = s.substr( 0, i);
+        s2 = s2.concat( n);
+        s = s2.concat( s.substr( j));
     }
-    n = j - i;
-    s2 = s.substr( 0, i);
-    s2 = s2.concat( n);
-    s = s2.concat( s.substr( j));
-  }
 
-  return encodeURIComponent( s);
+    return encodeURIComponent( s);
 }
 
 // Called when the "check server" link is clicked.
-function CheckServerClick( endofgame)
-{
-	var i, j, x, y, UserEntry, ErrorsFound = 0, EmptyFound = 0, TableCell;
-	if (CrosswordFinished)
-    return;
-	DeselectCurrentWord();
-	
-	for (y = 0; y < CrosswordHeight; y++)
-	for (x = 0; x < CrosswordWidth; x++)
-	{
-		if (TableAcrossWord[x][y] >= 0 || TableDownWord[x][y] >= 0)
-		{
-			TableCell = CellAt(x, y);
-			if (TableCell.className == "box boxerror_unsel")
-        TableCell.className = "box boxnormal_unsel";
-		}
-	}
-		
-	sData = "";
-	for (i = 0; i < Words; i++)
-	{
-		// Get the user's entry for this word.
-		UserEntry = "";
-		for (j = 0; j < WordLength[i]; j++)
-		{
-			if (i <= LastHorizontalWord)
-				TableCell = CellAt(WordX[i] + j, WordY[i]);
-			else
-				TableCell = CellAt(WordX[i], WordY[i] + j);
-			if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;")
-				UserEntry += TableCell.innerHTML.toUpperCase();
-			else if( TableCell.innerHTML.toLowerCase() == "&nbsp;")
-			    UserEntry += " ";
-			else
-				UserEntry += "_";
-		}
-		sData += UserEntry;
-	}
+function CheckServerClick( endofgame) {
+    var i, j, x, y, UserEntry, ErrorsFound = 0, EmptyFound = 0, TableCell;
+    if (CrosswordFinished) {
+        return;
+    }
+    DeselectCurrentWord();
 
-	sData = PackPuzzle( sData);
-	
-	if( endofgame)
-		sData += "&finishattempt=1";
-	
-<?php
-        if ($onlyshow == false) {
-            global $CFG;
-            $params = 'id='.$id.'&action=crosscheck&g=';
-            echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
+    for (y = 0; y < CrosswordHeight; y++)  {
+        for (x = 0; x < CrosswordWidth; x++) {
+            if (TableAcrossWord[x][y] >= 0 || TableDownWord[x][y] >= 0) {
+                TableCell = CellAt(x, y);
+                if (TableCell.className == "box boxerror_unsel") {
+                    TableCell.className = "box boxnormal_unsel";
+                }
+            }
         }
-?>
+    }
+
+    sData = "";
+    for (i = 0; i < Words; i++) {
+        // Get the user's entry for this word.
+        UserEntry = "";
+        for (j = 0; j < WordLength[i]; j++) {
+            if (i <= LastHorizontalWord) {
+                TableCell = CellAt(WordX[i] + j, WordY[i]);
+            } else {
+                TableCell = CellAt(WordX[i], WordY[i] + j);
+            }
+            if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;") {
+                UserEntry += TableCell.innerHTML.toUpperCase();
+            } else if( TableCell.innerHTML.toLowerCase() == "&nbsp;") {
+                UserEntry += " ";
+            } else {
+                UserEntry += "_";
+            }
+        }
+        sData += UserEntry;
+    }
+
+    sData = PackPuzzle( sData);
+
+    if( endofgame) {
+        sData += "&finishattempt=1";
+    }
+
+    <?php
+    if ($onlyshow == false) {
+        global $CFG;
+        $params = 'id='.$id.'&action=crosscheck&g=';
+        echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
+    }
+    ?>
 }
 <?php
-    }
+}
 ?>
 
 function OnPrint()
@@ -781,13 +785,12 @@ function OnPrint()
 }
 
 <?php
-    if ($showhtmlprintbutton) {
+if ($showhtmlprintbutton) {
 ?>
-    function PrintHtmlClick()
-    {
-    	document.getElementById("printhtmlbutton").style.display = "none";
-    	
-    	<?php
+    function PrintHtmlClick() {
+        document.getElementById("printhtmlbutton").style.display = "none";
+
+        <?php
         if ($showhtmlsolutions) {
             ?> document.getElementById("checkhtmlbutton").style.display = "none"; <?php
         }
@@ -798,14 +801,14 @@ function OnPrint()
             ?> document.getElementById("checkhtmlbutton").style.display = "block"; <?php
         }
         ?>
-    	document.getElementById("printhtmlbutton").style.display = "block";	
+        document.getElementById("printhtmlbutton").style.display = "block";
     }
 <?php
-    }
+}
 ?>
 
 <?php
-    if ($showhtmlprintbutton) {
+if ($showhtmlprintbutton) {
 ?>
 
 /**
@@ -817,112 +820,104 @@ function OnPrint()
  
 var Base64 = {
  
-	// private property
-	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
- 
-	// public method for decoding
-	decode : function (input) {
-		var output = "";
-		var chr1, chr2, chr3;
-		var enc1, enc2, enc3, enc4;
-		var i = 0;
- 
-		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
- 
-		while (i < input.length) {
- 
-			enc1 = this._keyStr.indexOf(input.charAt(i++));
-			enc2 = this._keyStr.indexOf(input.charAt(i++));
-			enc3 = this._keyStr.indexOf(input.charAt(i++));
-			enc4 = this._keyStr.indexOf(input.charAt(i++));
- 
-			chr1 = (enc1 << 2) | (enc2 >> 4);
-			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);bgColor = "Black";
-			chr3 = ((enc3 & 3) << 6) | enc4;
- 
-			output = output + String.fromCharCode(chr1);
- 
-			if (enc3 != 64) {
-				output = output + String.fromCharCode(chr2);
-			}
-			if (enc4 != 64) {
-				output = output + String.fromCharCode(chr3);
-			}
- 		}
- 
-		output = Base64._utf8_decode(output);
- 
-		return output;
- 
-	}, 
- 
-	// private method for UTF-8 decoding
-	_utf8_decode : function (utftext) {
-		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
-		while ( i < utftext.length ) {
-			c = utftext.charCodeAt(i);
- 
-			if (c < 128) {
-				string += String.fromCharCode(c);
-				i++;
-			}
-			else if((c > 191) && (c < 224)) {
-				c2 = utftext.charCodeAt(i+1);
-				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-				i += 2;
-			}
-			else {
-				c2 = utftext.charCodeAt(i+1);
-				c3 = utftext.charCodeAt(i+2);
-				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-				i += 3;
-			}
- 
-		}
- 
-		return string;
-	}
- 
+    // private property
+    _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+    // public method for decoding
+    decode : function (input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+        while (i < input.length) {
+            enc1 = this._keyStr.indexOf(input.charAt(i++));
+            enc2 = this._keyStr.indexOf(input.charAt(i++));
+            enc3 = this._keyStr.indexOf(input.charAt(i++));
+            enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);bgColor = "Black";
+            chr3 = ((enc3 & 3) << 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        output = Base64._utf8_decode(output);
+
+        return output;
+
+    }, 
+
+    // private method for UTF-8 decoding
+    _utf8_decode : function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+        while ( i < utftext.length ) {
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            } else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            } else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+
+        return string;
+    }
 }
 
 // Called when the "checkhtml" link is clicked.
-function CheckHtmlClick()
-{
-	var i, TableCell, UserEntry, sData, solution;
-		
-	sData = "";
-	for (i = 0; i < Words; i++)
-	{
-	    solution = Base64.decode( HtmlSolutions[ i]);
-		// Get the user's entry for this word.
-		UserEntry = "";
-		for (j = 0; j < WordLength[i]; j++)
-		{
-			if (i <= LastHorizontalWord)
-				TableCell = CellAt(WordX[i] + j, WordY[i]);
-			else
-				TableCell = CellAt(WordX[i], WordY[i] + j);
-			if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;")
-				UserEntry += TableCell.innerHTML.toUpperCase();
-			else if( TableCell.innerHTML.toLowerCase() == "&nbsp;")
-			    UserEntry += " ";
-			else
-				UserEntry += "_";
-				
-			if( UserEntry[ j] != solution[ j])
-			{
-			    TableCell.innerHTML = "&nbsp;";
-			}
-		}
+function CheckHtmlClick() {
+    var i, TableCell, UserEntry, sData, solution;
 
-	}
+    sData = "";
+    for (i = 0; i < Words; i++) {
+        solution = Base64.decode( HtmlSolutions[ i]);
+        // Get the user's entry for this word.
+        UserEntry = "";
+        for (j = 0; j < WordLength[i]; j++) {
+            if (i <= LastHorizontalWord) {
+                TableCell = CellAt(WordX[i] + j, WordY[i]);
+            } else {
+                TableCell = CellAt(WordX[i], WordY[i] + j);
+            }
+            if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;") {
+                UserEntry += TableCell.innerHTML.toUpperCase();
+            } else if( TableCell.innerHTML.toLowerCase() == "&nbsp;") {
+                UserEntry += " ";
+            } else {
+                UserEntry += "_";
+            }
+
+            if( UserEntry[ j] != solution[ j]) {
+                TableCell.innerHTML = "&nbsp;";
+            }
+        }
+    }
 }
 <?php
-    }
+}
 
-    if ($showhtmlsolutions) {
+if ($showhtmlsolutions) {
 ?>
     function decodeutf8(utftext) {
         var string = "";
@@ -954,7 +949,7 @@ function CheckHtmlClick()
         return string;
     }
 <?php
-    }
+}
 ?>
 
 //-->
@@ -962,92 +957,91 @@ function CheckHtmlClick()
 
 </table></td>
 
-<?php 
-    if ($game->param3 == 2) {
-        echo '<td>&nbsp &nbsp &nbsp</td>';
-        game_cross_show_legends( $cross);
-    } else {
-        game_cross_show_welcome( $game);
-    }
+<?php
+if ($game->param3 == 2) {
+    echo '<td>&nbsp &nbsp &nbsp</td>';
+    game_cross_show_legends( $cross);
+} else {
+    game_cross_show_welcome( $game);
+}
 ?>
 
 </tr></table>
 
-<?php 
-    if ($onlyshow == false) {
-        echo '<div style="margin-top: 1em;">';
+<?php
+if ($onlyshow == false) {
+    echo '<div style="margin-top: 1em;">';
 
-        echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.
-            get_string( 'cross_checkbutton', 'game');
+    echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.
+    get_string( 'cross_checkbutton', 'game');
+    echo '</button>';
+
+    echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
+    ' type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
+    get_string( 'cross_endofgamebutton', 'game');
+    echo '</button>';
+    if ($game->param5 == 1 or $game->param5 == null) {
+        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" '.
+        ' onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
         echo '</button>';
-
-        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
-            ' type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
-            get_string( 'cross_endofgamebutton', 'game');
-        echo '</button>';
-        if ($game->param5 == 1 or $game->param5 == null) {
-            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" '.
-                ' onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
-            echo '</button>';
-        }
-
-        echo "</div>\r\n";
     }
 
-    if ($showhtmlsolutions or $showhtmlprintbutton) {
-        echo '<br>';
-    }
+    echo "</div>\r\n";
+}
 
+if ($showhtmlsolutions or $showhtmlprintbutton) {
+    echo '<br>';
+}
+
+if ($showhtmlsolutions) {
+    echo '<button id="checkhtmlbutton" type="button" '.
+    ' onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
+    echo '</button>';
+}
+
+if ($showhtmlprintbutton) {
     if ($showhtmlsolutions) {
-        echo '<button id="checkhtmlbutton" type="button" '.
-            ' onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
-        echo '</button>';
+        echo "&nbsp;&nbsp;&nbsp;&nbsp;";
     }
+    echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick( 0);" visible=true>'.get_string( 'print', 'game');
+    echo '</button>';
+}
 
-    if ($showhtmlprintbutton) {
-        if ($showhtmlsolutions) {
-            echo "&nbsp;&nbsp;&nbsp;&nbsp;";
-        }
-        echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick( 0);" visible=true>'.get_string( 'print', 'game');
-        echo '</button>';
-    }
+if ($game->param3 == 2) {
+    echo '<td>&nbsp &nbsp &nbsp</td>';
+    game_cross_show_welcome( $game);
+} else {
+    game_cross_show_legends( $cross);
+}
 
-    if ($game->param3 == 2) {
-        echo '<td>&nbsp &nbsp &nbsp</td>';
-        game_cross_show_welcome( $game);
-    } else {
-        game_cross_show_legends( $cross);
-    }
+if ($game->bottomtext != '') {
+    echo '<br><br>'.$game->bottomtext;
+}
 
-    if ($game->bottomtext != '') {
-        echo '<br><br>'.$game->bottomtext;
-    }
-
-    if ($attempt != false) {
-        if ($attempt->timefinish == 0 and $endofgame == 0) {
+if ($attempt != false) {
+    if ($attempt->timefinish == 0 and $endofgame == 0) {
 ?>
-    	<script language="JavaScript" type="text/javascript"><!--
-	    if (Initialized)
-	    {
+        <script language="JavaScript" type="text/javascript"><!--
+        if (Initialized) {
 <?php
-            if ($print == false) {
-                echo "document.getElementById(\"welcomemessage\").style.display = \"\";";
-            }
+if ($print == false) {
+    echo "document.getElementById(\"welcomemessage\").style.display = \"\";";
+}
 
-            if ($showsolution == false) {
-                ?>
-    	    	    document.getElementById("checkbutton").style.display = "";
-	        	    document.getElementById("finishattemptbutton").style.display = "";
-	        	    document.getElementById("printbutton").style.display = "";
-	        	<?php
-            }
-?>
-	    }
-	    //-->
-	    </script>
+if ($showsolution == false) {
+    ?>
+    document.getElementById("checkbutton").style.display = "";
+    document.getElementById("finishattemptbutton").style.display = "";
+    document.getElementById("printbutton").style.display = "";
 <?php
-        }
+}
+?>
+}
+//-->
+</script>
+<?php
     }
+}
 
 ?>
 
@@ -1079,17 +1073,17 @@ function game_cross_show_welcome0( $game) {
 <div id="wordclue" class="cluebox"> </div>
 <div style="margin-top:1em;"><input id="wordentry" type="text" size="24"
 <?php
-    echo 'style="font-weight: bold; ';
-    if ($game->param6 == 0) {
-        echo 'text-transform:uppercase;';
-    }
-    echo '"';
+echo 'style="font-weight: bold; ';
+if ($game->param6 == 0) {
+    echo 'text-transform:uppercase;';
+}
+echo '"';
 ?>
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
 <?php
-    if ($game->param3 == 2) {
-        game_cross_show_welcome( $game);
-    }
+if ($game->param3 == 2) {
+    game_cross_show_welcome( $game);
+}
 ?>
 <div id="worderror" style="color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
 

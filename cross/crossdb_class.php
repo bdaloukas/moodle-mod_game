@@ -18,7 +18,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
+/*
  * This class is a cross that can load and save to a table
  *
  * @author  bdaloukas

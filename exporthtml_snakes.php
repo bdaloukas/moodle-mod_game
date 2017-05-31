@@ -14,9 +14,9 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
+/*
  * This page export the game snakes to html
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/
@@ -39,25 +39,26 @@ defined('MOODLE_INTERNAL') || die();
 <style type="text/css">
 #pawn
 {
-position:absolute;
+    position:absolute;
 }
+
 img
 {
-	border:hidden
+    border:hidden
+
 }
 body
 { 
-background: #999 url('images/backdropJungle.png') no-repeat fixed left top;
+    background: #999 url('images/backdropJungle.png') no-repeat fixed left top;
 }
-	.score
-	{color: #FC3; 
-	font-size: 40px;
-	}
+
+.score {
+    color: #FC3; 
+    font-size: 40px;
+}
 </style>
 
 </head>
-
-
 
 <body>
 
@@ -152,55 +153,52 @@ display_quest();
 
 function ShowMainForm()
 {
-	var pawn_x =0;
-	var pawn_y=0;
-	var direction=0;
-	var cols = board_cols[current_board];
-	var rows = board_rows[current_board];
-	var col_width = (board_width[current_board]-board_headerx[current_board]-board_footerx[current_board])/cols;
-	var col_height = (board_height[current_board]-board_headery[current_board]-board_footery[current_board])/rows;
-	
-	document.write('<img id="boardimage" src="images/meter.png">');
-	document.getElementById("boardimage").src = "images/" + board_images[ current_board];
-	document.write('<div id="dicecont">&nbsp;</div>');
-		
-	if( current_position  >= 0)
-	{
-		direction=Math.floor((current_position /cols))%2;
-		if (direction==1)
-			axis_x=(cols-(current_position %cols)-1);
-		else
+    var pawn_x =0;
+    var pawn_y=0;
+    var direction=0;
+    var cols = board_cols[current_board];
+    var rows = board_rows[current_board];
+    var col_width = (board_width[current_board]-board_headerx[current_board]-board_footerx[current_board])/cols;
+    var col_height = (board_height[current_board]-board_headery[current_board]-board_footery[current_board])/rows;
+
+    document.write('<img id="boardimage" src="images/meter.png">');
+    document.getElementById("boardimage").src = "images/" + board_images[ current_board];
+    document.write('<div id="dicecont">&nbsp;</div>');
+
+    if( current_position  >= 0) {
+        direction=Math.floor((current_position /cols))%2;
+        if (direction == 1) {
+            axis_x=(cols-(current_position %cols)-1);
+		} else {
 			axis_x=current_position %cols;
+        }
+        axis_y=Math.floor((current_position /rows));
+        pawn_x=board_headerx[current_board]+(axis_x*col_width)+(col_width-pawn_width[current_board])/2;
+        pawn_y=board_footery[current_board]+pawn_height[current_board]+(axis_y*col_height)+(col_height-pawn_height[current_board])/2;
 
-		axis_y=Math.floor((current_position /rows));
-		pawn_x=board_headerx[current_board]+(axis_x*col_width)+(col_width-pawn_width[current_board])/2;
-		pawn_y=board_footery[current_board]+pawn_height[current_board]+(axis_y*col_height)+(col_height-pawn_height[current_board])/2;
-			
-		document.write('<div id="pawn1"><img id="pawn" alt="" src="images/player1.png"></div>');
-	    move_pawn();
-	}
+        document.write('<div id="pawn1"><img id="pawn" alt="" src="images/player1.png"></div>');
+        move_pawn();
+    }
 }
 
-function selectBoard()
-{
-	current_board = document.getElementById("boardtype").value;
-	document.getElementById("boardimage").src = "images/" + board_images[ current_board];	
+function selectBoard() {
+    current_board = document.getElementById("boardtype").value;
+    document.getElementById("boardimage").src = "images/" + board_images[ current_board];	
 }
 
-function select_quest()
-{
+function select_quest() {
     var quest_total = countofquestionsM + countofquestionsS;
-	var quest_candidates= new Array();
-	var i, q;
+    var quest_candidates= new Array();
+    var i, q;
 
-	for (i=0;i<3;i++) {
-		quest_candidates[i]=Math.floor((Math.random() * quest_total));
-	}
-	current_quest = quest_candidates[0];
-	for (i=1;i<3;i++) {
-		if (quest_times_asked[quest_candidates[i]]>quest_times_asked[current_quest])
-			current_quest=quest_candidates[i];
-	}
+    for (i=0;i<3;i++) {
+        quest_candidates[i]=Math.floor((Math.random() * quest_total));
+    }
+    current_quest = quest_candidates[0];
+    for (i=1;i<3;i++) {
+        if (quest_times_asked[quest_candidates[i]]>quest_times_asked[current_quest])
+            current_quest=quest_candidates[i];
+    }
 
     q=Base64decode( questions[ current_quest]);
     quest_resp = decode_multiple_choice( q);
@@ -208,206 +206,188 @@ function select_quest()
     quest_feedb = Base64decode( feedbacks[ current_quest]);
 }
 
-function IsMultipleChoiceQuestion()
-{
+function IsMultipleChoiceQuestion() {
     return (current_quest < countofquestionsM);
 }
 
-function check_answer()
-{
-	all_ans=all_ans+1;
-	if( IsMultipleChoiceQuestion())
-		check_answer_M();
-	else
-		check_answer_S();
-        
-	move_pawn();
+function check_answer() {
+    all_ans=all_ans+1;
+    if( IsMultipleChoiceQuestion()) {
+        check_answer_M();
+    } else {
+        check_answer_S();
+    }
+
+    move_pawn();
 }
 
-function check_answer_M()
-{	
-	document.getElementById("check_btn").style.display = "none";
+function check_answer_M() {
+    document.getElementById("check_btn").style.display = "none";
 
-	var useranswer;
-	var n=document.snakesform.radio_answer.length;
-	for(useranswer=0;useranswer < n;useranswer++)
-	{
-		if( document.snakesform.radio_answer[ useranswer].checked)
-			break;
-	}
-	
-	if( useranswer >= n)
-	{
-		alert( str_no_selection);
-		document.getElementById("feedb").innerHTML= "";
-		document.getElementById("check_btn").style.display = "block";
-		return;
-	}
-	
-	var feedbacks = decode_multiple_choice(quest_feedb);	
-	
-	var j;
-	for (j=0;j<n;j++) {
-	document.snakesform.radio_answer[ j].disabled = "true"; 
-	}
+    var useranswer;
+    var n=document.snakesform.radio_answer.length;
+    for(useranswer=0;useranswer < n;useranswer++) {
+        if( document.snakesform.radio_answer[ useranswer].checked)
+            break;
+    }
 
-	document.getElementById("feedb").innerHTML= feedbacks[ mchoice_positions[useranswer]];
-	document.getElementById("feedb").style.display = "block";
-	
-	if ( mchoice_positions[ useranswer] == 1)
-	{
-		current_position += current_dice;
-		correct_ans =correct_ans+1; //calculate new score----
-		score = Math.round((correct_ans/all_ans)*100);
-		document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
-		check_game_over();
-		check_exists_ladder();
-	}
-	else 
-	{
-		score = Math.round((correct_ans/all_ans)*100); 
-		document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
-		check_exists_snake();
-	}
-	
-	document.getElementById("OK_btn").style.display = "block";	
+    if( useranswer >= n) {
+        alert( str_no_selection);
+        document.getElementById("feedb").innerHTML= "";
+        document.getElementById("check_btn").style.display = "block";
+        return;
+    }
+
+    var feedbacks = decode_multiple_choice(quest_feedb);	
+
+    var j;
+    for (j=0;j<n;j++) {
+        document.snakesform.radio_answer[ j].disabled = "true"; 
+    }
+
+    document.getElementById("feedb").innerHTML= feedbacks[ mchoice_positions[useranswer]];
+    document.getElementById("feedb").style.display = "block";
+
+    if ( mchoice_positions[ useranswer] == 1) {
+        current_position += current_dice;
+        correct_ans =correct_ans+1; //calculate new score----
+        score = Math.round((correct_ans/all_ans)*100);
+        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        check_game_over();
+        check_exists_ladder();
+    } else {
+        score = Math.round((correct_ans/all_ans)*100); 
+        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        check_exists_snake();
+    }
+
+    document.getElementById("OK_btn").style.display = "block";	
 }
 
-function check_answer_S()
-{
-	document.getElementById("answer").disabled = "true";
-	document.getElementById("check_btn").style.display = "none";
-		
-	if (document.getElementById("answer").value.toUpperCase() == quest_resp[ 1].toUpperCase()) 
-	{
-		document.getElementById("feedb").style.display = "block";
-		current_position += current_dice;
-		correct_ans =correct_ans+1; //calculate new score
-		score = Math.round((correct_ans/all_ans)*100); 
-		document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
-		check_game_over();
-		check_exists_ladder();			
-	}
-	else 
-	{
-		document.getElementById("feedb_wrong").style.display = "block";
-		score = Math.round((correct_ans/all_ans)*100); 
-		document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
-		check_exists_snake();
-	}
+function check_answer_S() {
+    document.getElementById("answer").disabled = "true";
+    document.getElementById("check_btn").style.display = "none";
 	
-	document.getElementById("OK_btn").style.display = "block";	
+    if (document.getElementById("answer").value.toUpperCase() == quest_resp[ 1].toUpperCase())  {
+        document.getElementById("feedb").style.display = "block";
+        current_position += current_dice;
+        correct_ans =correct_ans+1; //calculate new score
+        score = Math.round((correct_ans/all_ans)*100); 
+        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        check_game_over();
+        check_exists_ladder();			
+	} else {
+        document.getElementById("feedb_wrong").style.display = "block";
+        score = Math.round((correct_ans/all_ans)*100); 
+        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        check_exists_snake();
+    }
+
+    document.getElementById("OK_btn").style.display = "block";	
 }
 
-function check_game_over()
-{
-	var out=(board_cols[current_board]*board_rows[current_board]);
-	if (current_position > out-1)
-    {
-		current_position=out-1;
-		showPopWin('modalContent.html', 350, 220, returnRefresh); // modal
-	}
+function check_game_over() {
+    var out=(board_cols[current_board]*board_rows[current_board]);
+    if (current_position > out-1) {
+        current_position=out-1;
+        showPopWin('modalContent.html', 350, 220, returnRefresh); // modal
+    }
 }
 
-function check_exists_ladder()
-{
-	var find = "L" + (current_position+1) + "-";
-	var pos = board_contents[ current_board].indexOf( find);
+function check_exists_ladder() {
+    var find = "L" + (current_position+1) + "-";
+    var pos = board_contents[ current_board].indexOf( find);
+
+    if( pos < 0) {
+        return;
+    }
 	
-	if( pos < 0)
-		return;
-		
-	var s = board_contents[ current_board].substr( pos+find.length)
-	pos = s.indexOf( ',');
-	if( pos >= 0)
-		s = s.substr( 0, pos);
-		
-	current_position = s-1;
+    var s = board_contents[ current_board].substr( pos+find.length)
+    pos = s.indexOf( ',');
+    if (pos >= 0) {
+        s = s.substr( 0, pos);
+    }
+
+    current_position = s-1;
 }
 
-function check_exists_snake()
-{
-	var find = "-" + (current_position+1) + ",";
-	var s= ',' +board_contents[ current_board] + ',';
-	
-	for(;;)
-	{
-		var pos = s.indexOf( find);
-	
-		if( pos < 0)
-			return;
-			
-		var pos_start = s.lastIndexOf( ',', pos-1);
-		
-		var kind = s.substr( pos_start+1, 1);
-		if( kind != "S")
-		{
-			s = s.substr( pos+1);
-			continue;
-		}
-		s = s.substr( pos_start+2);
-		pos = s.indexOf( '-');
-		current_position = s.substr( 0, pos)-1;
-		break;
-	}
+function check_exists_snake() {
+    var find = "-" + (current_position+1) + ",";
+    var s= ',' +board_contents[ current_board] + ',';
+
+    for(;;) {
+        var pos = s.indexOf( find);
+
+        if (pos < 0) {
+            return;
+        }
+
+        var pos_start = s.lastIndexOf( ',', pos-1);
+
+        var kind = s.substr( pos_start+1, 1);
+        if ( kind != "S") {
+            s = s.substr( pos+1);
+            continue;
+        }
+        s = s.substr( pos_start+2);
+        pos = s.indexOf( '-');
+        current_position = s.substr( 0, pos)-1;
+        break;
+    }
 }
 
-function decode_multiple_choice(s)
-{
-	var ret = new Array();
-	
-	var i=0;
-	for(;;)
-	{
-		var pos=s.indexOf( '#');
-		if( pos < 0)
-		{
-			ret[ i++] = s;
-			return ret;
-		}
-		ret[ i++] = s.substr( 0, pos);
-		s = s.substr( pos+1);
-	}
+function decode_multiple_choice(s) {
+    var ret = new Array();
+
+    var i=0;
+    for(;;) {
+        var pos=s.indexOf( '#');
+        if( pos < 0) {
+            ret[ i++] = s;
+            return ret;
+        }
+        ret[ i++] = s.substr( 0, pos);
+        s = s.substr( pos+1);
+    }
 }
 
-function display_quest() 
-{
-	current_dice = Math.floor((Math.random() * 6)) + 1;
-	select_quest();
+function display_quest()  {
+    current_dice = Math.floor((Math.random() * 6)) + 1;
+    select_quest();
 
-    if( IsMultipleChoiceQuestion())
-		display_quest_M();
-	else
-		display_quest_S();
+    if( IsMultipleChoiceQuestion()) {
+        display_quest_M();
+	} else {
+        display_quest_S();
+    }
 }
 
-function display_quest_M() 
-{	
-	s = '<table width="250px"><tr><td><div id="show_dice"> ';
+function display_quest_M() {
+    s = '<table width="250px"><tr><td><div id="show_dice"> ';
     s = s + '<img src = "images/dice' + current_dice + '.png"> </div> </td>';
     s = s + '<td align=right><div id="show_score" style="color: #FFFFFF; font-weight:bold; font-size: 20px;">';
     s = s + '<strong>'+str_score+': </strong>';
     s = s + '<strong class="score">' +score+ '</strong></div></td></tr></table>';
-	s = s + '<div id="question_area">' + quest_text+'</div>';
-	s = s + '<form name="snakesform">';
+    s = s + '<div id="question_area">' + quest_text+'</div>';
+    s = s + '<form name="snakesform">';
 
-	mchoice_count = quest_resp.length-1;
-	mchoice_positions = new Array( mchoice_count);
-	for(i=0; i < mchoice_count ; i++)
-		mchoice_positions[ i] = i+1;
-	for(i=0; i < mchoice_count ; i++)
-	{		
-		var j = Math.floor((Math.random() * mchoice_count));
-		var temp = mchoice_positions[ i];
-		mchoice_positions[ i] = mchoice_positions[ j];
-		mchoice_positions[ j] = temp;
-	}		
-	
-	for(i=0; i < mchoice_count;i++) {
-		s = s + '<input type="radio" name="radio_answer" id="radio_answer" value="';
+    mchoice_count = quest_resp.length-1;
+    mchoice_positions = new Array( mchoice_count);
+    for(i=0; i < mchoice_count ; i++) {
+        mchoice_positions[ i] = i+1;
+    }
+    for(i=0; i < mchoice_count ; i++) {		
+        var j = Math.floor((Math.random() * mchoice_count));
+        var temp = mchoice_positions[ i];
+        mchoice_positions[ i] = mchoice_positions[ j];
+        mchoice_positions[ j] = temp;
+    }		
+
+    for(i=0; i < mchoice_count;i++) {
+        s = s + '<input type="radio" name="radio_answer" id="radio_answer" value="';
         s = s + i+'" />'+quest_resp[ mchoice_positions[ i]] + '<br />';
     }
-	
+
     s = s + '<br /><input type="button" id="check_btn" value="'+str_check;
     s = s + '" onclick="check_answer();">  <br/><div id="feedb_area"> <div id="feedb_wrong" style="display:none; color:yellow;"> ';
     s = s + quest_feedb+' </div> <br /><div id="feedb" style="display:none; color:yellow;"> ';
@@ -415,17 +395,16 @@ function display_quest_M()
     s = s + current_dice+' τετράγωνα μπροστά!</div><br /> <div id="OK_btn"';   
     s = s + 'style="display:none;"><input type="button" onclick="display_quest();" value="OK"/></div> </div></form>';
 
-	document.getElementById("dicecont").innerHTML = s;
-	
-	document.getElementById("question_area").style.display = "block";
-	document.getElementById("check_btn").style.display = "block";		
+    document.getElementById("dicecont").innerHTML = s;
+
+    document.getElementById("question_area").style.display = "block";
+    document.getElementById("check_btn").style.display = "block";		
 }
 
-function display_quest_S() 
-{
+function display_quest_S() {
     var s = "";
 
-	s = '<table width="250px"><tr><td><div id="show_dice"> <img src = "images/dice';
+    s = '<table width="250px"><tr><td><div id="show_dice"> <img src = "images/dice';
     s = s + current_dice + '.png"> </div> </td><td align=right>';
     s = s + '<div id="show_score" style="color: #FFFFFF; font-weight:bold; font-size: 20px;"><strong>';
     s = s + str_score+': </strong><strong class="score">' +score+ '</strong></div></td></tr></table><div id="question_area">';
@@ -440,24 +419,22 @@ function display_quest_S()
 	document.getElementById("check_btn").style.display = "block";
 }
 
-function move_pawn()
-{
-
-	var pawn_x =0;
-	var pawn_y=0;
-	var direction=0;
-	var cols = board_cols[current_board];
-	var rows = board_rows[current_board];
-	var col_width = (board_width[current_board]-board_headerx[current_board]-board_footerx[current_board])/cols;
-	var col_height = (board_height[current_board]-board_headery[current_board]-board_footery[current_board])/rows;
+function move_pawn() {
+    var pawn_x =0;
+    var pawn_y=0;
+    var direction=0;
+    var cols = board_cols[current_board];
+    var rows = board_rows[current_board];
+    var col_width = (board_width[current_board]-board_headerx[current_board]-board_footerx[current_board])/cols;
+    var col_height = (board_height[current_board]-board_headery[current_board]-board_footery[current_board])/rows;
     
-	if( current_position  >= 0)
-	{
+	if( current_position  >= 0) {
 		direction=Math.floor((current_position /cols))%2;
 		if (direction == 1) {
 			axis_x=(cols-(current_position %cols)-1);
-		}else
+		} else {
 			axis_x=current_position %cols;
+        }
 				
 		axis_y=Math.floor((current_position /rows));
 		pawn_x=board_headerx[current_board]+(axis_x*col_width)+(col_width-pawn_width[current_board])/2;
@@ -505,7 +482,7 @@ function move_pawn()
  
 	};
  
-	// private method for UTF-8 decoding
+	// Private method for UTF-8 decoding.
 	function Base64_utf8_decode(utftext) {
 		var string = "";
 		var i = 0;

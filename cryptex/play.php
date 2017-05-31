@@ -16,10 +16,12 @@
 
 /**
  * This page plays the cryptex game
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once( "cryptexdb_class.php");
 
@@ -267,27 +269,25 @@ width:	240pt;
 
 <?php
 
-    if ($showhtmlprintbutton) {
-        echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >'.get_string( 'finish', 'game');
-        echo '</button>';
-        echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string( 'print', 'game');
-        echo '</button><br>';
-    }
+if ($showhtmlprintbutton) {
+    echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >'.get_string( 'finish', 'game');
+    echo '</button>';
+    echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string( 'print', 'game');
+    echo '</button><br>';
+}
 
-    if ($showhtmlprintbutton) {
+if ($showhtmlprintbutton) {
 ?>
 <script>
-    function PrintHtmlClick()
-    {
-    	document.getElementById("printbutton").style.display = "none";
-    	
+    function PrintHtmlClick() {
+        document.getElementById("printbutton").style.display = "none";
+
         window.print();     
 
-    	document.getElementById("printbutton").style.display = "block";	
+        document.getElementById("printbutton").style.display = "block";
     }
 
-    function OnPrint()
-    {
+    function OnPrint() {
 <?php
         global $CFG;
 
@@ -296,8 +296,7 @@ width:	240pt;
 ?>
     }
 
-    function OnEndGame()
-    {
+    function OnEndGame() {
 <?php
         global $CFG;
 
@@ -307,68 +306,65 @@ width:	240pt;
     }
 </script>
 <?php
+}
+
+$i = 0;
+$else = '';
+$contextglossary = false;
+foreach ($questions as $key => $q) {
+    $i++;
+    if ($showsolution == false) {
+        // When I want to show the solution a want to show the questions to.
+        if (array_key_exists( $q->id, $corrects)) {
+            continue;
+        }
     }
 
-    $i = 0;
-    $else = '';
-    $contextglossary = false;
-    foreach ($questions as $key => $q) {
-        $i++;
-        if ($showsolution == false) {
-            // When I want to show the solution a want to show the questions to.
-            if (array_key_exists( $q->id, $corrects)) {
-                continue;
-            }
-        }
+    $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
+    $question2 = strip_tags($question); // ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question.
 
-        $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
-        $question2 = strip_tags($question); // ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question.
-
-        echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
-        if (($onlyshow == false) and ($showsolution == false)) {
-            if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
-                $question .= ' &nbsp;<input type="submit" value="'.
-                    get_string( 'answer').'" onclick="OnCheck( '.$q->id.",msg{$q->id});\" />";
-            }
+    echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
+    if (($onlyshow == false) and ($showsolution == false)) {
+        if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
+            $question .= ' &nbsp;<input type="submit" value="'.
+            get_string( 'answer').'" onclick="OnCheck( '.$q->id.",msg{$q->id});\" />";
         }
-        echo $question;
-
-        if ($showsolution) {
-            echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
-        }
-        echo '<br>';
     }
+    echo $question;
 
-    if ($game->bottomtext != '') {
-        echo '<br><br>'.$game->bottomtext;
+    if ($showsolution) {
+        echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
     }
+    echo '<br>';
+}
+
+if ($game->bottomtext != '') {
+    echo '<br><br>'.$game->bottomtext;
+}
 
 ?>
-		<script>
-			function OnCheck( id, question)
-			{
-				document.getElementById("q").value = id;
-				document.getElementById("wordclue").innerHTML = question;
+    <script>
+        function OnCheck( id, question) {
+            document.getElementById("q").value = id;
+            document.getElementById("wordclue").innerHTML = question;
 
-				// Finally, show the answer box.
-				document.getElementById("answerbox").style.display = "block";
-				try
-				{
-					document.getElementById("answer").focus();
-					document.getElementById("answer").select();
-				}
-				catch (e)
-				{
-				}
-			}
-		</script>
+            // Finally, show the answer box.
+            document.getElementById("answerbox").style.display = "block";
+            try {
+                document.getElementById("answer").focus();
+                document.getElementById("answer").select();
+            }
+            catch (e)
+            {
+            }
+        }
+    </script>
 <?php
-
-    if ($print) {
-        echo '<body onload="window.print()">';
-    } else {
-        echo '<body>';
-    }
+if ($print) {
+    echo '<body onload="window.print()">';
+} else {
+    echo '<body>';
+}
 }
 
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec) {
