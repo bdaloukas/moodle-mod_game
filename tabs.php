@@ -72,7 +72,7 @@ if ($currenttab == 'reports' and isset($mode)) {
     $activated[] = 'reports';
 
     $allreports = get_list_of_plugins("mod/game/report");
-    // Standard reports we want to show first
+    // Standard reports we want to show first.
     $reportlist = array ('overview');
 
     foreach ($allreports as $report) {

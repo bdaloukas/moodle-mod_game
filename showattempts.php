@@ -75,7 +75,7 @@ function game_showusers($game) {
                     window.location.href = "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid='+groupid;
                 }
             </script>
-<?php
+    <?php
 
     $attributes = 'onchange="javascript:onselectuser();"';
     $name = 'user';
@@ -128,7 +128,7 @@ function game_showgroups($game) {
                     window.location.href = "<?php echo $href;?>" + document.getElementById('menugroup').value;
                 }
             </script>
-        <?php
+    <?php
 
     $attributes = 'onchange="javascript:onselectgroup();"';
     $name = 'group';

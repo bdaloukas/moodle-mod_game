@@ -16,6 +16,8 @@
 
 // This file plays the game hangman.
 
+defined('MOODLE_INTERNAL') || die();
+
 function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $action, $context) {
     global $DB, $USER;
 

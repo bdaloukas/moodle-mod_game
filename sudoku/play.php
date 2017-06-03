@@ -285,7 +285,7 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
             window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
         }
     </script>
-<?php
+    <?php
 
     // Here are the congratulations.
     if ($attempt->timefinish) {

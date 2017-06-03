@@ -16,7 +16,7 @@
 
 /**
  * This page export the game to javame for mobile phones
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/

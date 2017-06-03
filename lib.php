@@ -17,7 +17,7 @@
 /**
  * Library of functions and constants for module game
  *
- * @author 
+ * @author Vasilis Daloukas
  * @package game
  **/
 
@@ -179,7 +179,7 @@ function game_before_add_or_update(&$game) {
 }
 
 /**
- * Given an ID of an instance of this module, 
+ * Given an ID of an instance of this module,
  * this function will permanently delete the instance
  * and any data that depends on it.
  *
@@ -262,7 +262,7 @@ function game_user_outline($course, $user, $mod, $game) {
 }
 
 /**
- * Print a detailed representation of what a user has done with 
+ * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
  **/
 function game_user_complete($course, $user, $mod, $game) {
@@ -291,7 +291,7 @@ function game_user_complete($course, $user, $mod, $game) {
 /**
  * Given a course and a time, this module should find recent activity
  * that has occurred in game activities and print it out.
- * Return true if there was output, or false is there was none. 
+ * Return true if there was output, or false is there was none.
  *
  * @uses $CFG
  * @return boolean
@@ -320,9 +320,9 @@ function game_cron() {
 }
 
 /**
- * Must return an array of grades for a given instance of this module, 
+ * Must return an array of grades for a given instance of this module,
  * indexed by user.  It also returns a maximum allowed grade.
- * 
+ *
  * Example:
  *    $return->grades = array of grades;
  *    $return->maxgrade = maximum allowed grade;
@@ -972,7 +972,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 if (defined('USE_GET_SHORTCUTS')) {
     /**
      * Returns an array of game type objects to construct
-     * menu list when adding new game 
+     * menu list when adding new game
      *
      */
     function game_get_shortcuts($defaultitem) {
@@ -1359,11 +1359,11 @@ function game_get_context_course_instance( $courseid) {
 }
 
 function game_pix_url( $filename) {
-	global $OUTPUT;
+    global $OUTPUT;
 
-	if (game_get_moodle_version() >= '03.03') {
-		return $OUTPUT->image_url($filename, 'mod_game');
-	} else {
-		return $OUTPUT->pix_url($filename, 'mod_game');
-	}
+    if (game_get_moodle_version() >= '03.03') {
+        return $OUTPUT->image_url($filename, 'mod_game');
+    } else {
+        return $OUTPUT->pix_url($filename, 'mod_game');
+    }
 }

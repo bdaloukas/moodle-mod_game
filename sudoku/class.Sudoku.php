@@ -336,7 +336,7 @@ class cell extends objects {
  * @package Sudoku
  */
 
-class rcs extends ObjectS{
+class rcs extends ObjectS {
     protected $theindex;
 
     protected $therow = array();
@@ -346,7 +346,7 @@ class rcs extends ObjectS{
     protected $thetag = "";
 
     /**
-     * This 
+     * This
      * @desc Constructor
      * @access public
      * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
@@ -557,7 +557,7 @@ class rcs extends ObjectS{
 
     /**
      * @desc Get the header set by the last call to doAnInference.
-     * 
+     *
      */
 
     public function getheader() {
@@ -570,7 +570,7 @@ class rcs extends ObjectS{
      * This is a second positive inference that provides additional negative information.
      * Thanks to Ghica van Emde Boas (also an author of a Sudoku class) for convincing
      * me that these situations really occurred.
-     * 
+     *
      * @desc Eliminate tuple-locked alternatives.
      * @access private
      * @return boolean True if something changed.
@@ -640,9 +640,9 @@ class rcs extends ObjectS{
 
     /**
      * Find a solution to a row/column/square.
-     * 
+     *
      * Find any unique numbers within the row/column/square under consideration.
-     * Look through a row structure for a value that appears in only one cell.  
+     * Look through a row structure for a value that appears in only one cell.
      * When you find one, that's a solution for that cell.
      *
      * There is a second inference that can be taken.  Given "n" cells in a row/column/square
@@ -726,7 +726,7 @@ class rcs extends ObjectS{
 
     /**
      * Validate a part of a trial solution.
-     * 
+     *
      * Check a row/column/square to see if there are any invalidations on this solution.
      * Only items that are actually solved are compared.  This is used during puzzle
      * generation.
@@ -781,8 +781,8 @@ class r extends rcs {
      * @access private
      * @param integer $theIndex the index of the cell within the row or column.
      * @return integer the "coupling coefficient" for the cell.  The sum of the
-     *    			   sizes of the intersection between this and all other
-     *				   cells in the row or column.
+     *          sizes of the intersection between this and all other
+     *          cells in the row or column.
      */
 
     protected function _coupling($theindex) {
@@ -913,7 +913,7 @@ class s extends rcs {
  * to that position, I just retry and so far I've always succeeded in
  * generating an initial state.  Not guarateed, but in engineering terms
  * "close enough".
- * 
+ *
  * @package Sudoku
  * @example ./example.php
  * @example ./example1.php
@@ -1525,7 +1525,7 @@ class sudoku extends ObjectS {
      *
      * @desc Initialize puzzle from a string.
      * @access public
-     * @param string $theString The initial state of each cell in the puzzle.  
+     * @param string $theString The initial state of each cell in the puzzle.
      */
 
     public function initializepuzzlefromstring($thestring) {
@@ -1560,7 +1560,7 @@ class sudoku extends ObjectS {
 
     /**
      * Convert pending to actual solutions.
-     * 
+     *
      * This step is actually unnecessary unless you want a pretty output of the
      * intermediate.
      *
@@ -1585,7 +1585,7 @@ class sudoku extends ObjectS {
 
     /**
      * Print the contents of the board in HTML format.
-     * 
+     *
      * A "hook" so that extension classes can show all the steps taken by
      * the solve function.
      *
@@ -1691,7 +1691,7 @@ class sudoku extends ObjectS {
      *     two cells containing a pair of values eliminate those values from
      *     consideration in the rest of the RC or S.
      * 3b. The n/n+1 set rule as discovered by me, e.g., in any RCS, three cells
-     *     containing the following pattern, (i, j)/(j, k)/(i, j, k) eliminate 
+     *     containing the following pattern, (i, j)/(j, k)/(i, j, k) eliminate
      *     the values i, j, k from consideration in the rest of the RC or S.
      *
      * During processing I explain which structures (row, column, square)
@@ -1776,7 +1776,7 @@ class sudoku extends ObjectS {
      *
      * There's a bit of bookkeeping to keep the state right when backing up, but that's pretty
      * straightforward and looks a lot like that of generatePuzzle.
-     * 
+     *
      * @desc Brute force additional solutions.
      * @access public
      * @returns array The clues added sufficient to solve the puzzle.
@@ -1841,7 +1841,7 @@ class sudoku extends ObjectS {
 
     /**
      * Validate a complete solution.
-     * 
+     *
      * After a complete solution has been generated check the board and
      * report any inconsistencies.  This is primarily intended for debugging
      * purposes.
@@ -1895,7 +1895,7 @@ class sudoku extends ObjectS {
  * Extend Sudoku to generate puzzles based on templates.
  *
  * Templates are either input files or arrays containing doubles.
- * 
+ *
  * @package Sudoku
  */
 
@@ -1938,7 +1938,7 @@ class SudokuTemplates extends Sudoku
 
 /**
  * Extend Sudoku to print all intermediate results.
- * 
+ *
  * @package Sudoku
  */
 

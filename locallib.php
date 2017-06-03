@@ -1579,17 +1579,17 @@ function game_print_question_multichoice( $game, $question, $context) {
     </div>
 
     <table class="answer">
-<?php 
-    $row = 1;
-    foreach ($anss as $answer) {
+<?php
+$row = 1;
+foreach ($anss as $answer) {
 ?>
         <tr class="<?php echo 'r'.$row = $row ? 0 : 1; ?>">
             <td>
                 <?php echo $answer->control; ?>
             </td>
         </tr>
-<?php 
-    }
+<?php
+}
 ?>        
     </table>
 </div>
@@ -1635,17 +1635,17 @@ function game_print_question_multianswer( $game, $question, $context) {
     </div>
 
     <table class="answer">
-<?php 
-    $row = 1;
-    foreach ($anss as $answer) {
+<?php
+$row = 1;
+foreach ($anss as $answer) {
 ?>
         <tr class="<?php echo 'r'.$row = $row ? 0 : 1; ?>">
             <td>
                 <?php echo $answer->control; ?>
             </td>
         </tr>
-<?php 
-    }
+<?php
+}
 ?>
     </table>
 </div>
@@ -1657,7 +1657,9 @@ function game_print_question_shortanswer( $game, $question, $context) {
 
 ?>
 <div class="qtext">
-  <?php echo game_filterquestion(str_replace( '\"', '"', $questiontext), $question->id, $context->id, $game->course); ?>
+<?php
+echo game_filterquestion(str_replace( '\"', '"', $questiontext), $question->id, $context->id, $game->course);
+?>
 </div>
 
 <div class="ablock clearfix">
@@ -1890,12 +1892,6 @@ function game_addattempt( $game) {
     return $DB->get_record_select( 'game_attempts', 'id='.$newid);
 }
 
-/*
-function game_print_r( $title, $a) {
-    echo "\r\n<hr><b>$title</b><br>";print_r( $a);echo "<hr>\r\n";
-}
-*/
-
 function game_get_contexts() {
     global $CFG, $COURSE;
 
@@ -2015,14 +2011,6 @@ function game_question_get_id_from_name_prefix($name) {
     }
     return (integer) $matches[ 1];
 }
-
-/*
-function game_debug_array( $title, $a) {
-    echo '<br>'.$title.' ';
-    print_r( $a);
-    echo '<br>';
-}
-*/
 
 function game_get_version() {
     global $CFG, $DB;

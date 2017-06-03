@@ -16,7 +16,7 @@
 
 /**
  * This page prints a particular attempt of game
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/

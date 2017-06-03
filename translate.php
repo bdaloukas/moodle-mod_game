@@ -17,8 +17,7 @@
 /**
  * Check translation of module Game
  *
- * @author 
- * @version $Id: translate.php,v 1.10 2012/07/25 23:07:43 bdaloukas Exp $
+ * @author Vasilis Daloukas
  * @package game
  **/
 require( "../../config.php");

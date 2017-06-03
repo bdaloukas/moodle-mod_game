@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for creating and modifying a game 
+ * Form for creating and modifying a game
  *
  * @package   game
  * @author    Vasilis Daloukas

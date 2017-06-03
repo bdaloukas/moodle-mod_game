@@ -169,12 +169,13 @@ function ShowMainForm()
         direction=Math.floor((current_position /cols))%2;
         if (direction == 1) {
             axis_x=(cols-(current_position %cols)-1);
-		} else {
-			axis_x=current_position %cols;
+        } else {
+            axis_x=current_position %cols;
         }
         axis_y=Math.floor((current_position /rows));
         pawn_x=board_headerx[current_board]+(axis_x*col_width)+(col_width-pawn_width[current_board])/2;
-        pawn_y=board_footery[current_board]+pawn_height[current_board]+(axis_y*col_height)+(col_height-pawn_height[current_board])/2;
+        pawn_y=board_footery[current_board]+pawn_height[current_board]+(axis_y*col_height);
+        pawn_y += (col_height-pawn_height[current_board])/2;
 
         document.write('<div id="pawn1"><img id="pawn" alt="" src="images/player1.png"></div>');
         move_pawn();
@@ -183,7 +184,7 @@ function ShowMainForm()
 
 function selectBoard() {
     current_board = document.getElementById("boardtype").value;
-    document.getElementById("boardimage").src = "images/" + board_images[ current_board];	
+    document.getElementById("boardimage").src = "images/" + board_images[ current_board];
 }
 
 function select_quest() {
@@ -238,7 +239,7 @@ function check_answer_M() {
         return;
     }
 
-    var feedbacks = decode_multiple_choice(quest_feedb);	
+    var feedbacks = decode_multiple_choice(quest_feedb);
 
     var j;
     for (j=0;j<n;j++) {
@@ -252,38 +253,42 @@ function check_answer_M() {
         current_position += current_dice;
         correct_ans =correct_ans+1; //calculate new score----
         score = Math.round((correct_ans/all_ans)*100);
-        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        var s = '<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        document.getElementById("show_score").innerHTML = s;
         check_game_over();
         check_exists_ladder();
     } else {
-        score = Math.round((correct_ans/all_ans)*100); 
-        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        score = Math.round((correct_ans/all_ans)*100);
+        var s = '<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        document.getElementById("show_score").innerHTML = s;
         check_exists_snake();
     }
 
-    document.getElementById("OK_btn").style.display = "block";	
+    document.getElementById("OK_btn").style.display = "block";
 }
 
 function check_answer_S() {
     document.getElementById("answer").disabled = "true";
     document.getElementById("check_btn").style.display = "none";
-	
+
     if (document.getElementById("answer").value.toUpperCase() == quest_resp[ 1].toUpperCase())  {
         document.getElementById("feedb").style.display = "block";
         current_position += current_dice;
         correct_ans =correct_ans+1; //calculate new score
         score = Math.round((correct_ans/all_ans)*100); 
-        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        var s = '<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        document.getElementById("show_score").innerHTML = s;
         check_game_over();
-        check_exists_ladder();			
-	} else {
+        check_exists_ladder();
+    } else {
         document.getElementById("feedb_wrong").style.display = "block";
         score = Math.round((correct_ans/all_ans)*100); 
-        document.getElementById("show_score").innerHTML='<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        var s = '<strong>'+str_score+': </strong><strong class="score">' +score+ '</strong>';
+        document.getElementById("show_score").innerHTML = s;
         check_exists_snake();
     }
 
-    document.getElementById("OK_btn").style.display = "block";	
+    document.getElementById("OK_btn").style.display = "block";
 }
 
 function check_game_over() {
@@ -301,7 +306,7 @@ function check_exists_ladder() {
     if( pos < 0) {
         return;
     }
-	
+
     var s = board_contents[ current_board].substr( pos+find.length)
     pos = s.indexOf( ',');
     if (pos >= 0) {
@@ -357,7 +362,7 @@ function display_quest()  {
 
     if( IsMultipleChoiceQuestion()) {
         display_quest_M();
-	} else {
+    } else {
         display_quest_S();
     }
 }
@@ -376,12 +381,12 @@ function display_quest_M() {
     for(i=0; i < mchoice_count ; i++) {
         mchoice_positions[ i] = i+1;
     }
-    for(i=0; i < mchoice_count ; i++) {		
+    for(i=0; i < mchoice_count ; i++) {
         var j = Math.floor((Math.random() * mchoice_count));
         var temp = mchoice_positions[ i];
         mchoice_positions[ i] = mchoice_positions[ j];
         mchoice_positions[ j] = temp;
-    }		
+    }
 
     for(i=0; i < mchoice_count;i++) {
         s = s + '<input type="radio" name="radio_answer" id="radio_answer" value="';
@@ -398,7 +403,7 @@ function display_quest_M() {
     document.getElementById("dicecont").innerHTML = s;
 
     document.getElementById("question_area").style.display = "block";
-    document.getElementById("check_btn").style.display = "block";		
+    document.getElementById("check_btn").style.display = "block";
 }
 
 function display_quest_S() {
@@ -414,9 +419,9 @@ function display_quest_S() {
     s = s + feedb_wrong_S+' </div> <div id="feedb" style="display:none; color:yellow;"> ';
     s = s + feedb_correct_S+'</div> <br /><div id="OK_btn" style="display:none;">';
     s = s + '<input type="button" onclick="display_quest();" value="OK"/></div> </div>';
-	document.getElementById("dicecont").innerHTML = s;
-	document.getElementById("question_area").style.display = "block";
-	document.getElementById("check_btn").style.display = "block";
+    document.getElementById("dicecont").innerHTML = s;
+    document.getElementById("question_area").style.display = "block";
+    document.getElementById("check_btn").style.display = "block";
 }
 
 function move_pawn() {
@@ -428,91 +433,86 @@ function move_pawn() {
     var col_width = (board_width[current_board]-board_headerx[current_board]-board_footerx[current_board])/cols;
     var col_height = (board_height[current_board]-board_headery[current_board]-board_footery[current_board])/rows;
     
-	if( current_position  >= 0) {
-		direction=Math.floor((current_position /cols))%2;
-		if (direction == 1) {
-			axis_x=(cols-(current_position %cols)-1);
-		} else {
-			axis_x=current_position %cols;
+    if( current_position  >= 0) {
+        direction=Math.floor((current_position /cols))%2;
+        if (direction == 1) {
+            axis_x=(cols-(current_position %cols)-1);
+        } else {
+            axis_x=current_position %cols;
         }
-				
-		axis_y=Math.floor((current_position /rows));
-		pawn_x=board_headerx[current_board]+(axis_x*col_width)+(col_width-pawn_width[current_board])/2;
-		pawn_y=board_footery[current_board]+pawn_height[current_board]+(axis_y*col_height)+(col_height-pawn_height[current_board])/2;
+
+        axis_y=Math.floor((current_position /rows));
+        pawn_x=board_headerx[current_board]+(axis_x*col_width)+(col_width-pawn_width[current_board])/2;
+        pawn_y = board_footery[current_board]+pawn_height[current_board]+(axis_y*col_height);
+        pawn_y += (col_height-pawn_height[current_board])/2;
 
         document.getElementById("pawn1").style.position='relative';
-		document.getElementById("pawn1").style.left=pawn_x+'px';
-		document.getElementById("pawn1").style.bottom=pawn_y+'px';
-	}
+        document.getElementById("pawn1").style.left=pawn_x+'px';
+        document.getElementById("pawn1").style.bottom=pawn_y+'px';
+    }
 }
 
-	function Base64decode(input) {
-		var output = "";
-		var chr1, chr2, chr3;
-		var enc1, enc2, enc3, enc4;
-		var i = 0;
-	    var keyStr="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+    function Base64decode(input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+        var keyStr="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
  
-		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
- 
-		while (i < input.length) {
- 
-			enc1 = keyStr.indexOf(input.charAt(i++));
-			enc2 = keyStr.indexOf(input.charAt(i++));
-			enc3 = keyStr.indexOf(input.charAt(i++));
-			enc4 = keyStr.indexOf(input.charAt(i++));
- 
-			chr1 = (enc1 << 2) | (enc2 >> 4);
-			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-			chr3 = ((enc3 & 3) << 6) | enc4;
- 
-			output = output + String.fromCharCode(chr1);
- 
-			if (enc3 != 64) {
-				output = output + String.fromCharCode(chr2);
-			}
-			if (enc4 != 64) {
-				output = output + String.fromCharCode(chr3);
-			}
- 		}
- 
-		output = Base64_utf8_decode(output);
- 
-		return output;
- 
-	};
- 
-	// Private method for UTF-8 decoding.
-	function Base64_utf8_decode(utftext) {
-		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
- 
-		while ( i < utftext.length ) {
- 
-			c = utftext.charCodeAt(i);
- 
-			if (c < 128) {
-				string += String.fromCharCode(c);
-				i++;
-			}
-			else if((c > 191) && (c < 224)) {
-				c2 = utftext.charCodeAt(i+1);
-				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-				i += 2;
-			}
-			else {
-				c2 = utftext.charCodeAt(i+1);
-				c3 = utftext.charCodeAt(i+2);
-				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-				i += 3;
-			}
- 
-		}
- 
-		return string;
-	}
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
+        while (i < input.length) {
+            enc1 = keyStr.indexOf(input.charAt(i++));
+            enc2 = keyStr.indexOf(input.charAt(i++));
+            enc3 = keyStr.indexOf(input.charAt(i++));
+            enc4 = keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        output = Base64_utf8_decode(output);
+
+        return output;
+
+    };
+
+    // Private method for UTF-8 decoding.
+    function Base64_utf8_decode(utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+
+        while ( i < utftext.length ) {
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            } else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            } else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+
+        return string;
+    }
 </script>
 
 </body>

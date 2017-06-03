@@ -16,13 +16,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/**
+/*
  * This script lists student attempts
  *
  * @author bdaloukas.
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  * @package game
- *//** */
+ */
 
 require_once($CFG->libdir.'/tablelib.php');
 
