@@ -851,6 +851,8 @@ function game_extend_settings_navigation($settings, $gamenode) {
                 break;
         }
     }
+
+    $gamenode->make_active();
 }
 
 /* Returns an array of game type objects to construct

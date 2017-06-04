@@ -21,15 +21,55 @@
  * @package game
  **/
 
-defined('MOODLE_INTERNAL') || die();
+require_once(dirname(__FILE__) . '/../../config.php');
+$id = optional_param('id', 0, PARAM_INT); // Course Module ID.
+    if (!$cm = get_coursemodule_from_id('game', $id)) {
+        print_error('invalidcoursemodule');
+    }
+    if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+        print_error('coursemisconf');
+    }
+    if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
+        print_error('invalidcoursemodule');
+    }
+
+require_login($course->id, false, $cm);
+$context = game_get_context_module_instance( $cm->id);
+require_capability('mod/game:view', $context);
+// Initialize $PAGE, compute blocks.
+$PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
+
+$edit = optional_param('edit', -1, PARAM_BOOL);
+if ($edit != -1 && $PAGE->user_allowed_editing()) {
+    $USER->editing = $edit;
+}
+
+// Note: MDL-19010 there will be further changes to printing header and blocks.
+// The code will be much nicer than this eventually.
+$title = $course->shortname . ': ' . format_string($game->name);
+
+if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
+    $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
+        '<input type="hidden" name="id" value="'.$cm->id.'" />'.
+        '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on').'" />'.
+        '<input type="submit" value="'.
+            get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
+            '" /></div></form></td></tr></table>';
+    $PAGE->set_button($buttons);
+}
+
+$PAGE->set_title($title);
+$PAGE->set_heading($course->fullname);
+
+echo $OUTPUT->header();
 
 ob_start();
 
 require_once( $CFG->dirroot.'/lib/formslib.php');
 require( 'locallib.php');
-require( 'headergame.php');
 
-$context = game_get_context_module_instance( $cm->id);
+require_login($course->id, false, $cm);
+
 if (!has_capability('mod/game:viewreports', $context)) {
     return;
 }
