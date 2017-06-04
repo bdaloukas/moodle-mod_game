@@ -21,6 +21,9 @@
  * @package game
  **/
 require( "../../config.php");
+
+require_login();
+
 require( 'locallib.php');
 
 ?>

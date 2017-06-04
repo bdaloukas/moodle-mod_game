@@ -22,6 +22,9 @@
  **/
 
 require_once("../../config.php");
+
+require_login();
+
 require_once( "headergame.php");
 
 if (!has_capability('mod/game:viewreports', $context)) {

@@ -21,7 +21,8 @@
  * @package game
  **/
 
-require( '../../config.php');
+defined('MOODLE_INTERNAL') || die();
+
 ob_start();
 
 require_once( $CFG->dirroot.'/lib/formslib.php');

@@ -29,6 +29,8 @@
 
 // Included by ../report.php.
 
+defined('MOODLE_INTERNAL') || die();
+
 class game_default_report {
 
     public function display($cm, $course, $game) {

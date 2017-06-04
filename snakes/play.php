@@ -106,16 +106,17 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
 <img src="<?php echo $board->imagesrc; ?>"></img>
 </div>
 
-<?php
+    <?php
     if ($finish == false) {
         game_snakes_showdice( $snakes, $board);
     }
-?>
-    </td>
-	</tr>
-	</table>
-<?php
+    ?>
 
+    </td>
+    </tr>
+    </table>
+
+    <?php
     if ($game->bottomtext != '') {
         echo '<br>'.$game->bottomtext;
     }
@@ -138,8 +139,8 @@ height="<?php echo $pos->height; ?>"/>
 <div ID="dice" STYLE="position:relative; 
 left:<?php p( $board->width + round($board->width / 3)); ?>px;
 top:<?php p( -2 * round($board->height / 3));?>px; ">
-	<img src="snakes/1/dice<?php p($snakes->dice);?>.png" alt="<?php print_string('snakes_dice', 'game', $snakes->dice) ?>" />
-	</div>	
+    <img src="snakes/1/dice<?php p($snakes->dice);?>.png" alt="<?php print_string('snakes_dice', 'game', $snakes->dice) ?>" />
+    </div>
 <?php
 }
 

@@ -19,7 +19,7 @@ require_once("class.Sudoku.php");
 require( '../header.php');
 
 $action = optional_param('action', PARAM_ALPHA);   // The action.
-
+require_login();
 if ($action == 'create') {
     AppendSudokuB();
 } else {

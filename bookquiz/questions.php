@@ -23,7 +23,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once("../../../config.php");
 require_once( "../headergame.php");
 require_once("../locallib.php");
 
