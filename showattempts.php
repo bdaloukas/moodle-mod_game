@@ -228,7 +228,7 @@ function game_showattempts($game) {
                     echo '&allowdelete=1';
                 }
                 echo '">';
-                echo '<img src="'.$OUTPUT->pix_url('t/delete').'" alt="'.get_string( 'delete').'" /></a>';
+                echo '<img src="'.game_pix_url('t/delete').'" alt="'.get_string( 'delete').'" /></a>';
             }
             echo '</center></td>';
             echo '<td><center>'.$rec->firstname. ' '.$rec->lastname.'</center></td>';
@@ -245,7 +245,7 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update='.$update."&amp;q={$game->id}\">";
-                echo '<img src="'.$OUTPUT->pix_url('t/preview').'" alt="'.get_string( 'preview', 'game').'" /></a>';
+                echo '<img src="'.game_pix_url('t/preview').'" alt="'.get_string( 'preview', 'game').'" /></a>';
             }
             echo '</center></td>';
 
@@ -255,7 +255,7 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=solution&amp;".
                     "attemptid={$rec->id}&amp;gamekind={$gamekind}&amp;update=$update&amp;&amp;".
                     "q={$game->id}\">";
-                echo '<img src="'.$OUTPUT->pix_url('t/preview').'" alt="'.get_string( 'showsolution', 'game').'" /></a>';
+                echo '<img src="'.game_pix_url('t/preview').'" alt="'.get_string( 'showsolution', 'game').'" /></a>';
             }
             echo '</center></td>';
             echo "</tr>\r\n";

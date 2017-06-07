@@ -16,6 +16,8 @@
 
 // This file plays the game Hidden Picture.
 
+defined('MOODLE_INTERNAL') || die();
+
 function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture, $context) {
     global $DB, $USER;
 

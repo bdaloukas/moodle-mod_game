@@ -1,43 +1,4 @@
 <?php
-// This file is part of Moodle - http://moodle.org/
-//
-// Moodle is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// Moodle is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-
-/*
- * This page exports a game to another platform e.g. html, jar
- *
- * @author  bdaloukas
- * @package game
- **/
-
-require_once(dirname(__FILE__) . '/../../config.php');
-ob_start();
-
-require_once( "headergame.php");
-
-require_login($course->id, false, $cm);
-$context = game_get_context_module_instance( $cm->id);
-require_capability('mod/game:view', $context);
-require_once( $CFG->dirroot.'/lib/formslib.php');
-
-require_login($course->id, false, $cm);
-
-if (!has_capability('mod/game:viewreports', $context)) {
-    return;
-}
-
-$target = optional_param('target', "", PARAM_ALPHANUM); // The target is HTML or JavaMe.
 
 class mod_game_exporthtml_form extends moodleform {
 
@@ -133,7 +94,7 @@ class mod_game_exporthtml_form extends moodleform {
         $cm = get_coursemodule_from_instance('game', $game->id, $game->course);
         $context = game_get_context_module_instance( $cm->id);
 
-        require_once("export/exporthtml.php");
+        require_once("exporthtml.php");
         game_OnExportHTML( $game, $context, $html);
     }
 }
@@ -221,71 +182,9 @@ class mod_game_exportjavame_form extends moodleform {
             print_error("game_export_javame: not updated id=$javame->id");
         }
 
-        require_once("export/exportjavame.php");
+        require_once("exportjavame.php");
         game_OnExportJavaME( $game, $javame);
     }
 
 }
 
-// Creates form and set initial data.
-if ($target == 'html') {
-    $html = $DB->get_record( 'game_export_html', array( 'id' => $game->id));
-    if ($html == false) {
-        $html = new stdClass();
-        $html->id = $game->id;
-        $html->checkbutton = 1;
-        $html->printbutton = 1;
-        game_insert_record( 'game_export_html', $html);
-        $html = $DB->get_record( 'game_export_html', array( 'id' => $game->id));
-    }
-    $html->type = 0;
-    $mform = new mod_game_exporthtml_form(null, array('id' => $id, 'html' => $html));
-} else {
-    $javame = $DB->get_record( 'game_export_javame', array( 'id' => $game->id));
-    if ($javame == false) {
-        $javame = new stdClass();
-        $javame->id = $game->id;
-        $javame->filename = $game->gamekind;
-        game_insert_record( 'game_export_javame', $javame);
-        $javame = $DB->get_record( 'game_export_javame', array( 'id' => $game->id));
-    }
-    $mform = new mod_game_exportjavame_form(null, array('id' => $id, 'javame' => $javame));
-}
-
-if ($mform->is_cancelled()) {
-    ob_end_flush();
-    if ($id) {
-        redirect("view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
-    } else {
-        redirect("view.php?id=$cm->id");
-    }
-} else if ($entry = $mform->get_data()) {
-    $mform->export();
-} else {
-    ob_end_flush();
-    if (!empty($id)) {
-        $PAGE->navbar->add(get_string('export', 'game'));
-    }
-
-    $mform->display();
-}
-echo $OUTPUT->footer();
-
-function game_send_stored_file($file) {
-    if (file_exists($file)) {
-        header('Content-Description: File Transfer');
-        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($file));
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($file));
-        ob_clean();
-        flush();
-        readfile($file);
-        exit;
-    } else {
-        print_error("export.php: File does not exists ".$file);
-    }
-}

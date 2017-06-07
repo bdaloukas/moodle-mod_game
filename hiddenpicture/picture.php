@@ -15,6 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 require( '../../../config.php');
+require_login();
 
 $id = required_param('id', PARAM_INT); // Course Module ID.
 $attemptid = required_param('id2', PARAM_INT); // Course Module ID.
