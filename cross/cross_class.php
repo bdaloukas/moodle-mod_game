@@ -63,7 +63,6 @@ class Cross
         foreach ($reps as $word => $r) {
             $this->mreps[ game_upper( $word)] = $r;
         }
-
         $this->maveragereps = 0;
         foreach ($reps as $r) {
             $this->maveragereps += $r;

@@ -113,6 +113,7 @@ pawn_height [0]= 40;
 echo "var countofquestionsM=$countofquestionsm;\r\n";
 echo 'var countofquestionsS='.count($questionss).";\r\n";
 
+$questionsm = '';
 foreach ($questionss as $line) {
     $s = $line->question.'#'.str_replace( array( '"', '#'), array( "'", ' '), $line->answer);
     if ($questionsm != '') {

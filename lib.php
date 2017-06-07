@@ -1360,12 +1360,12 @@ function game_get_context_course_instance( $courseid) {
     return get_context_instance( CONTEXT_COURSE, $courseid);
 }
 
-function game_pix_url( $filename) {
+function game_pix_url( $filename, $module='') {
     global $OUTPUT;
 
     if (game_get_moodle_version() >= '03.03') {
         return $OUTPUT->image_url($filename, 'mod_game');
     } else {
-        return $OUTPUT->pix_url($filename, 'mod_game');
+        return $OUTPUT->pix_url($filename, $module);
     }
 }
