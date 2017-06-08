@@ -1821,29 +1821,7 @@ function game_create_zip( $srcdir, $courseid, $filename) {
 function game_get_string_lang( $identifier, $module, $lang) {
     global $CFG;
 
-    $langfile = "{$CFG->dirroot}/mod/game/lang/$lang/game.php";
-
-    $result = get_string_from_file( $identifier, $langfile, "\$ret");
-    if ($result != '') {
-        $pos = strpos( $result, '=');
-        if ($pos > 0) {
-            $result = substr( $result, $pos + 1);
-            $pos = strpos( $result, "'");
-            if ($pos > 0) {
-                $result = substr( $result, $pos + 1);
-                $pos = strpos( $result, "'");
-                if ($pos > 0) {
-                    $result = substr( $result, 0, $pos);
-                }
-            }
-        }
-    }
-
-    if ($result != '') {
-        return $result;
-    } else {
-        return get_string( $identifier, $module);
-    }
+    return get_string_manager()->get_string($identifier, $module, null, $lang);
 }
 
 function get_string_from_file($identifier, $langfile, $destination) {
@@ -1861,7 +1839,7 @@ function get_string_from_file($identifier, $langfile, $destination) {
         return false;
     }
 
-    return $destination .'= sprintf("'. $string[$identifier] .'");';
+    return $string[ $identifier];
 }
 
 // Inserts a record to game_attempts.

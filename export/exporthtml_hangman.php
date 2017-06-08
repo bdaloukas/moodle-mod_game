@@ -178,7 +178,7 @@ function selectLetter(l)
 
         if (display_word.indexOf("#") == -1) {
             // won
-            alert( "<?php echo game_get_string_lang( 'win', 'game', $lang); ?>");
+            alert( "<?php echo game_get_string_lang( 'win', 'mod_game', $lang); ?>");
             can_play = false;
             reset();
         }
@@ -195,7 +195,7 @@ if ($html->type != 'hangmanp') {
 ?>
         if (wrong_guesses == <?php echo $game->param10 + 1;?>) {
             // lost
-            alert( "<?php echo strip_tags( game_get_string_lang( 'hangman_loose', 'game', $lang)); ?>");
+            alert( "<?php echo strip_tags( game_get_string_lang( 'hangman_loose', 'mod_game', $lang)); ?>");
             can_play = false;
             reset();
         }
@@ -362,7 +362,7 @@ var Base64 = {
 
 <div id="question"></div>
 <img src="<?php echo ($html->type == 'hangmanp' ? '' : 'hangman_0.jpg');?>" name="hm"> 
-<a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'game', $lang); ?></a>
+<a href="javascript:reset();"><?php echo game_get_string_lang( 'html_hangman_new', 'mod_game', $lang); ?></a>
 <form name="game">
 <div id="displayWord"> </div>
 <div id="usedLetters"> </div>
