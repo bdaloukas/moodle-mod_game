@@ -827,18 +827,14 @@ function game_extend_settings_navigation($settings, $gamenode) {
                     null, null, new pix_icon('i/item', ''));
                 break;
             case 'hangman':
-                $url = new moodle_url('', null);
-                $exportnode = $gamenode->add( get_string('export', 'game'), $url, navigation_node::TYPE_SETTING,
-                    null, null, new pix_icon('i/report', ''));
-
                 $url = new moodle_url('/mod/game/export.php', array( 'id' => $PAGE->cm->id,
                     'courseid' => $courseid, 'target' => 'html'));
-                $exportnode->add( get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING,
+                $gamenode->add( get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING,
                     null, null, new pix_icon('i/item', ''));
 
                 $url = new moodle_url('/mod/game/export.php', array( 'id' => $PAGE->cm->id,
                     'courseid' => $courseid, 'target' => 'javame'));
-                $exportnode->add( get_string('export_to_javame', 'game'), $url, navigation_node::TYPE_SETTING,
+                $gamenode->add( get_string('export_to_javame', 'game'), $url, navigation_node::TYPE_SETTING,
                     null, null, new pix_icon('i/item', ''));
                 break;
             case 'snakes':
