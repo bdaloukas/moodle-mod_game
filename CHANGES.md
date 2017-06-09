@@ -1,5 +1,5 @@
 Changes in version 2017-06-08 (20170609)
-- Fix Moodle 31 compatibility
+- Fix Moodle 3.4 compatibility problems
 - Fix stylings problems
 
 Changes in version 2016-08-19 (20160819)
