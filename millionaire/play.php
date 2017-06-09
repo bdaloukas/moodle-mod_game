@@ -16,10 +16,12 @@
 
 /**
  * This file plays the game millionaire
- * 
+ *
  * @author  bdaloukas
  * @package game
  **/
+
+defined('MOODLE_INTERNAL') || die();
 
 function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context) {
     // User must select quiz or question as a source module.
@@ -134,7 +136,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $gif = "5050";
         $disabled = "";
     }
-	$src = game_pix_url($dirgif.$gif, 'mod_game');
+    $src = game_pix_url($dirgif.$gif, 'mod_game');
     echo '<input type="image" '.$disabled.' name="Help5050" id="Help5050" Title="50 50" src="'.$src.'" alt="" border="0">&nbsp;';
 
     if ($state & 2) {
@@ -235,8 +237,9 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
 
     $bfirst = true;
     $letters = get_string( 'millionaire_lettersall', 'game');
-    if( ($letters == '') or ($letters == '-'))
+    if (($letters == '') or ($letters == '-')) {
         $letters = get_string( 'lettersall', 'game');
+    }
     for ($i = 1; $i <= count( $aanswer); $i++) {
         $name = "btAnswer".$i;
         $s = game_substr( $letters, $i - 1, 1);
@@ -466,7 +469,7 @@ function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer
     }
 }
 
-// Flag 1:5050, 2:telephone 4:people.
+// Flag 1 is 5050, 2 is telephone 4 is people.
 function game_millionaire_setstate( &$millionaire, $mask) {
     global $DB;
 

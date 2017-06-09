@@ -1135,9 +1135,6 @@ function game_cross_show_welcome1() {
 }
 
 function game_cross_show_legends( $cross) {
-    //echo '<td>';
-
     ShowLegend( $cross->mlegendh,  get_string( 'cross_across', 'game'));
     ShowLegend( $cross->mlegendv, get_string( 'cross_down', 'game'));
-    //echo '</td>';
 }
