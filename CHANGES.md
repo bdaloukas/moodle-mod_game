@@ -1,4 +1,4 @@
-Changes in version 2017-06-08 (20170609)
+Changes in version 2017-06-09 (20170609)
 - Fix Moodle 3.4 compatibility problems
 - Fix stylings problems
 
