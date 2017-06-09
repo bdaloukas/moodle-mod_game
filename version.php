@@ -38,7 +38,7 @@ $plugin->component = 'mod_game';  // Full name of the plugin (used for diagnosti
 $plugin->version   = 2017060901;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires  = 2010112400;  // Requires Moodle 2.0.
 $plugin->cron      = 0;           // Period for cron to check this module (secs).
-$plugin->release   = '2017-06-09-01';
+$plugin->release   = '2017-06-09';
 
 if ($useplugin != 2) {
     $module = $plugin;

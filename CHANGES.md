@@ -1,3 +1,7 @@
+Changes in version 2017-06-08 (20170609)
+- Fix Moodle 31 compatibility
+- Fix stylings problems
+
 Changes in version 2016-08-19 (20160819)
 - New string (millionaire_lettersall) that will be used to Deutsch language
 
