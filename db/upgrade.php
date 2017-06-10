@@ -853,6 +853,16 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2007111310, 'game');
     }
 
+    if ($oldversion < 2007111303) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('bottomtext', XMLDB_TYPE_TEXT);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, 2007111303, 'game');
+    }
+
     if ($oldversion < 2007111842) {
         $table = new xmldb_table( 'game_queries');
         $field = new xmldb_field( 'gameinstanceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0');
@@ -870,16 +880,6 @@ function xmldb_game_upgrade($oldversion) {
             $dbman->drop_field($table, $field);
         }
         upgrade_mod_savepoint(true, 2007111843, 'game');
-    }
-
-    if ($oldversion < 2007111303) {
-        $table = new xmldb_table('game');
-        $field = new xmldb_field('bottomtext', XMLDB_TYPE_TEXT);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        upgrade_mod_savepoint(true, 2007111303, 'game');
     }
 
     if ($oldversion < 2007111844) {

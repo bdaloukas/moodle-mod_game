@@ -1,10 +1,5 @@
-﻿/*This code was originally based on code by
-Husain Limdiyawala(MSc IT DA-IICT)*/
-
-$(document).ready(function () {
-
-});
-
+﻿/* This code was originally based on code by
+Husain Limdiyawala(MSc IT DA-IICT) */
 
 // Global Variables.
 var totblocks = 0;
@@ -21,8 +16,8 @@ var destsnake = new Array(4);
 var ladsrc = new Array(3);
 var laddest = new Array(3);
 var quest = new Array(); // Available questions along with multiple answers.
-var COR_answered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
-var WRO_answered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
+var cor_answered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
+var wro_answered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
 var user = new Array();
 
 // Constract table with questions and answers and pick question to display.
@@ -156,7 +151,7 @@ function throwDice(i) {
 
 // The below Function Checks The Snake Biting for a user.
 function snakescheck(k) {
-    i = 0;
+    var i;
 
     for(i = 0; i <= srcsnake.length; i++) {
         if (srcsnake[i] == tots[k]) {
@@ -176,7 +171,7 @@ function snakescheck(k) {
 
 // The below function checks the ladders for a user.
 function laddercheck(k) {
-    i = 0;
+    var i;
 
     for(i = 0; i <= ladsrc.length; i++) {
         if (ladsrc[i] == tots[k]) {
@@ -254,11 +249,17 @@ function selectPlayer() {
 // The below function starts the play.
 function play() {
     if (tots[l] != null) {
-        disableField();
-        document.getElementById("status").innerHTML = "<ul class='nodis'><li>O Paiktis " + (l + 1) + " </li><li>brisketai sto tetragwno " + tots[l] + "</li><li></li></ul>";
+        var s;
 
-        Question();
-        document.getElementById("status").innerHTML = "<ul class='nodis'><li>O Paiktis " + (l + 1) + " </li><li>vrisketai sto tetragwno " + tots[l] + "</li></ul>";
+        s = "<ul class='nodis'><li>O Paiktis " + (l + 1);
+        s = s + " </li><li>brisketai sto tetragwno " + tots[l] + "</li><li></li></ul>";
+        disableField();
+        document.getElementById("status").innerHTML = s;
+
+        question();
+        s = "<ul class='nodis'><li>O Paiktis " + (l + 1);
+        s = s + " </li><li>vrisketai sto tetragwno " + tots[l] + "</li></ul>";
+        document.getElementById("status").innerHTML = s;
     } else {
         document.getElementById("status").innerHTML = "<ul class='nodis'><li>Molis exases...</li></ul>";
     }
@@ -277,13 +278,13 @@ function doit(i) {
         snakescheck(i);
         laddercheck(i);
     } else {
-        alert("ÏëïêëÞñùóåò ôçí ðßóôá, óõã÷áñçôÞñéá!!!");
+        alert("Congatulations!!!");
     }
 }
 
 // The below function checks whether the player has won or not.
 function checkWin(i) {
-    if( tots[i] == totblocks) {
+    if (tots[i] == totblocks) {
         return false;
     } else {
         return true;
@@ -296,18 +297,20 @@ function disableField() {
     document.getElementById("boardtype").disabled = "disabled";
 }
 
-function Question() {
+function question() {
+    var picked, q1;
+
     picked = selectQuest(allQuest);
     alert("Randomly selected number:" + picked);
-    Q1 = prompt(quest[picked * 4], "Απάντηση");
-    if (Q1 == quest[picked * 4 + 1]) {
+    q1 = prompt(quest[picked * 4], "Απάντηση");
+    if (q1 == quest[picked * 4 + 1]) {
         alert("Σωστά!")
         doit(l);
 
-        COR_answered.concat(quest.splice(picked * 4, 4));
+        cor_answered.concat(quest.splice(picked * 4, 4));
     } else {
         alert("Η απάντηση δεν ήταν σωστή. Χάνεις τη σειρά σου για αυτό το γύρο!")
-        WRO_answered.concat(quest.splice(picked * 4, 4));
+        wro_answered.concat(quest.splice(picked * 4, 4));
     }
 
     // Remove question and answers from available questions - (thus not allowing to have a Repeated question).

@@ -38,6 +38,11 @@ $gamegrademethod = array ( GAME_GRADEMETHOD_HIGHEST => get_string("gradehighest"
 
 define( "CONST_GAME_TRIES_REPETITION", "3");
 
+/**
+ * Returns the version of Moodle.
+ *
+ * @return string version
+ */
 function game_get_moodle_version() {
     global $DB;
 
@@ -56,6 +61,13 @@ function game_get_moodle_version() {
     }
 }
 
+/**
+ * Convert a string to upper.
+ *
+ * @param string $str
+ * @param string $lang
+ * @return string the uppercase of $str
+ */
 function game_upper( $str, $lang='') {
     if ($lang == 'user') {
         return $str;
@@ -80,6 +92,15 @@ function game_upper( $str, $lang='') {
     return $str;
 }
 
+/**
+ * Returns the HTML of a select control.
+ *
+ * @param string $name
+ * @param array a
+ * @param string $input
+ * @param array $events
+ * @return string the HTML
+ */
 function game_showselectcontrol( $name, $a,  $input, $events='') {
     $ret = "<select id=\"$name\" name=\"$name\" $events>";
 
@@ -95,6 +116,13 @@ function game_showselectcontrol( $name, $a,  $input, $events='') {
     return $ret;
 }
 
+/**
+ * Returns the HTML of a checkbox control.
+ *
+ * @param string $name
+ * @param string $value
+ * @return string the HTML
+ */
 function game_showcheckbox( $name, $value) {
     $a = array();
     $a[ 0] = get_string( 'no');
@@ -103,7 +131,15 @@ function game_showcheckbox( $name, $value) {
     return game_showselectcontrol( $name, $a, $value);
 }
 
-// Used by hangman.
+/**
+ * Used by hangman. Returns a short answer.
+ *
+ * @param string $name
+ * @param array a
+ * @param string $input
+ * @param array $events
+ * @return string the HTML
+ */
 function game_question_shortanswer( $game, $allowspaces=false, $userepetitions=true) {
     switch( $game->sourcemodule)
     {
@@ -118,7 +154,15 @@ function game_question_shortanswer( $game, $allowspaces=false, $userepetitions=t
     return false;
 }
 
-// Used by hangman.
+/**
+ * Used by hangman. Returns a short answer from glossary.
+ *
+ * @param string $name
+ * @param array a
+ * @param string $input
+ * @param array $events
+ * @return string the HTML
+ */
 function game_question_shortanswer_glossary( $game, $allowspaces, $userepetitions) {
     global $DB;
 
@@ -160,7 +204,15 @@ function game_question_shortanswer_glossary( $game, $allowspaces, $userepetition
     return $rec;
 }
 
-// Used by hangman.
+/**
+ * Used by hangman. Returns a short answer from quiz.
+ *
+ * @param string $name
+ * @param array a
+ * @param string $input
+ * @param array $events
+ * @return string the HTML
+ */
 function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
     global $DB;
 
@@ -200,7 +252,15 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
     }
 }
 
-// Used by hangman.
+/**
+ * Used by hangman. Returns a short answer from question.
+ *
+ * @param string $name
+ * @param stdClass $game
+ * @param boolean $allowspaces
+ * @param boolean $userepetitions
+ * @return the short answer record
+ */
 function game_question_shortanswer_question( $game, $allowspaces, $userepetitions) {
     global $DB;
 
@@ -242,7 +302,16 @@ function game_question_shortanswer_question( $game, $allowspaces, $userepetition
     }
 }
 
-// Used by millionaire, game_question_shortanswer_quiz, hidden picture.
+/**
+ * Select a random question. Used by millionaire, game_question_shortanswer_quiz, hidden picture.
+ *
+ * @param stdClass $game
+ * @param string $table
+ * @param string $select
+ * @param string $idfields
+ * @param boolean userepetitions
+ * @return stdClass the random question
+ */
 function game_question_selectrandom( $game, $table, $select, $idfields='id', $userepetitions=true) {
     global $DB, $USER;
 
@@ -307,6 +376,15 @@ function game_question_selectrandom( $game, $table, $select, $idfields='id', $us
     return $minid;
 }
 
+
+/**
+ * Updates the repetition table.
+ *
+ * @param int $gameid
+ * @param int $userid
+ * @param int $questionid
+ * @param int $glossaryentryid
+ */
 function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryid) {
     global $DB;
 
@@ -338,7 +416,13 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
     }
 }
 
-// Used by sudoku.
+/**
+ * Select random questions for Sudoku.
+ *
+ * @param stdClass $game
+ * @param int count
+ * @param stdClass the random record(s)
+ */
 function game_questions_selectrandom( $game, $count=1) {
     global $DB;
 
@@ -431,7 +515,15 @@ function game_questions_selectrandom( $game, $count=1) {
     return $ret;
 }
 
-// Used by game_questions_selectrandom.
+/**
+ * Select random questions. Used by game_questions_selectrandom.
+ *
+ * @param string $table
+ * @param string $select
+   @param int $idfield
+   @param int $count
+ * @return stdClass the random record(s)
+ */
 function game_questions_selectrandom_detail( $table, $select, $idfield="id", $count=1) {
     global $DB;
 

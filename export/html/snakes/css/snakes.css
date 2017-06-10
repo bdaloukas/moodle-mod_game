@@ -2,81 +2,71 @@
 Husain Limdiyawala(MSc IT DA-IICT)
 Any Duplication of this code should be avoided*/
 
-.blocks
-{
+.blocks {
     font-family: Arial, Helvetica, sans-serif;
     margin-left: 5px;
-    margin-top:2px;
-    margin-bottom:2px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     padding: 0px;
-    float:left;
+    float: left;
     height: 52px;
     width: 52px;
-    display:block;
-    position:relative;
+    display: block;
+    position: relative;
     background-image: url(../square52.png);
 }
 
-.nodis
-{
-    list-style-type:none;
+.nodis {
+    list-style-type: none;
 }
 
-#cont
-{
-    position:relative;
-    display:none;
+#cont {
+    position: relative;
+    display: none;
 }
 
-#diceimg
-{
-    display:none;
-    width:45px;
-    height:44px;
+#diceimg {
+    display: none;
+    width: 45px;
+    height: 44px;
 }
 
-.img1
-{
+.img1 {
     position:absolute;
     display:none;
 }
 
-body
-{
-    background:#CCCCCC;
+body {
+    background:#cccccc;
 }
 
-#player
-{
-    display:none;
-    z-index:5;
-    position:absolute;
+#player {
+    display: none;
+    z-index: 5;
+    position: absolute;
 }
 
-#players
-{
+#players {
     margin-top: 0.3em;
     margin-bottom: 1em;
 }
 
-#dicecont
-{
-    float:right;
-    width:170px;
+#dicecont {
+    float: right;
+    width: 170px;
     background-image: url(../images/meter.png);
     background-repeat: repeat;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
-    color: #FFFFFF;
+    color: #ffffff;
     border: 0.5em solid #333333;
     top: 30px;
     position: absolute;
     right: 880px;
 }
 
-#playbtn
-{
-    margin-left:0.5em;
+#playbtn {
+    margin-left: 0.5em;
     font-family: Arial, Helvetica, sans-serif;
     font-weight: bold;
     color: #000000;
@@ -94,6 +84,7 @@ body
     opacity: .80;
     z-index: 9999;
 }
+
 .popup_block{
     display: none; /*--hidden by default--*/
     background: #fff;
@@ -113,15 +104,18 @@ body
     -moz-border-radius: 10px;
     border-radius: 10px;
 }
+
 img.btn_close {
     float: right;
     margin: -55px -55px 0 0;
     border: 0;
 }
+
 /*--Making IE6 Understand Fixed Positioning--*/
 *html #fade {
     position: absolute;
 }
+
 *html .popup_block {
     position: absolute;
 }

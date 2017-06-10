@@ -41,6 +41,9 @@ $target = optional_param('target', "", PARAM_ALPHANUM); // The target is HTML or
 
 class mod_game_exporthtml_form extends moodleform {
 
+    /**
+     * Definition of form.
+     */
     public function definition() {
         global $CFG, $game;
 
@@ -98,6 +101,14 @@ class mod_game_exporthtml_form extends moodleform {
         $mform->closeHeaderBefore('submitbutton');
     }
 
+    /**
+     * Validation of form.
+     *
+     * @param stdClass $data
+     * @param stdClass $files
+     *
+     * @return errors
+     */
     public function validation($data, $files) {
         global $CFG, $USER, $DB;
         $errors = parent::validation($data, $files);
@@ -105,6 +116,9 @@ class mod_game_exporthtml_form extends moodleform {
         return $errors;
     }
 
+    /**
+     * Do the exporting.
+     */
     public function export() {
         global $game, $DB;
 
@@ -140,6 +154,9 @@ class mod_game_exporthtml_form extends moodleform {
 
 class mod_game_exportjavame_form extends moodleform {
 
+    /**
+     * Definition of form.
+     */
     public function definition() {
         global $CFG, $DB, $game;
 
@@ -192,6 +209,14 @@ class mod_game_exportjavame_form extends moodleform {
         $mform->closeHeaderBefore('submitbutton');
     }
 
+    /**
+     * Validation of form.
+     *
+     * @param stdClass $data
+     * @param stdClass $files
+     *
+     * @return errors
+     */
     public function validation($data, $files) {
         global $CFG, $USER, $DB;
         $errors = parent::validation($data, $files);
@@ -199,6 +224,9 @@ class mod_game_exportjavame_form extends moodleform {
         return $errors;
     }
 
+    /**
+     * Do the exporting.
+     */
     public function export() {
         global $game, $DB;
 
@@ -271,6 +299,11 @@ if ($mform->is_cancelled()) {
 }
 echo $OUTPUT->footer();
 
+/**
+ * Sends via html a file.
+ *
+ * @param string file
+ */
 function game_send_stored_file($file) {
     if (file_exists($file)) {
         header('Content-Description: File Transfer');

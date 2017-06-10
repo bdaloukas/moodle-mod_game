@@ -40,6 +40,11 @@ game_do_attempt( $id, $game, $action, $course, $context);
 
 /**
  * Do the required checks and print header.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $course
+ * @param stdClass $context
  */
 function game_show_header( &$id, &$game, &$course, &$context) {
     global $DB, $USER, $PAGE, $OUTPUT;
@@ -118,8 +123,12 @@ function game_show_header( &$id, &$game, &$course, &$context) {
 
 /**
  * Do one attempt.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $course
+ * @param stdClass $context
  */
-
 function game_do_attempt( $id, $game, $action, $course, $context) {
     global $OUTPUT;
 
@@ -194,6 +203,12 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
 
 /**
  * Creates one game.
+ *
+ * @param stdClass $game
+ * @param int $id
+ * @param int $forcenew
+ * @param stdClass $course
+ * @param stdClass $context
  */
 function game_create( $game, $id, $forcenew, $course, $context) {
     global $USER, $CFG, $DB;
@@ -236,6 +251,8 @@ function game_create( $game, $id, $forcenew, $course, $context) {
 
 /**
  * Unpacks the cross.
+ *
+ * @param string $g
  */
 function game_cross_unpackpuzzle( $g) {
     $ret = "";

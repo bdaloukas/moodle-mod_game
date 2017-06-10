@@ -44,6 +44,13 @@ function game_print( $game, $update, $context) {
     }
 }
 
+/**
+ * Prints a cross.
+ *
+ * @param stdClass $game
+   @param boolean $update
+ * @param stdClass $context
+ */
 function game_print_cross( $game, $update, $context) {
     require( "cross/play.php");
 
@@ -70,6 +77,13 @@ function game_print_cross( $game, $update, $context) {
         $showstudentguess, $context);
 }
 
+/**
+ * Prints a cryptex.
+ *
+ * @param stdClass $game
+   @param boolean $update
+ * @param stdClass $context
+ */
 function game_print_cryptex( $game, $update, $context) {
     global $DB;
 

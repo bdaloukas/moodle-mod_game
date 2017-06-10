@@ -61,7 +61,6 @@ define('GAME_REVIEW_GENERALFEEDBACK', 32 * 0x1041); // Show general feedback.
  * @param object $instance An object from the form in mod.html
  * @return int The id of the newly inserted game record
  **/
-
 function game_add_instance($game) {
     global $DB;
 
@@ -138,6 +137,11 @@ function game_update_instance($game) {
     return true;
 }
 
+/**
+ * Updates some fields before writing to database.
+ *
+ * @param stdClass $game
+ */
 function game_before_add_or_update(&$game) {
     if (isset( $game->questioncategoryid)) {
         $pos = strpos( $game->questioncategoryid, ',');
@@ -264,7 +268,12 @@ function game_user_outline($course, $user, $mod, $game) {
 /**
  * Print a detailed representation of what a user has done with
  * a given particular instance of this module, for user activity reports.
- **/
+
+ * @param stdClass $course
+ * @param stdClass $user
+ * @param string $mod
+ * @param stdClass $game
+ */
 function game_user_complete($course, $user, $mod, $game) {
     global $DB;
 
@@ -296,11 +305,17 @@ function game_user_complete($course, $user, $mod, $game) {
  * @uses $CFG
  * @return boolean
  * @todo Finish documenting this function
- **/
+ *
+ * @param stdClass $course
+ * @param int $isteacher
+ * @param int $timestart
+ *
+ * @return True if anything was printed, otherwise false.
+ */
 function game_print_recent_activity($course, $isteacher, $timestart) {
     global $CFG;
 
-    return false;  // True if anything was printed, otherwise false.
+    return false;
 }
 
 /**
@@ -308,7 +323,6 @@ function game_print_recent_activity($course, $isteacher, $timestart) {
  * This function searches for things that need to be done, such
  * as sending out mail, toggling flags etc ...
  *
-
  * @uses $CFG
  * @return boolean
  * @todo Finish documenting this function
@@ -512,6 +526,13 @@ function game_grade_item_delete( $game) {
 
 /**
  * Returns all game graded users since a given time for specified game
+ * @param stdClass $activities
+ * @param int $index
+ * @param int $timestart
+ * @param int courseid
+ * @param int cmid
+ * @param int userid
+ * @param int groupid
  */
 function game_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
     global $DB, $COURSE, $USER;
@@ -607,6 +628,14 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
     }
 }
 
+/**
+ * Prints recent activity.
+ *
+ * @param stdClass $activity
+ * @param int $courseid
+ * @param stdClass $detail
+ * @param array $modgames
+ */
 function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames) {
     global $CFG, $OUTPUT;
 
@@ -755,10 +784,26 @@ function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup
     return '';
 }
 
+/**
+ * Converts score of game to grade.
+ *
+ * @param stdClass $game
+ * @param float $score
+ *
+ * @return float  the score
+ */
 function game_format_score($game, $score) {
     return format_float($game->grade * $score / 100, $game->decimalpoints);
 }
 
+/**
+ * Converts grade to score.
+ *
+ * @param stdClass $game
+ * @param float $grade
+ *
+ * @return foat score
+ */
 function game_format_grade($game, $grade) {
     return format_float($grade, $game->decimalpoints);
 }
@@ -1103,6 +1148,18 @@ if (defined('USE_GET_SHORTCUTS')) {
     }
 }
 
+/**
+ * Serves the game attachents.
+ *
+ * @param stdClass $course
+ * @param stdClass $cm
+ * @param stdClass $context
+ * @param string filearea
+ * @param array args
+ * @param boolean forcedownload
+ *
+ * @return boolean false if not exists file
+ */
 function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
     global $CFG, $DB;
 
@@ -1176,6 +1233,8 @@ function game_reset_course_form_definition(&$mform) {
 
 /**
  * Course reset form defaults.
+ * @param stdClass $course
+ *
  * @return array
  */
 function game_reset_course_form_defaults($course) {
@@ -1188,6 +1247,7 @@ function game_reset_course_form_defaults($course) {
  *
  * @global object
  * @param $data the data submitted from the reset course.
+ *
  * @return array status array
  */
 function game_reset_userdata($data) {
@@ -1295,6 +1355,7 @@ function game_reset_userdata($data) {
  * @param object $cm Course-module
  * @param int $userid User ID
  * @param bool $type Type of comparison (or/and; can be used as return value if no conditions)
+ *
  * @return bool True if completed, false if not, $type if conditions not set.
  */
 function game_get_completion_state($course, $cm, $userid, $type) {
@@ -1340,6 +1401,14 @@ function game_scale_used_anywhere($scaleid) {
     }
 }
 
+/**
+ * Returns the context instance of a Module. Is the same for all version of Moodle.
+ *
+ * This is used to find out if scale used anywhere
+ *
+ * @param int $moduleid
+ * @return stdClass context
+ */
 function game_get_context_module_instance( $moduleid) {
     if (class_exists( 'context_module')) {
         return context_module::instance( $moduleid);
@@ -1348,6 +1417,14 @@ function game_get_context_module_instance( $moduleid) {
     return get_context_instance( CONTEXT_MODULE, $moduleid);
 }
 
+/**
+ * Returns the context instance of a course. Is the same for all version of Moodle.
+ *
+ * This is used to find out if scale used anywhere
+ *
+ * @param int $moduleid
+ * @return stdClass context
+ */
 function game_get_context_course_instance( $courseid) {
     if (class_exists( 'context_course')) {
         return context_course::instance( $courseid);
@@ -1356,11 +1433,18 @@ function game_get_context_course_instance( $courseid) {
     return get_context_instance( CONTEXT_COURSE, $courseid);
 }
 
+/**
+ * Returns the url of a pix file. Is the same for all versions of Moodle.
+ *
+ * @param string $filename
+ * @param string module
+ * @return stdClass url
+ */
 function game_pix_url( $filename, $module='') {
     global $OUTPUT;
 
     if (game_get_moodle_version() >= '03.03') {
-        return $OUTPUT->image_url($filename, 'mod_game');
+        return $OUTPUT->image_url($filename, $module);
     } else {
         return $OUTPUT->pix_url($filename, $module);
     }

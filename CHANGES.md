@@ -1,3 +1,6 @@
+Changes in version 2017-06-10 (20170610)
+- Fix phpdocs problems
+
 Changes in version 2017-06-09 (20170609)
 - Fix Moodle 3.4 compatibility problems
 - Fix stylings problems

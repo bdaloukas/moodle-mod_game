@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Code fragment to define the version of game
- * This fragment is called by moodle_needs_upgrading() and /admin/index.php
+ * Version information
  *
- * @author
- * @package game
- **/
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -35,10 +35,10 @@ if (!isset( $plugin)) {
 }
 
 $plugin->component = 'mod_game';  // Full name of the plugin (used for diagnostics).
-$plugin->version   = 2017060901;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version   = 2017061001;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires  = 2010112400;  // Requires Moodle 2.0.
 $plugin->cron      = 0;           // Period for cron to check this module (secs).
-$plugin->release   = '2017-06-09';
+$plugin->release   = '2017-06-10';
 
 if ($useplugin != 2) {
     $module = $plugin;
