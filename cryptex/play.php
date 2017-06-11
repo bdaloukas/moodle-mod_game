@@ -28,7 +28,7 @@ require_once( "cryptexdb_class.php");
 /**
  * Plays the game cryptex.
  *
- * @param int $id
+ * @param $id
  * @param stdClass $game
  * @param stdClass $atttempt
  * @param $cryptexrec

@@ -36,6 +36,18 @@ $rows = required_param('rows', PARAM_INT);
 $filenamenumbers = required_param('n', PARAM_PATH); // Path to numbers picture.
 create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
 
+/**
+ * Create an image.
+ *
+ * @param $id
+ * @param $attemptid
+ * @param $foundcells
+ * @param $cells
+ * @param $filehash
+ * @param $cols
+ * @param $rows
+ * @param $filenamenumbers
+ */
 function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers) {
     global $CFG;
 
@@ -108,6 +120,18 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
     imagedestroy ($imghandle);
 }
 
+/**
+ * Show number.
+ *
+ * @param $imghandle
+ * @param $imgnumbers
+ * @param $number
+ * @param $x1
+ * @param $y1
+ * @param $width
+ * @param $height
+ * @param $sizenumbers
+ */
 function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
         $widthnumber = $sizenumbers[ 0] / 10;

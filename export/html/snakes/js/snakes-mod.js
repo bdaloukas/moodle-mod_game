@@ -41,7 +41,7 @@ quest[15] = "one";
 var z = 0;
 var allQuest;
 
-for () {
+for (;;) {
     if (quest[z] === null) {
         break;
     }

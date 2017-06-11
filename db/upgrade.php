@@ -41,6 +41,11 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Upgrades database
+ *
+ * @param $oldversion
+ */
 function xmldb_game_upgrade($oldversion) {
 
     global $CFG, $DB;

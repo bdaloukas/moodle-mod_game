@@ -16,13 +16,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-// This files plays the game "Crossword".
-
+/**
+ * This files plays the game "Crossword".
+ *
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 require( "cross_class.php");
 require( "crossdb_class.php");
 
+/**
+ * Plays the game crossword.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $cross
+ * @param string $g
+ * @param boolean $endofgame
+ * param stdClass $context 
+ */
 function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $context) {
     if ($endofgame) {
         if ($g == '') {
@@ -45,6 +61,13 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $con
     return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false, false, false, false, false, true, $context);
 }
 
+/**
+ * Creates a new cross.
+ *
+ * @param stdClass $game
+ * @param int $attemptid
+ * @param stdClass $crossm
+ */
 function game_cross_new( $game, $attemptid, &$crossm) {
     global $DB, $USER;
 
@@ -102,6 +125,12 @@ function game_cross_new( $game, $attemptid, &$crossm) {
     }
 }
 
+/**
+ * Shows the legend.
+ *
+ * @param array $legend
+ * @param string $title
+ */
 function showlegend( $legend, $title) {
     if (count( $legend) == 0) {
         return;
@@ -114,6 +143,24 @@ function showlegend( $legend, $title) {
     }
 }
 
+/**
+ * Plays the game crossword.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $crossrec
+ * @param string $g
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param boolean $endofgame
+ * @param boolean $print
+ * @param boolean $checkbutton
+ * @param boolean $showhtmlsolutions
+ * @param boolean $showhtmlprintbutton
+ * @param boolean $showstudentguess
+ * @param stdClass $context
+ */
 function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
     $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton, $showstudentguess, $context) {
     global $CFG, $DB;
@@ -1134,6 +1181,18 @@ function game_cross_show_welcome1() {
 <?php
 }
 
+
+/**
+ * Show the legend (horizontal and vertical)
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $cross
+ * @param string $g
+ * @param boolean $endofgame
+ * param stdClass $context 
+ */
 function game_cross_show_legends( $cross) {
     ShowLegend( $cross->mlegendh,  get_string( 'cross_across', 'game'));
     ShowLegend( $cross->mlegendv, get_string( 'cross_down', 'game'));

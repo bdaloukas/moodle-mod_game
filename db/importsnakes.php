@@ -26,6 +26,10 @@ defined('MOODLE_INTERNAL') || die();
 
 game_importsnakes();
 
+
+/**
+ * Imports the snakes database.
+ */
 function game_importsnakes() {
     global $DB;
 

@@ -14,6 +14,14 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * The class CryptexDB loads/save the cryptex from/to database.
+ *
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -28,8 +36,8 @@ class CryptexDB extends CrossDB {
      * Save cryptex.
      *
      * @param stdClass $game
-     * @param array &$crossm
-     * @param array &$crossd
+     * @param array $crossm
+     * @param array $crossd
      * @param int id
      * @param $letters
      *
@@ -60,8 +68,8 @@ class CryptexDB extends CrossDB {
     /**
      * Compute letters.
      *
-     * @param array &$crossm
-     * @param array &$crossd
+     * @param array $crossm
+     * @param array $crossd
      *
      * @return the letters.
      */
@@ -130,7 +138,7 @@ class CryptexDB extends CrossDB {
      * @param $rows
      * @param $letters
      * @param $mask
-     * @param boolean $showsolution
+     * @param $showsolution
      * @param $textdir
      */
     public function displaycryptex( $cols, $rows, $letters, $mask, $showsolution, $textdir) {
@@ -226,9 +234,9 @@ class CryptexDB extends CrossDB {
      * Loads the cryptex from database.
      *
      * @param array $crossm
-     * @param &$mask
-     * @param &$corrects
-     * @param &$language
+     * @param $mask
+     * @param $corrects
+     * @param $language
      *
      * @return questions
      */
@@ -293,9 +301,9 @@ class CryptexDB extends CrossDB {
     /**
      * Calss the computedata of class Cross.
      *
-     * @param &$crossm
-     * @param &$crossd
-     * @param &$letters
+     * @param $crossm
+     * @param $crossd
+     * @param $letters
      * @param $minwords
      * @param $maxwords
      * @param $mtimelimit

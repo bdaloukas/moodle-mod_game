@@ -14,16 +14,16 @@
      * I find setting the color in the css gives me more flexibility
         * than the PNG solution.
     */
-    background-color:transparent !important;
+    background-color: transparent !important;
     background-color: #333;
     /* this hack is for opera support
      * you can uncomment the background-image if you don't care about opera.
      * this gives you the flexibility to use any bg color that you want, instead of the png
      */
     background-image: url("../images/maskBG.png") !important; // For browsers Moz, Opera, etc.
-    background-image:none;
+    background-image: none;
     background-repeat: repeat;
-    display:none;
+    display: none;
 }
 
 #popupContainer {
@@ -46,9 +46,10 @@
     position: relative;
     z-index: 202;
 }
+
 #popupTitleBar {
     background-color: #090;
-    color: # 000;
+    color: #000;
     font-weight: bold;
     height: 1.3em;
     padding: 5px;
@@ -59,10 +60,12 @@
     position: relative;
     z-index: 203;
 }
+
 #popupTitle {
     float:left;
     font-size: 1.1em;
 }
+
 #popupControls {
     float: right;
     cursor: pointer;

@@ -24,6 +24,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Exports millionaire.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param $maxanswers
+ * @param $countofquestions
+ * @param $retfeedback
+ * @param $destdir
+ * @param $files
+ */
 function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files) {
     global $CFG, $DB, $USER;
 
@@ -97,6 +108,13 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
     return $ret;
 }
 
+/**
+ * Exports to html a "Millionaire" game.
+ *
+ * @param stdClass $game
+ * @param $questions
+ * @param $maxquestions
+ */
 function game_millionaire_html_print( $game,  $questions, $maxquestions) {
     $color1 = 'black';
     $color2 = 'DarkOrange';
