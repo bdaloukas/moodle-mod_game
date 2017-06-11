@@ -14,27 +14,20 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Table of contents.
+ *
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 defined('MOODLE_INTERNAL') || die();
 
 define('NUM_NONE',     '0');
 define('NUM_NUMBERS',  '1');
 define('NUM_BULLETS',  '2');
 define('NUM_INDENTED', '3');
-
-
-/* Included from mod/book/view.php and print.php.
- *
- * uses:
- *   $chapters - all book chapters
- *   $chapter - may be false
- *   $cm - course module
- *   $book - book
- *   $edit - force editing view
- *
- * fills:
- *   $toc
- *   $title (not for print)
- */
 
 $currtitle = '';    // Active chapter title (plain text).
 $currsubtitle = ''; // Active subchapter if any.

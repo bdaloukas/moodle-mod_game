@@ -16,7 +16,25 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * The class CryptexDB loads/save the cryptex from/to database.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class CryptexDB extends CrossDB {
+    /**
+     * Save cryptex.
+     *
+     * @param stdClass $game
+     * @param array &$crossm
+     * @param array &$crossd
+     * @param int id
+     * @param $letters
+     *
+     * @return the saved record
+     */
     public function savecryptex( $game, &$crossm, $crossd, $id, $letters) {
         global $USER;
 
@@ -39,6 +57,14 @@ class CryptexDB extends CrossDB {
         return $newrec;
     }
 
+    /**
+     * Compute letters.
+     *
+     * @param array &$crossm
+     * @param array &$crossd
+     *
+     * @return the letters.
+     */
     public function computeletters( $crossm, $crossd) {
         $letters = '';
         $cols = $crossm->cols + 1;
@@ -97,6 +123,16 @@ class CryptexDB extends CrossDB {
         return $retletters;
     }
 
+    /**
+     * Displays the cryptex.
+     *
+     * @param $cols
+     * @param $rows
+     * @param $letters
+     * @param $mask
+     * @param boolean $showsolution
+     * @param $textdir
+     */
     public function displaycryptex( $cols, $rows, $letters, $mask, $showsolution, $textdir) {
         echo "<table border=1 $textdir>";
         for ($row = 0; $row < $rows; $row++) {
@@ -119,6 +155,15 @@ class CryptexDB extends CrossDB {
         echo "</table>";
     }
 
+    /**
+     * Inserts a char.
+     *
+     * @param $letters
+     * @param $cols
+     * @param $rows
+     * @param $char
+     * @param int &$spaces
+     */
     public function insertchar( &$letters, $cols, $rows, $char, &$spaces) {
         $len = game_strlen( $letters);
         for ($i = 0; $i < $len; $i++) {
@@ -130,6 +175,15 @@ class CryptexDB extends CrossDB {
         }
     }
 
+    /**
+     * Inserts chars.
+     *
+     * @param $letters
+     * @param $cols
+     * @param $rows
+     * @param $char
+     * @param int &$spaces
+     */
     public function insertchars( &$letters, $cols, $rows, $char, &$spaces) {
         $len = game_strlen( $letters);
         for ($i = 0; $i < $len; $i++) {
@@ -150,6 +204,13 @@ class CryptexDB extends CrossDB {
         return false;
     }
 
+    /**
+     * Gets the hash of a word.
+     *
+     * @param string $word
+     *
+     * @return the hash
+     */
     public function gethash( $word) {
         $x = 37;
         $len = count( game_strlen( $word));
@@ -161,6 +222,16 @@ class CryptexDB extends CrossDB {
         return $x;
     }
 
+    /**
+     * Loads the cryptex from database.
+     *
+     * @param array $crossm
+     * @param &$mask
+     * @param &$corrects
+     * @param &$language
+     *
+     * @return questions
+     */
     public function loadcryptex( $crossm, &$mask, &$corrects, &$language) {
         global $DB;
 
@@ -206,10 +277,29 @@ class CryptexDB extends CrossDB {
         return $questions;
     }
 
+    /**
+     * Calss the setwords of class Cross.
+     *
+     * @param $answers
+     * @param $maxcols
+     * @param $reps
+     *
+     * @return Cross::setwords
+     */
     public function setwords( $answers, $maxcols, $reps) {
         return Cross::setwords( $answers, $maxcols, $reps);
     }
 
+    /**
+     * Calss the computedata of class Cross.
+     *
+     * @param &$crossm
+     * @param &$crossd
+     * @param &$letters
+     * @param $minwords
+     * @param $maxwords
+     * @param $mtimelimit
+     */
     public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
         if (!cross::computedata( $crossm, $crossd, $letters, $minwords, $maxwords, $mtimelimit)) {
             return false;

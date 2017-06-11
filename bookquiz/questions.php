@@ -123,6 +123,14 @@ if (($recs = $DB->get_records( 'book_chapters', array('bookid' => $game->bookid)
 
 echo $OUTPUT->footer($course);
 
+/**
+ * Save infos to database.
+ *
+ * @param int $gameid
+ * @param int $bookid
+ * @param array $ids
+ * @param stdClass $form
+ */
 function game_bookquiz_save( $gameid, $bookid, $ids, $form) {
     global $DB;
 

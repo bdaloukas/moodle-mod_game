@@ -65,15 +65,13 @@ defined('MOODLE_INTERNAL') || die();
  * @package Sudoku
  */
 
-/*
+/**
  * Basic functionality needed for ObjectSs in the Sudoku solver.
  *
- * Technically speaking these aren't restricted to the Sudoku classes
- * and are of use generally.
- *
- * @package Sudoku
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 class objects {
     /**
      * @desc Are two array's equal (have the same contents).

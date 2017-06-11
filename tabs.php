@@ -17,11 +17,10 @@
 /**
  * Sets up the tabs used by the game pages based on the users capabilites.
  *
- * @author Vasilis Daloukas.
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package game
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 if (empty($game)) {

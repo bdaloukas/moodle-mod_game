@@ -26,8 +26,13 @@ Codewalkers PHP Coding Contest of July 2002
 Author Àngel Fenoy from Arenys de Mar, Barcelona.
 */
 
-defined('MOODLE_INTERNAL') || die();
-
+/**
+ * The class cross computes a crossword.
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class Cross
 {
     public $minputanswers;   // Contains the words and the answers.
@@ -58,6 +63,15 @@ class Cross
     public $mreps;      // Repetition of each word.
     public $maveragereps; // Average of repetitions.
 
+    /**
+     * Set words for computing.
+     *
+     * @param array $answers
+     * @param int $maxcols
+     * @param array reps
+     *
+     * @return \moodle_url
+     */
     public function setwords( $answers, $maxcols, $reps) {
         $this->mreps = array();
         foreach ($reps as $word => $r) {
@@ -114,6 +128,9 @@ class Cross
         return count( $this->mwords);
     }
 
+    /**
+     * Randomizes the words.
+     */
     public function randomize() {
         $n = count( $this->mwords);
         for ($j = 0; $j <= $n / 4; $j++) {
@@ -123,6 +140,18 @@ class Cross
         }
     }
 
+    /**
+     * Compute one crossword.
+     *
+     * @param stdClass crossm
+     * @param stdClass crossm
+     * @param string $letters
+     * @param int minwords
+     * @param int maxwords
+     * @param int mtimelimit
+     *
+     * @return the crossword
+     */
     public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
         $t1 = time();
 
@@ -141,7 +170,7 @@ class Cross
             // Selects the size of the cross.
             $n20 = mt_rand( $this->mn20min, $this->mn20max);
 
-            if (!$this->computenextcross( $n20, $t1, $ctries, $minwords, $maxwords, $nochange)) {
+            if (!$this->computenextcross( $n20, $ctries, $minwords, $maxwords, $nochange)) {
                 break;
             }
 
@@ -160,7 +189,18 @@ class Cross
         return $this->savepuzzle( $crossm, $crossd, $ctries, time() - $t1);
     }
 
-    public function computenextcross( $n20, $t1, $ctries, $minwords, $maxwords, &$nochange) {
+    /**
+     * Compute the next crossword.
+     *
+     * @param int $n20
+     * @param int $ctries
+     * @param int $minwords
+     * @param int $maxwords
+     * @param int &$nochange
+     *
+     * @return \moodle_url
+     */
+    public function computenextcross( $n20, $ctries, $minwords, $maxwords, &$nochange) {
         $maxw = $n20;
 
         $n21 = $n20 + 1;
@@ -247,6 +287,22 @@ class Cross
         return true;
     }
 
+    /**
+     * Compute the scrore of one crossword.
+     *
+     * @param string $puzzle
+     * @param int $n20
+     * @param int $n22
+     * @param int $n2222
+     * @param int $nwords
+     * @param int @$nconnectors
+     * @param int @$nfilleds
+     * @param int @$cspaces
+     * @param stdClass $crossword
+     * @param array reps
+     *
+     * @return \moodle_url
+     */
     public function computescore( $puzzle, $n20, $n22, $n2222, $nwords, &$nconnectors, &$nfilleds, &$cspaces, $crossword) {
         $nconnectors = $nfilleds = 0;
         $puzzle00 = str_replace('.', '0', $puzzle);
@@ -279,6 +335,15 @@ class Cross
         return $score - 10 * $sumrep;
     }
 
+    /**
+     * Compute puzzle info.
+     *
+     * @param int $n20
+     * @param int $crosspos
+     * @param int $crossdir
+     * @param stdClass $crossword
+     * @param boolean bprint
+     */
     public function computepuzzleinfo( $n20, $crosspos, $crossdir, $crossword, $bprint=false) {
         $bprint = false;
         $n22 = $n20 + 2;
@@ -344,6 +409,14 @@ class Cross
         }
     }
 
+    /**
+     * Save the crossword to database.
+     *
+     * @param array &$crossm
+     * @param array &$crossd
+     * @param int ctries
+     * @param int time
+     */
     public function savepuzzle( &$crossm, &$crossd, $ctries, $time) {
         $n22 = $this->mbestn20 + 2;
 
@@ -410,12 +483,24 @@ class Cross
         return (count( $crossd) > 0);
     }
 
+    /**
+     * Swaps two variables.
+     *
+     * @param $a
+     * @param $b
+     */
     public function swap( &$a, &$b) {
         $temp = $a;
         $a = $b;
         $b = $temp;
     }
 
+    /**
+     * Displays a crossword.
+     *
+     * @param sting $puzzle
+     * @param int $n20
+     */
     public function displaycross($puzzle, $n20) {
         $n21 = $n20 + 1;
         $n22 = $n20 + 2;
@@ -453,6 +538,23 @@ class Cross
         return $ret.'</tr></table>';
     }
 
+    /**
+     * Scans a positions.
+     *
+     * @param int $pos
+     * @param int $dir
+     * @param int $valblanc
+     * @param string &$puzzle
+     * @param array &$words
+     * @param &$magics
+     * @param poss
+     * @param #ccrosspos
+     * @param crossdir
+     * @param crosssword
+     * @param int $n20
+     *
+     * @return true if it is ok.
+     */
     public function scan_pos($pos, $dir, $valblanc, &$puzzle, &$words, &$magics,
         &$poss, &$crosspos, &$crossdir, &$crossword, $n20) {
 
@@ -578,6 +680,15 @@ class Cross
         return false;
     }
 
+    /**
+     * my_preg_match (backward compatibility).
+     *
+     * @param $w
+     * @param @words
+     * @param &$word
+     *
+     * @return true if it is ok.
+     */
     public function my_preg_match( $w, $words, &$word) {
         $a = explode( ";", $words);
         $lenw = game_strlen( $w);
@@ -604,6 +715,13 @@ class Cross
         return false;
     }
 
+    /**
+     * Set a char to the specified position.
+     *
+     * @param @$s
+     * @param int $pos
+     * @param char $char
+     */
     public function setchar( &$s, $pos, $char) {
         $ret = "";
 
@@ -614,6 +732,17 @@ class Cross
         $s = $ret . $char . game_substr( $s, $pos + 1, game_strlen( $s) - $pos - 1);
     }
 
+    /**
+     * Show html base.
+     *
+     * @param $crossm
+     * @param $crossd
+     * @param boolean $showsolution
+     * @param boolean $showhtmlsolutions
+     * @param boolean $showstudentguess
+     * @param stdClass $context
+     * @param stdClass $game
+     */
     public function showhtml_base( $crossm, $crossd, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game) {
         $this->mLegendh = array();
         $this->mLegendv = array();
@@ -735,10 +864,26 @@ class Cross
         return $sret;
     }
 
+    /**
+     * Compares length of two strings.
+     *
+     * @param string $a
+     * @param string $b
+     *
+     * @return -1 if a < b, 0 if equal
+     */
     public function cmp($a, $b) {
         return game_strlen($b) - game_strlen($a);
     }
 
+    /**
+     * Compares two strings with random
+     *
+     * @param string $a
+     * @param string $b
+     *
+     * @return -1 if a < b, 0 if equal
+     */
     public function cmp_magic($a, $b) {
         return (game_strlen($a) + mt_rand(0, 3)) - (game_strlen($b) - mt_rand(0, 1));
     }

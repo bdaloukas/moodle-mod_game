@@ -16,7 +16,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// This file creates a board for "Snakes and Ladders".
+/**
+ * This file creates a board for "Snakes and Ladders".
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom,
         $ofsright, $ofsleft, $board, $setwidth, $setheight) {
     global $CFG;

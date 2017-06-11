@@ -15,19 +15,21 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Defines backup_glossary_activity_task class
+ *
  * @package mod_game
  * @subpackage backup-moodle2
- * class backup_game_activity_task
- * @author
- * @package game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/mod/game/backup/moodle2/backup_game_stepslib.php'); // Because it exists (must).
-require_once($CFG->dirroot . '/mod/game/backup/moodle2/backup_game_settingslib.php'); // Because it exists (optional).
 
 /**
+ * Defines backup_game_activity_task class
+ *
  * game backup task that provides all the settings and steps to perform one
  * complete backup of the activity
  */
@@ -49,8 +51,10 @@ class backup_game_activity_task extends backup_activity_task {
     }
 
     /**
-     * Code the transformations to perform in the activity in
-     * order to get transportable (encoded) links
+     * Encodes URLs to the index.php and view.php scripts
+     *
+     * @param string $content some HTML text that eventually contains URLs to the activity instance scripts
+     * @return string the content with the URLs encoded
      */
     static public function encode_content_links($content) {
         global $CFG;

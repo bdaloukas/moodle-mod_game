@@ -15,13 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Define all the backup steps that will be used by the backup_game_activity_task
+ *
  * @package mod_game
  * @subpackage backup-moodle2
  * @author bdaloukas
- */
-
-/**
- * Define all the backup steps that will be used by the backup_game_activity_task
+backup_game_settingslib.php
  */
 
 /**

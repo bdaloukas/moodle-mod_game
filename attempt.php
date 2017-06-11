@@ -18,7 +18,8 @@
  * This page prints a particular attempt of game
  *
  * @author  bdaloukas
- * @package game
+ * @copyright 2007 Vasilis Daloukas
+ * @package mod_game
  **/
 require_once( "../../config.php");
 require_once( "lib.php");
@@ -126,6 +127,7 @@ function game_show_header( &$id, &$game, &$course, &$context) {
  *
  * @param int $id
  * @param stdClass $game
+ * @param string $action
  * @param stdClass $course
  * @param stdClass $context
  */

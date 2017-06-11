@@ -16,6 +16,17 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Plays the game bookquiz.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $bookquiz
+ * @param int $bookquizid
+ * @param int $chapterid
+ * @param stdClass $context
+ */
 function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $context) {
     if ($attempt != false and $bookquiz != false) {
         return game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context);
@@ -37,6 +48,16 @@ function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $c
     return game_bookquiz_play( $id, $game, $attempt, $bookquiz, 0, $context);
 }
 
+/**
+ * Plays the game bookquiz.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $bookquiz
+ * @param int $chapterid
+ * @param stdClass $context
+ */
 function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context) {
     global $DB, $OUTPUT, $cm;
 
@@ -240,6 +261,12 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
     }
 }
 
+/**
+ * Computes the last chapter.
+ *
+ * @param stdClass $game
+ * @param stdClass $bookquiz
+ */
 function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
     global $DB;
 
@@ -262,6 +289,17 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
     }
 }
 
+/**
+ * Shows questions.
+ *
+ * @param int $id
+ * @param int $questionid
+ * @param int $chapterid
+ * @param int $nextchapterid
+ * @param int $scoreattempt
+ * @param stdClass $game
+ * @param stdClass $context
+ */
 function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapterid, $scoreattempt, $game, $context) {
     $onlyshow  = false;
     $showsolution = false;
@@ -306,6 +344,13 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
     echo "</form>\n";
 }
 
+/**
+ * Selects random one question from the input list.
+ *
+ * @param array $questions
+ *
+ * @return the position of the random question.
+ */
 function game_bookquiz_selectrandomquestion( $questions) {
     global $DB;
 
@@ -333,6 +378,15 @@ function game_bookquiz_selectrandomquestion( $questions) {
     }
 }
 
+/**
+ * Check if the answers are correct.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $bookquiz
+ * @param stdClass $context
+ */
 function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz, $context) {
     global $USER, $DB;
 

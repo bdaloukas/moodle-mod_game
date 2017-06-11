@@ -16,8 +16,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-// This files plays the game "Snakes and Ladders".
-
+/**
+ * This files plays the game "Snakes and Ladders".
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
     if ($attempt != false and $snakes != false) {
         return game_snakes_play( $id, $game, $attempt, $snakes, $context);

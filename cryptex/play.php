@@ -25,6 +25,16 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once( "cryptexdb_class.php");
 
+/**
+ * Plays the game cryptex.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $atttempt
+ * @param $cryptexrec
+ * @param $endofgame
+ * @param stdClass $context
+ */
 function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $context) {
     global $DB, $USER;
 
@@ -99,7 +109,18 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
     return game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context);
 }
 
-// The q means game_queries.id.
+/**
+ * Checks if is correct.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $atttempt
+ * @param $cryptexrec
+ * @param $q (The q means game_queries.id).
+ * @param $answer
+ * @param $finishattempt
+ * @param stdClass $context
+ */
 function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $finishattempt, $context) {
     global $DB;
 
@@ -144,6 +165,21 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $fi
     game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm, true, $onlyshow, $showsolution, $context);
 }
 
+/**
+ * Plays the game cryptex.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $atttempt
+ * @param $cryptexrec
+ * @param $crosssm
+ * @param boolean $updateattempt
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $context
+ * @param boolean $print
+ * @param boolean $showhtmlprintbutton
+ */
 function game_cryptex_play( $id, $game, $attempt, $cryptexrec, $crossm,
         $updateattempt = false, $onlyshow = false, $showsolution = false, $context,
         $print = false, $showhtmlprintbutton = true) {
@@ -366,7 +402,14 @@ if ($print) {
     echo '<body>';
 }
 }
-
+/**
+ * On finished.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $atttempt
+ * @param $cryptexrec
+ */
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec) {
     global $CFG, $DB;
 

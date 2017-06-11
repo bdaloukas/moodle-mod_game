@@ -17,10 +17,10 @@
 /**
  * Library of functions and constants for module game
  *
- * @author Vasilis Daloukas
- * @package game
- **/
-
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 defined('MOODLE_INTERNAL') || die();
 
 // Define CONSTANTS.

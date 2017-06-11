@@ -47,6 +47,15 @@ class game_played extends \core\event\base {
             "course module id '$this->contextinstanceid'.";
     }
 
+    /**
+     * Create instance of event.
+     *
+     * @since Moodle 2.7
+     *
+     * @param \stdClass $game
+     * @param \context_module $context
+     * @return event
+     */
     public static function played(\stdClass $game, \context_module $context) {
         $data = array(
             'context' => $context,

@@ -15,16 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Define all the restore steps that will be used by the restore_game_activity_task
+ *
  * @package mod_game
  * @subpackage backup-moodle2
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-/**
- * Define all the restore steps that will be used by the restore_game_activity_task
- */
 
 /**
  * Structure step to restore one game activity
@@ -67,6 +65,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game table.
+     *
+     * @param stdClass $data
      */
     protected function process_game($data) {
         global $DB;
@@ -85,6 +85,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_export_html table.
+     *
+     * @param stdClass $data
      */
     protected function process_game_export_html($data) {
         global $DB;
@@ -99,8 +101,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_export_javame table.
+     *
+     * @param stdClass $game
      */
-    protected function process_game_export_javame($data) {
+    protected function process_game_export_javame( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -113,8 +117,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_grades table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_grade($data) {
+    protected function process_game_grade( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -128,8 +134,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_repetitions table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_repetition($data) {
+    protected function process_game_repetition( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -143,8 +151,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_attempts table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_attempt($data) {
+    protected function process_game_attempt( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -173,8 +183,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_queries table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_query($data) {
+    protected function process_game_query( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -190,8 +202,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_bookquiz table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_bookquiz($data) {
+    protected function process_game_bookquiz( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -203,8 +217,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_bookauiz_chapters table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_bookquiz_chapter($data) {
+    protected function process_game_bookquiz_chapter( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -216,8 +232,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_bookquiz_questions table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_bookquiz_question($data) {
+    protected function process_game_bookquiz_question( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -229,8 +247,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_cross table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_cross($data) {
+    protected function process_game_cross( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -242,8 +262,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_cryptex table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_cryptex($data) {
+    protected function process_game_cryptex( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -255,8 +277,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_hangman table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_hangman($data) {
+    protected function process_game_hangman( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -269,8 +293,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_hiddenpicture table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_hiddenpicture($data) {
+    protected function process_game_hiddenpicture( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -282,8 +308,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_millionaire table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_millionaire($data) {
+    protected function process_game_millionaire( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -296,8 +324,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_snakes table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_snake($data) {
+    protected function process_game_snake( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -310,8 +340,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Restores the game_sudoku table.
+     *
+     * @param stdClass $data
      */
-    protected function process_game_sudoku($data) {
+    protected function process_game_sudoku( $data) {
         global $DB;
 
         $data = (object)$data;
@@ -321,7 +353,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $DB->insert_record('game_sudoku', $data);
     }
 
-    // Add Game related files, no need to match by itemname (just internally handled context).
+    /**
+     * Add Game related files, no need to match by itemname (just internally handled context).
+     */
     protected function after_execute() {
         $this->add_related_files('mod_game', 'snakes_file', null);
         $this->add_related_files('mod_game', 'snakes_board', null);

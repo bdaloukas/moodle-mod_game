@@ -5,7 +5,6 @@ Husain Limdiyawala(MSc IT DA-IICT) */
 var totblocks = 0;
 var data = "";
 var currentblock = 0;
-var position = 0;
 var lastposition = new Array();
 var randomno = 0;
 var tots = new Array();
@@ -16,8 +15,8 @@ var destsnake = new Array(4);
 var ladsrc = new Array(3);
 var laddest = new Array(3);
 var quest = new Array(); // Available questions along with multiple answers.
-var cor_answered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
-var wro_answered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
+var coranswered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
+var wroanswered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
 var user = new Array();
 
 // Constract table with questions and answers and pick question to display.
@@ -38,9 +37,14 @@ quest[12] = "Spell 4";
 quest[13] = "four";
 quest[14] = "three";
 quest[15] = "one";
-z = 0;
-for (z = 0; quest[z] != null; z++) {
-    // Do nothing.
+
+var z = 0;
+var allQuest;
+
+for () {
+    if (quest[z] === null) {
+        break;
+    }
 }
 allQuest = z / 4;
 
@@ -65,6 +69,8 @@ function hideAll() {
 // The Below Function will Render The Main Board.
 
 function paintBoard(a) {
+    var j;
+
     totblocks = (a * a);
     if ((a * a) % 2 == 0) {
         currentblock = (a * a) - a + 1;
@@ -105,9 +111,9 @@ function paintBoard(a) {
     document.getElementById("cont").style.width = (a * 52 + 52) + "px"
 
     document.getElementById("cont").innerHTML = data;
-    $("#cont").slideDown("slow");
-    $("#cont").effect("shake",3000);
-    $("img:hidden").fadeIn(5000);
+    $("#cont").slideDown( "slow");
+    $("#cont").effect( "shake",3000);
+    $("img:hidden").fadeIn( 5000);
 
     if (a == 6) {
         registerSnake(158, 196, "img1", 14, 3, 0);
@@ -188,22 +194,6 @@ function laddercheck(k) {
     }
 }
 
-// The below Function checks for pythons.
-
-function pythoncheck(k) {
-    i = 0;
-
-    for (i = 0; i < pythons.length; i++) {
-        if (pythons[i] == tots[k]) {
-            alert("You have been eaten up by a python.Your game is over");
-            document.getElementById(tots[k]).style.background = "url(images/csnake.gif) #000000";
-            lastposition[k] = null;
-            tots[k] = null;
-            break;
-        }
-    }
-}
-
 // The below function will register a snake.
 function registerSnake(tp, lft, dv, src, dest, i) {
     document.getElementById(dv).style.top = tp + "px";
@@ -225,7 +215,6 @@ function selectBoard() {
     totblocks = 0;
     data = "";
     currentblock = 0;
-    position = 0;
 
     hideAll();
     if (document.getElementById("boardtype").value != null) {
@@ -307,10 +296,10 @@ function question() {
         alert("Σωστά!")
         doit(l);
 
-        cor_answered.concat(quest.splice(picked * 4, 4));
+        coranswered.concat(quest.splice(picked * 4, 4));
     } else {
         alert("Η απάντηση δεν ήταν σωστή. Χάνεις τη σειρά σου για αυτό το γύρο!")
-        wro_answered.concat(quest.splice(picked * 4, 4));
+        wroanswered.concat(quest.splice(picked * 4, 4));
     }
 
     // Remove question and answers from available questions - (thus not allowing to have a Repeated question).

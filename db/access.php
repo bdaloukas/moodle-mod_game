@@ -17,9 +17,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 /*
- * Capability definitions for the game module.
+ * Plugin capabilities
  *
- * For naming conventions, see lib/db/access.php.
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 $capabilities = array(
 
