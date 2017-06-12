@@ -52,7 +52,6 @@ class sdd {
     /*
      * Constructor.
      *
-     * @access public
      * @param boolean $theHTMLFlag [optional] True if HTML is to be generated.
      *                If omitted, $_SERVER is used to "guess" the state of
      *                    the HTML flag.  Be default, HTML is generated when
@@ -73,7 +72,6 @@ class sdd {
     /*
      * Close the log file.
      *
-     * @access public
      * @abstract
      */
 
@@ -284,14 +282,12 @@ class sdd {
     /*
      * Write a debugging value to a log file.
      *
-     * @access public
      * @abstract
      * @param mixed Data to be logged.
      * @param string $theHeader [optional] string to be emitted prior to
      *               logging the data.  By default it is a date/time
      *                   stamp.
      */
-
     public function log(&$thedata, $theheader = null) {
         $theheader = date('[Y-m-d H:i:s]: ') . $theheader;
 
@@ -317,9 +313,7 @@ class sdd {
      * @param integer [optional] the number of newlines.
      * @param boolean [optional] true if generating html newlines.
      * @return string newlines.
-     * @access public
      */
-
     public function newline($thecount = 1, $thehtmlflag = null) {
         if ($thehtmlflag === null) {
             if (empty($this)) {
@@ -346,7 +340,6 @@ class sdd {
      * @param mixed $theVariable the variable to be dumped.
      * @param boolean $theHtmlFlag true if html is to be generated.
      */
-
     public function scalar(&$thevariable, $thehtmlflag) {
         if ($thehtmlflag) {
             return "<pre>" . preg_replace('|<|s', '&lt;', var_export($thevariable, true)) . "</pre>";
@@ -358,13 +351,11 @@ class sdd {
     /*
      * Write data to the log file.
      *
-     * @access public
      * @abstract
      * @parameter string $theData [by reference] the data to be written
      *                       into the log file.
      * @return integer the number of bytes written into the log file.
      */
-
     public function writelog(&$thedata) {
         return strlen($this->m_log[] = $thedata);
     }
@@ -372,10 +363,8 @@ class sdd {
     /*
      * Return the state of the logging flag.
      *
-     * @access public
      * @return boolean
      */
-
     public function getlogging() {
         return $this->m_logging;
     }
@@ -383,10 +372,8 @@ class sdd {
     /*
      * Set the state of the logging flag.
      *
-     * @access public
      * @return boolean
      */
-
     public function setlogging($thelogging=false) {
         $this->m_logging = $thelogging;
     }

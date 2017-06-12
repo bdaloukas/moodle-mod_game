@@ -44,10 +44,7 @@ class logfile extends SDD {
 
     /*
      * Constructor
-     *
-     * @access public
      */
-
     public function init($thefilename) {
         if (file_exists($thefilename)) {
             $this->m_handle = fopen($thefilename, 'a');
@@ -56,6 +53,9 @@ class logfile extends SDD {
         }
     }
 
+    /*
+     * close
+     */
     public function close() {
         fclose($this->m_handle);
     }
@@ -68,9 +68,7 @@ class logfile extends SDD {
      * @param mixed Data to be logged.
      * @return integer number of bytes written to the log.
      */
-
     public function log(&$thedata) {
         return fwrite($this->m_handle, date('[Y-m-d H:i:s]: ') . $this->dump($thedata) . "\n");
     }
 }
-

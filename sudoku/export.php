@@ -27,6 +27,9 @@ require_login();
 
 export();
 
+/**
+ * Exports
+ */
 function export() {
     global $CFG;
 

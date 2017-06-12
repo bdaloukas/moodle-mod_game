@@ -57,6 +57,9 @@ function showform() {
 <?php
 }
 
+/**
+ * Append sudoku
+ */
 function appendsudokub() {
     global $DB;
 
@@ -87,6 +90,12 @@ function appendsudokub() {
     }
 }
 
+/**
+ * Pack sudoku
+ *
+ * @param $si
+ * @param $sp
+ */
 function packsudoku( $si, $sp) {
     $data = '';
 
@@ -112,6 +121,13 @@ function packsudoku( $si, $sp) {
     return $data;
 }
 
+/**
+ * Creates a sudoku
+ *
+ * @param $id
+ * @param $sp
+ * @param $level
+ */
 function create( &$si, &$sp, $level=1) {
     for ($i = 1; $i <= 40; $i++) {
         $sp = new sudoku();
@@ -131,6 +147,13 @@ function create( &$si, &$sp, $level=1) {
     return true;
 }
 
+/**
+ * get opened
+ *
+ * @param $si
+ *
+ * @return count of opened
+ */
 function getopened( $si) {
     $count = 0;
 
