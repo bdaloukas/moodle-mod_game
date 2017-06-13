@@ -27,14 +27,6 @@
 namespace mod_game\event;
 defined('MOODLE_INTERNAL') || die();
 
-/*
- * The mod_game instance list viewed event class.
- *
- * @package    mod_game
- * @copyright  2007 Vasilis Daloukas
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-
 /**
  * The mod_game instance list viewed event class.
  *

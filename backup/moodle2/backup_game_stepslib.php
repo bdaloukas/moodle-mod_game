@@ -19,8 +19,8 @@
  *
  * @package mod_game
  * @subpackage backup-moodle2
- * @author bdaloukas
-backup_game_settingslib.php
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -29,6 +29,9 @@ backup_game_settingslib.php
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Define the complete game structure for backup, with file and id annotations
+ */
 class backup_game_activity_structure_step extends backup_activity_structure_step {
 
     /**

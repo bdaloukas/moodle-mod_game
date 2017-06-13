@@ -31,7 +31,7 @@
     z-index: 201;
     top: 0;
     left: 0;
-    display:none;
+    display: none;
     padding: 0;
 }
 #popupInner {
@@ -40,7 +40,7 @@
 }
 
 #popupFrame {
-    margin: 0px;
+    margin: 0;
     width: 100%;
     height: 100%;
     position: relative;
@@ -62,7 +62,7 @@
 }
 
 #popupTitle {
-    float:left;
+    float: left;
     font-size: 1.1em;
 }
 

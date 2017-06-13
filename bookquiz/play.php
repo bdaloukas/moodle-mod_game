@@ -30,7 +30,6 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $bookquiz
- * @param int $bookquizid
  * @param int $chapterid
  * @param stdClass $context
  */

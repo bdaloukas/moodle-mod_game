@@ -19,7 +19,8 @@
  *
  * @package mod_game
  * @subpackage backup-moodle2
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -102,7 +103,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
     /**
      * Restores the game_export_javame table.
      *
-     * @param stdClass $game
+     * @param stdClass $data
      */
     protected function process_game_export_javame( $data) {
         global $DB;

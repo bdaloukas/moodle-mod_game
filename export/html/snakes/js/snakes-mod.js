@@ -49,8 +49,9 @@ for (;;) {
 allQuest = z / 4;
 
 function selectQuest(all) {
-    pickOne = Math.floor((Math.random() * all));
-    return pickOne;
+    var pickone = Math.floor((Math.random() * all));
+
+    return pickone;
 }
 
 // The Below Function will hide all the snakes.
@@ -67,9 +68,8 @@ function hideAll() {
 }
 
 // The Below Function will Render The Main Board.
-
-function paintBoard(a) {
-    var j;
+function paintBoard( a) {
+    var i, j;
 
     totblocks = (a * a);
     if ((a * a) % 2 == 0) {
@@ -111,28 +111,28 @@ function paintBoard(a) {
     document.getElementById("cont").style.width = (a * 52 + 52) + "px"
 
     document.getElementById("cont").innerHTML = data;
-    $("#cont").slideDown( "slow");
-    $("#cont").effect( "shake",3000);
-    $("img:hidden").fadeIn( 5000);
+    $( "#cont").slideDown( "slow");
+    $( "#cont").effect( "shake", 3000);
+    $( "img:hidden").fadeIn( 5000);
 
     if (a == 6) {
-        registerSnake(158, 196, "img1", 14, 3, 0);
-        registerSnake(62, 183, "img2", 27, 24, 1);
-        registerSnake(175, 18, "img3", 18, 4, 2);
-        registerSnake(10, 45, "img4", 32, 23, 3);
+        registerSnake( 158, 196, "img1", 14, 3, 0);
+        registerSnake( 62, 183, "img2", 27, 24, 1);
+        registerSnake( 175, 18, "img3", 18, 4, 2);
+        registerSnake( 10, 45, "img4", 32, 23, 3);
 
-        registerLadder(27, 132, "lad1", 28, 34, 0);
-        registerLadder(90, 22, "lad2", 19, 30, 1);
-        registerLadder(179, 137, "lad3", 2, 16, 2);
+        registerLadder( 27, 132, "lad1", 28, 34, 0);
+        registerLadder( 90, 22, "lad2", 19, 30, 1);
+        registerLadder( 179, 137, "lad3", 2, 16, 2);
     } else if (a == 8) {
-        registerSnake(300, 380, "img1", 44, 29, 0);
-        registerSnake(180, 550, "img2", 51, 46, 1);
-        registerSnake(290, 50, "img3", 41, 40, 2);
-        registerSnake(500, 280, "img4", 27, 22, 3);
+        registerSnake( 300, 380, "img1", 44, 29, 0);
+        registerSnake( 180, 550, "img2", 51, 46, 1);
+        registerSnake( 290, 50, "img3", 41, 40, 2);
+        registerSnake( 500, 280, "img4", 27, 22, 3);
 
-        registerLadder(350, 515, "lad1", 19, 35, 0);
-        registerLadder(180, 230, "lad2", 43, 54, 1);
-        registerLadder(80, 350, "lad3", 53, 60, 2);
+        registerLadder( 350, 515, "lad1", 19, 35, 0);
+        registerLadder( 180, 230, "lad2", 43, 54, 1);
+        registerLadder( 80, 350, "lad3", 53, 60, 2);
     }
 }
 

@@ -708,7 +708,6 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
 }
 
 /**This is the last function after submiting the answers.
- * 
  *
  * @param $id
  * @param $game

@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
- * @param stdClass $context 
+ * @param stdClass $context
  */
 function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
     if ($attempt != false and $snakes != false) {
@@ -66,7 +66,7 @@ function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
- * @param stdClass $context 
+ * @param stdClass $context
  */
 function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
     global $CFG, $DB, $OUTPUT;
@@ -171,7 +171,7 @@ top:<?php p( -2 * round($board->height / 3));?>px; ">
  * Computes player's position.
  *
  * @param stdClass $snakes
- * @param stdClass $board 
+ * @param stdClass $board
  */
 function game_snakes_computeplayerposition( $snakes, $board) {
     $x = ($snakes->position - 1) % $board->cols;
@@ -273,7 +273,7 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query) {
  * @param stdClass $game
  * @param stdClass $snakes
  * @param stdClass $query
- * @param stdClass $context 
+ * @param stdClass $context
  */
 function game_snakes_showquestion( $id, $game, $snakes, $query, $context) {
     if ($query->sourcemodule == 'glossary') {
@@ -290,7 +290,7 @@ function game_snakes_showquestion( $id, $game, $snakes, $query, $context) {
  * @param $id
  * @param stdClass $snakes
  * @param stdClass $query
- * @param stdClass $context 
+ * @param stdClass $context
  */
 function game_snakes_showquestion_question( $game, $id, $snakes, $query, $context) {
     global $CFG;
@@ -365,7 +365,7 @@ function game_snakes_showquestion_glossary( $id, $snakes, $query, $game) {
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
- * @param stdClass $context 
+ * @param stdClass $context
  */
 function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
     global $CFG, $DB;
@@ -410,7 +410,7 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
- * @param stdClass $context 
+ * @param stdClass $context
  */
 function game_snakes_check_glossary( $id, $game, $attempt, $snakes, $context) {
     global $CFG, $DB;

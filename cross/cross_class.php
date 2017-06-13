@@ -43,42 +43,61 @@ Author Àngel Fenoy from Arenys de Mar, Barcelona.
  */
 class Cross
 {
-    public $minputanswers;   // Contains the words and the answers.
-    public $mwords;           // The words that will be used.
+    /** @var int Contains the words and the answers. */
+    public $minputanswers;   // 
+    /** @var The words that will be used. */
+    public $mwords;
 
+    /** @var Time limit for computing the cross */
     public $mtimelimit = 3;
 
     // Computed by computenextcross.
-    public $mbestcrosspos;  // The best puzzle.
-    public $mbestcrossdir;  // The best puzzle.
-    public $mbestcrossword; // The best puzzle.
+    /** @var Best score post */
+    public $mbestcrosspos;
+    /** @var Best score dir */
+    public $mbestcrossdir;
+    /** @var Best score crossword */
+    public $mbestcrossword;
+    /** @var Best puzzle */
     public $mbestpuzzle;
 
-    public $mbests;           // The best score as a phrase.
-    public $mbestscore;       // The best score.
+    /** @var The best score as a phrase. */
+    public $mbests;
+    /** @var The best score */
+    public $mbestscore;
 
+    /** @var The best connectors */
     public $mbestconnectors;
+    /** @var The best filleds */
     public $mbestfilleds;
+    /** @var The best spaces */
     public $mbestspaces;
+    /** @var The best n20 */
     public $mbestn20;
 
-    // Computepuzzleinfo.
-    public $mmincol;    // Computed by ComputePuzzleInfo.
-    public $mmaxcol;    // Computed by ComputePuzzleInfo.
-    public $mminrow;    // Computed by ComputePuzzleInfo.
-    public $mmaxrow;    // Computed by ComputePuzzleInfo.
-    public $mcletter;   // Computed by ComputePuzzleInfo.
-    public $mreps;      // Repetition of each word.
-    public $maveragereps; // Average of repetitions.
+    /** @var Computed by ComputePuzzleInfo. */
+    public $mmincol;
+    /** @var Computed by ComputePuzzleInfo. */
+    public $mmaxcol;
+    /** @var Computed by ComputePuzzleInfo. */
+    public $mminrow;
+    /** @var Computed by ComputePuzzleInfo. */
+    public $mmaxrow;
+    /** @var Computed by ComputePuzzleInfo. */
+    public $mcletter;
+    /** @var Repetition of each word. */
+    public $mreps;
+    /** @var Average of repetitions. */
+    public $maveragereps;
 
     /**
      * Set words for computing.
      *
      * @param array $answers
      * @param int $maxcols
-     * @param array reps
+     * @param array $reps
      *
-     * @return \moodle_url
+     * @return moodle_url
      */
     public function setwords( $answers, $maxcols, $reps) {
         $this->mreps = array();

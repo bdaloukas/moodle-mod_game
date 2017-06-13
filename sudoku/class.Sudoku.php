@@ -234,7 +234,7 @@ class cell extends objects {
      * Sudoku::_newSolvedPosition.
      *
      * @desc Assert pending solution.
-]     * @param integer $value The value for the solved position.
+     * @param integer $value The value for the solved position.
      */
     public function flagsolvedposition($value) {
         $this->state = array($value => $value);

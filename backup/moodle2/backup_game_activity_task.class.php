@@ -28,10 +28,10 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/mod/game/backup/moodle2/backup_game_stepslib.php'); // Because it exists (must).
 
 /**
- * Defines backup_game_activity_task class
+ * Fame backup task that provides all the settings and steps to perform one complete backup of the activity
  *
- * game backup task that provides all the settings and steps to perform one
- * complete backup of the activity
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_game_activity_task extends backup_activity_task {
 
