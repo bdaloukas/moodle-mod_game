@@ -94,7 +94,7 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
 
         $crosss = new backup_nested_element('game_crosss');
         $cross = new backup_nested_element('game_cross', array('id'), array(
-            'cols', 'rows', 'words', 'wordsall', 'createscore', 'createtries',
+            'usedcols', 'usedrows', 'words', 'wordsall', 'createscore', 'createtries',
             'createtimelimit', 'createconnectors', 'createfilleds', 'createspaces', 'triesplay'));
 
         $cryptexs = new backup_nested_element('game_cryptexs');

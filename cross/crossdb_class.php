@@ -122,8 +122,8 @@ class CrossDB extends Cross {
         $loadfromdb = ( $g == "");
 
         $this->mmincol = $this->mminrow = 0;
-        $this->mmaxcol = $crossrec->cols;
-        $this->mmaxrow = $crossrec->rows;
+        $this->mmaxcol = $crossrec->usedcols;
+        $this->mmaxrow = $crossrec->usedrows;
 
         if ($g == "") {
             $g = str_repeat( ' ', $this->mmaxcol * $this->mmaxrow);

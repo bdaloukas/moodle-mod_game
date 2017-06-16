@@ -461,8 +461,8 @@ class Cross
         $crossm = new stdClass();
         $crossm->datebegin = time();
         $crossm->time = $time;
-        $crossm->cols = $cols;
-        $crossm->rows = $rows;
+        $crossm->usedcols = $cols;
+        $crossm->usedrows = $rows;
         $crossm->words = count( $this->mbestcrosspos);
         $crossm->wordsall = count( $this->minputanswers);
 
@@ -774,8 +774,8 @@ class Cross
         $this->mLegendh = array();
         $this->mLegendv = array();
 
-        $sret = "CrosswordWidth  = {$crossm->cols};\n";
-        $sret .= "CrosswordHeight = {$crossm->rows};\n";
+        $sret = "CrosswordWidth  = {$crossm->usedcols};\n";
+        $sret .= "CrosswordHeight = {$crossm->usedrows};\n";
 
         $sret .= "Words=".count( $crossd).";\n";
         $swordlength = "";
