@@ -139,7 +139,7 @@
     <TABLE NAME="game_cross" COMMENT="game_cross">
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
-        <FIELD NAME="usedcols" TYPE="char" LENGTH="50" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usedrows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="usedrows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="words" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="wordsall" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
