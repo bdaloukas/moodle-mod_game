@@ -1556,10 +1556,12 @@ function xmldb_game_upgrade($oldversion) {
         $dbman->change_field_type($table, $field);
     }
 
-  if ($oldversion < ($ver = 2017061603)) {
+  if ($oldversion < ($ver = 2017061604)) {
         $table = new xmldb_table('game_cross');
         $field = new xmldb_field('usedcols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
-        $dbman->add_field($table, $field);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
         $field = new xmldb_field('cols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
         if ($dbman->field_exists($table, $field)) {
@@ -1571,10 +1573,12 @@ function xmldb_game_upgrade($oldversion) {
         }
     }
 
-   if ($oldversion < ($ver = 2017061603)) {
+   if ($oldversion < ($ver = 2017061604)) {
         $table = new xmldb_table('game_cross');
         $field = new xmldb_field('usedrows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
-        $dbman->add_field($table, $field);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
         $field = new xmldb_field('rows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
         if ($dbman->field_exists($table, $field)) {
