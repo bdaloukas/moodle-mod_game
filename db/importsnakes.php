@@ -68,6 +68,9 @@ function game_importsnakes() {
     game_importsnakes_do( $newrec);
 }
 
+/**
+  * Insert one board to database
+  */ 
 function game_importsnakes_do( $newrec) {
     global $DB;
 

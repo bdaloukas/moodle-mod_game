@@ -16,7 +16,6 @@
 
 /**
  * Strings for component 'game', language 'en', branch 'MOODLE_20_STABLE'
- * Translated by Vasilis Daloukas.
  *
  * @package mod_game
  * @copyright 2007 Vasilis Daloukas

@@ -17,7 +17,6 @@ var laddest = new Array(3);
 var quest = new Array(); // Available questions along with multiple answers.
 var coranswered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
 var wroanswered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
-var user = new Array();
 
 // Constract table with questions and answers and pick question to display.
 
@@ -52,88 +51,6 @@ function selectQuest(all) {
     var pickone = Math.floor((Math.random() * all));
 
     return pickone;
-}
-
-// The Below Function will hide all the snakes.
-
-function hideAll() {
-    document.getElementById("img1").style.display = "none";
-    document.getElementById("img2").style.display = "none";
-    document.getElementById("img3").style.display = "none";
-    document.getElementById("img4").style.display = "none";
-
-    document.getElementById("lad1").style.display = "none";
-    document.getElementById("lad2").style.display = "none";
-    document.getElementById("lad3").style.display = "none";
-}
-
-// The Below Function will Render The Main Board.
-function paintBoard( a) {
-    var i, j;
-
-    totblocks = (a * a);
-    if ((a * a) % 2 == 0) {
-        currentblock = (a * a) - a + 1;
-        for (j = 0; j < (a / 2); j++) {
-            for (i = 0; i < a; i++) {
-                data += "<div class='blocks' id='" + currentblock + "'>" + currentblock + "</div>";
-                currentblock++;
-            }
-            currentblock -= (a + 1);
-
-            for (i = 0; i < a; i++) {
-                data += "<div id='" + currentblock + "' class ='blocks'>" + currentblock + "</div>";
-                currentblock--;
-            }
-            currentblock -= (a - 1);
-        }
-    } else {
-        currentblock = (a * a);
-        for (j = 0; j < (a / 2); j++) {
-            for (i = 0; i < a; i++) {
-                data += "<div class='blocks' id='" + currentblock + "'>" + currentblock + "</div>";
-                currentblock--;
-            }
-
-            currentblock -= (a - 1);
-
-            if (currentblock < 2) {
-                break;
-            }
-
-            for (i = 0; i < a; i++) {
-                data += "<div id='" + currentblock + "' class ='blocks'>" + currentblock + "</div>";
-                currentblock++;
-            }
-            currentblock -= (a + 1);
-        }
-    }
-    document.getElementById("cont").style.width = (a * 52 + 52) + "px";
-
-    document.getElementById("cont").innerHTML = data;
-    $("#cont").slideDown("slow");
-    $("#cont").effect("shake", 3000);
-    $("img:hidden").fadeIn( 5000);
-
-    if (a == 6) {
-        registerSnake(158, 196, "img1", 14, 3, 0);
-        registerSnake(62, 183, "img2", 27, 24, 1);
-        registerSnake(175, 18, "img3", 18, 4, 2);
-        registerSnake(10, 45, "img4", 32, 23, 3);
-
-        registerLadder(27, 132, "lad1", 28, 34, 0);
-        registerLadder(90, 22, "lad2", 19, 30, 1);
-        registerLadder(179, 137, "lad3", 2, 16, 2);
-    } else if (a == 8) {
-        registerSnake(300, 380, "img1", 44, 29, 0);
-        registerSnake(180, 550, "img2", 51, 46, 1);
-        registerSnake(290, 50, "img3", 41, 40, 2);
-        registerSnake(500, 280, "img4", 27, 22, 3);
-
-        registerLadder(350, 515, "lad1", 19, 35, 0);
-        registerLadder(180, 230, "lad2", 43, 54, 1);
-        registerLadder(80, 350, "lad3", 53, 60, 2);
-    }
 }
 
 // The below Function will simulate throwing of a dice.
@@ -210,31 +127,6 @@ function registerLadder(tp, lft, dv, src, dest, i) {
     laddest[i] = dest;
 }
 
-// The below function starts the play.
-function play() {
-    if (tots[l] != null) {
-        var s;
-
-        s = "<ul class='nodis'><li>O Paiktis " + (l + 1);
-        s = s + " </li><li>brisketai sto tetragwno " + tots[l] + "</li><li></li></ul>";
-        disableField();
-        document.getElementById("status").innerHTML = s;
-
-        question();
-        s = "<ul class='nodis'><li>O Paiktis " + (l + 1);
-        s = s + " </li><li>vrisketai sto tetragwno " + tots[l] + "</li></ul>";
-        document.getElementById("status").innerHTML = s;
-    } else {
-        document.getElementById("status").innerHTML = "<ul class='nodis'><li>Molis exases...</li></ul>";
-    }
-
-    if( l == lastposition.length - 1) {
-        l = 0;
-    } else {
-        l++;
-    }
-}
-
 // The below function regulates the play.
 function doit(i) {
     throwDice(i);
@@ -268,7 +160,7 @@ function question() {
     alert("Randomly selected number:" + picked);
     q1 = prompt(quest[picked * 4], "Απάντηση");
     if (q1 == quest[picked * 4 + 1]) {
-        alert("Σωστά!")
+        alert("Σωστά!");
         doit(l);
 
         coranswered.concat(quest.splice(picked * 4, 4));

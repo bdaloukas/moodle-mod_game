@@ -32,6 +32,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
     /**
      * Defines the neeeded structures.
+     *
+     * @copyright 2007 Vasilis Daloukas
+     * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
     protected function define_structure() {
 

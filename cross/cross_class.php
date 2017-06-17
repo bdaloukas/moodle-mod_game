@@ -44,7 +44,7 @@ Author Àngel Fenoy from Arenys de Mar, Barcelona.
 class Cross
 {
     /** @var int Contains the words and the answers. */
-    public $minputanswers;   // 
+    public $minputanswers;
     /** @var The words that will be used. */
     public $mwords;
 
@@ -170,12 +170,12 @@ class Cross
     /**
      * Compute one crossword.
      *
-     * @param stdClass crossm
-     * @param stdClass crossd
+     * @param stdClass $crossm
+     * @param stdClass $crossd
      * @param string $letters
-     * @param int minwords
-     * @param int maxwords
-     * @param int mtimelimit
+     * @param int $minwords
+     * @param int $maxwords
+     * @param int $mtimelimit
      *
      * @return the crossword
      */
@@ -368,7 +368,7 @@ class Cross
      * @param int $crosspos
      * @param int $crossdir
      * @param stdClass $crossword
-     * @param boolean bprint
+     * @param boolean $bprint
      */
     public function computepuzzleinfo( $n20, $crosspos, $crossdir, $crossword, $bprint=false) {
         $bprint = false;
@@ -745,8 +745,8 @@ class Cross
      * Set a char to the specified position.
      *
      * @param $s
-     * @param int $pos
-     * @param char $char
+     * @param $pos
+     * @param $char
      */
     public function setchar( &$s, $pos, $char) {
         $ret = "";

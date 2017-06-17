@@ -24,7 +24,15 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
+/**
+ * Plays the game "Hidden picture"
+ *
+ * @param $id
+ * @param $game
+ * @param $attempt
+ * @param $hiddenpicture
+ * @param $context
+ */
 function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture, $context) {
     global $DB, $USER;
 

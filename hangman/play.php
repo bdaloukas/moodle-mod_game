@@ -33,7 +33,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param $hangman
  * @param $newletter
  * @param $action
- * @param stdClass $context
+ * @param $context
  */
 function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $action, $context) {
     global $DB, $USER;
@@ -234,12 +234,12 @@ function game_hangman_onfinishgame( $game, $attempt, $hangman) {
  * Plays the hangman game.
  *
  * @param $id
- * @param stdClass $game
- * @param stdClass $attempt
- * @param stdClass $hangman
- * @param boolean $onlyshow
- * @param boolean $showsolution
- * @param stdClass $context
+ * @param $game
+ * @param $attempt
+ * @param $hangman
+ * @param $onlyshow
+ * @param $showsolution
+ * @param $context
  */
 function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolution, $context) {
     global $CFG, $DB, $OUTPUT;
@@ -326,15 +326,15 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
  * @param $wrong
  * @param $max
  * @param wordline
- * @param @wordline2
+ * @param $wordline2
  * @param $links
  * @param stdClass $game
  * @param $attempt
  * @param $hangman
  * @param $query
- * @param boolean $onlyshow
- * @param boolean $showsolution
- * @param $stdClass $context
+ * @param $onlyshow
+ * @param $showsolution
+ * @param $context
  */
 function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordline2, &$links,
     $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution, $context) {
@@ -486,9 +486,9 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
  *
  * @param $id
  * @param $wordline
- * @param stdClass $game
- * @param stdClass $attempt
- * @param stdClass $hangman
+ * @param $game
+ * @param $attempt
+ * @param $hangman
  * @param $query
  */
 function hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query) {
@@ -513,11 +513,11 @@ function hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query) {
  * @param $id
  * @param $wordline
  * @param $word
- * @param stdClass $game
- * @param stdClass $attempt
- * @param stdClass $hangman
- * @param boolean $onlyshow
- * @param boolean $showsolution
+ * @param $game
+ * @param $attempt
+ * @param $hangman
+ * @param $onlyshow
+ * @param $showsolution
  */
 function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution) {
     echo "\r\n<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
@@ -545,9 +545,9 @@ function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, 
  * Shows the next word.
  *
  * @param $id
- * @param stdClass $game
- * @param stdClass $attempt
- * @param stdClass $hangman
+ * @param $game
+ * @param $attempt
+ * @param $hangman
  */
 function game_hangman_show_nextword( $id, $game, $attempt, $hangman) {
     global $CFG, $DB;

@@ -316,7 +316,7 @@ echo $OUTPUT->footer();
 /**
  * Sends via html a file.
  *
- * @param string file
+ * @param string $file
  */
 function game_send_stored_file($file) {
     if (file_exists($file)) {

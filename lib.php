@@ -53,10 +53,7 @@ define('GAME_REVIEW_SOLUTIONS',  16 * 0x1041);      // Show solutions.
 define('GAME_REVIEW_GENERALFEEDBACK', 32 * 0x1041); // Show general feedback.
 
 /**
- * Given an object containing all the necessary data,
- * (defined by the form in mod.html) this function
- * will create a new instance and return the id number
- * of the new instance.
+ * Given an object containing all the necessary data, will create a new instance and return the id number of the new instance.
  *
  * @param object $instance An object from the form in mod.html
  * @return int The id of the newly inserted game record
@@ -80,9 +77,7 @@ function game_add_instance($game) {
 }
 
 /**
- * Given an object containing all the necessary data,
- * (defined by the form in mod.html) this function
- * will update an existing instance with new data.
+ * Given an object containing all the necessary data, this function will update an existing instance with new data.
  *
  * @param object $instance An object from the form in mod.html
  * @return boolean Success/Fail
@@ -183,9 +178,7 @@ function game_before_add_or_update(&$game) {
 }
 
 /**
- * Given an ID of an instance of this module,
- * this function will permanently delete the instance
- * and any data that depends on it.
+ * Given an ID of an instance of this module, this function will permanently delete the instance and any data that depends on it.
  *
  * @param int $id Id of the module instance
  * @return boolean Success/Failure
@@ -242,9 +235,13 @@ function game_delete_instance($gameid) {
 }
 
 /**
- * Return a small object with summary information about what a
- * user has done with a given particular instance of this module
- * Used for user activity reports.
+ * Return a small object with summary information about what a user has done
+ *
+ * @param $course
+ * @param $user
+ * @param $mod
+ * @param $game
+ *
  * $return->time = the time they did it
  * $return->info = a short text description
  **/
@@ -266,8 +263,7 @@ function game_user_outline($course, $user, $mod, $game) {
 }
 
 /**
- * Print a detailed representation of what a user has done with
- * a given particular instance of this module, for user activity reports.
+ * Print a detailed representation of what a user has done with a given particular instance of this module, for user activity reports.
 
  * @param stdClass $course
  * @param stdClass $user
@@ -298,9 +294,7 @@ function game_user_complete($course, $user, $mod, $game) {
 }
 
 /**
- * Given a course and a time, this module should find recent activity
- * that has occurred in game activities and print it out.
- * Return true if there was output, or false is there was none.
+ * Given a course and a time, this module should find recent activity that has occurred in game activities and print it out.
  *
  * @uses $CFG
  * @return boolean
@@ -320,8 +314,6 @@ function game_print_recent_activity($course, $isteacher, $timestart) {
 
 /**
  * Function to be run periodically according to the moodle cron
- * This function searches for things that need to be done, such
- * as sending out mail, toggling flags etc ...
  *
  * @uses $CFG
  * @return boolean
@@ -334,8 +326,7 @@ function game_cron() {
 }
 
 /**
- * Must return an array of grades for a given instance of this module,
- * indexed by user.  It also returns a maximum allowed grade.
+ * Must return an array of grades for a given instance of this module, indexed by user.
  *
  * Example:
  *    $return->grades = array of grades;
@@ -388,10 +379,7 @@ function game_get_user_grades($game, $userid=0) {
 }
 
 /**
- * Must return an array of user records (all data) who are participants
- * for a given instance of game. Must include every user involved
- * in the instance, independient of his role (student, teacher, admin...)
- * See other modules as example.
+ * Must return an array of user records (all data) who are participants for a given instance of game. Must include every user involved
  *
  * @param int $gameid ID of an instance of this module
  * @return mixed boolean/array of students
@@ -401,10 +389,7 @@ function game_get_participants($gameid) {
 }
 
 /**
- * This function returns if a scale is being used by one game
- * it it has support for grading and scales. Commented code should be
- * modified if necessary. See forum, glossary or journal modules
- * as reference.
+ * This function returns if a scale is being used by one game it it has support for grading and scales.
  *
  * @param int $gameid ID of an instance of this module
  * @return mixed
@@ -526,6 +511,7 @@ function game_grade_item_delete( $game) {
 
 /**
  * Returns all game graded users since a given time for specified game
+ *
  * @param stdClass $activities
  * @param int $index
  * @param int $timestart
@@ -673,6 +659,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
 
 /**
  * Removes all grades from gradebook
+ *
  * @param int $courseid
  * @param string optional type
  */
@@ -691,6 +678,8 @@ function game_reset_gradebook($courseid, $type='') {
 }
 
 /**
+ * What supports.
+ *
  * @uses FEATURE_GRADE_HAS_GRADE
  * @return bool True if quiz supports feature
  */
@@ -723,6 +712,8 @@ function game_supports($feature) {
 }
 
 /**
+ * get extra capabilities
+ *
  * @global object
  * @global stdClass
  * @return array all other caps used in module
@@ -741,7 +732,6 @@ function game_get_extra_capabilities() {
 
 /**
  * Return a textual summary of the number of attemtps that have been made at a particular game,
- * returns '' if no attemtps have been made yet, unless $returnzero is passed as true.
  *
  * @global stdClass
  * @global object
@@ -809,6 +799,8 @@ function game_format_grade($game, $grade) {
 }
 
 /**
+ * get grading options
+ *
  * @return the options for calculating the quiz grade from the individual attempt grades.
  */
 function game_get_grading_options() {
@@ -896,14 +888,16 @@ function game_extend_settings_navigation($settings, $gamenode) {
     $gamenode->make_active();
 }
 
-/* Returns an array of game type objects to construct
-   menu list when adding new game  */
+/* Returns an array of game type objects to construct menu list when adding new game  */
 require($CFG->dirroot.'/version.php');
 if ($branch >= '31') {
     define('USE_GET_SHORTCUTS', '1');
 }
 
 if (!defined('USE_GET_SHORTCUTS')) {
+    /**
+     * Shows kind of games
+     */
     function game_get_types() {
         global $DB;
 
@@ -1014,9 +1008,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 
 if (defined('USE_GET_SHORTCUTS')) {
     /**
-     * Returns an array of game type objects to construct
-     * menu list when adding new game
-     *
+     * Returns an array of game type objects to construct menu list when adding new game
      */
     function game_get_shortcuts($defaultitem) {
         global $DB, $CFG;
@@ -1221,8 +1213,8 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
 }
 
 /**
- * Implementation of the function for printing the form elements that control
- * whether the course reset functionality affects the Game.
+ * Implementation of the function for printing the form elements that control whether the course reset functionality affects the Game.
+ *
  * @param object $mform form passed by reference
  */
 function game_reset_course_form_definition(&$mform) {
@@ -1233,6 +1225,7 @@ function game_reset_course_form_definition(&$mform) {
 
 /**
  * Course reset form defaults.
+ *
  * @param stdClass $course
  *
  * @return array
@@ -1242,8 +1235,7 @@ function game_reset_course_form_defaults($course) {
 }
 
 /**
- * Actual implementation of the reset course functionality, delete all the
- * Game responses for course $data->courseid.
+ * Actual implementation of the reset course functionality, delete all the Game responses for course $data->courseid.
  *
  * @global object
  * @param $data the data submitted from the reset course.
@@ -1348,8 +1340,7 @@ function game_reset_userdata($data) {
 }
 
 /**
- * Obtains the automatic completion state for this module based on any conditions
- * in game settings.
+ * Obtains the automatic completion state for this module based on any conditions in game settings.
  *
  * @param object $course Course
  * @param object $cm Course-module

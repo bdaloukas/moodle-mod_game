@@ -27,7 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Exports to javame.
  *
- * @param stdClass $game
+ * @param object $game
  * @param $javame
  */
 function game_onexportjavame( $game, $javame) {
@@ -100,7 +100,7 @@ function game_onexportjavame( $game, $javame) {
  * @param $src
  * @param $destmobiledir
  * @param $destdir
- * @param stdClass $game
+ * @param $game
  * @param $maxwidth
  * @param $maxheight
  */
@@ -163,7 +163,7 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
  * @param $game
  * @param $map
  * @param $maxwidth
- * @param @maxheight
+ * @param $maxheight
  */
 function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight) {
     global $CFG;
@@ -194,9 +194,9 @@ function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, 
 /**
  * Exports to javame.
  *
- * @param stdClass $game
- * @param stdClass $context
- * @param string $exportattachments
+ * @param $game
+ * @param $context
+ * @param $exportattachments
  * @param $dest
  * @param $files
  */
@@ -219,9 +219,9 @@ function game_exmportjavame_getanswers( $game, $context, $exportattachment, $des
 /**
  * Exports to javame.
  *
- * @param stdClass $game
- * @param stdClass $context
- * @param string $destdir
+ * @param $game
+ * @param $context
+ * @param $destdir
  * @param $files
  */
 function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$files) {
@@ -236,9 +236,9 @@ function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$fi
 /**
  * Exports to javame.
  *
- * @param stdClass $game
- * @param stdClass $context
- * @param string $destdir
+ * @param $game
+ * @param $context
+ * @param $destdir
  * @param $files
  */
 function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) {
@@ -256,9 +256,9 @@ function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) 
 /**
  * Exports to javame.
  *
- * @param stdClass $game
- * @param stdClass $context
- * @param string $table
+ * @param $game
+ * @param $context
+ * @param $table
  * @param $select
  * @param $fields
  * @param $courseid
@@ -302,8 +302,8 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
 /**
  * Exports to javame.
  *
- * @param stdClass $game
- * @param stdClass $context
+ * @param $game
+ * @param $context
  * @param $exportattachments
  * @param $destdir
  * @param $files
@@ -412,7 +412,7 @@ function game_create_manifest_mf( $dir, $javame, $destmobiledir) {
  * Creates a jar file.
  *
  * @param $srcdir
- * @param stdClass $course
+ * @param $course
  * @param $javame
  */
 function game_create_jar( $srcdir, $course, $javame) {
