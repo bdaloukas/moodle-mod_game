@@ -38,7 +38,7 @@ class CryptexDB extends CrossDB {
      * @param stdClass $game
      * @param array $crossm
      * @param array $crossd
-     * @param int id
+     * @param int $id
      * @param $letters
      *
      * @return the saved record
@@ -170,7 +170,7 @@ class CryptexDB extends CrossDB {
      * @param $cols
      * @param $rows
      * @param $char
-     * @param int &$spaces
+     * @param int $spaces
      */
     public function insertchar( &$letters, $cols, $rows, $char, &$spaces) {
         $len = game_strlen( $letters);
@@ -190,7 +190,7 @@ class CryptexDB extends CrossDB {
      * @param $cols
      * @param $rows
      * @param $char
-     * @param int &$spaces
+     * @param int $spaces
      */
     public function insertchars( &$letters, $cols, $rows, $char, &$spaces) {
         $len = game_strlen( $letters);
@@ -286,7 +286,7 @@ class CryptexDB extends CrossDB {
     }
 
     /**
-     * Calss the setwords of class Cross.
+     * Calls the setwords of class Cross.
      *
      * @param $answers
      * @param $maxcols
@@ -299,7 +299,7 @@ class CryptexDB extends CrossDB {
     }
 
     /**
-     * Calss the computedata of class Cross.
+     * Calls the computedata of class Cross.
      *
      * @param $crossm
      * @param $crossd

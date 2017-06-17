@@ -17,7 +17,8 @@
 /**
  * @package mod_game
  * @subpackage backup-moodle2
- * @author  bdaloukas
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -107,8 +108,10 @@ class restore_game_activity_task extends restore_activity_task {
         return $rules;
     }
 
+    /**
+     * Do something at end of restore.
+     */
     public function after_restore() {
-        // Do something at end of restore.
         global $DB;
 
         // Get the blockid.

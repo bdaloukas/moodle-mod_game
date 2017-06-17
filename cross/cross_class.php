@@ -171,7 +171,7 @@ class Cross
      * Compute one crossword.
      *
      * @param stdClass crossm
-     * @param stdClass crossm
+     * @param stdClass crossd
      * @param string $letters
      * @param int minwords
      * @param int maxwords
@@ -223,7 +223,7 @@ class Cross
      * @param int $ctries
      * @param int $minwords
      * @param int $maxwords
-     * @param int &$nochange
+     * @param int $nochange
      *
      * @return \moodle_url
      */
@@ -322,11 +322,10 @@ class Cross
      * @param int $n22
      * @param int $n2222
      * @param int $nwords
-     * @param int @$nconnectors
-     * @param int @$nfilleds
-     * @param int @$cspaces
+     * @param int $nconnectors
+     * @param int $nfilleds
+     * @param int $cspaces
      * @param stdClass $crossword
-     * @param array reps
      *
      * @return \moodle_url
      */
@@ -439,10 +438,10 @@ class Cross
     /**
      * Save the crossword to database.
      *
-     * @param array &$crossm
-     * @param array &$crossd
-     * @param int ctries
-     * @param int time
+     * @param array $crossm
+     * @param array $crossd
+     * @param int $ctries
+     * @param int $time
      */
     public function savepuzzle( &$crossm, &$crossd, $ctries, $time) {
         $n22 = $this->mbestn20 + 2;
@@ -571,13 +570,13 @@ class Cross
      * @param int $pos
      * @param int $dir
      * @param int $valblanc
-     * @param string &$puzzle
-     * @param array &$words
-     * @param &$magics
-     * @param poss
-     * @param #ccrosspos
-     * @param crossdir
-     * @param crosssword
+     * @param string $puzzle
+     * @param array $words
+     * @param $magics
+     * @param $poss
+     * @param $ccrosspos
+     * @param $crossdir
+     * @param $crosssword
      * @param int $n20
      *
      * @return true if it is ok.
@@ -711,8 +710,8 @@ class Cross
      * my_preg_match (backward compatibility).
      *
      * @param $w
-     * @param @words
-     * @param &$word
+     * @param $words
+     * @param $word
      *
      * @return true if it is ok.
      */
@@ -745,7 +744,7 @@ class Cross
     /**
      * Set a char to the specified position.
      *
-     * @param @$s
+     * @param $s
      * @param int $pos
      * @param char $char
      */

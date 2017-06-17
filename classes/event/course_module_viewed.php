@@ -55,6 +55,9 @@ class course_module_viewed extends \core\event\course_module_viewed {
         return $event;
     }
 
+    /**
+     * Create instance of event.
+     */
     public static function played(\stdClass $game, \context_module $context) {
         $data = array(
             'context' => $context,

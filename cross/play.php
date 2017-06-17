@@ -37,7 +37,7 @@ require( "crossdb_class.php");
  * @param stdClass $cross
  * @param string $g
  * @param boolean $endofgame
- * param stdClass $context
+ * @param stdClass $context
  */
 function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $context) {
     if ($endofgame) {
@@ -1159,8 +1159,6 @@ if ($game->param3 == 2) {
 
 /**
  * Shows welcome message 1.
- *
- * @param stdClass $game
  */
 function game_cross_show_welcome1() {
 ?>
@@ -1200,13 +1198,7 @@ function game_cross_show_welcome1() {
 /**
  * Show the legend (horizontal and vertical)
  *
- * @param int $id
- * @param stdClass $game
- * @param stdClass $attempt
  * @param stdClass $cross
- * @param string $g
- * @param boolean $endofgame
- * param stdClass $context
  */
 function game_cross_show_legends( $cross) {
     ShowLegend( $cross->mlegendh,  get_string( 'cross_across', 'game'));

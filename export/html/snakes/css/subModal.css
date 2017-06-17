@@ -14,7 +14,6 @@
      * I find setting the color in the css gives me more flexibility
         * than the PNG solution.
     */
-    background-color: transparent !important;
     background-color: #333;
     /* this hack is for opera support
      * you can uncomment the background-image if you don't care about opera.
@@ -68,6 +67,5 @@
 
 #popupControls {
     float: right;
-    cursor: pointer;
     cursor: hand;
 }

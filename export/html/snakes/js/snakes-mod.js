@@ -108,31 +108,31 @@ function paintBoard( a) {
             currentblock -= (a + 1);
         }
     }
-    document.getElementById("cont").style.width = (a * 52 + 52) + "px"
+    document.getElementById("cont").style.width = (a * 52 + 52) + "px";
 
     document.getElementById("cont").innerHTML = data;
-    $( "#cont").slideDown( "slow");
-    $( "#cont").effect( "shake", 3000);
-    $( "img:hidden").fadeIn( 5000);
+    $("#cont").slideDown("slow");
+    $("#cont").effect("shake", 3000);
+    $("img:hidden").fadeIn( 5000);
 
     if (a == 6) {
-        registerSnake( 158, 196, "img1", 14, 3, 0);
-        registerSnake( 62, 183, "img2", 27, 24, 1);
-        registerSnake( 175, 18, "img3", 18, 4, 2);
-        registerSnake( 10, 45, "img4", 32, 23, 3);
+        registerSnake(158, 196, "img1", 14, 3, 0);
+        registerSnake(62, 183, "img2", 27, 24, 1);
+        registerSnake(175, 18, "img3", 18, 4, 2);
+        registerSnake(10, 45, "img4", 32, 23, 3);
 
-        registerLadder( 27, 132, "lad1", 28, 34, 0);
-        registerLadder( 90, 22, "lad2", 19, 30, 1);
-        registerLadder( 179, 137, "lad3", 2, 16, 2);
+        registerLadder(27, 132, "lad1", 28, 34, 0);
+        registerLadder(90, 22, "lad2", 19, 30, 1);
+        registerLadder(179, 137, "lad3", 2, 16, 2);
     } else if (a == 8) {
-        registerSnake( 300, 380, "img1", 44, 29, 0);
-        registerSnake( 180, 550, "img2", 51, 46, 1);
-        registerSnake( 290, 50, "img3", 41, 40, 2);
-        registerSnake( 500, 280, "img4", 27, 22, 3);
+        registerSnake(300, 380, "img1", 44, 29, 0);
+        registerSnake(180, 550, "img2", 51, 46, 1);
+        registerSnake(290, 50, "img3", 41, 40, 2);
+        registerSnake(500, 280, "img4", 27, 22, 3);
 
-        registerLadder( 350, 515, "lad1", 19, 35, 0);
-        registerLadder( 180, 230, "lad2", 43, 54, 1);
-        registerLadder( 80, 350, "lad3", 53, 60, 2);
+        registerLadder(350, 515, "lad1", 19, 35, 0);
+        registerLadder(180, 230, "lad2", 43, 54, 1);
+        registerLadder(80, 350, "lad3", 53, 60, 2);
     }
 }
 
@@ -189,7 +189,7 @@ function laddercheck(k) {
             break;
         }
     }
-    if(!checkWin(k)) {
+    if (!checkWin(k)) {
         alert("You have won!");
     }
 }
@@ -208,31 +208,6 @@ function registerLadder(tp, lft, dv, src, dest, i) {
     document.getElementById(dv).style.left = lft + "px";
     ladsrc[i] = src;
     laddest[i] = dest;
-}
-
-// The below function checks the change in the boardtype selection combobox.
-function selectBoard() {
-    totblocks = 0;
-    data = "";
-    currentblock = 0;
-
-    hideAll();
-    if (document.getElementById("boardtype").value != null) {
-        paintBoard(parseInt(document.getElementById("boardtype").value));
-    }
-}
-
-// The below function checks the change in the player selection combobox.
-function selectPlayer() {
-    if (document.getElementById("players").value != null) {
-        user[document.getElementById("players").value - 1] = 0;
-        tots[document.getElementById("players").value - 1] = 0;
-        lastposition[document.getElementById("players").value - 1] = 0;
-        for(var j = 0; j < lastposition.length; j++) {
-            lastposition[j] = 0;
-            tots[j] = 0;
-        }
-    }
 }
 
 // The below function starts the play.
@@ -298,7 +273,7 @@ function question() {
 
         coranswered.concat(quest.splice(picked * 4, 4));
     } else {
-        alert("Η απάντηση δεν ήταν σωστή. Χάνεις τη σειρά σου για αυτό το γύρο!")
+        alert("Η απάντηση δεν ήταν σωστή. Χάνεις τη σειρά σου για αυτό το γύρο!");
         wroanswered.concat(quest.splice(picked * 4, 4));
     }
 

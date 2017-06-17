@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /*
  * Plugin capabilities
  *
@@ -23,6 +21,9 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+
 $capabilities = array(
 
 // Ability to see that the game exists, and the basic information about it, for example the start date and time limit.

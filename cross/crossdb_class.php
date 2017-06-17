@@ -102,8 +102,8 @@ class CrossDB extends Cross {
      * @param stdClass $crossrec
      * @param boolean $onlyshow
      * @param boolean $showsolution
-     * @param finishattempt
-     * @param boolean $htmlsolutions
+     * @param $finishattempt
+     * @param boolean $showhtmlsolutions
      * @param string $language
      * @param boolean $showstudentguess
      * @param stdClass $context
@@ -252,7 +252,7 @@ class CrossDB extends Cross {
      * @param stdClass $game
      * @param stdClass $attempt
      * @param stdClass $crossrec
-     * @param boolean loadfromdb
+     * @param boolean $loadfromdb
      */
     public function updatecrossquestions( &$rec, &$g, &$pos, &$correctletters, &$wrongletters,
         &$restletters, $game, $attempt, $crossrec, $loadfromdb) {

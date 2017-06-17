@@ -39,6 +39,13 @@ if (!has_capability('mod/game:viewreports', $context)) {
 
 $target = optional_param('target', "", PARAM_ALPHANUM); // The target is HTML or JavaMe.
 
+/**
+ * The mod_game_exporthtml_form show the export form.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_game_exporthtml_form extends moodleform {
 
     /**
@@ -152,6 +159,13 @@ class mod_game_exporthtml_form extends moodleform {
     }
 }
 
+/**
+ * The mod_game_exportjavame_form show the export form.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_game_exportjavame_form extends moodleform {
 
     /**
