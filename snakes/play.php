@@ -154,7 +154,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
  *
  * @param stdClass $snakes
  * @param boolean $board
- */  
+ */
 function game_snakes_showdice( $snakes, $board) {
     $pos = game_snakes_computeplayerposition( $snakes, $board);
 ?>

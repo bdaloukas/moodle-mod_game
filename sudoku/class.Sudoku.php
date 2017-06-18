@@ -146,7 +146,7 @@ class cell extends objects {
      *
      * @param integer $inpr row address of this cell (not used, primarily for debugging purposes).
      * @param integer $inpc column address of this cell (ditto).
-     * @param integer $nStates The number of states each cell can have.  Looking forward to
+     * @param integer $nstates The number of states each cell can have.  Looking forward to
      *                         implementing Super-doku.
      */
     public function init($inpr, $inpc, $nstates = 9) {
@@ -339,29 +339,20 @@ class rcs extends ObjectS {
     /**
      * Constructor
      *
+      *  This interface is what limts things to 9x9 Sudoku currently
      * @param string $thetag "Row", "Column", "Square", used primarily in debugging.
      * @param integer $theindex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
-     * @param ObjectS $a1 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a2 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a3 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a4 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a5 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a6 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a6 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a7 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a8 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
-     * @param ObjectS $a9 of class Cell.  The cells comprising this entity.  This interface is what
-     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a1 of class Cell.
+     * @param ObjectS $a2 of class Cell.
+     * @param ObjectS $a3 of class Cell.
+     * @param ObjectS $a4 of class Cell.
+     * @param ObjectS $a5 of class Cell.
+     * @param ObjectS $a6 of class Cell.
+     * @param ObjectS $a6 of class Cell.
+     * @param ObjectS $a7 of class Cell.
+     * @param ObjectS $a8 of class Cell.
+     * @param ObjectS $a9 of class Cell.
      */
     public function init($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
         $this->thetag = $thetag;
@@ -453,7 +444,7 @@ class rcs extends ObjectS {
     /**
      * apply a tuple to exclude items from within the row/column/square.
      *
-     * @param array $aTuple the tuple to be excluded.
+     * @param array $atuple the tuple to be excluded.
      *
      * @return boolean true if anything changes.
      */
@@ -624,7 +615,6 @@ class rcs extends ObjectS {
         return $thereturn;
     }
 
-   
     /**
      * un set
      *
@@ -710,7 +700,7 @@ class rcs extends ObjectS {
      * Check to see if the RCS contains a valid state.
      *
      * @return boolean True if the state of the RCS could be part of a valid
-     *				   solution, false otherwise.
+     *          solution, false otherwise.
      */
     public function validatesolution() {
         $thenewset = array();
@@ -829,7 +819,7 @@ class c extends r {
      * see R::coupling
      *
      * @param int $therow
-     * @param int $thecolumn 
+     * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
         return $thestate = $this->_coupling($therow);
@@ -957,9 +947,6 @@ class sudoku extends ObjectS {
 
     /** @var integer. Used during puzzle generation to limit the number of trys at
      * generation a puzzle in the event puzzle generation fails
-     * (@see Suduko::$theMaxIterations).  I've never seen more than
-     * a couple of failures in a row, so this should be sufficient
-     * to get a puzzle generated.
      */
     protected $thetrys = 10;
 
@@ -1095,7 +1082,7 @@ class sudoku extends ObjectS {
      * Given a solution, see if there are any alternates within the solution.
      * In theory this should return the "minimum" solution given any solution.
      *
-     * @param array $theInitialState (@see Sudoku::initializePuzzleFromArray)
+     * @param array $theinitialState
      *
      * @return array A set of triples containing the minimum solution.
      */
@@ -1140,7 +1127,6 @@ class sudoku extends ObjectS {
      * @param integer $thetrys [optional] The number of attempts at resetting the
      *                initial parameters before giving up.
      * @return array A set of triples suitable for initializing a new Sudoku class
-     *               (@see Sudoku::initializePuzzleFromArray).
      */
     public function generatepuzzle($thedifficultylevel = 10, $themaxiterations = 50, $thetrys = 10) {
         $thedifficultylevel = min($thedifficultylevel, 10);
@@ -1532,8 +1518,6 @@ class sudoku extends ObjectS {
      *
      * A "hook" so that extension classes can show all the steps taken by
      * the solve function.
-     *
-     * @see SudokuIntermediateSolution.
      *
      * @param string $theheader [optional] The header line to be output along
      *               with the intermediate solution.

@@ -589,7 +589,7 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
  *
  * @param int $id
  * @param stdClass $game
- * @param stdClass $attempt 
+ * @param stdClass $attempt
  * @param stdClass $sudoku
  */
 function game_sudoku_showquestion_onfinish( $id, $game, $attempt, $sudoku) {

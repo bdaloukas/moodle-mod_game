@@ -16,7 +16,7 @@
 
 /**
  * Dump structured data, i.e., Objects and Arrays, in either plain text or html.
- * 
+ *
  * This is a class wrapper for a couple of utility routines that I use
  * all the time.  It's handier to have them as a class.
  *

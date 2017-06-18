@@ -6,15 +6,12 @@ var totblocks = 0;
 var lastposition = new Array();
 var randomno = 0;
 var tots = new Array();
-var l = 0;
 var srcsnake = new Array(4);
 var destsnake = new Array(4);
 
 var ladsrc = new Array(3);
 var laddest = new Array(3);
 var quest = new Array(); // Available questions along with multiple answers.
-var coranswered = new Array(); // Record all questions (along with answers) the user responded CORRECTLY.
-var wroanswered = new Array(); // Record all questions (along with answers) the user responded WRONGLY.
 
 // Constract table with questions and answers and pick question to display.
 
@@ -44,12 +41,6 @@ for (;;) {
     }
 }
 allQuest = z / 4;
-
-function selectQuest(all) {
-    var pickone = Math.floor((Math.random() * all));
-
-    return pickone;
-}
 
 // The below Function will simulate throwing of a dice.
 function throwDice(i) {
@@ -108,17 +99,6 @@ function laddercheck(k) {
     }
     if (!checkWin(k)) {
         alert("You have won!");
-    }
-}
-
-// The below function regulates the play.
-function doit(i) {
-    throwDice(i);
-    if (checkWin(i)) {
-        snakescheck(i);
-        laddercheck(i);
-    } else {
-        alert("Congatulations!!!");
     }
 }
 
