@@ -129,7 +129,7 @@ function packsudoku( $si, $sp) {
 /**
  * Creates a sudoku
  *
- * @param int $id
+ * @param stdClass $si
  * @param object $sp
  * @param int $level
  *

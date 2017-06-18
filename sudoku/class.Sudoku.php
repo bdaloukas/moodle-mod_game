@@ -83,8 +83,8 @@ class objects {
     /**
      * Are two array's equal (have the same contents).
      *
-     * @param array
-     * @param array
+     * @param array $thearray1
+     * @param array $thearray2
      * @return boolean
      */
     public function array_equal($thearray1, $thearray2) {
@@ -144,8 +144,8 @@ class cell extends objects {
     /**
      * Constructor
      *
-     * @param integer $r row address of this cell (not used, primarily for debugging purposes).
-     * @param integer $c column address of this cell (ditto).
+     * @param integer $inpr row address of this cell (not used, primarily for debugging purposes).
+     * @param integer $inpc column address of this cell (ditto).
      * @param integer $nStates The number of states each cell can have.  Looking forward to
      *                         implementing Super-doku.
      */
@@ -170,7 +170,7 @@ class cell extends objects {
      * contents of the tuple removed.
      *
      * apply a 23Tuple to a cell.
-     * @param array $aTuple the tuple to be eliminated.
+     * @param array $atuple the tuple to be eliminated.
      */
     public function apply23tuple($atuple) {
         if (is_array($this->state)) {
@@ -189,7 +189,7 @@ class cell extends objects {
      * For more details on the pair tuple algorithm, see RCS::_pairSolution.
      *
      * Remove all values in the tuple, but only if the cell is a superset.
-     * @param array A tuple to be eliminated from the cell's state.
+     * @param array $atuple to be eliminated from the cell's state.
      */
     public function applytuple($atuple) {
         if (is_array($this->state)) {
@@ -204,7 +204,8 @@ class cell extends objects {
     /**
      * Return the string representation of the cell.
      *
-     * @param boolean $theFlag true if the intermediate states of the cell are to be visible.
+     * @param boolean $theflag true if the intermediate states of the cell are to be visible.
+     *
      * @return string
      */
     public function asstring($theflag = false) {
@@ -287,7 +288,8 @@ class cell extends objects {
      * the value causing the complete elimination must be the solution and the
      * cell is promoted into the solved state.
      *
-     * @param mixed The value or values to be removed from the cell state.
+     * @param mixed $thevalues or values to be removed from the cell state.
+     *
      * @return boolean True if the cell state was modified, false otherwise.
      */
     public function un_set($thevalues) {
@@ -322,21 +324,43 @@ class cell extends objects {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class rcs extends ObjectS {
+    /** @var theindex */
     protected $theindex;
 
+    /** @var therow */
     protected $therow = array();
 
+    /** @var theheader */
     protected $theheader = "";
 
+    /** @var thetag */
     protected $thetag = "";
 
     /**
      * Constructor
      *
-     * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
-     * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
+     * @param string $thetag "Row", "Column", "Square", used primarily in debugging.
+     * @param integer $theindex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
-     * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
+     * @param ObjectS $a1 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a2 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a3 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a4 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a5 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a6 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a6 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a7 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a8 of class Cell.  The cells comprising this entity.  This interface is what
+     *                                      limts things to 9x9 Sudoku currently.
+     * @param ObjectS $a9 of class Cell.  The cells comprising this entity.  This interface is what
      *                                      limts things to 9x9 Sudoku currently.
      */
     public function init($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
@@ -430,6 +454,7 @@ class rcs extends ObjectS {
      * apply a tuple to exclude items from within the row/column/square.
      *
      * @param array $aTuple the tuple to be excluded.
+     *
      * @return boolean true if anything changes.
      */
     protected function _applytuple(&$atuple) {
@@ -455,8 +480,8 @@ class rcs extends ObjectS {
      * available for the state of the cell.  By selecting areas with the least information
      * the clue sets are substantially smaller than simple random placement.
      *
-     * @param integer $theRow the row coordinate on the board of the cell.
-     * @param integer $theColumn the column coordinate on the board of the cell.
+     * @param integer $therow the row coordinate on the board of the cell.
+     * @param integer $thecolumn the column coordinate on the board of the cell.
      * @return integer the degree of coupling between the cell and the rest of the cells
      *      within the row/column/square.
      */
@@ -473,9 +498,6 @@ class rcs extends ObjectS {
      * the 23 tuple allows you to eliminate 3 values (if it works), and the
      * pair (generally) only 2.  The unique solution adds no new information.
      *
-     * @param array theRow A row/column/square data structure.
-     * @param string theType A string merged with the standard headers during
-     *               intermediate solution printing.
      * @return boolean True when at least one inference has succeeded.
      */
     public function doaninference() {
@@ -491,7 +513,8 @@ class rcs extends ObjectS {
     /**
      * Find all tuples with the same contents.
      *
-     * @param array Array of n size tuples.
+     * @param array $thearray of n size tuples.
+     *
      * @return array of tuples that appear the same number of times as the size of the contents
      */
     public function _findtuples(&$thearray) {
@@ -524,6 +547,8 @@ class rcs extends ObjectS {
 
     /**
      * Get a reference to the specified cell.
+     *
+     * @param int $i
      *
      * @return reference to ObjectS of class Cell.
      */
@@ -603,7 +628,7 @@ class rcs extends ObjectS {
     /**
      * un set
      *
-     * @param $thevalues
+     * @param object $thevalues
      *
      * @return boolean True if one or more values in the RCS has changed state.
      */
@@ -757,7 +782,8 @@ class r extends rcs {
      * Heavy lifting for row/column coupling calculations.
      *
      * RCS::coupling
-     * @param integer $theIndex the index of the cell within the row or column.
+     * @param integer $theindex the index of the cell within the row or column.
+     *
      * @return integer the "coupling coefficient" for the cell.  The sum of the
      *          sizes of the intersection between this and all other
      *          cells in the row or column.
@@ -800,7 +826,7 @@ class c extends r {
      */
 
     /**
-     * @see R::coupling
+     * see R::coupling
      *
      * @param int $therow
      * @param int $thecolumn 
@@ -846,7 +872,7 @@ class s extends rcs {
      */
 
     /**
-     * @see RCS::coupling
+     * see RCS::coupling
      *
      * @param int $therow
      * @param int $thecolumn
@@ -1070,6 +1096,7 @@ class sudoku extends ObjectS {
      * In theory this should return the "minimum" solution given any solution.
      *
      * @param array $theInitialState (@see Sudoku::initializePuzzleFromArray)
+     *
      * @return array A set of triples containing the minimum solution.
      */
     public function findalternatesolution($theinitialstate) {
@@ -1103,14 +1130,14 @@ class sudoku extends ObjectS {
      * a long time to force a solution, it's easier to probe for a solution
      * if you go "too long".
      *
-     * @param integer $theDifficultyLevel [optional] Since virtually everybody who
+     * @param integer $thedifficultylevel [optional] Since virtually everybody who
      *                plays sudoku wants a variety of difficulties this controls that.
      *                1 is the easiest, 10 the most difficult.  The easier Sudoku have
      *                extra information.
-     * @param integer $theMaxInterations [optional] Controls the number of iterations
+     * @param integer $themaxinterations [optional] Controls the number of iterations
      *                before the puzzle generator gives up and trys a different set
      *                of initial parameters.
-     * @param integer $theTrys [optional] The number of attempts at resetting the
+     * @param integer $thetrys [optional] The number of attempts at resetting the
      *                initial parameters before giving up.
      * @return array A set of triples suitable for initializing a new Sudoku class
      *               (@see Sudoku::initializePuzzleFromArray).
@@ -1197,12 +1224,12 @@ class sudoku extends ObjectS {
      * of iterations are asserted.  Once these limits are passed, the generator gives up and
      * makes another try.  If enough tries are made, the generator gives up entirely.
      *
-     * @param array $theAvailablePositions A set of pairs for all positions which have not been
+     * @param array $theavailablepositions A set of pairs for all positions which have not been
      *              filled by the solver or the set of guesses.  When we run out of available
      *              positions, the solution is in hand.
-     * @param array $theCluesPositions A set of pairs for which values have been set by the
+     * @param array $thecluespositions A set of pairs for which values have been set by the
      *              puzzle generator.
-     * @param array $theClues A set of values for each pair in $theCluesPositions.
+     * @param array $theclues A set of values for each pair in $theCluesPositions.
      * @return array NULL array if no solution is possible, otherwise a set of triples
      *               suitable for feeding to {@link Sudoku::initializePuzzleFromArray}
      */
@@ -1383,7 +1410,7 @@ class sudoku extends ObjectS {
      * Each element of the input array is a triple consisting of (row, column, value).
      * Each of these values is in the range 1..9.
      *
-     * @param array $theArray
+     * @param array $thearray
      */
     public function initializepuzzlefromarray($thearray) {
         foreach ($thearray as $xxx) {
@@ -1400,7 +1427,7 @@ class sudoku extends ObjectS {
      * 1..9.  Input lines that are blank (all whitespace) or which begin with whitespace
      * followed by a "#" character are ignored.
      *
-     * @param mixed $theHandle [optional] defaults to STDIN.  If a string is passed
+     * @param mixed $thehandle [optional] defaults to STDIN.  If a string is passed
      *              instead of a file handle, the file is opened.
      */
     public function initializepuzzlefromfile($thehandle = STDIN) {
@@ -1446,7 +1473,7 @@ class sudoku extends ObjectS {
      * The input parameter consists of a string of 81 digits and blanks.  If fewer characters
      * are provide, the string is padded on the right.
      *
-     * @param string $theString The initial state of each cell in the puzzle.
+     * @param string $thestring The initial state of each cell in the puzzle.
      */
     public function initializepuzzlefromstring($thestring) {
         $thestring = str_pad($thestring, 81, " ");
@@ -1508,7 +1535,7 @@ class sudoku extends ObjectS {
      *
      * @see SudokuIntermediateSolution.
      *
-     * @param string $theHeader [optional] The header line to be output along
+     * @param string $theheader [optional] The header line to be output along
      *               with the intermediate solution.
      */
     protected function _printintermediatesolution($theheader = null) {
@@ -1523,7 +1550,7 @@ class sudoku extends ObjectS {
      * Simple output, is tailored by hand so that an initial state and
      * a solution will find nicely upon a single 8.5 x 11 page of paper.
      *
-     * @param mixed $theHeader [optional] The header line[s] to be output along
+     * @param mixed $theheader [optional] The header line[s] to be output along
      *               with the solution.
      */
     public function printsolution($theheader = null) {
@@ -1610,7 +1637,7 @@ class sudoku extends ObjectS {
      * During processing I explain which structures (row, column, square)
      * are being used to infer solutions.
      *
-     * @param boolean $theInitialStateFlag [optional] True if the initial
+     * @param boolean $theinitialstateflag [optional] True if the initial
      *                state of the board is to be printed upon entry, false
      *                otherwise.  [Default = true]
      * @return boolean true if a solution was possible, false otherwise.
@@ -1740,8 +1767,8 @@ class sudoku extends ObjectS {
     /**
      * Calculate the index of the square containing a specific cell.
      *
-     * @param integer $theRow the row coordinate.
-     * @param integer $theColumn the column coordinate.
+     * @param integer $therow the row coordinate.
+     * @param integer $thecolumn the column coordinate.
      * @return integer the square index in the range 1..9
      */
     protected function _squareindex($therow, $thecolumn) {

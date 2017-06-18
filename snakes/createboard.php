@@ -121,7 +121,7 @@ function computexy( $pos, &$x, &$y, $colsx, $colsy) {
  *
  * @param object $im
  * @param int $dir
- * @param int $cs
+ * @param int $cx
  * @param int $cy
  * @param object $board
  * @param int $colsx
