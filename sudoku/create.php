@@ -96,8 +96,8 @@ function appendsudokub() {
 /**
  * Pack sudoku
  *
- * @param $si
- * @param $sp
+ * @param object $si
+ * @param object $sp
  *
  * @return the packed sudoku
  */

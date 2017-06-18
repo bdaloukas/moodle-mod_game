@@ -664,7 +664,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
  * Removes all grades from gradebook
  *
  * @param int $courseid
- * @param string optional $type
+ * @param string $type
  **/
 function game_reset_gradebook($courseid, $type='') {
     global $DB;

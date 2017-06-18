@@ -104,7 +104,7 @@ class objects {
     /*
      * Deep copy anything.
      *
-     * @param array $theArray [optional] Something to be deep copied.  Default is the current
+     * @param array $thearray [optional] Something to be deep copied.  Default is the current
      *                        ObjectS.
      * @return mixed The deep copy of the input.  All references embedded within
      *               the array have been resolved into copies allowing things like the
@@ -229,7 +229,7 @@ class cell extends objects {
         }
     }
 
-    /*
+    /**
      * Assert pending solution.
      * Used to make sure that solved positions show up at print time.
      * The value is used as a candidate for "slicing and dicing" by elimination in
@@ -241,7 +241,7 @@ class cell extends objects {
         $this->state = array($value => $value);
     }
 
-    /*
+    /**
      * return the state of a cell.
      *
      * @return mixed Either solved state or array of state pending solution.
@@ -250,7 +250,7 @@ class cell extends objects {
         return $this->state;
     }
 
-    /*
+    /**
      * Has the state of this cell been applied to the board.
      *
      * @return boolean True if it has, false otherwise.  Implies that IsSolved is true as well.
@@ -259,7 +259,7 @@ class cell extends objects {
         return $this->applied;
     }
 
-     /*
+     /**
       * Has this cell been solved?
       *
       * @return boolean True if this cell has hit a single state.
@@ -268,7 +268,7 @@ class cell extends objects {
         return !is_array($this->state);
     }
 
-    /*
+    /**
      * This is used primarily by the pretty printer, but has other applications in the code.
      *
      * Return information about the state of a cell.
@@ -289,7 +289,7 @@ class cell extends objects {
         }
     }
 
-    /*
+    /**
      * Eliminate one or more values from the state information of the cell.
      *
      * This is the negative inference of Sudoku.  By eliminating values the
@@ -691,7 +691,7 @@ class rcs extends ObjectS {
         return true;
     }
 
-    /*
+    /**
      * Check to see if the RCS contains a valid state.
      *
      * @return boolean True if the state of the RCS could be part of a valid
@@ -828,7 +828,7 @@ class c extends r {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class s extends rcs {
-    /*
+    /**
      * The cells within the 3x3 sudoku which participate in the coupling calculation for a square.
      * Remember that the missing cells have already participated in the row or column coupling
      * calculation.
@@ -971,7 +971,7 @@ class sudoku extends ObjectS {
         $this->_buildrcs();
     }
 
-    /*
+    /**
      * Apply a pending solved position to the row/square/column.
      *
      * At this point, the board has been populated with any pending solutions.
@@ -998,7 +998,7 @@ class sudoku extends ObjectS {
         $this->thesquares[$i]->un_set($thevalue);
     }
 
-    /*
+    /**
      * Apply all pending solved positions to the board.
      *
      * @return boolean True if at least one solved position was applied, false
@@ -1028,7 +1028,7 @@ class sudoku extends ObjectS {
         return $thereturn;
     }
 
-    /*
+    /**
      * build the row/column/square structures for the board.
      */
     protected function _buildrcs() {
@@ -1073,7 +1073,7 @@ class sudoku extends ObjectS {
         }
     }
 
-    /*
+    /**
      * Seek alternate solutions in a solution set.
      *
      * Given a solution, see if there are any alternates within the solution.
@@ -1102,7 +1102,7 @@ class sudoku extends ObjectS {
         return $theinitialstate;
     }
 
-    /*
+    /**
      * Initialize Sudoku puzzle generation and generate a puzzle.
      *
      * Turns out that while the solution of Sudoku is mechanical, the creation of
@@ -1195,7 +1195,7 @@ class sudoku extends ObjectS {
         return array();
     }
 
-    /*
+    /**
      * Sudoku puzzle generator.
      *
      * This is the routine that does the heavy lifting
@@ -1360,7 +1360,7 @@ class sudoku extends ObjectS {
         return array();
     }
 
-    /*
+    /**
      * Get the current state of the board as a string.
      *
      * Return the contents of the board as a string of digits and blanks.  Blanks
@@ -1379,7 +1379,7 @@ class sudoku extends ObjectS {
         return $thestring;
     }
 
-    /*
+    /**
      * Get cel
      *
      * @param int $r
@@ -1389,7 +1389,7 @@ class sudoku extends ObjectS {
         return $this->theboard[$r][$c];
     }
 
-    /*
+    /**
      * Each element of the input array is a triple consisting of (row, column, value).
      * Each of these values is in the range 1..9.
      *
@@ -1402,7 +1402,7 @@ class sudoku extends ObjectS {
         }
     }
 
-    /*
+    /**
      * Initialize puzzle from an input file.
      *
      * The input file is a text file, blank or tab delimited, with each line being a
@@ -1470,7 +1470,7 @@ class sudoku extends ObjectS {
         $this->initializepuzzlefromrray($therray);
     }
 
-    /*
+    /**
      * predicate to determine if the current puzzle has been solved.
      *
      * @return boolean true if the puzzle has been solved.

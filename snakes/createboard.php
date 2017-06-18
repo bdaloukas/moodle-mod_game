@@ -122,7 +122,7 @@ function computexy( $pos, &$x, &$y, $colsx, $colsy) {
  * @param object $im
  * @param int $cs
  * @param int $cy
- * @param $object $board
+ * @param object $board
  * @param int $colsx
  * @param int $colsy
  * @param int $ofsleft
@@ -146,6 +146,7 @@ function makeboard( $im, $dir, $cx, $cy, $board, $colsx, $colsy, $ofsleft, $ofst
  * @param object $im
  * @param string $dir
  * @param int $cx
+ * @param int $cy
  * @param string $s
  * @param int $colsx
  * @param int $colsy
@@ -213,7 +214,7 @@ function makeboardl( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
  * Make board snakes
  *
  * @param object $im
- * @param string $dit
+ * @param string $dir
  * @param int $cx
  * @param int $cy
  * @param string $s

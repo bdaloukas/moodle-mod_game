@@ -19,9 +19,6 @@
  * html.  This is a class wrapper for a couple of utility routines that I use
  * all the time.  It's handier to have them as a class.
  *
- * Its also the class interface for logging functions that I use in developing
- * web enabled applications.
- *
  * @author Dick Munroe <munroe@csworks.com>
  * @copyright copyright @ by Dick Munroe, 2004
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
@@ -44,38 +41,23 @@ class sdd {
     /** @var HTML to be generated flag. */
     protected $m_htmlflag;
 
-    /** @var logging flag. */
-    protected $m_logging = false;
-
-    /** @var In memory log file. */
-    protected $m_log = array();
-
-    /*
+    /**
      * Constructor.
      *
      * @param boolean $theHTMLFlag [optional] True if HTML is to be generated.
      *                If omitted, $_SERVER is used to "guess" the state of
      *                    the HTML flag.  Be default, HTML is generated when
      *                    accessed by a web server.
-     * @param boolean $theLoggingFlag [optional] the state of logging for
-     *                this object.  By default, logging is off.
      */
-    public function init($thehtmlflag = null, $theloggingflag = false) {
+    public function init($thehtmlflag = null) {
         if ($thehtmlflag === null) {
             $thehtmlflag = (!empty($_SERVER['DOCUMENT_ROOT']));
         }
 
         $this->m_htmlflag = $thehtmlflag;
-        $this->m_logging = $theloggingflag;
     }
 
-    /*
-     * Close the log file.
-     */
-    public function close() {
-    }
-
-    /*
+    /**
      * Dump a structured variable.
      *
      * @static
@@ -109,7 +91,7 @@ class sdd {
         }
     }
 
-    /*
+    /**
      * Dump the contents of an array.
      *
      * @param array $thearray the array whose contents are to be displayed.
@@ -157,7 +139,7 @@ class sdd {
         return $thestring;
     }
 
-    /*
+    /**
      * Dump the contents of an object.
      *
      * Provide a structured display of an object and all the
@@ -274,38 +256,12 @@ class sdd {
         return $thestring;
     }
 
-    /*
-     * Write a debugging value to a log file.
+    /**
+     * Generate context specific new line equivalents.
      *
-     * @param mixed Data to be logged.
-     * @param string $theHeader [optional] string to be emitted prior to
-     *               logging the data.  By default it is a date/time
-     *                   stamp.
-     */
-    public function log(&$thedata, $theheader = null) {
-        $theheader = date('[Y-m-d H:i:s]: ') . $theheader;
-
-        if ($this->m_logging) {
-            if ($this->m_htmlflag) {
-                $xxx = $this->dump($thedata);
-                if (substr($xxx, 0, 5) == '<pre>') {
-                    $xxx = '<pre>' . $theheader . substr($xxx, 5);
-                } else {
-                    $xxx = $theheader . $xxx;
-                }
-
-                $this->writeLog($xxx);
-            } else {
-                $xxx = $theheader . $this->dump($thedata);
-                $this->writelog($xxx);
-            }
-        }
-    }
-
-    /*
-     * @desc Generate context specific new line equivalents.
      * @param integer [optional] the number of newlines.
      * @param boolean [optional] true if generating html newlines.
+     *
      * @return string newlines.
      */
     public function newline($thecount = 1, $thehtmlflag = null) {
@@ -328,7 +284,7 @@ class sdd {
         }
     }
 
-    /*
+    /**
      * Dump any scalar value
      *
      * @param mixed $theVariable the variable to be dumped.
@@ -340,34 +296,5 @@ class sdd {
         } else {
             return var_export($thevariable, true);
         }
-    }
-
-    /*
-     * Write data to the log file.
-     *
-     * @parameter string $theData [by reference] the data to be written
-     *                       into the log file.
-     * @return integer the number of bytes written into the log file.
-     */
-    public function writelog(&$thedata) {
-        return strlen($this->m_log[] = $thedata);
-    }
-
-    /*
-     * Return the state of the logging flag.
-     *
-     * @return boolean
-     */
-    public function getlogging() {
-        return $this->m_logging;
-    }
-
-    /*
-     * Set the state of the logging flag.
-     *
-     * @return boolean
-     */
-    public function setlogging($thelogging=false) {
-        $this->m_logging = $thelogging;
     }
 }

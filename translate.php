@@ -479,7 +479,7 @@ function read_dir($dir, $ext) {
  * @param string $langname
  * @param int $sum
  * @param string $outdir
- * @param int $utranslated
+ * @param int $untranslated
  */
 function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated) {
     global $CFG;
