@@ -129,9 +129,9 @@ function packsudoku( $si, $sp) {
 /**
  * Creates a sudoku
  *
- * @param $id
- * @param $sp
- * @param $level
+ * @param int $id
+ * @param object $sp
+ * @param int $level
  *
  * @return true if created correctly
  */
@@ -157,7 +157,7 @@ function create( &$si, &$sp, $level=1) {
 /**
  * get opened
  *
- * @param $si
+ * @param stdClass $si
  *
  * @return count of opened
  */

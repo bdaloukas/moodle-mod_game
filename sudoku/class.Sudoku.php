@@ -101,7 +101,7 @@ class objects {
         return (count($xxx) == 0);
     }
 
-    /*
+    /**
      * Deep copy anything.
      *
      * @param array $thearray [optional] Something to be deep copied.  Default is the current
@@ -116,16 +116,6 @@ class objects {
         } else {
             return unserialize(serialize($thearray));
         }
-    }
-
-    /**
-     * Debugging output interface.
-     *
-     * @param mixed $theValue The "thing" to be pretty printed.
-     * @param boolean $theHTMLFlag True if the output will be seen in a browser, false otherwise.
-     */
-    public function print_d(&$thevalue, $thehtmlflag = true) {
-        print SDD::dump($thevalue, $thehtmlflag);
     }
 }
 
@@ -1816,6 +1806,12 @@ class sudoku extends ObjectS {
  */
 class SudokuTemplates extends Sudoku
 {
+    /**
+     * Generate puzzle from file
+     *
+     * @param int $thehandle
+     * @param int $thedifficultylevel
+     */
     public function generatepuzzlefromfile($thehandle = STDIN, $thedifficultylevel = 10) {
         $yyy = array();
 
@@ -1832,6 +1828,12 @@ class SudokuTemplates extends Sudoku
         return $this->generatepuzzlefromarray($yyy, $thedifficultylevel);
     }
 
+    /**
+     * Generate puzzle from file
+     *
+     * @param int $thearray
+     * @param int $thedifficultylevel
+     */
     public function generatepuzzlefromarray($thearray, $thedifficultylevel = 10) {
         $this->_generatepuzzle($thearray, array(), array());
 
@@ -1857,10 +1859,19 @@ class SudokuTemplates extends Sudoku
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class sudokuintermediatesolution extends sudoku {
+    /**
+     * intermediate results
+     *
+     * @param int $thedebug
+     */
     public function sudokuintermediateresults($thedebug = false) {
         $this->sudoku($thedebug);
     }
-
+    /**
+     * print intermediate solution
+     *
+     * @param object $theheader
+     */
     protected function _printintermediatesolution($theheader = null) {
         $this->printsolution($theheader);
     }

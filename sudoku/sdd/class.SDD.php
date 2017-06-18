@@ -15,27 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Dump structured data, i.e., Objects and Arrays, in either plain text or
- * html.  This is a class wrapper for a couple of utility routines that I use
+ * Dump structured data, i.e., Objects and Arrays, in either plain text or html.
+ * 
+ * This is a class wrapper for a couple of utility routines that I use
  * all the time.  It's handier to have them as a class.
  *
- * @author Dick Munroe <munroe@csworks.com>
+ * @author Dick Munroe <munroe@csworks.com> original package StructuredDataDumper
  * @copyright copyright @ by Dick Munroe, 2004
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @package StructuredDataDumper
+ * @package mod_game
  */
 
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Dump structured data, i.e., Objects and Arrays, in either plain text or
- * html.  This is a class wrapper for a couple of utility routines that I use
- * all the time.  It's handier to have them as a class.
+ * This is a class wrapper for a couple of utility routines that I use all the time.
  *
  * @author Dick Munroe <munroe@csworks.com>
  * @copyright copyright @ by Dick Munroe, 2004
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @package StructuredDataDumper
+ * @package mod_game
  */
 class sdd {
     /** @var HTML to be generated flag. */
@@ -44,7 +43,7 @@ class sdd {
     /**
      * Constructor.
      *
-     * @param boolean $theHTMLFlag [optional] True if HTML is to be generated.
+     * @param boolean $thehtmlflag [optional] True if HTML is to be generated.
      *                If omitted, $_SERVER is used to "guess" the state of
      *                    the HTML flag.  Be default, HTML is generated when
      *                    accessed by a web server.
@@ -60,7 +59,6 @@ class sdd {
     /**
      * Dump a structured variable.
      *
-     * @static
      * @param mixed $thevariable the variable to be dumped.
      * @param boolean $thehtmlflag [optional] true if HTML is to be generated,
      *                false if plain text is to be generated, null (default) if
@@ -95,9 +93,9 @@ class sdd {
      * Dump the contents of an array.
      *
      * @param array $thearray the array whose contents are to be displayed.
-     * @param boolean $theHTMLFlag True if an HTML table is to be generated,
+     * @param boolean $thehtmlflag True if an HTML table is to be generated,
      *                false otherwise.
-     * @param string $theIndent [optional] Used by SDD::dArray during recursion
+     * @param string $theindent [optional] Used by SDD::dArray during recursion
      *               to get indenting right.
      * @return string The display form of the array.
      */
@@ -147,8 +145,8 @@ class sdd {
      * the object is displayed from most derived to the base
      * class, in order.
      *
-     * @param object $theObject the object to be dumped.
-     * @param boolean $theHTMLFlag true if HTML is to be generated.
+     * @param object $theobject the object to be dumped.
+     * @param boolean $thehtmlflag true if HTML is to be generated.
      * @return string the display form of the object.
      */
     public function dobject(&$theobject, $thehtmlflag) {
@@ -259,8 +257,8 @@ class sdd {
     /**
      * Generate context specific new line equivalents.
      *
-     * @param integer [optional] the number of newlines.
-     * @param boolean [optional] true if generating html newlines.
+     * @param integer $thecount [optional] the number of newlines.
+     * @param boolean $thehtmlflag [optional] true if generating html newlines.
      *
      * @return string newlines.
      */
@@ -287,8 +285,8 @@ class sdd {
     /**
      * Dump any scalar value
      *
-     * @param mixed $theVariable the variable to be dumped.
-     * @param boolean $theHtmlFlag true if html is to be generated.
+     * @param mixed $thevariable the variable to be dumped.
+     * @param boolean $thehtmlflag true if html is to be generated.
      */
     public function scalar(&$thevariable, $thehtmlflag) {
         if ($thehtmlflag) {

@@ -423,6 +423,10 @@ function game_sudoku_getglossaryentries( $game, $offsetentries, &$entrylist, $nu
  * @param stdClass $sudoku
  * @param int $offsetquestions
  * @param string $numbers
+ * @param int $correctquestions
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $context
  */
 function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetquestions, $numbers,
      $correctquestions, $onlyshow, $showsolution, $context) {
@@ -502,6 +506,9 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
  * @param stdClass $sudoku
  * @param int $offsetentries
  * @param int $numbers
+ * @param int $correctentries
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
  */
 function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $offsetentries, $numbers,
  $correctentries, $onlyshow, $showsolution) {
@@ -714,12 +721,12 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
 /**
  * This is the last function after submiting the answers.
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $sudoku
- * @param $finishattempt
- * @param $course
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param boolean $finishattempt
+ * @param stdClass $course
  */
 function game_sudoku_check_last( $id, $game, $attempt, $sudoku, $finishattempt, $course) {
     global $CFG, $DB;

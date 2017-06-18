@@ -303,6 +303,8 @@ function game_hidden_picture_computescore( $game, $hiddenpicture) {
  * @param stdClass $attempt
  * @param stdClass $hiddenpicture
  * @param boolean $showsolution
+ * @param int $offsetquestions
+ * @param int $correctquestions
  */
 function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpicture, $showsolution,
             $offsetquestions, $correctquestions) {

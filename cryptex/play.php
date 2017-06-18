@@ -173,7 +173,7 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $fi
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $cryptexrec
- * @param stdClass $crosssm
+ * @param stdClass $crossm
  * @param boolean $updateattempt
  * @param boolean $onlyshow
  * @param boolean $showsolution

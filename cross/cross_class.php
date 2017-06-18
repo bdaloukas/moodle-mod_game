@@ -565,7 +565,7 @@ class Cross
     }
 
     /**
-     * Scans a positions.
+     * Scans a position.
      *
      * @param int $pos
      * @param int $dir
@@ -576,7 +576,7 @@ class Cross
      * @param object $poss
      * @param int $crosspos
      * @param int $crossdir
-     * @param object $crosssword
+     * @param object $crossword
      * @param int $n20
      *
      * @return true if it is ok.

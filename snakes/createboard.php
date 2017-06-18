@@ -120,6 +120,7 @@ function computexy( $pos, &$x, &$y, $colsx, $colsy) {
  * Make board
  *
  * @param object $im
+ * @param int $dir
  * @param int $cs
  * @param int $cy
  * @param object $board
