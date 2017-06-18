@@ -476,7 +476,7 @@ function read_dir($dir, $ext) {
  * @param string $en
  * @param string $lang
  * @param string $strings
- * @param string $langfile
+ * @param string $langname
  * @param int $sum
  * @param string $outdir
  * @param int $utranslated

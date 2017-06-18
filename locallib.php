@@ -1150,7 +1150,7 @@ function game_score_to_grade($score, $game) {
  *
  * @param object $game the game instance.
  * @param object $attempt the attempt in question.
- * @param $context the roles and permissions context, for game module instance
+ * @param object $context the roles and permissions context, for game module instance
  *
  * @return object an object with boolean fields responses, scores, feedback,
  *          correct_responses, solutions and general feedback
@@ -1228,7 +1228,7 @@ function game_compute_attempt_layout( $game, &$attempt) {
  *
  * @param object $game the game instance.
  * @param array $attempts an array of attempt objects.
- * @param $context the roles and permissions context, the game instance
+ * @param object $context the roles and permissions context, the game instance
  *
  * @return array of two options objects, one showing which options are true for
  *          at least one of the attempts, the other showing which options are true

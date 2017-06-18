@@ -87,7 +87,6 @@ class objects {
      * @param array
      * @return boolean
      */
-
     public function array_equal($thearray1, $thearray2) {
         if (!(is_array($thearray1) && is_array($thearray2))) {
             return false;
@@ -111,7 +110,6 @@ class objects {
      *               the array have been resolved into copies allowing things like the
      *               board array to be copied.
      */
-
     public function deepcopy($thearray = null) {
         if ($thearray === null) {
             return unserialize(serialize($this));
@@ -126,7 +124,6 @@ class objects {
      * @param mixed $theValue The "thing" to be pretty printed.
      * @param boolean $theHTMLFlag True if the output will be seen in a browser, false otherwise.
      */
-
     public function print_d(&$thevalue, $thehtmlflag = true) {
         print SDD::dump($thevalue, $thehtmlflag);
     }
@@ -162,7 +159,6 @@ class cell extends objects {
      * @param integer $nStates The number of states each cell can have.  Looking forward to
      *                         implementing Super-doku.
      */
-
     public function init($inpr, $inpc, $nstates = 9) {
         $this->r = $inpr;
         $this->c = $inpc;
@@ -613,6 +609,14 @@ class rcs extends ObjectS {
         return $thereturn;
     }
 
+   
+    /**
+     * un set
+     *
+     * @param $thevalues
+     *
+     * @return boolean True if one or more values in the RCS has changed state.
+     */
     public function un_set($thevalues) {
         $thereturn = false;
 
@@ -752,8 +756,8 @@ class r extends rcs {
     /**
      * see RCS::coupling
      *
-     * @param $therow
-     * @param $thecolumn
+     * @param int $therow
+     * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
         return $thestate = $this->_coupling($thecolumn);
@@ -807,8 +811,10 @@ class c extends r {
 
     /**
      * @see R::coupling
+     *
+     * @param int $therow
+     * @param int $thecolumn 
      */
-
     public function coupling($therow, $thecolumn) {
         return $thestate = $this->_coupling($therow);
     }
@@ -829,7 +835,6 @@ class s extends rcs {
      *
      * @var array
      */
-
     protected $thecouplingorder = array( 1 => array(5, 6, 8, 9),
         2 => array(4, 6, 7, 9),
         3 => array(4, 5, 7, 8),
@@ -852,6 +857,9 @@ class s extends rcs {
 
     /**
      * @see RCS::coupling
+     *
+     * @param int $therow
+     * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
         $theindex = ((($therow - 1) % 3) * 3) + (($thecolumn - 1) % 3) + 1;
@@ -948,7 +956,7 @@ class sudoku extends ObjectS {
     /**
      * Constructor
      *
-     * @param $thedebug
+     * @param boolean $thedebug
      */
     public function init($thedebug = false) {
         $this->thedebug = $thedebug;
@@ -1374,8 +1382,8 @@ class sudoku extends ObjectS {
     /*
      * Get cel
      *
-     * @param $r
-     * @param $c
+     * @param int $r
+     * @param int $c
      */
     public function &getcell($r, $c) {
         return $this->theboard[$r][$c];

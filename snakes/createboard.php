@@ -32,6 +32,11 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $colsy
  * @param int $ofstop
  * @param int $ofsbottom
+ * @param int $ofsright
+ * @param int $ofsleft
+ * @param stdClass $board
+ * @param int $setwidth
+ * @param int $setheight
  */
 function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom,
         $ofsright, $ofsleft, $board, $setwidth, $setheight) {

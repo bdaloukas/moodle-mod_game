@@ -152,7 +152,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
 /**
  * Show dice
  *
- * @param stdClass $snake
+ * @param stdClass $snakes
  * @param boolean $board
  */  
 function game_snakes_showdice( $snakes, $board) {
@@ -293,7 +293,7 @@ function game_snakes_showquestion( $id, $game, $snakes, $query, $context) {
  * Shows the question.
  *
  * @param stdClass $game
- * @param $id
+ * @param int $id
  * @param stdClass $snakes
  * @param stdClass $query
  * @param stdClass $context
@@ -458,7 +458,6 @@ function game_snakes_check_glossary( $id, $game, $attempt, $snakes, $context) {
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param boolean $correct
- * @param stsdClass $correct
  * @param stdClasss $query
  * @param stdClass $context
  */
