@@ -339,16 +339,14 @@ class rcs extends ObjectS {
     /**
      * Constructor
      *
-      *  This interface is what limts things to 9x9 Sudoku currently
+     *  This interface is what limts things to 9x9 Sudoku currently
      * @param string $thetag "Row", "Column", "Square", used primarily in debugging.
-     * @param integer $theindex 1..9, where is this on the board.  Square are numbered top
-     *                          left, ending bottom right
+     * @param integer $theindex 1..9, where is this on the board.  Square are numbered top left, ending bottom right
      * @param ObjectS $a1 of class Cell.
      * @param ObjectS $a2 of class Cell.
      * @param ObjectS $a3 of class Cell.
      * @param ObjectS $a4 of class Cell.
      * @param ObjectS $a5 of class Cell.
-     * @param ObjectS $a6 of class Cell.
      * @param ObjectS $a6 of class Cell.
      * @param ObjectS $a7 of class Cell.
      * @param ObjectS $a8 of class Cell.
@@ -1082,7 +1080,7 @@ class sudoku extends ObjectS {
      * Given a solution, see if there are any alternates within the solution.
      * In theory this should return the "minimum" solution given any solution.
      *
-     * @param array $theinitialState
+     * @param array $theinitialstate
      *
      * @return array A set of triples containing the minimum solution.
      */
@@ -1121,7 +1119,7 @@ class sudoku extends ObjectS {
      *                plays sudoku wants a variety of difficulties this controls that.
      *                1 is the easiest, 10 the most difficult.  The easier Sudoku have
      *                extra information.
-     * @param integer $themaxinterations [optional] Controls the number of iterations
+     * @param integer $themaxiterations [optional] Controls the number of iterations
      *                before the puzzle generator gives up and trys a different set
      *                of initial parameters.
      * @param integer $thetrys [optional] The number of attempts at resetting the
@@ -1700,6 +1698,9 @@ class sudoku extends ObjectS {
      *
      * There's a bit of bookkeeping to keep the state right when backing up, but that's pretty
      * straightforward and looks a lot like that of generatePuzzle.
+     *
+     * @param int $i
+     * @param int $j
      *
      * @return array The clues added sufficient to solve the puzzle.
      */
