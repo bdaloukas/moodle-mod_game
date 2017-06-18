@@ -17,8 +17,9 @@
 /**
  * This page plays the cryptex game
  *
- * @author  bdaloukas
- * @package game
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 
 defined('MOODLE_INTERNAL') || die();
@@ -30,7 +31,7 @@ require_once( "cryptexdb_class.php");
  *
  * @param int $id
  * @param stdClass $game
- * @param stdClass $atttempt
+ * @param stdClass $attempt
  * @param stdClass $cryptexrec
  * @param boolean $endofgame
  * @param stdClass $context
@@ -114,7 +115,7 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
  *
  * @param int $id
  * @param stdClass $game
- * @param stdClass $atttempt
+ * @param stdClass $attempt
  * @param stdClass $cryptexrec
  * @param int $q (The q means game_queries.id).
  * @param stdClass $answer
@@ -170,7 +171,7 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $fi
  *
  * @param int $id
  * @param stdClass $game
- * @param stdClass $atttempt
+ * @param stdClass $attempt
  * @param stdClass $cryptexrec
  * @param stdClass $crosssm
  * @param boolean $updateattempt
@@ -407,7 +408,7 @@ if ($print) {
  *
  * @param int $id
  * @param stdClass $game
- * @param stdClass $atttempt
+ * @param stdClass $attempt
  * @param stdClass $cryptexrec
  */
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec) {

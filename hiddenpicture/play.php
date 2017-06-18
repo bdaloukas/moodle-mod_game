@@ -233,12 +233,12 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
 /**
  * Plays the game "Hidden picture"
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $hiddenpicture
- * @param $showsolution
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hiddenpicture
+ * @param boolean $showsolution
+ * @param stdClass $context
  */
 function game_hiddenpicture_play( $id, $game, $attempt, $hiddenpicture, $showsolution, $context) {
     if ($game->toptext != '') {
@@ -276,8 +276,8 @@ function game_hiddenpicture_play( $id, $game, $attempt, $hiddenpicture, $showsol
 /**
  * "Hidden picture" compute score
  *
- * @param $game
- * @param $hiddenpicture
+ * @param stdClass $game
+ * @param stdClass $hiddenpicture
  */
 function game_hidden_picture_computescore( $game, $hiddenpicture) {
     $correct = $hiddenpicture->correct;
@@ -298,11 +298,11 @@ function game_hidden_picture_computescore( $game, $hiddenpicture) {
 /**
  * Show hidden picture
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $hiddenpicture
- * @param $showsolution
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hiddenpicture
+ * @param boolean $showsolution
  */
 function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpicture, $showsolution,
             $offsetquestions, $correctquestions) {
@@ -335,9 +335,9 @@ function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpict
 /**
  * hidden picture. show question glossary
  *
- * @param $game
- * @param $id
- * @param $query
+ * @param stdClass $game
+ * @param int $id
+ * @param stdClass $query
  */
 function game_hiddenpicture_showquestion_glossary( $game, $id, $query) {
     global $CFG, $DB;
@@ -373,12 +373,12 @@ function game_hiddenpicture_showquestion_glossary( $game, $id, $query) {
 /**
  * Check main question
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $hiddenpicture
- * @param $finishattempt
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hiddenpicture
+ * @param boolean $finishattempt
+ * @param stdClass $context
  */
 function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenpicture, $finishattempt, $context) {
     global $CFG, $DB;
@@ -448,13 +448,13 @@ function game_hiddenpicture_check_mainquestion( $id, $game, &$attempt, &$hiddenp
 /**
  * Show picture
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $query
- * @param $cells
- * @param $foundcells
- * @param $usemap
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $query
+ * @param object $cells
+ * @param int $foundcells
+ * @param boolean $usemap
  */
 function game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, $usemap) {
     global $CFG;

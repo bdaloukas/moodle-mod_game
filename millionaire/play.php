@@ -340,7 +340,7 @@ function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, 
 /**
  * Updates tables: games_millionaire, game_attempts, game_questions.
  *
- * @param string $answer
+ * @param array $aanswer
  * @param stdClass $game
  * @param stdClasss $attempt
  * @param stdClass $millionaire

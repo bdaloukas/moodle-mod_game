@@ -55,9 +55,9 @@ function game_print( $game, $update, $context) {
 /**
  * Prints a cross.
  *
- * @param $game
-   @param $update
- * @param $context
+ * @param stdClass $game
+   @param boolean $update
+ * @param stdClass $context
  */
 function game_print_cross( $game, $update, $context) {
     require( "cross/play.php");

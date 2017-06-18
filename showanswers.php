@@ -486,7 +486,7 @@ function game_showanswers_glossary( $game) {
 /**
  * Show answers bookquiz
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showanswers_bookquiz( $game, $context) {
     global $CFG;

@@ -196,7 +196,7 @@ function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, 
  *
  * @param stdClas $game
  * @param stdClass $context
- * @param boolean $exportattachments
+ * @param boolean $exportattachment
  * @param string $dest
  * @param array $files
  */
@@ -304,7 +304,7 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
  *
  * @param stdClass $game
  * @param stdClass $context
- * @param boolean $exportattachments
+ * @param boolean $exportattachment
  * @param string $destdir
  * @param array $files
  */

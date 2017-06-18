@@ -665,7 +665,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
  *
  * @param int $courseid
  * @param string optional $type
- */
+ **/
 function game_reset_gradebook($courseid, $type='') {
     global $DB;
 
@@ -1147,7 +1147,7 @@ if (defined('USE_GET_SHORTCUTS')) {
  * @param stdClass $course
  * @param stdClass $cm
  * @param stdClass $context
- * @param string filearea
+ * @param string $filearea
  * @param array $args
  * @param boolean $forcedownload
  *
@@ -1412,7 +1412,8 @@ function game_get_context_module_instance( $moduleid) {
  *
  * This is used to find out if scale used anywhere
  *
- * @param int $moduleid
+ * @param int $courseid
+ *
  * @return stdClass context
  */
 function game_get_context_course_instance( $courseid) {
@@ -1427,7 +1428,8 @@ function game_get_context_course_instance( $courseid) {
  * Returns the url of a pix file. Is the same for all versions of Moodle.
  *
  * @param string $filename
- * @param string module
+ * @param string $module
+ *
  * @return stdClass url
  */
 function game_pix_url( $filename, $module='') {

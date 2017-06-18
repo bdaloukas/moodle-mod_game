@@ -50,7 +50,7 @@ echo $OUTPUT->footer();
 /**
  * Show users
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showusers($game) {
     global $CFG, $USER, $DB;
@@ -122,7 +122,7 @@ function game_showusers($game) {
 /**
  * Show groups
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showgroups($game) {
     global $CFG, $USER, $DB;
@@ -180,7 +180,7 @@ function game_showgroups($game) {
 /**
  * Show attempts
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showattempts($game) {
     global $CFG, $DB, $OUTPUT;
@@ -282,7 +282,7 @@ function game_showattempts($game) {
 /**
  * One delete attempt
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_ondeleteattempt( $game) {
     global $CFG, $DB;

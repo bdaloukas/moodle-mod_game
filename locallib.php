@@ -315,7 +315,7 @@ function game_question_shortanswer_question( $game, $allowspaces, $userepetition
  * @param string $table
  * @param string $select
  * @param string $idfields
- * @param boolean userepetitions
+ * @param boolean $userepetitions
  *
  * @return stdClass the random question
  */
@@ -427,7 +427,7 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
  * Select random questions for Sudoku.
  *
  * @param stdClass $game
- * @param int count
+ * @param int $count
  *
  * @return stdClass the random record(s)
  */
@@ -641,7 +641,7 @@ function game_getallletters( $word, $lang='', $userlanguage='') {
  * true if exist all the letters
  *
  * @param string $str
- * @param string $strfile
+ * @param string $strfind
  *
  * @return the letters detected
  */
@@ -1133,7 +1133,7 @@ function game_get_best_grade($game, $userid) {
  * Converts score to grade
  *
  * @param float $score
- * @param float $grade
+ * @param stdClass $game
  *
  * @return float the user's current grade for this game.
  */
@@ -1150,8 +1150,7 @@ function game_score_to_grade($score, $game) {
  *
  * @param object $game the game instance.
  * @param object $attempt the attempt in question.
- * @param $context the roles and permissions context,
- *          normally the context for the game module instance.
+ * @param $context the roles and permissions context, for game module instance
  *
  * @return object an object with boolean fields responses, scores, feedback,
  *          correct_responses, solutions and general feedback
@@ -1229,8 +1228,7 @@ function game_compute_attempt_layout( $game, &$attempt) {
  *
  * @param object $game the game instance.
  * @param array $attempts an array of attempt objects.
- * @param $context the roles and permissions context,
- *          normally the context for the game module instance.
+ * @param $context the roles and permissions context, the game instance
  *
  * @return array of two options objects, one showing which options are true for
  *          at least one of the attempts, the other showing which options are true
@@ -1257,8 +1255,8 @@ function game_get_combined_reviewoptions($game, $attempts, $context=null) {
 /**
  * Save the overall grade for a user at a game in the game_grades table
  *
- * @param object $quiz The game for which the best grade is to be calculated and then saved.
- * @param integer $userid The userid to calculate the grade for. Defaults to the current user.
+ * @param object $game The game for which the best grade is to be calculated and then saved.
+ *
  * @return boolean Indicates success or failure.
  */
 function game_save_best_score($game) {
@@ -1382,7 +1380,7 @@ function game_calculate_best_attempt($game, $attempts) {
 /**
  * get questions for sudoku
  *
- * @param $questionlist
+ * @param string $questionlist
  */
 function game_sudoku_getquestions( $questionlist) {
     global $CFG, $DB;
@@ -1715,7 +1713,7 @@ function game_right_to_left( $lang) {
  * Compute reverse print
  *
  * @param stdClass $attempt
- * @param string $wordctrl
+ * @param string $wordrtl
  * @param boolean $reverseprint
  */
 function game_compute_reserve_print( $attempt, &$wordrtl, &$reverseprint) {
@@ -2212,7 +2210,7 @@ function game_get_string_lang( $identifier, $module, $lang) {
  * Get string from file
  *
  * @param string $identifier
- * @param string $lanfile
+ * @param string $langfile
  * @param string $destination
  */
 function get_string_from_file($identifier, $langfile, $destination) {
@@ -2288,7 +2286,7 @@ function game_get_contexts() {
  * @param int $id
  * @param string $line
  * @param string $destdir
- * @pram array $files
+ * @param array $files
  */
 function game_export_split_files( $courseid, $context, $filearea, $id, $line, $destdir, &$files) {
     global $CFG, $DB;

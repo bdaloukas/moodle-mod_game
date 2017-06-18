@@ -149,6 +149,12 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
     }
 }
 
+/**
+ * Show dice
+ *
+ * @param stdClass $snake
+ * @param boolean $board
+ */  
 function game_snakes_showdice( $snakes, $board) {
     $pos = game_snakes_computeplayerposition( $snakes, $board);
 ?>
@@ -207,7 +213,7 @@ function game_snakes_computeplayerposition( $snakes, $board) {
  *
  * @param stdClass $game
  * @param stdClass $snakes
- * @param stdClass $quert
+ * @param stdClass $query
  */
 function game_snakes_computenextquestion( $game, &$snakes, &$query) {
     global $DB, $USER;
@@ -451,7 +457,7 @@ function game_snakes_check_glossary( $id, $game, $attempt, $snakes, $context) {
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
- * @param $correct
+ * @param boolean $correct
  * @param stsdClass $correct
  * @param stdClasss $query
  * @param stdClass $context
@@ -497,7 +503,7 @@ function game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query, 
  * In lander go forward.
  *
  * @param int $position
- * @param $data
+ * @param string $data
  */
 function game_snakes_foundlander( $position, $data) {
     preg_match( "/L$position-([0-9]*)/", $data, $matches);
@@ -513,7 +519,7 @@ function game_snakes_foundlander( $position, $data) {
  * In snake go backward.
  *
  * @param int $position
- * @param $data
+ * @param string $data
  */
 function game_snakes_foundsnake( $position, $data) {
     preg_match( "/S([0-9]*)-$position,/", $data.',', $matches);

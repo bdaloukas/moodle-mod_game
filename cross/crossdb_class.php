@@ -26,7 +26,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-/*
+/**
  * This class is a cross that can load and save to a table
  *
  * @package mod_game
@@ -100,7 +100,7 @@ class CrossDB extends Cross {
      * @param stdClass $crossrec
      * @param boolean $onlyshow
      * @param boolean $showsolution
-     * @param $finishattempt
+     * @param boolean $finishattempt
      * @param boolean $showhtmlsolutions
      * @param string $language
      * @param boolean $showstudentguess

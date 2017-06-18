@@ -3,8 +3,6 @@ Husain Limdiyawala(MSc IT DA-IICT) */
 
 // Global Variables.
 var totblocks = 0;
-var data = "";
-var currentblock = 0;
 var lastposition = new Array();
 var randomno = 0;
 var tots = new Array();
@@ -78,7 +76,9 @@ function snakescheck(k) {
 
     for(i = 0; i <= srcsnake.length; i++) {
         if (srcsnake[i] == tots[k]) {
-            alert("Ωχ! Σε τσίμπησε φίδι στο τετράγωνο " + srcsnake[i] + " και θα πρέπει να γυρίσεις στο τετράγωνο " + destsnake[i] + ", εκτός κι αν απαντήσεις σωστά στην ερώτηση που ακολουθεί.");
+            var s = "Ωχ! Σε τσίμπησε φίδι στο τετράγωνο " + srcsnake[i] + " και θα πρέπει να γυρίσεις στο τετράγωνο " + destsnake[i];
+            s = s + ", εκτός κι αν απαντήσεις σωστά στην ερώτηση που ακολουθεί.";
+            alert( s);
             document.getElementById(destsnake[i]).style.background = "url(images/pawn1.png)";
             document.getElementById(tots[k]).style.background = "url(images/square52.png)";
             lastposition[k] = destsnake[i];
@@ -111,22 +111,6 @@ function laddercheck(k) {
     }
 }
 
-// The below function will register a snake.
-function registerSnake(tp, lft, dv, src, dest, i) {
-    document.getElementById(dv).style.top = tp + "px";
-    document.getElementById(dv).style.left = lft + "px";
-    srcsnake[i] = src;
-    destsnake[i] = dest;
-}
-
-// The below function will register a ladder.
-function registerLadder(tp, lft, dv, src, dest, i) {
-    document.getElementById(dv).style.top = tp + "px";
-    document.getElementById(dv).style.left = lft + "px";
-    ladsrc[i] = src;
-    laddest[i] = dest;
-}
-
 // The below function regulates the play.
 function doit(i) {
     throwDice(i);
@@ -145,30 +129,4 @@ function checkWin(i) {
     } else {
         return true;
     }
-}
-
-// The below function will disable both the combobox .
-function disableField() {
-    document.getElementById("players").disabled = "disabled";
-    document.getElementById("boardtype").disabled = "disabled";
-}
-
-function question() {
-    var picked, q1;
-
-    picked = selectQuest(allQuest);
-    alert("Randomly selected number:" + picked);
-    q1 = prompt(quest[picked * 4], "Απάντηση");
-    if (q1 == quest[picked * 4 + 1]) {
-        alert("Σωστά!");
-        doit(l);
-
-        coranswered.concat(quest.splice(picked * 4, 4));
-    } else {
-        alert("Η απάντηση δεν ήταν σωστή. Χάνεις τη σειρά σου για αυτό το γύρο!");
-        wroanswered.concat(quest.splice(picked * 4, 4));
-    }
-
-    // Remove question and answers from available questions - (thus not allowing to have a Repeated question).
-    allQuest--;
 }

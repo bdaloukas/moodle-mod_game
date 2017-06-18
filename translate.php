@@ -256,7 +256,7 @@ if ($ret != '') {
  * Returns the language file for lang
  *
  * @param string $lang
- * @param string module
+ *
  * @return the path of language file
  */
 function getlangfile( $lang) {
@@ -309,7 +309,7 @@ function readlangfile( $lang, &$header) {
  *
  * @param string $line
  * @param string $name
- * @return string $trans
+ * @param string $trans
  */
 function splitlangdefinition($line, &$name, &$trans) {
     $pos1 = strpos( $line, '=');
@@ -475,11 +475,11 @@ function read_dir($dir, $ext) {
  *
  * @param string $en
  * @param string $lang
- * @param $strings
- * @param $langfile
- * @param $sum
- * @param $outdir
- * @param $utranslated
+ * @param string $strings
+ * @param string $langfile
+ * @param int $sum
+ * @param string $outdir
+ * @param int $utranslated
  */
 function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated) {
     global $CFG;

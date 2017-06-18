@@ -44,7 +44,7 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Upgrades database
  *
- * @param $oldversion
+ * @param int $oldversion
  */
 function xmldb_game_upgrade($oldversion) {
 
