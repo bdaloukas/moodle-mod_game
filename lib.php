@@ -55,7 +55,8 @@ define('GAME_REVIEW_GENERALFEEDBACK', 32 * 0x1041); // Show general feedback.
 /**
  * Given an object containing all the necessary data, will create a new instance and return the id number of the new instance.
  *
- * @param object $instance An object from the form in mod.html
+ * @param object $game An object from the form in mod.html
+ *
  * @return int The id of the newly inserted game record
  **/
 function game_add_instance($game) {
@@ -79,7 +80,7 @@ function game_add_instance($game) {
 /**
  * Given an object containing all the necessary data, this function will update an existing instance with new data.
  *
- * @param object $instance An object from the form in mod.html
+ * @param object $game An object from the form in mod.html
  * @return boolean Success/Fail
  **/
 function game_update_instance($game) {
@@ -237,10 +238,10 @@ function game_delete_instance($gameid) {
 /**
  * Return a small object with summary information about what a user has done
  *
- * @param $course
- * @param $user
- * @param $mod
- * @param $game
+ * @param stdClass $course
+ * @param stdClass $user
+ * @param string $mod
+ * @param stdClass $game
  *
  * $return->time = the time they did it
  * $return->info = a short text description

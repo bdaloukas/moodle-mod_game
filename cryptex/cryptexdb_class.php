@@ -39,7 +39,7 @@ class CryptexDB extends CrossDB {
      * @param array $crossm
      * @param array $crossd
      * @param int $id
-     * @param $letters
+     * @param string $letters
      *
      * @return the saved record
      */
@@ -134,12 +134,12 @@ class CryptexDB extends CrossDB {
     /**
      * Displays the cryptex.
      *
-     * @param $cols
-     * @param $rows
-     * @param $letters
-     * @param $mask
-     * @param $showsolution
-     * @param $textdir
+     * @param int $cols
+     * @param int $rows
+     * @param string $letters
+     * @param string $mask
+     * @param boolean $showsolution
+     * @param boolean $textdir
      */
     public function displaycryptex( $cols, $rows, $letters, $mask, $showsolution, $textdir) {
         echo "<table border=1 $textdir>";

@@ -58,8 +58,8 @@ class course_module_viewed extends \core\event\course_module_viewed {
     /**
      * Create instance of event.
      *
-     * @param $game
-     * @param $context
+     * @param stdClass $game
+     * @param context_module $context
      *
      * @return event
      */

@@ -51,9 +51,9 @@ class game_default_report {
     /**
      * Display
      *
-     * @param $cm
-     * @param $course
-     * @param $game
+     * @param stdClass $cm
+     * @param stdClass $course
+     * @param stdClass $game
      */
     public function display($cm, $course, $game) {
         // This function just displays the report.
@@ -63,11 +63,11 @@ class game_default_report {
     /**
      * print header and tabs
      *
-     * @param $cm
-     * @param $course
-     * @param $game
-     * @param $reportmode
-     * @param $meta
+     * @param stdClass $cm
+     * @param stdClass $course
+     * @param stdClass $game
+     * @param string $reportmode
+     * @param string $meta
      */
     public function print_header_and_tabs($cm, $course, $game, $reportmode = "overview", $meta = "") {
         global $CFG;

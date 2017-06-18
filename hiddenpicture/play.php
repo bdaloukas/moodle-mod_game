@@ -28,11 +28,11 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Plays the game "Hidden picture"
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $hiddenpicture
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hiddenpicture
+ * @param stdClass $context
  */
 function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture, $context) {
     global $DB, $USER;
@@ -117,8 +117,8 @@ function game_hiddenpicture_continue( $id, $game, $attempt, $hiddenpicture, $con
 /**
  * Create the game_hiddenpicture record.
  *
- * @param $game
- * @param $attempt
+ * @param stdClass $game
+ * @param stdClass $attempt
  */
 function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     global $CFG, $DB, $USER;

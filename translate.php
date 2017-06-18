@@ -255,7 +255,7 @@ if ($ret != '') {
 /**
  * Returns the language file for lang
  *
- * @param $lang
+ * @param string $lang
  * @param string module
  * @return the path of language file
  */
@@ -272,8 +272,8 @@ function getlangfile( $lang) {
 /**
  * Reads the language file
  *
- * @param $lang
- * @param  $header
+ * @param string $lang
+ * @param string $header
  */
 function readlangfile( $lang, &$header) {
 
@@ -341,7 +341,7 @@ function splitlangdefinition($line, &$name, &$trans) {
  * Read source code
  *
  * @param string $file
- * @param $strings
+ * @param string $strings
  */
 function readsourcecode( $file, &$strings) {
     global $CFG;
@@ -357,7 +357,7 @@ function readsourcecode( $file, &$strings) {
 /**
  * Parse line
  *
- * @param $strings
+ * @param string $strings
  * @param string $line
  * @param string $filename
  */

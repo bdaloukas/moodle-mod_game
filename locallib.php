@@ -1992,6 +1992,13 @@ foreach ($anss as $answer) {
 <?php
 }
 
+/**
+ * Print question show answer
+ *
+ * @param stdClass $game
+ * @param stdClass $question
+ * @param $context
+ */
 function game_print_question_shortanswer( $game, $question, $context) {
     $questiontext = $question->questiontext;
 

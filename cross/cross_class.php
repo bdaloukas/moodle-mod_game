@@ -512,8 +512,8 @@ class Cross
     /**
      * Swaps two variables.
      *
-     * @param &$a
-     * @param &$b
+     * @param object $a
+     * @param object $b
      */
     public function swap( &$a, &$b) {
         $temp = $a;
@@ -572,11 +572,11 @@ class Cross
      * @param int $valblanc
      * @param string $puzzle
      * @param array $words
-     * @param $magics
-     * @param $poss
-     * @param $ccrosspos
-     * @param $crossdir
-     * @param $crosssword
+     * @param object $magics
+     * @param object $poss
+     * @param int $ccrosspos
+     * @param int $crossdir
+     * @param object $crosssword
      * @param int $n20
      *
      * @return true if it is ok.
@@ -709,9 +709,9 @@ class Cross
     /**
      * my_preg_match (backward compatibility).
      *
-     * @param $w
-     * @param $words
-     * @param $word
+     * @param string $w
+     * @param string $words
+     * @param string $word
      *
      * @return true if it is ok.
      */
@@ -744,9 +744,9 @@ class Cross
     /**
      * Set a char to the specified position.
      *
-     * @param $s
-     * @param $pos
-     * @param $char
+     * @param string $s
+     * @param int $pos
+     * @param string $char
      */
     public function setchar( &$s, $pos, $char) {
         $ret = "";
@@ -761,8 +761,8 @@ class Cross
     /**
      * Show html base.
      *
-     * @param $crossm
-     * @param $crossd
+     * @param object $crossm
+     * @param object $crossd
      * @param boolean $showsolution
      * @param boolean $showhtmlsolutions
      * @param boolean $showstudentguess

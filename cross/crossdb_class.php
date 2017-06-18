@@ -32,9 +32,6 @@ defined('MOODLE_INTERNAL') || die();
  * @author  bdaloukas
  * @package game
  **/
-
-defined('MOODLE_INTERNAL') || die();
-
 class CrossDB extends Cross {
     /**
      * Save cross.

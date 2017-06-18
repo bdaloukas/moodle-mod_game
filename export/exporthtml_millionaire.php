@@ -29,11 +29,11 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param stdClass $game
  * @param stdClass $context
- * @param $maxanswers
- * @param $countofquestions
- * @param $retfeedback
- * @param $destdir
- * @param $files
+ * @param int $maxanswers
+ * @param int $countofquestions
+ * @param string $retfeedback
+ * @param string $destdir
+ * @param array $files
  */
 function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files) {
     global $CFG, $DB, $USER;

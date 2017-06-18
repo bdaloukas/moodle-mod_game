@@ -40,9 +40,9 @@ game_print( $game, $id, $context);
 /**
  * Print
  *
- * @param $game
- * @param $update
- * @param $context
+ * @param stdClass $game
+ * @param boolean $update
+ * @param stdClass $context
  */
 function game_print( $game, $update, $context) {
     if ( $game->gamekind == 'cross') {
