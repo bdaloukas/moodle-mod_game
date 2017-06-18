@@ -27,8 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 require_once( $CFG->dirroot.'/course/moodleform_mod.php');
 require( 'locallib.php');
 
+/**
+ * The class defines the form of game parameters
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_game_mod_form extends moodleform_mod {
 
+    /**
+     * definition
+     */
     public function definition() {
         global $CFG, $DB, $COURSE;
 
@@ -418,6 +428,14 @@ class mod_game_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
+    /**
+     * validation
+     *
+     * @param $data
+     * @param $files
+     *
+     * @return moodle_url
+     */
     public function validation($data, $files) {
         $errors = parent::validation($data, $files);
 
@@ -430,7 +448,11 @@ class mod_game_mod_form extends moodleform_mod {
         return $errors;
     }
 
-
+    /**
+     * Set data
+     *
+     * @param $defaultvalues
+     */
     public function set_data($defaultvalues) {
         global $DB;
 

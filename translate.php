@@ -252,6 +252,13 @@ if ($ret != '') {
     echo '<table border=1><tr><td><b>Word1</td><td><b>Word2</td><td><b>Translation</td></tr>'.$ret.'</table>';
 }
 
+/**
+ * Returns the language file for lang
+ *
+ * @param $lang
+ * @param string module
+ * @return the path of language file
+ */
 function getlangfile( $lang) {
     global $CFG;
 
@@ -262,6 +269,12 @@ function getlangfile( $lang) {
     }
 }
 
+/**
+ * Reads the language file
+ *
+ * @param $lang
+ * @param  $header
+ */
 function readlangfile( $lang, &$header) {
 
     $file = getlangfile( $lang);
@@ -291,6 +304,13 @@ function readlangfile( $lang, &$header) {
     return $a;
 }
 
+/**
+ * Split language definition for one line
+ *
+ * @param string $line
+ * @param string $name
+ * @return string $trans
+ */
 function splitlangdefinition($line, &$name, &$trans) {
     $pos1 = strpos( $line, '=');
     if ($pos1 == 0) {
@@ -317,6 +337,12 @@ function splitlangdefinition($line, &$name, &$trans) {
     return true;
 }
 
+/**
+ * Read source code
+ *
+ * @param string $file
+ * @param $strings
+ */
 function readsourcecode( $file, &$strings) {
     global $CFG;
 
@@ -328,6 +354,13 @@ function readsourcecode( $file, &$strings) {
     return $strings;
 }
 
+/**
+ * Parse line
+ *
+ * @param $strings
+ * @param string $line
+ * @param string $filename
+ */
 function parseline( &$strings, $line, $filename) {
     global $CFG;
 
@@ -379,6 +412,11 @@ function parseline( &$strings, $line, $filename) {
     }
 }
 
+/**
+ * get string
+ *
+ * @param string $s
+ */
 function gets( $s) {
     $s = trim( $s);
     if (substr( $s, 0, 1) == '"') {
@@ -391,6 +429,12 @@ function gets( $s) {
     return $s;
 }
 
+/**
+ * Read dir
+ *
+ * @param string $dir
+ * @param string $ext
+ */
 function read_dir($dir, $ext) {
     if ($ext != '') {
         $ext = '.' .$ext;
@@ -426,6 +470,17 @@ function read_dir($dir, $ext) {
     return $ret;
 }
 
+/**
+ * Compute difference
+ *
+ * @param string $en
+ * @param string $lang
+ * @param $strings
+ * @param $langfile
+ * @param $sum
+ * @param $outdir
+ * @param $utranslated
+ */
 function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated) {
     global $CFG;
     $untranslated = '';

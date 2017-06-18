@@ -714,8 +714,6 @@ function game_supports($feature) {
 /**
  * get extra capabilities
  *
- * @global object
- * @global stdClass
  * @return array all other caps used in module
  */
 function game_get_extra_capabilities() {
@@ -733,9 +731,6 @@ function game_get_extra_capabilities() {
 /**
  * Return a textual summary of the number of attemtps that have been made at a particular game,
  *
- * @global stdClass
- * @global object
- * @global object
  * @param object $game the game object. Only $game->id is used at the moment.
  * @param object $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
  * @param boolean $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
@@ -1237,7 +1232,6 @@ function game_reset_course_form_defaults($course) {
 /**
  * Actual implementation of the reset course functionality, delete all the Game responses for course $data->courseid.
  *
- * @global object
  * @param $data the data submitted from the reset course.
  *
  * @return array status array
@@ -1378,7 +1372,6 @@ function game_get_completion_state($course, $cm, $userid, $type) {
  *
  * This is used to find out if scale used anywhere
  *
- * @global object
  * @param int $scaleid
  * @return boolean True if the scale is used by any Game
  */

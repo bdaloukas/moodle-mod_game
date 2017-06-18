@@ -32,6 +32,13 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once('SDD/class.SDD.php');
 
+/**
+ * log file
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class logfile extends SDD {
 
     /*
@@ -42,8 +49,10 @@ class logfile extends SDD {
 
     protected $m_handle;
 
-    /*
+    /**
      * Constructor
+     *
+     * @param $thefilename
      */
     public function init($thefilename) {
         if (file_exists($thefilename)) {
@@ -53,8 +62,10 @@ class logfile extends SDD {
         }
     }
 
-    /*
-     * close
+    /**
+     * Close
+     *
+     * @param $thefilename
      */
     public function close() {
         fclose($this->m_handle);

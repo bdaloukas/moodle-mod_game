@@ -14,14 +14,24 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This file creates a board for "Snakes and Ladders".
  *
  * @package    mod_game
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Create snakes board
+ *
+ * @param $imageasstring
+ * @param $colsx
+ * @param $colsy
+ * @param $ofstop
+ * @param $ofsbottom
  */
 function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom,
         $ofsright, $ofsleft, $board, $setwidth, $setheight) {
@@ -84,6 +94,15 @@ function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbot
     return $im;
 }
 
+/**
+ * Compute coordinates
+ *
+ * @param $pos
+ * @param $x
+ * @param $y
+ * @param $colsx
+ * @param $colsy
+ */
 function computexy( $pos, &$x, &$y, $colsx, $colsy) {
     $x = ($pos - 1) % $colsx;
     $y = ($colsy - 1) - floor( ($pos - 1) / $colsy);
@@ -92,6 +111,18 @@ function computexy( $pos, &$x, &$y, $colsx, $colsy) {
     }
 }
 
+/**
+ * Make board
+ *
+ * @param $im
+ * @param $cs
+ * @param $cy
+ * @param $board
+ * @param $colsx
+ * @param $colsy
+ * @param $ofsleft
+ * @param $ofstop
+ */
 function makeboard( $im, $dir, $cx, $cy, $board, $colsx, $colsy, $ofsleft, $ofstop) {
     $a = explode( ',', $board);
     foreach ($a as $s) {
@@ -103,6 +134,19 @@ function makeboard( $im, $dir, $cx, $cy, $board, $colsx, $colsy, $ofsleft, $ofst
     }
 }
 
+
+/**
+ * Make board ladders
+ *
+ * @param $im
+ * @param $dir
+ * @param $cx
+ * @param $s
+ * @param $colsx
+ * @param $colsy
+ * @param $ofsleft
+ * @param $ofstop
+ */
 function makeboardl( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) {
     $pos = strpos( $s, '-');
     $from = substr( $s, 0, $pos);
@@ -160,6 +204,19 @@ function makeboardl( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
     }
 }
 
+/**
+ * Make board snakes
+ *
+ * @param $im
+ * @param $dit
+ * @param $cx
+ * @param $cy
+ * @param $s
+ * @param $colsx
+ * @param $colsy
+ * @param $ofsleft
+ * @param $ofstop
+ */
 function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) {
     $pos = strpos( $s, '-');
     $from = substr( $s, 0, $pos);
@@ -237,6 +294,11 @@ function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
     }
 }
 
+/**
+ * Image create from png
+ *
+ * @param $file
+ */
 function game_imagecreatefrompng( $file) {
     if (file_exists( $file)) {
         return imagecreatefrompng( $file);
@@ -245,6 +307,18 @@ function game_imagecreatefrompng( $file) {
     return 0;
 }
 
+/**
+ * Show number
+ *
+ * @param $imghandle
+ * @param $imgnumbers
+ * @param $number
+ * @param $x1
+ * @param $y1
+ * @param $width
+ * @param $height
+ * @param $sizenumbers
+ */
 function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
         $widthnumber = $sizenumbers[ 0] / 10;
@@ -264,6 +338,15 @@ function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $heigh
     }
 }
 
+/**
+ * Return rotated point
+ *
+ * @param $x
+ * @param $y
+ * @param $cx
+ * @param $cy
+ * @param $a
+ */
 function returnrotatedpoint($x, $y, $cx, $cy, $a) {
     // Radius using distance formula.
     $r = sqrt(pow(($x - $cx), 2) + pow(($y - $cy), 2));
@@ -277,6 +360,19 @@ function returnrotatedpoint($x, $y, $cx, $cy, $a) {
     return array("x" => $cx + $nx, "y" => $cy + $ny);
 }
 
+
+/**
+ * Print ladder
+ *
+ * @param $im
+ * @param $file
+ * @param $x
+ * @param $y
+ * @param $width
+ * @param $height
+ * @param $cellx
+ * @param $celly
+ */
 function game_printladder( $im, $file, $x, $y, $width, $height, $cellx, $celly) {
     $color = imagecolorallocate($im, 0, 0, 255);
     $x2 = $x + $width - $cellx / 2;
@@ -294,6 +390,18 @@ function game_printladder( $im, $file, $x, $y, $width, $height, $cellx, $celly) 
     imageline( $im, $x2, $y2, $a[ 'x'], $a[ 'y'], $color);
 }
 
+/**
+ * Print snake
+ *
+ * @param $im
+ * @param $file
+ * @param $x
+ * @param $y
+ * @param $width
+ * @param $height
+ * @param $cellx
+ * @param $celly
+ */
 function game_printsnake( $im, $file, $x, $y, $width, $height, $cellx, $celly) {
     $color = imagecolorallocate($im, 0, 255, 0);
     $x2 = $x + $width - $cellx / 2;

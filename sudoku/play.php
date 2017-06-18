@@ -33,8 +33,8 @@ require_once( "../../lib/questionlib.php");
  * @param $game
  * @param $attempt
  * @param $sudoku
- * @param boolean $endofgame
- * @param stdClass $context
+ * @param $endofgame
+ * @param $context
  */
 function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $context) {
     global $CFG, $DB, $USER;
@@ -133,9 +133,9 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $conte
  * @param $game
  * @param $attempt
  * @param $sudoku
- * @param boolean $onlyshow
- * @param boolean $showsolution
- * @param stdClass $context
+ * @param $onlyshow
+ * @param $showsolution
+ * @param $context
  */
 function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow, $showsolution, $context) {
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
@@ -707,7 +707,8 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
     return true;
 }
 
-/**This is the last function after submiting the answers.
+/**
+ * This is the last function after submiting the answers.
  *
  * @param $id
  * @param $game

@@ -30,23 +30,24 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Dump structured data, i.e., Objects and Arrays, in either plain text or
+ * html.  This is a class wrapper for a couple of utility routines that I use
+ * all the time.  It's handier to have them as a class.
+ *
+ * @author Dick Munroe <munroe@csworks.com>
+ * @copyright copyright @ by Dick Munroe, 2004
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @package StructuredDataDumper
+ */
 class sdd {
-    /*
-     * HTML to be generated flag.
-     */
-
+    /** @var HTML to be generated flag. */
     protected $m_htmlflag;
 
-    /*
-     * logging flag.
-     */
-
+    /** @var logging flag. */
     protected $m_logging = false;
 
-    /*
-     * In memory log file.
-     */
-
+    /** @var In memory log file. */
     protected $m_log = array();
 
     /*
@@ -59,7 +60,6 @@ class sdd {
      * @param boolean $theLoggingFlag [optional] the state of logging for
      *                this object.  By default, logging is off.
      */
-
     public function init($thehtmlflag = null, $theloggingflag = false) {
         if ($thehtmlflag === null) {
             $thehtmlflag = (!empty($_SERVER['DOCUMENT_ROOT']));
@@ -74,7 +74,6 @@ class sdd {
      *
      * @abstract
      */
-
     public function close() {
     }
 
@@ -82,8 +81,8 @@ class sdd {
      * Dump a structured variable.
      *
      * @static
-     * @param mixed $theVariable the variable to be dumped.
-     * @param boolean $theHtmlFlag [optional] true if HTML is to be generated,
+     * @param mixed $thevariable the variable to be dumped.
+     * @param boolean $thehtmlflag [optional] true if HTML is to be generated,
      *                false if plain text is to be generated, null (default) if
      *                dump is to guess which to display.
      * @return string The data to be displayed.
@@ -115,14 +114,13 @@ class sdd {
     /*
      * Dump the contents of an array.
      *
-     * @param array $theArray the array whose contents are to be displayed.
+     * @param array $thearray the array whose contents are to be displayed.
      * @param boolean $theHTMLFlag True if an HTML table is to be generated,
      *                false otherwise.
      * @param string $theIndent [optional] Used by SDD::dArray during recursion
      *               to get indenting right.
      * @return string The display form of the array.
      */
-
     public function darray(&$thearray, $thehtmlflag, $theindent = "") {
         $theoutput = array();
 
@@ -173,7 +171,6 @@ class sdd {
      * @param boolean $theHTMLFlag true if HTML is to be generated.
      * @return string the display form of the object.
      */
-
     public function dobject(&$theobject, $thehtmlflag) {
         $theobjectvars = get_object_vars($theobject);
 

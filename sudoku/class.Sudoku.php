@@ -70,7 +70,6 @@ defined('MOODLE_INTERNAL') || die();
  * @author Dick Munroe <munroe@csworks.com>
  * @copyright copyright @ 2005 by Dick Munroe, Cottage Software Works, Inc.
  * @license http://www.csworks.com/publications/ModifiedNetBSD.html
- * @package Sudoku
  */
 
 /**
@@ -82,7 +81,8 @@ defined('MOODLE_INTERNAL') || die();
  */
 class objects {
     /**
-     * @desc Are two array's equal (have the same contents).
+     * Are two array's equal (have the same contents).
+     *
      * @param array
      * @param array
      * @return boolean
@@ -121,7 +121,8 @@ class objects {
     }
 
     /**
-     * @desc Debugging output interface.
+     * Debugging output interface.
+     *
      * @param mixed $theValue The "thing" to be pretty printed.
      * @param boolean $theHTMLFlag True if the output will be seen in a browser, false otherwise.
      */
@@ -150,7 +151,8 @@ class cell extends objects {
     protected $applied = false;
 
     /**
-     * @desc Constructor
+     * Constructor
+     *
      * @param integer $r row address of this cell (not used, primarily for debugging purposes).
      * @param integer $c column address of this cell (ditto).
      * @param integer $nStates The number of states each cell can have.  Looking forward to
@@ -167,9 +169,8 @@ class cell extends objects {
     }
 
     /**
-     * @desc This cell has been "applied", i.e., solved, to the board.
+     * This cell has been "applied", i.e., solved, to the board.
      */
-
     public function applied() {
         $this->applied = true;
     }
@@ -178,10 +179,9 @@ class cell extends objects {
      * Only those cells which are not subsets of the tuple have the
      * contents of the tuple removed.
      *
-     * @desc apply a 23Tuple to a cell.
+     * apply a 23Tuple to a cell.
      * @param array $aTuple the tuple to be eliminated.
      */
-
     public function apply23tuple($atuple) {
         if (is_array($this->state)) {
             $xxx = array_intersect($this->state, $atuple);
@@ -198,7 +198,7 @@ class cell extends objects {
     /**
      * For more details on the pair tuple algorithm, see RCS::_pairSolution.
      *
-     * @desc Remove all values in the tuple, but only if the cell is a superset.
+     * Remove all values in the tuple, but only if the cell is a superset.
      * @param array A tuple to be eliminated from the cell's state.
      */
     public function applytuple($atuple) {
@@ -212,7 +212,8 @@ class cell extends objects {
     }
 
     /**
-     * @desc Return the string representation of the cell.
+     * Return the string representation of the cell.
+     *
      * @param boolean $theFlag true if the intermediate states of the cell are to be visible.
      * @return string
      */
@@ -229,11 +230,11 @@ class cell extends objects {
     }
 
     /*
+     * Assert pending solution.
      * Used to make sure that solved positions show up at print time.
      * The value is used as a candidate for "slicing and dicing" by elimination in
      * Sudoku::_newSolvedPosition.
      *
-     * @desc Assert pending solution.
      * @param integer $value The value for the solved position.
      */
     public function flagsolvedposition($value) {
@@ -241,7 +242,8 @@ class cell extends objects {
     }
 
     /*
-     * @desc return the state of a cell.
+     * return the state of a cell.
+     *
      * @return mixed Either solved state or array of state pending solution.
      */
     public function &getstate() {
@@ -249,7 +251,8 @@ class cell extends objects {
     }
 
     /*
-     * @desc Has the state of this cell been applied to the board.
+     * Has the state of this cell been applied to the board.
+     *
      * @return boolean True if it has, false otherwise.  Implies that IsSolved is true as well.
      */
     public function isapplied() {
@@ -257,7 +260,8 @@ class cell extends objects {
     }
 
      /*
-      * @desc Has this cell been solved?
+      * Has this cell been solved?
+      *
       * @return boolean True if this cell has hit a single state.
       */
     public function issolved() {
@@ -265,10 +269,10 @@ class cell extends objects {
     }
 
     /*
-     * This is used primarily by the pretty printer, but has other applications
-     * in the code.
+     * This is used primarily by the pretty printer, but has other applications in the code.
      *
-     * @desc Return information about the state of a cell.
+     * Return information about the state of a cell.
+     *
      * @return integer 0 => the cell has been solved.
      *                 1 => the cell has been solved but not seen a solved.
      *                 2 => the cell has not been solved.
@@ -286,12 +290,13 @@ class cell extends objects {
     }
 
     /*
+     * Eliminate one or more values from the state information of the cell.
+     *
      * This is the negative inference of Sudoku.  By eliminating values the
      * cells approach solutions.  Once a cell has been completely eliminated,
      * the value causing the complete elimination must be the solution and the
      * cell is promoted into the solved state.
      *
-     * @desc Eliminate one or more values from the state information of the cell.
      * @param mixed The value or values to be removed from the cell state.
      * @return boolean True if the cell state was modified, false otherwise.
      */
@@ -322,7 +327,9 @@ class cell extends objects {
 /**
  * The individual row column or square on the Sudoku board.
  *
- * @package Sudoku
+ * package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class rcs extends ObjectS {
     protected $theindex;
@@ -334,15 +341,14 @@ class rcs extends ObjectS {
     protected $thetag = "";
 
     /**
-     * This
-     * @desc Constructor
+     * Constructor
+     *
      * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
      * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
      * @param ObjectS $a1..9 of class Cell.  The cells comprising this entity.  This interface is what
      *                                      limts things to 9x9 Sudoku currently.
      */
-
     public function init($thetag, $theindex, &$a1, &$a2, &$a3, &$a4, &$a5, &$a6, &$a7, &$a8, &$a9) {
         $this->thetag = $thetag;
         $this->theindex = $theindex;
@@ -366,10 +372,8 @@ class rcs extends ObjectS {
      * three cells.  I'm pretty sure that this is a general rule, but for
      * 9x9 Sudoku, they probably aren't of interested.
      *
-     * @desc
      * @return boolean True if a 23 solution exists and has been applied.
      */
-
     public function _23solution() {
         $thecounts = array();
         $thetuples = array();
@@ -433,11 +437,11 @@ class rcs extends ObjectS {
     }
 
     /**
-     * @desc apply a tuple to exclude items from within the row/column/square.
+     * apply a tuple to exclude items from within the row/column/square.
+     *
      * @param array $aTuple the tuple to be excluded.
      * @return boolean true if anything changes.
      */
-
     protected function _applytuple(&$atuple) {
         $thereturn = false;
 
@@ -449,6 +453,8 @@ class rcs extends ObjectS {
     }
 
     /**
+     * Calculate the coupling for a cell within the row/column/square.
+     *
      * This is a placeholder to be overridden to calculate the "coupling" for
      * a cell.  Coupling is defined to be the sum of the sizes of the intersection
      * between this cell and all others in the row/column/square.  This provides
@@ -459,7 +465,6 @@ class rcs extends ObjectS {
      * available for the state of the cell.  By selecting areas with the least information
      * the clue sets are substantially smaller than simple random placement.
      *
-     * @desc Calculate the coupling for a cell within the row/column/square.
      * @param integer $theRow the row coordinate on the board of the cell.
      * @param integer $theColumn the column coordinate on the board of the cell.
      * @return integer the degree of coupling between the cell and the rest of the cells
@@ -470,13 +475,14 @@ class rcs extends ObjectS {
     }
 
     /**
+     * Run the inference engine for a row/column/square.
+     *
      * I think that the goal of the inference engine is to eliminate
      * as much "junk" state as possible on each pass.  Therefore the
      * order of the inferences should be 23 tuple, pair, unique because
      * the 23 tuple allows you to eliminate 3 values (if it works), and the
      * pair (generally) only 2.  The unique solution adds no new information.
      *
-     * @desc Run the inference engine for a row/column/square.
      * @param array theRow A row/column/square data structure.
      * @param string theType A string merged with the standard headers during
      *               intermediate solution printing.
@@ -493,9 +499,10 @@ class rcs extends ObjectS {
     }
 
     /**
-     * @desc Find all tuples with the same contents.
+     * Find all tuples with the same contents.
+     *
      * @param array Array of n size tuples.
-     * @returns array of tuples that appear the same number of times as the size of the contents
+     * @return array of tuples that appear the same number of times as the size of the contents
      */
     public function _findtuples(&$thearray) {
         $thereturn = array();
@@ -526,7 +533,8 @@ class rcs extends ObjectS {
     }
 
     /**
-     * @desc Get a reference to the specified cell.
+     * Get a reference to the specified cell.
+     *
      * @return reference to ObjectS of class Cell.
      */
     public function &getcell($i) {
@@ -534,21 +542,21 @@ class rcs extends ObjectS {
     }
 
     /**
-     * @desc Get the header set by the last call to doAnInference.
-     *
+     * Get the header set by the last call to doAnInference.
      */
     public function getheader() {
         return $this->theheader;
     }
 
     /**
+     * Eliminate tuple-locked alternatives.
+     *
      * Turns out if you every find a position of n squares which can only contain
      * the same values, then those values cannot appear elsewhere in the structure.
      * This is a second positive inference that provides additional negative information.
      * Thanks to Ghica van Emde Boas (also an author of a Sudoku class) for convincing
      * me that these situations really occurred.
      *
-     * @desc Eliminate tuple-locked alternatives.
      * @return boolean True if something changed.
      */
     protected function _pairsolution() {
@@ -563,8 +571,7 @@ class rcs extends ObjectS {
         unset($thecounts[1]);
 
         /*
-         ** Get rid of any set of counts which cannot possibly meet the
-         ** requirements.
+         ** Get rid of any set of counts which cannot possibly meet the requirements.
          */
 
         $thepossibilities = $thecounts;
@@ -677,7 +684,8 @@ class rcs extends ObjectS {
     }
 
     /*
-     * @desc Check to see if the RCS contains a valid state.
+     * Check to see if the RCS contains a valid state.
+     *
      * @return boolean True if the state of the RCS could be part of a valid
      *				   solution, false otherwise.
      */
@@ -722,11 +730,14 @@ class rcs extends ObjectS {
 /**
  * Row ObjectS.
  *
- * @package Sudoku
+ * package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class r extends rcs {
     /**
-     * @desc Constructor
+     * Constructor
+     *
      * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
      * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
@@ -742,8 +753,9 @@ class r extends rcs {
     }
 
     /**
+     * Heavy lifting for row/column coupling calculations.
+     *
      * @see RCS::coupling
-     * @desc Heavy lifting for row/column coupling calculations.
      * @param integer $theIndex the index of the cell within the row or column.
      * @return integer the "coupling coefficient" for the cell.  The sum of the
      *          sizes of the intersection between this and all other
@@ -771,11 +783,14 @@ class r extends rcs {
 /**
  * The column ObjectS.
  *
- * @package Sudoku
+ * package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class c extends r {
     /**
-     * @desc Constructor
+     * Constructor
+     *
      * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
      * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
@@ -795,7 +810,9 @@ class c extends r {
 /**
  * The Square ObjectS.
  *
- * @package Sudoku
+ * package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class s extends rcs {
     /*
@@ -817,7 +834,8 @@ class s extends rcs {
         9 => array(1, 2, 4, 5));
 
     /**
-     * @desc Constructor
+     * Constructor
+     *
      * @param string $theTag "Row", "Column", "Square", used primarily in debugging.
      * @param integer $theIndex 1..9, where is this on the board.  Square are numbered top
      *                          left, ending bottom right
@@ -872,88 +890,59 @@ class s extends rcs {
  * generating an initial state.  Not guarateed, but in engineering terms
  * "close enough".
  *
- * @package Sudoku
- * @example ./example.php
- * @example ./example1.php
- * @example ./example2.php
- * @example ./example3.php
+ * package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class sudoku extends ObjectS {
-    /*
-     * An array of Cell ObjectSs, organized into rows and columns.
-     *
-     * @var array of ObjectSs of type Cell.
-     */
+    /** @var array of ObjectSs of type Cell. */
     protected $theboard = array();
 
-    /*
-     * True if debugging output is to be provided during a run.
-     *
-     * @var boolean
-     */
+    /** @var boolean True if debugging output is to be provided during a run. */
     protected $thedebug = false;
 
-    /*
-     * An array of RCS ObjectSs, one ObjectS for each row.
-     *
-     * @var ObjectS of type R
-     */
+    /** @var ObjectS of type R An array of RCS ObjectSs, one ObjectS for each row. */
     protected $therows = array();
 
-    /*
-     * An array of RCS ObjectSs, one ObjectS for each Column.
-     *
-     * @var ObjectS of type C
-     */
+    /** @var ObjectS of type C An array of RCS ObjectSs, one ObjectS for each Column. */
     private $thecolumns = array();
 
-    /**
-     * An array of RCS ObjectSs, one ObjectS for each square.
-     *
-     * @var ObjectS of type S
-     */
+    /** @var ObjectS of type S An array of RCS ObjectSs, one ObjectS for each square. */
     protected $thesquares = array();
 
-    /*
-     * Used during puzzle generation for debugging output.  There may
+    /** @var integer. Used during puzzle generation for debugging output.  There may
      * eventually be some use of theLevel to figure out where to stop
      * the backtrace when puzzle generation fails.
-     *
-     * @var integer.
      */
     protected $thelevel = 0;
 
-    /*
-     * Used during puzzle generation to determine when the generation
+    /** @var integer. Used during puzzle generation to determine when the generation
      * will fail.  Failure, in this case, means to take a LONG time.  The
      * backtracing algorithm used in the puzzle generator will always find
      * a solution, it just might take a very long time.  This is a way to
      * limit the damage before taking another guess.
-     *
-     * @var integer.
      */
     protected $themaxiterations = 50;
 
-    /*
-     * Used during puzzle generation to limit the number of trys at
+    /** @var integer. Used during puzzle generation to limit the number of trys at
      * generation a puzzle in the event puzzle generation fails
      * (@see Suduko::$theMaxIterations).  I've never seen more than
      * a couple of failures in a row, so this should be sufficient
      * to get a puzzle generated.
-     *
-     * @var integer.
      */
     protected $thetrys = 10;
 
-    /*
-     * Used during puzzle generation to count the number of iterations
+    /** @var integer. Used during puzzle generation to count the number of iterations
      * during puzzle generation.  It the number gets above $theMaxIterations,
      * puzzle generation has failed and another try is made.
-     *
-     * @var integer.
      */
     protected $thegenerationiterations = 0;
 
+    /**
+     * Constructor
+     *
+     * @param $thedebug
+     */
     public function init($thedebug = false) {
         $this->thedebug = $thedebug;
 
@@ -995,7 +984,8 @@ class sudoku extends ObjectS {
     }
 
     /*
-     * @desc Apply all pending solved positions to the board.
+     * Apply all pending solved positions to the board.
+     *
      * @return boolean True if at least one solved position was applied, false
      *                 otherwise.
      */
@@ -1024,7 +1014,7 @@ class sudoku extends ObjectS {
     }
 
     /*
-     * @desc build the row/column/square structures for the board.
+     * build the row/column/square structures for the board.
      */
     protected function _buildrcs() {
         for ($i = 1; $i <= 9; $i++) {
@@ -1356,11 +1346,11 @@ class sudoku extends ObjectS {
     }
 
     /*
+     * Get the current state of the board as a string.
+     *
      * Return the contents of the board as a string of digits and blanks.  Blanks
      * are used where the corresponding board item is an array, indicating the cell
      * has not yet been solved.
-     *
-     * @desc Get the current state of the board as a string.
      */
     public function getboardasstring() {
         $thestring = "";
@@ -1374,6 +1364,12 @@ class sudoku extends ObjectS {
         return $thestring;
     }
 
+    /*
+     * Get cel
+     *
+     * @param $r
+     * @param $c
+     */
     public function &getcell($r, $c) {
         return $this->theboard[$r][$c];
     }
@@ -1440,10 +1436,11 @@ class sudoku extends ObjectS {
     }
 
     /**
+     * Initialize puzzle from a string.
+     *
      * The input parameter consists of a string of 81 digits and blanks.  If fewer characters
      * are provide, the string is padded on the right.
      *
-     * @desc Initialize puzzle from a string.
      * @param string $theString The initial state of each cell in the puzzle.
      */
     public function initializepuzzlefromstring($thestring) {
@@ -1459,7 +1456,8 @@ class sudoku extends ObjectS {
     }
 
     /*
-     * @desc predicate to determine if the current puzzle has been solved.
+     * predicate to determine if the current puzzle has been solved.
+     *
      * @return boolean true if the puzzle has been solved.
      */
     public function issolved() {
@@ -1666,6 +1664,8 @@ class sudoku extends ObjectS {
     }
 
     /**
+     * Brute force additional solutions.
+     *
      * Here there be dragons.  In conversations with other Sudoku folks, I find that there ARE Sudoku with
      * unique solutions for which a clue set may be incomplete, i.e., does not lead to a solution.  The
      * solution may only be found by guessing the next move.  I'm of the opinion that this violates the
@@ -1685,8 +1685,7 @@ class sudoku extends ObjectS {
      * There's a bit of bookkeeping to keep the state right when backing up, but that's pretty
      * straightforward and looks a lot like that of generatePuzzle.
      *
-     * @desc Brute force additional solutions.
-     * @returns array The clues added sufficient to solve the puzzle.
+     * @return array The clues added sufficient to solve the puzzle.
      */
     public function solvebruteforce($i = 1, $j = 1) {
         for (; $i <= 9; $i++) {
@@ -1734,7 +1733,8 @@ class sudoku extends ObjectS {
     }
 
     /**
-     * @desc Calculate the index of the square containing a specific cell.
+     * Calculate the index of the square containing a specific cell.
+     *
      * @param integer $theRow the row coordinate.
      * @param integer $theColumn the column coordinate.
      * @return integer the square index in the range 1..9
@@ -1796,8 +1796,8 @@ class sudoku extends ObjectS {
  * Extend Sudoku to generate puzzles based on templates.
  *
  * Templates are either input files or arrays containing doubles.
- *
- * @package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class SudokuTemplates extends Sudoku
 {
@@ -1838,7 +1838,8 @@ class SudokuTemplates extends Sudoku
 /**
  * Extend Sudoku to print all intermediate results.
  *
- * @package Sudoku
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class sudokuintermediatesolution extends sudoku {
     public function sudokuintermediateresults($thedebug = false) {
@@ -1850,6 +1851,9 @@ class sudokuintermediatesolution extends sudoku {
     }
 }
 
+/**
+ * make seed
+ */
 function make_seed() {
     list($usec, $sec) = explode(' ', microtime());
     return (float) $sec + ((float) $usec * 100000);

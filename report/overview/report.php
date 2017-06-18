@@ -14,8 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-defined('MOODLE_INTERNAL') || die();
-
 /*
  * This script lists student attempts.
  *
@@ -24,12 +22,25 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->libdir.'/tablelib.php');
 
+/**
+ * The class prints a report
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class game_report extends game_default_report {
 
     /**
      * Display the report.
+     *
+     * @param $game
+     * @param $cm
+     * @param $course
      */
     public function display($game, $cm, $course) {
         global $CFG, $SESSION, $DB;

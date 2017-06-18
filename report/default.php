@@ -39,13 +39,36 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * default report
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class game_default_report {
 
+    /**
+     * Display
+     *
+     * @param $cm
+     * @param $course
+     * @param $game
+     */
     public function display($cm, $course, $game) {
         // This function just displays the report.
         return true;
     }
 
+    /**
+     * print header and tabs
+     *
+     * @param $cm
+     * @param $course
+     * @param $game
+     * @param $reportmode
+     * @param $meta
+     */
     public function print_header_and_tabs($cm, $course, $game, $reportmode = "overview", $meta = "") {
         global $CFG;
 

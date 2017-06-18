@@ -37,6 +37,13 @@ require_capability('mod/game:view', $context);
 
 game_print( $game, $id, $context);
 
+/**
+ * Print
+ *
+ * @param $game
+ * @param $update
+ * @param $context
+ */
 function game_print( $game, $update, $context) {
     if ( $game->gamekind == 'cross') {
         game_print_cross( $game, $update, $context);

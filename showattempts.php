@@ -47,6 +47,11 @@ game_showattempts( $game);
 
 echo $OUTPUT->footer();
 
+/**
+ * Show users
+ *
+ * @param $game
+ */
 function game_showusers($game) {
     global $CFG, $USER, $DB;
 
@@ -114,6 +119,11 @@ function game_showusers($game) {
     echo $output . '</select>' . "\n";
 }
 
+/**
+ * Show groups
+ *
+ * @param $game
+ */
 function game_showgroups($game) {
     global $CFG, $USER, $DB;
 
@@ -167,6 +177,11 @@ function game_showgroups($game) {
     echo $output . '</select>' . "\n";
 }
 
+/**
+ * Show attempts
+ *
+ * @param $game
+ */
 function game_showattempts($game) {
     global $CFG, $DB, $OUTPUT;
 
@@ -264,6 +279,11 @@ function game_showattempts($game) {
     }
 }
 
+/**
+ * One delete attempt
+ *
+ * @param $game
+ */
 function game_ondeleteattempt( $game) {
     global $CFG, $DB;
 

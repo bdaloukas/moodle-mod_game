@@ -24,6 +24,15 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+/**
+ * Plays the millionaire
+ *
+ * @param $id
+ * @param $game
+ * @param $attempt
+ * @param $millionaire
+ * @param $context
+ */
 function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context) {
     // User must select quiz or question as a source module.
     if (($game->quizid == 0) and ($game->questioncategoryid == 0)) {
@@ -56,6 +65,15 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context
     game_millionaire_play( $id, $game, $attempt, $newrec, $context);
 }
 
+/**
+ * Plays the millionaire
+ *
+ * @param $id
+ * @param $game
+ * @param $attempt
+ * @param $millionaire
+ * @param $context
+ */
 function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
     global $DB;
 
@@ -96,6 +114,17 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
     }
 }
 
+/**
+ * Shows the grid
+ *
+ * @param $game
+ * @param $millionaire
+ * @param $id
+ * @param $query
+ * @param $aanswer
+ * @param $info
+ * @param $context
+ */
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context) {
     global $CFG, $OUTPUT;
 
@@ -285,6 +314,15 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     echo "</form>\r\n";
 }
 
+/**
+ * Show next question
+ *
+ * @param $id
+ * @param $game
+ * @param $attempt
+ * @param $millionaire
+ * @param $context
+ */
 function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, $context) {
     game_millionaire_selectquestion( $aanswer, $game, $attempt, $millionaire, $query, $context);
 
@@ -299,7 +337,16 @@ function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, 
     }
 }
 
-// Updates tables: games_millionaire, game_attempts, game_questions.
+/**
+ * Updates tables: games_millionaire, game_attempts, game_questions.
+ *
+ * @param $answer
+ * @param $game
+ * @param $attemt
+ * @param $millionaire
+ * @param $query
+ * @param $context
+ */
 function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context) {
     global $DB, $USER;
 
@@ -425,6 +472,16 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     game_update_queries( $game, $attempt, $query, $score, '');
 }
 
+/**
+ * Select serial question
+ *
+ * @param $game
+ * @param $table
+ * @param $select
+ * @param $idfields
+ * @param $level
+ * @param $order
+ */
 function game_millionaire_select_serial_question( $game, $table, $select, $idfields = "id", $level, $order) {
     global $DB, $USER;
 
@@ -455,6 +512,15 @@ function game_millionaire_select_serial_question( $game, $table, $select, $idfie
     return $questions[ $pos];
 }
 
+/**
+ * Load questions for millionaire
+ *
+ * @param $game
+ * @param $millionaire
+ * @param $query
+ * @param $aanswer
+ * @param $context
+ */
 function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer, $context) {
     global $DB;
 
@@ -470,7 +536,12 @@ function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer
     }
 }
 
-// Flag 1 is 5050, 2 is telephone 4 is people.
+/**
+ * Set state. Flag 1 is 5050, 2 is telephone 4 is people.
+ *
+ * @param $millionaire
+ * @param $mask
+ */
 function game_millionaire_setstate( &$millionaire, $mask) {
     global $DB;
 
@@ -484,6 +555,15 @@ function game_millionaire_setstate( &$millionaire, $mask) {
     }
 }
 
+/**
+ * One help 50-50
+ *
+ * @param $game
+ * @param $id
+ * @param $millionaire
+ * @param $query
+ * @param $context
+ */
 function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $context) {
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
 
@@ -512,6 +592,15 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
     game_millionaire_showgrid(  $game, $millionaire, $id, $query, $aanswer, '', $context);
 }
 
+/**
+ * One help telephone
+ *
+ * @param $game
+ * @param $id
+ * @param $millionaire
+ * @param $query
+ * @param $context
+ */
 function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, $context) {
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
 
@@ -546,6 +635,15 @@ function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, 
     game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context);
 }
 
+/**
+ * One help people
+ *
+ * @param $game
+ * @param $id
+ * @param $millionaire
+ * @param $query
+ * @param $context
+ */
 function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $context) {
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
 
@@ -586,6 +684,17 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
     game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, game_substr( $info, 4), $context);
 }
 
+/**
+ * Millionaire on answer
+ *
+ * @param $id
+ * @param $game
+ * @param $attempt
+ * @param $millionaire
+ * @param $query
+ * @param $answer
+ * @param $context
+ */
 function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query, $answer, $context) {
     global $DB;
 
@@ -633,6 +742,14 @@ function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query,
     }
 }
 
+/**
+ * Millionaire on quit
+ *
+ * @param $id
+ * @param $game
+ * @param $attempt
+ * @param $query
+ */
 function game_millionaire_onquit( $id, $game, $attempt, $query) {
     global $CFG, $DB;
 

@@ -33,6 +33,9 @@ if ($action == 'create') {
     showform();
 }
 
+/**
+ * Show form
+ */
 function showform() {
     $id = required_param('id', PARAM_NUMBER);   // The action.
 
@@ -95,6 +98,8 @@ function appendsudokub() {
  *
  * @param $si
  * @param $sp
+ *
+ * @return the packed sudoku
  */
 function packsudoku( $si, $sp) {
     $data = '';
@@ -127,6 +132,8 @@ function packsudoku( $si, $sp) {
  * @param $id
  * @param $sp
  * @param $level
+ *
+ * @return true if created correctly
  */
 function create( &$si, &$sp, $level=1) {
     for ($i = 1; $i <= 40; $i++) {

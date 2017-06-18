@@ -55,6 +55,11 @@ game_showanswers( $game, $existsbook, $context);
 
 echo $OUTPUT->footer();
 
+/**
+ * Compute repetitions
+ *
+ * @param $game
+ */
 function game_compute_repetitions($game) {
     global $DB, $USER;
 
@@ -69,6 +74,11 @@ function game_compute_repetitions($game) {
     }
 }
 
+/**
+ * Show users
+ *
+ * @param $game
+ */
 function game_showusers($game) {
     global $CFG, $USER;
 
@@ -129,6 +139,13 @@ function game_showusers($game) {
     echo $output . '</select>' . "\n";
 }
 
+/**
+ * Show answers
+ *
+ * @param $game
+ * @param $existsbook
+ * @param $context
+ */
 function game_showanswers( $game, $existsbook, $context) {
     if ($game->gamekind == 'bookquiz' and $existsbook) {
         game_showanswers_bookquiz( $game, $context);
@@ -148,6 +165,11 @@ function game_showanswers( $game, $existsbook, $context) {
     }
 }
 
+/**
+ * append select to SQL
+ *
+ * @param $game
+ */
 function game_showanswers_appendselect( $game) {
     switch ($game->gamekind) {
         case 'hangman':
@@ -165,6 +187,12 @@ function game_showanswers_appendselect( $game) {
     return '';
 }
 
+/**
+ * Show answers question
+ *
+ * @param $game
+ * @param $context
+ */
 function game_showanswers_question( $game, $context) {
     global $DB;
 
@@ -197,6 +225,12 @@ function game_showanswers_question( $game, $context) {
     game_showanswers_question_select( $game, '{question} q', $select, '*', $order, $showcategories, $game->course, $context);
 }
 
+/**
+ * Show answers quiz
+ *
+ * @param $game
+ * @param $context
+ */
 function game_showanswers_quiz( $game, $context) {
     global $CFG;
 
@@ -215,6 +249,18 @@ function game_showanswers_quiz( $game, $context) {
     game_showanswers_question_select( $game, $table, $select, 'q.*', 'category,questiontext', false, $game->course, $context);
 }
 
+/**
+ * Create the select for SQL
+ *
+ * @param $game
+ * @param $table
+ * @param $select
+ * @param $fields
+ * @param $order
+ * @param $showcategoryname
+ * @param $courseid
+ * @param $context
+ */
 function game_showanswers_question_select( $game, $table, $select, $fields, $order, $showcategoryname, $courseid, $context) {
     global $CFG, $DB, $OUTPUT;
 
@@ -354,6 +400,11 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
     echo "</table><br>\r\n\r\n";
 }
 
+/**
+ * Show answers glossary
+ *
+ * @param $game
+ */
 function game_showanswers_glossary( $game) {
     global $CFG, $DB;
 
@@ -432,6 +483,11 @@ function game_showanswers_glossary( $game) {
     echo "</table><br>\r\n\r\n";
 }
 
+/**
+ * Show answers bookquiz
+ *
+ * @param $game
+ */
 function game_showanswers_bookquiz( $game, $context) {
     global $CFG;
 
