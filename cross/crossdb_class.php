@@ -29,8 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 /*
  * This class is a cross that can load and save to a table
  *
- * @author  bdaloukas
- * @package game
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 class CrossDB extends Cross {
     /**
@@ -91,7 +92,7 @@ class CrossDB extends Cross {
     /**
      * Load cross.
      *
-     * @param $g
+     * @param string $g
      * @param boolean $done
      * @param string $html
      * @param stdClass $game
@@ -173,7 +174,7 @@ class CrossDB extends Cross {
      *
      * @param int $correctletters
      * @param int $wrongletters
-     * @param $restletters
+     * @param string $restletters
      * @param stdClass $game
      * @param stdClass $attempt
      * @param boolean $done
@@ -241,8 +242,8 @@ class CrossDB extends Cross {
      * Update cross questions.
      *
      * @param stdClass $rec  (is a record of cross_questions).
-     * @param $g
-     * @param $pos
+     * @param string $g
+     * @param int $pos
      * @param int $correctletters
      * @param int $wrongletters
      * @param int $restletters

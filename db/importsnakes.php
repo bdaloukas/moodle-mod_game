@@ -71,7 +71,7 @@ function game_importsnakes() {
 /**
   * Insert one board to database
   *
-  * @param $newrec
+  * @param stdClass $newrec
   */ 
 function game_importsnakes_do( $newrec) {
     global $DB;

@@ -325,7 +325,7 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
  * @param boolean $correct
  * @param boolean $wrong
  * @param int $max
- * @param string wordline
+ * @param string $wordline
  * @param string $wordline2
  * @param array $links
  * @param stdClass $game

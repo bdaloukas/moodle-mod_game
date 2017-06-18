@@ -112,8 +112,8 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
  * Exports to html a "Millionaire" game.
  *
  * @param stdClass $game
- * @param $questions
- * @param $maxquestions
+ * @param string $questions
+ * @param int $maxquestions
  */
 function game_millionaire_html_print( $game,  $questions, $maxquestions) {
     $color1 = 'black';

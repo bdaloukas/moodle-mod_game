@@ -181,7 +181,7 @@ function game_before_add_or_update(&$game) {
 /**
  * Given an ID of an instance of this module, this function will permanently delete the instance and any data that depends on it.
  *
- * @param int $id Id of the module instance
+ * @param int $gameid Id of the module instance
  * @return boolean Success/Failure
  **/
 function game_delete_instance($gameid) {
@@ -358,7 +358,7 @@ function game_grades($gameid) {
 /**
  * Return grade for given user or all users.
  *
- * @param int $gameid id of game
+ * @param stdClass $game
  * @param int $userid optional user id, 0 means all users
  * @return array array of grades, false if none
  */
@@ -393,6 +393,7 @@ function game_get_participants($gameid) {
  * This function returns if a scale is being used by one game it it has support for grading and scales.
  *
  * @param int $gameid ID of an instance of this module
+ * @param int $scaleid
  * @return mixed
  * @todo Finish documenting this function
  **/
@@ -407,6 +408,7 @@ function game_scale_used ($gameid, $scaleid) {
  *
  * @param object $game null means all games
  * @param int $userid specific user only, 0 mean all
+ * @param boolean $nullifnone
  */
 function game_update_grades($game=null, $userid=0, $nullifnone=true) {
     global $CFG;
@@ -454,7 +456,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
  * Create grade item for given game
  *
  * @param object $game object with extra cmidnumber
- * @param mixed optional array/object of grade(s); 'reset' means reset grades in gradebook
+ * @param stdClass $grades
  * @return int 0 if ok, error code otherwise
  */
 function game_grade_item_update($game, $grades=null) {
@@ -516,10 +518,10 @@ function game_grade_item_delete( $game) {
  * @param stdClass $activities
  * @param int $index
  * @param int $timestart
- * @param int courseid
- * @param int cmid
- * @param int userid
- * @param int groupid
+ * @param int $courseid
+ * @param int $cmid
+ * @param int $userid
+ * @param int $groupid
  */
 function game_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
     global $DB, $COURSE, $USER;
@@ -621,7 +623,7 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
  * @param stdClass $activity
  * @param int $courseid
  * @param stdClass $detail
- * @param array $modgames
+ * @param array $modnames
  */
 function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames) {
     global $CFG, $OUTPUT;
@@ -662,7 +664,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
  * Removes all grades from gradebook
  *
  * @param int $courseid
- * @param string optional type
+ * @param string optional $type
  */
 function game_reset_gradebook($courseid, $type='') {
     global $DB;
@@ -682,6 +684,7 @@ function game_reset_gradebook($courseid, $type='') {
  * What supports.
  *
  * @uses FEATURE_GRADE_HAS_GRADE
+ * @param string $feature
  * @return bool True if quiz supports feature
  */
 function game_supports($feature) {
@@ -814,7 +817,7 @@ function game_get_grading_options() {
  * context when this is called
  *
  * @param settings_navigation $settings
- * @param navigation_node $quiznode
+ * @param navigation_node $gamenode
  * @return void
  */
 function game_extend_settings_navigation($settings, $gamenode) {
@@ -1005,6 +1008,8 @@ if (!defined('USE_GET_SHORTCUTS')) {
 if (defined('USE_GET_SHORTCUTS')) {
     /**
      * Returns an array of game type objects to construct menu list when adding new game
+     *
+     * @param stdClass $defaultitem
      */
     function game_get_shortcuts($defaultitem) {
         global $DB, $CFG;
@@ -1143,8 +1148,8 @@ if (defined('USE_GET_SHORTCUTS')) {
  * @param stdClass $cm
  * @param stdClass $context
  * @param string filearea
- * @param array args
- * @param boolean forcedownload
+ * @param array $args
+ * @param boolean $forcedownload
  *
  * @return boolean false if not exists file
  */
@@ -1233,7 +1238,7 @@ function game_reset_course_form_defaults($course) {
 /**
  * Actual implementation of the reset course functionality, delete all the Game responses for course $data->courseid.
  *
- * @param $data the data submitted from the reset course.
+ * @param stdClass $data the data submitted from the reset course.
  *
  * @return array status array
  */

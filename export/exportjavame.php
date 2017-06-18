@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die();
  * Exports to javame.
  *
  * @param object $game
- * @param $javame
+ * @param object $javame
  */
 function game_onexportjavame( $game, $javame) {
     global $CFG, $DB;
@@ -97,12 +97,12 @@ function game_onexportjavame( $game, $javame) {
 /**
  * Exports data.
  *
- * @param $src
- * @param $destmobiledir
- * @param $destdir
- * @param $game
- * @param $maxwidth
- * @param $maxheight
+ * @param string $src
+ * @param string $destmobiledir
+ * @param string $destdir
+ * @param stdClass $game
+ * @param int $maxwidth
+ * @param int $maxheight
  */
 function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $maxwidth, $maxheight) {
     global $CFG;
@@ -157,13 +157,13 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
 /**
  * Exports data of hangman with pictures.
  *
- * @param $src
- * @param $destmobiledir
- * @param $destdir
- * @param $game
- * @param $map
- * @param $maxwidth
- * @param $maxheight
+ * @param string $src
+ * @param string $destmobiledir
+ * @param string $destdir
+ * @param stdClass $game
+ * @param array $map
+ * @param int $maxwidth
+ * @param int $maxheight
  */
 function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight) {
     global $CFG;
@@ -194,11 +194,11 @@ function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, 
 /**
  * Exports to javame.
  *
- * @param $game
- * @param $context
- * @param $exportattachments
- * @param $dest
- * @param $files
+ * @param stdClas $game
+ * @param stdClass $context
+ * @param boolean $exportattachments
+ * @param string $dest
+ * @param array $files
  */
 function game_exmportjavame_getanswers( $game, $context, $exportattachment, $dest, &$files) {
     $map = array();
@@ -219,10 +219,10 @@ function game_exmportjavame_getanswers( $game, $context, $exportattachment, $des
 /**
  * Exports to javame.
  *
- * @param $game
- * @param $context
- * @param $destdir
- * @param $files
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $destdir
+ * @param array $files
  */
 function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$files) {
     $select = 'hidden = 0 AND category='.$game->questioncategoryid;
@@ -236,10 +236,10 @@ function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$fi
 /**
  * Exports to javame.
  *
- * @param $game
- * @param $context
- * @param $destdir
- * @param $files
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $destdir
+ * @param array $files
  */
 function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) {
     global $CFG;
@@ -256,14 +256,14 @@ function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) 
 /**
  * Exports to javame.
  *
- * @param $game
- * @param $context
- * @param $table
- * @param $select
- * @param $fields
- * @param $courseid
- * @param $destdir
- * @param $files
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $table
+ * @param string $select
+ * @param string $fields
+ * @param int $courseid
+ * @param string $destdir
+ * @param array $files
  */
 function game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, $fields, $courseid, $destdir, &$files) {
     global $CFG, $DB;
@@ -302,11 +302,11 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
 /**
  * Exports to javame.
  *
- * @param $game
- * @param $context
- * @param $exportattachments
- * @param $destdir
- * @param $files
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param boolean $exportattachments
+ * @param string $destdir
+ * @param array $files
  */
 function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachment, $destdir, &$files) {
     global $CFG, $DB;
@@ -388,9 +388,9 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
 /**
  * Create manifest mf.
  *
- * @param $dir
- * @param $javame
- * @param $destmobiledir
+ * @param string $dir
+ * @param stdClass $javame
+ * @param string $destmobiledir
  */
 function game_create_manifest_mf( $dir, $javame, $destmobiledir) {
     $fp = fopen( $dir.'/MANIFEST.MF', "w");
@@ -411,9 +411,9 @@ function game_create_manifest_mf( $dir, $javame, $destmobiledir) {
 /**
  * Creates a jar file.
  *
- * @param $srcdir
- * @param $course
- * @param $javame
+ * @param string $srcdir
+ * @param stdClass $course
+ * @param stdClass $javame
  */
 function game_create_jar( $srcdir, $course, $javame) {
     global $CFG;
@@ -463,9 +463,9 @@ function game_showanswers_appendselect( $form) {
 /**
  * Copy images
  *
- * @param $filename
- * @param $dest
- * @param $maxwidth
+ * @param string $filename
+ * @param string $dest
+ * @param int $maxwidth
  */
 function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth) {
     if ($maxwidth == 0) {

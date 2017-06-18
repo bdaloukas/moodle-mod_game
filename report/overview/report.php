@@ -38,9 +38,9 @@ class game_report extends game_default_report {
     /**
      * Display the report.
      *
-     * @param $game
-     * @param $cm
-     * @param $course
+     * @param stdClass $game
+     * @param stdClass $cm
+     * @param stdClass $course
      */
     public function display($game, $cm, $course) {
         global $CFG, $SESSION, $DB;

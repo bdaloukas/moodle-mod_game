@@ -574,7 +574,7 @@ class Cross
      * @param array $words
      * @param object $magics
      * @param object $poss
-     * @param int $ccrosspos
+     * @param int $crosspos
      * @param int $crossdir
      * @param object $crosssword
      * @param int $n20

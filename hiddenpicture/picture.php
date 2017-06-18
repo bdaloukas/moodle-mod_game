@@ -39,14 +39,14 @@ create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $fi
 /**
  * Create an image.
  *
- * @param $id
- * @param $attemptid
- * @param $foundcells
- * @param $cells
- * @param $filehash
- * @param $cols
- * @param $rows
- * @param $filenamenumbers
+ * @param int $id
+ * @param int $attemptid
+ * @param boolean $foundcells
+ * @param stdClass $cells
+ * @param string $filehash
+ * @param int $cols
+ * @param int $rows
+ * @param string $filenamenumbers
  */
 function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers) {
     global $CFG;
@@ -123,14 +123,14 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
 /**
  * Show number.
  *
- * @param $imghandle
- * @param $imgnumbers
- * @param $number
- * @param $x1
- * @param $y1
- * @param $width
- * @param $height
- * @param $sizenumbers
+ * @param object $imghandle
+ * @param object $imgnumbers
+ * @param int $number
+ * @param int $x1
+ * @param int $y1
+ * @param int $width
+ * @param int $height
+ * @param int $sizenumbers
  */
 function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {

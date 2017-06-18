@@ -58,7 +58,7 @@ echo $OUTPUT->footer();
 /**
  * Compute repetitions
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_compute_repetitions($game) {
     global $DB, $USER;
@@ -77,7 +77,7 @@ function game_compute_repetitions($game) {
 /**
  * Show users
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showusers($game) {
     global $CFG, $USER;
@@ -142,9 +142,9 @@ function game_showusers($game) {
 /**
  * Show answers
  *
- * @param $game
- * @param $existsbook
- * @param $context
+ * @param stdClass $game
+ * @param boolean $existsbook
+ * @param stdClass $context
  */
 function game_showanswers( $game, $existsbook, $context) {
     if ($game->gamekind == 'bookquiz' and $existsbook) {
@@ -168,7 +168,7 @@ function game_showanswers( $game, $existsbook, $context) {
 /**
  * append select to SQL
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showanswers_appendselect( $game) {
     switch ($game->gamekind) {
@@ -190,8 +190,8 @@ function game_showanswers_appendselect( $game) {
 /**
  * Show answers question
  *
- * @param $game
- * @param $context
+ * @param stdClass $game
+ * @param stdClass $context
  */
 function game_showanswers_question( $game, $context) {
     global $DB;
@@ -228,8 +228,8 @@ function game_showanswers_question( $game, $context) {
 /**
  * Show answers quiz
  *
- * @param $game
- * @param $context
+ * @param stdClass $game
+ * @param stdClass $context
  */
 function game_showanswers_quiz( $game, $context) {
     global $CFG;
@@ -252,14 +252,14 @@ function game_showanswers_quiz( $game, $context) {
 /**
  * Create the select for SQL
  *
- * @param $game
- * @param $table
- * @param $select
- * @param $fields
- * @param $order
- * @param $showcategoryname
- * @param $courseid
- * @param $context
+ * @param stdClass $game
+ * @param string $table
+ * @param string $select
+ * @param string $fields
+ * @param string $order
+ * @param boolean $showcategoryname
+ * @param int $courseid
+ * @param stdClass $context
  */
 function game_showanswers_question_select( $game, $table, $select, $fields, $order, $showcategoryname, $courseid, $context) {
     global $CFG, $DB, $OUTPUT;
@@ -403,7 +403,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
 /**
  * Show answers glossary
  *
- * @param $game
+ * @param stdClass $game
  */
 function game_showanswers_glossary( $game) {
     global $CFG, $DB;

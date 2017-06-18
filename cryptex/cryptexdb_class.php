@@ -166,10 +166,10 @@ class CryptexDB extends CrossDB {
     /**
      * Inserts a char.
      *
-     * @param $letters
-     * @param $cols
-     * @param $rows
-     * @param $char
+     * @param string $letters
+     * @param int $cols
+     * @param int $rows
+     * @param string $char
      * @param int $spaces
      */
     public function insertchar( &$letters, $cols, $rows, $char, &$spaces) {
@@ -186,10 +186,10 @@ class CryptexDB extends CrossDB {
     /**
      * Inserts chars.
      *
-     * @param $letters
-     * @param $cols
-     * @param $rows
-     * @param $char
+     * @param string $letters
+     * @param int $cols
+     * @param int $rows
+     * @param string $char
      * @param int $spaces
      */
     public function insertchars( &$letters, $cols, $rows, $char, &$spaces) {
@@ -234,9 +234,9 @@ class CryptexDB extends CrossDB {
      * Loads the cryptex from database.
      *
      * @param array $crossm
-     * @param $mask
-     * @param $corrects
-     * @param $language
+     * @param string $mask
+     * @param int $corrects
+     * @param string $language
      *
      * @return questions
      */
@@ -288,9 +288,9 @@ class CryptexDB extends CrossDB {
     /**
      * Calls the setwords of class Cross.
      *
-     * @param $answers
-     * @param $maxcols
-     * @param $reps
+     * @param string $answers
+     * @param int $maxcols
+     * @param array $reps
      *
      * @return Cross::setwords
      */
@@ -301,12 +301,12 @@ class CryptexDB extends CrossDB {
     /**
      * Calls the computedata of class Cross.
      *
-     * @param $crossm
-     * @param $crossd
-     * @param $letters
-     * @param $minwords
-     * @param $maxwords
-     * @param $mtimelimit
+     * @param stdClass $crossm
+     * @param stdClass $crossd
+     * @param string $letters
+     * @param int $minwords
+     * @param int $maxwords
+     * @param int $mtimelimit
      */
     public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
         if (!cross::computedata( $crossm, $crossd, $letters, $minwords, $maxwords, $mtimelimit)) {

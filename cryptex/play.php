@@ -28,11 +28,11 @@ require_once( "cryptexdb_class.php");
 /**
  * Plays the game cryptex.
  *
- * @param $id
+ * @param int $id
  * @param stdClass $game
  * @param stdClass $atttempt
- * @param $cryptexrec
- * @param $endofgame
+ * @param stdClass $cryptexrec
+ * @param boolean $endofgame
  * @param stdClass $context
  */
 function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $context) {
@@ -115,10 +115,10 @@ function game_cryptex_continue( $id, $game, $attempt, $cryptexrec, $endofgame, $
  * @param int $id
  * @param stdClass $game
  * @param stdClass $atttempt
- * @param $cryptexrec
- * @param $q (The q means game_queries.id).
- * @param $answer
- * @param $finishattempt
+ * @param stdClass $cryptexrec
+ * @param int $q (The q means game_queries.id).
+ * @param stdClass $answer
+ * @param boolean $finishattempt
  * @param stdClass $context
  */
 function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $finishattempt, $context) {
@@ -171,8 +171,8 @@ function game_cryptex_check( $id, $game, $attempt, $cryptexrec, $q, $answer, $fi
  * @param int $id
  * @param stdClass $game
  * @param stdClass $atttempt
- * @param $cryptexrec
- * @param $crosssm
+ * @param stdClass $cryptexrec
+ * @param stdClass $crosssm
  * @param boolean $updateattempt
  * @param boolean $onlyshow
  * @param boolean $showsolution
@@ -408,7 +408,7 @@ if ($print) {
  * @param int $id
  * @param stdClass $game
  * @param stdClass $atttempt
- * @param $cryptexrec
+ * @param stdClass $cryptexrec
  */
 function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec) {
     global $CFG, $DB;

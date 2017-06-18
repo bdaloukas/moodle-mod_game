@@ -27,11 +27,11 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Plays the millionaire
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $millionaire
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $millionaire
+ * @param stdClass $context
  */
 function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context) {
     // User must select quiz or question as a source module.
@@ -68,11 +68,11 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context
 /**
  * Plays the millionaire
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $millionaire
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $millionaire
+ * @param stdClass $context
  */
 function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
     global $DB;
@@ -117,13 +117,13 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
 /**
  * Shows the grid
  *
- * @param $game
- * @param $millionaire
- * @param $id
- * @param $query
- * @param $aanswer
- * @param $info
- * @param $context
+ * @param stdClass $game
+ * @param stdClass $millionaire
+ * @param int $id
+ * @param stdClass $query
+ * @param array $aanswer
+ * @param stdClass $info
+ * @param stdClass $context
  */
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context) {
     global $CFG, $OUTPUT;
@@ -317,11 +317,11 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
 /**
  * Show next question
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $millionaire
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $millionaire
+ * @param stdClass $context
  */
 function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, $context) {
     game_millionaire_selectquestion( $aanswer, $game, $attempt, $millionaire, $query, $context);
@@ -340,12 +340,12 @@ function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, 
 /**
  * Updates tables: games_millionaire, game_attempts, game_questions.
  *
- * @param $answer
- * @param $game
- * @param $attemt
- * @param $millionaire
- * @param $query
- * @param $context
+ * @param string $answer
+ * @param stdClass $game
+ * @param stdClasss $attempt
+ * @param stdClass $millionaire
+ * @param stdClass $query
+ * @param stdClass $context
  */
 function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context) {
     global $DB, $USER;
@@ -475,12 +475,12 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
 /**
  * Select serial question
  *
- * @param $game
- * @param $table
- * @param $select
- * @param $idfields
- * @param $level
- * @param $order
+ * @param stdClass $game
+ * @param string $table
+ * @param string $select
+ * @param string $idfields
+ * @param int $level
+ * @param string $order
  */
 function game_millionaire_select_serial_question( $game, $table, $select, $idfields = "id", $level, $order) {
     global $DB, $USER;
@@ -515,11 +515,11 @@ function game_millionaire_select_serial_question( $game, $table, $select, $idfie
 /**
  * Load questions for millionaire
  *
- * @param $game
- * @param $millionaire
- * @param $query
- * @param $aanswer
- * @param $context
+ * @param stdClass $game
+ * @param stdClass $millionaire
+ * @param string $query
+ * @param array $aanswer
+ * @param stdClass $context
  */
 function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer, $context) {
     global $DB;
@@ -539,8 +539,8 @@ function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer
 /**
  * Set state. Flag 1 is 5050, 2 is telephone 4 is people.
  *
- * @param $millionaire
- * @param $mask
+ * @param stdClass $millionaire
+ * @param string $mask
  */
 function game_millionaire_setstate( &$millionaire, $mask) {
     global $DB;
@@ -558,11 +558,11 @@ function game_millionaire_setstate( &$millionaire, $mask) {
 /**
  * One help 50-50
  *
- * @param $game
- * @param $id
- * @param $millionaire
- * @param $query
- * @param $context
+ * @param stdClass $game
+ * @param int $id
+ * @param stdClass $millionaire
+ * @param string $query
+ * @param stdClass $context
  */
 function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $context) {
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
@@ -595,11 +595,11 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
 /**
  * One help telephone
  *
- * @param $game
- * @param $id
- * @param $millionaire
- * @param $query
- * @param $context
+ * @param stdClass $game
+ * @param int $id
+ * @param stdClass $millionaire
+ * @param stdClass $query
+ * @param stdClass $context
  */
 function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, $context) {
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
@@ -638,11 +638,11 @@ function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, 
 /**
  * One help people
  *
- * @param $game
- * @param $id
- * @param $millionaire
- * @param $query
- * @param $context
+ * @param stdClass $game
+ * @param int $id
+ * @param stdClass $millionaire
+ * @param stdClass $query
+ * @param stdClass $context
  */
 function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $context) {
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
@@ -687,13 +687,13 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
 /**
  * Millionaire on answer
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $millionaire
- * @param $query
- * @param $answer
- * @param $context
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $millionaire
+ * @param stdClass $query
+ * @param string $answer
+ * @param stdClass $context
  */
 function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query, $answer, $context) {
     global $DB;
@@ -745,10 +745,10 @@ function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query,
 /**
  * Millionaire on quit
  *
- * @param $id
- * @param $game
- * @param $attempt
- * @param $query
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $query
  */
 function game_millionaire_onquit( $id, $game, $attempt, $query) {
     global $CFG, $DB;

@@ -104,9 +104,10 @@ function game_upper( $str, $lang='') {
  * Returns the HTML of a select control.
  *
  * @param string $name
- * @param array a
+ * @param array $a
  * @param string $input
  * @param array $events
+ *
  * @return string the HTML
  */
 function game_showselectcontrol( $name, $a,  $input, $events='') {
@@ -142,10 +143,10 @@ function game_showcheckbox( $name, $value) {
 /**
  * Used by hangman. Returns a short answer.
  *
- * @param string $name
- * @param array a
- * @param string $input
- * @param array $events
+ * @param stdClass $game
+ * @param boolean $allowspaces
+ * @param boolean $userepetitions
+ *
  * @return string the HTML
  */
 function game_question_shortanswer( $game, $allowspaces=false, $userepetitions=true) {
@@ -165,11 +166,10 @@ function game_question_shortanswer( $game, $allowspaces=false, $userepetitions=t
 /**
  * Used by hangman. Returns a short answer from glossary.
  *
- * @param string $name
- * @param array a
- * @param string $input
- * @param array $events
- * @return string the HTML
+ * @param stdClass $game
+ * @param boolean $allowspaces
+ * @param boolean $userepetitions
+ *
  */
 function game_question_shortanswer_glossary( $game, $allowspaces, $userepetitions) {
     global $DB;
@@ -215,11 +215,9 @@ function game_question_shortanswer_glossary( $game, $allowspaces, $userepetition
 /**
  * Used by hangman. Returns a short answer from quiz.
  *
- * @param string $name
- * @param array a
- * @param string $input
- * @param array $events
- * @return string the HTML
+ * @param stdClass $game
+ * @param boolean $allowspaces
+ * @param boolean $userepetitions
  */
 function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
     global $DB;
@@ -263,10 +261,10 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
 /**
  * Used by hangman. Returns a short answer from question.
  *
- * @param string $name
  * @param stdClass $game
  * @param boolean $allowspaces
  * @param boolean $userepetitions
+ *
  * @return the short answer record
  */
 function game_question_shortanswer_question( $game, $allowspaces, $userepetitions) {
@@ -318,6 +316,7 @@ function game_question_shortanswer_question( $game, $allowspaces, $userepetition
  * @param string $select
  * @param string $idfields
  * @param boolean userepetitions
+ *
  * @return stdClass the random question
  */
 function game_question_selectrandom( $game, $table, $select, $idfields='id', $userepetitions=true) {
@@ -429,7 +428,8 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
  *
  * @param stdClass $game
  * @param int count
- * @param stdClass the random record(s)
+ *
+ * @return stdClass the random record(s)
  */
 function game_questions_selectrandom( $game, $count=1) {
     global $DB;
@@ -528,8 +528,9 @@ function game_questions_selectrandom( $game, $count=1) {
  *
  * @param string $table
  * @param string $select
-   @param int $idfield
-   @param int $count
+ * @param int $idfield
+ * @param int $count
+ *
  * @return stdClass the random record(s)
  */
 function game_questions_selectrandom_detail( $table, $select, $idfield="id", $count=1) {
@@ -557,7 +558,7 @@ function game_questions_selectrandom_detail( $table, $select, $idfield="id", $co
 /**
  * Tries to detect the language of word.
  *
- * @param $word
+ * @param string $word
  *
  * @return the language detected
  */
@@ -600,9 +601,9 @@ function game_detectlanguage( $word) {
 /**
  * The words maybe are in two languages e.g. greek or english so I try to find the correct one.
  *
- * @param $word
- * @param $lang
- * @param $userlanguage
+ * @param string $word
+ * @param string $lang
+ * @param string $userlanguage
  *
  * @return the letters detected
  */
@@ -639,8 +640,8 @@ function game_getallletters( $word, $lang='', $userlanguage='') {
 /**
  * true if exist all the letters
  *
- * @param $str
- * @param $strfile
+ * @param string $str
+ * @param string $strfile
  *
  * @return the letters detected
  */
@@ -659,7 +660,7 @@ function hangman_existall( $str, $strfind) {
 /**
  * return a short answer randomly selected. used by cross
  *
- * @param $game
+ * @param stdClass $game
  *
  * @return a question
  */
@@ -682,7 +683,7 @@ function game_questions_shortanswer( $game) {
 /**
  * return a short answer (from glossary) randomly selected. used by cross
  *
- * @param $game
+ * @param stdClass $game
  *
  * @return a question
  */
@@ -707,7 +708,7 @@ function game_questions_shortanswer_glossary( $game) {
 /**
  * return a short answer (from quiz) randomly selected. used by cross
  *
- * @param $game
+ * @param stdClass $game
  *
  * @return a question
  */
@@ -744,7 +745,7 @@ function game_questions_shortanswer_quiz( $game) {
 /**
  * return a short answer (from question) randomly selected. used by cross
  *
- * @param $game
+ * @param stdClass $game
  *
  * @return a question
  */
@@ -775,9 +776,9 @@ function game_questions_shortanswer_question( $game) {
 /**
  * question fraction
  *
- * @param $table
- * @param $field
- * @param $select
+ * @param string $table
+ * @param string $fields
+ * @param string $select
  *
  * @return the record
  */
@@ -815,9 +816,9 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
 /**
  * sets char
  *
- * @param $d
- * @param $pos
- * @param $char
+ * @param string $s
+ * @param int $pos
+ * @param string $char
  */
 function game_setchar( &$s, $pos, $char) {
     $ret = "";
@@ -832,8 +833,8 @@ function game_setchar( &$s, $pos, $char) {
 /**
  * insert a record
  *
- * @param $table
- * @param $rec
+ * @param stdClass $table
+ * @param stdClass $rec
  */
 function game_insert_record( $table, $rec) {
     global $DB;
@@ -862,10 +863,10 @@ function game_insert_record( $table, $rec) {
 /**
  * If score is negative doesn't update the record score is between 0 and 1.
  *
- * @param $game
- * @param $attempt
- * @param $score
- * @param $finished
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param float $score
+ * @param boolean $finished
  *
  * @return the record
  */
@@ -917,10 +918,10 @@ function game_updateattempts( $game, $attempt, $score, $finished) {
 /**
  * Computes max grade
  *
- * @param $game
- * @param $attempt
- * @param $grade
- * @param $finished
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param float $grade
+ * @param boolean $finished
  *
  * @return the record
  */
@@ -939,12 +940,12 @@ function game_updateattempts_maxgrade( $game, $attempt, $grade, $finished) {
 /**
  * Update queries
  *
- * @param $game
- * @param $attempt
- * @param $query
- * @param $score
- * @param $studentanswer
- * @param $updatetries
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param string $query
+ * @param float $score
+ * @param string $studentanswer
+ * @param boolean $updatetries
  *
  * @return the record
  */
@@ -1007,9 +1008,9 @@ function game_update_queries( $game, $attempt, $query, $score, $studentanswer, $
 /**
  * get attempt
  *
- * @param $game
- * @param $detail
- * @param $autoadd
+ * @param stdClass $game
+ * @param stdclass $detail
+ * @param boolean $autoadd
  */
 function game_getattempt( $game, &$detail, $autoadd=false) {
     global $DB, $USER;
@@ -1050,6 +1051,7 @@ function game_getattempt( $game, &$detail, $autoadd=false) {
  * @param integer $gameid the game id.
  * @param integer $userid the userid.
  * @param string $status 'all', 'finished' or 'unfinished' to control
+ *
  * @return an array of all the user's attempts at this game. Returns an empty array if there are none.
  */
 function game_get_user_attempts( $gameid, $userid, $status = 'finished') {
@@ -1093,6 +1095,7 @@ function game_get_user_attempt_unfinished( $gameid, $userid) {
  *
  * @param object $game the game object.
  * @param integer $userid the id of the user.
+ *
  * @return float the user's current grade for this game.
  */
 function game_get_best_score($game, $userid) {
@@ -1113,6 +1116,7 @@ function game_get_best_score($game, $userid) {
  *
  * @param object $game the game object.
  * @param integer $userid the id of the user.
+ *
  * @return float the user's current grade for this game.
  */
 function game_get_best_grade($game, $userid) {
@@ -1128,8 +1132,9 @@ function game_get_best_grade($game, $userid) {
 /**
  * Converts score to grade
  *
- * @param $score
- * @param $grade
+ * @param float $score
+ * @param float $grade
+ *
  * @return float the user's current grade for this game.
  */
 function game_score_to_grade($score, $game) {
@@ -1197,7 +1202,7 @@ function game_get_reviewoptions($game, $attempt, $context=null) {
  * Compute attempt layout
  *
  * @param object $game the game object.
- * @param $attempt
+ * @param stdClass $attempt
  * @return float the user's current grade for this game.
  */
 function game_compute_attempt_layout( $game, &$attempt) {
@@ -1402,10 +1407,10 @@ function game_sudoku_getquestions( $questionlist) {
 /**
  * Filter glossary
  *
- * @param $text
- * @param $entryid
- * @param $contextid
- * @param $courseid
+ * @param string $text
+ * @param int $entryid
+ * @param int $contextid
+ * @param int $courseid
  */
 function game_filterglossary( $text, $entryid, $contextid, $courseid) {
     global $CFG, $DB;
@@ -1440,10 +1445,10 @@ function game_filterglossary( $text, $entryid, $contextid, $courseid) {
 /**
  * Filter book
  *
- * @param $text
- * @param $chapterid
- * @param $contextid
- * @param $courseid
+ * @param string $text
+ * @param int $chapterid
+ * @param int $contextid
+ * @param int $courseid
  */
 function game_filterbook( $text, $chapterid, $contextid, $courseid) {
     global $CFG, $DB;
@@ -1478,10 +1483,10 @@ function game_filterbook( $text, $chapterid, $contextid, $courseid) {
 /**
  * Filter questio
  *
- * @param $questiontext
- * @param $questionid
- * @param $contextid
- * @param $courseid
+ * @param string $questiontext
+ * @param int $questionid
+ * @param int $contextid
+ * @param int $courseid
  */
 function game_filterquestion( $questiontext, $questionid, $contextid, $courseid) {
     global $CFG, $DB;
@@ -1516,10 +1521,10 @@ function game_filterquestion( $questiontext, $questionid, $contextid, $courseid)
 /**
  * Filter question answer
  *
- * @param $questiontext
- * @param $questionid
- * @param $contextid
- * @param $courseid
+ * @param string $questiontext
+ * @param int $questionid
+ * @param int $contextid
+ * @param int $courseid
  */
 function game_filterquestion_answer( $questiontext, $questionid, $contextid, $courseid) {
     global $CFG, $DB;
@@ -1553,8 +1558,8 @@ function game_filterquestion_answer( $questiontext, $questionid, $contextid, $co
 /**
  * Filter text
  *
- * @param $text
- * @param $courseid
+ * @param string $text
+ * @param int $courseid
  */
 function game_filtertext( $text, $courseid) {
     $formatoptions = new stdClass();
@@ -1580,7 +1585,7 @@ function game_filtertext( $text, $courseid) {
 /**
  * To javascript string
  *
- * @param $text
+ * @param string $text
  */
 function game_tojavascriptstring( $text) {
     $from = array('"', "\r", "\n");
@@ -1597,7 +1602,7 @@ function game_tojavascriptstring( $text) {
 /**
  * Repair question
  *
- * @param $s
+ * @param string $s
  */
 function game_repairquestion( $s) {
     if (substr( $s, 0, 3) == '<p>') {
@@ -1627,8 +1632,8 @@ function game_repairquestion( $s) {
 /**
  * Delete a game attempt.
  *
- * @param $attempt
- * @param $game
+ * @param stdClass $attempt
+ * @param stdClass $game
  */
 function game_delete_attempt($attempt, $game) {
     global $DB;
@@ -1700,7 +1705,7 @@ function game_get_grading_option_name($option) {
 /**
  * Right to left.
  *
- * @param $lang
+ * @param string $lang
  */
 function game_right_to_left( $lang) {
     return ( get_string_manager()->get_string('thisdirection', 'langconfig', null, $lang) == 'rtl');
@@ -1709,9 +1714,9 @@ function game_right_to_left( $lang) {
 /**
  * Compute reverse print
  *
- * @param $attempt
- * @param $wordctrl
- * @param $reverseprint
+ * @param stdClass $attempt
+ * @param string $wordctrl
+ * @param boolean $reverseprint
  */
 function game_compute_reserve_print( $attempt, &$wordrtl, &$reverseprint) {
     if (function_exists( 'right_to_left')) {
@@ -1730,9 +1735,9 @@ function game_compute_reserve_print( $attempt, &$wordrtl, &$reverseprint) {
 /**
  * select from repetitions
  *
- * @param $game
- * @param $recs
- * @param $need
+ * @param stdClass $game
+ * @param stdClass $recs
+ * @param booolean $need
  */
 function game_select_from_repetitions( $game, $recs, $need) {
     global $DB, $USER;
@@ -1778,11 +1783,11 @@ function game_select_from_repetitions( $game, $recs, $need) {
 /**
  * Grades responses
  *
- * @param $question
- * @param $responses
- * @param $maxgrade
- * @param $answertext
- * @param $answered
+ * @param stdClass $question
+ * @param array $responses
+ * @param int $maxgrade
+ * @param string $answertext
+ * @param boolean $answered
  */
 function game_grade_responses( $question, $responses, $maxgrade, &$answertext, &$answered) {
     $answered = true;
@@ -1822,10 +1827,10 @@ function game_grade_responses( $question, $responses, $maxgrade, &$answertext, &
 /**
  * Responses multianswer
  *
- * @param $question
- * @param $responses
- * @param $maxgrade
- * @param $answertext
+ * @param stdClass $question
+ * @param array $responses
+ * @param int $maxgrade
+ * @param string $answertext
  */
 function game_grade_responses_multianswer( $question, $responses, $maxgrade, &$answertext) {
     $name = "resp{$question->id}_";
@@ -1850,9 +1855,9 @@ function game_grade_responses_multianswer( $question, $responses, $maxgrade, &$a
 /**
  * Print question
  *
- * @param $game
- * @param $question
- * @param $context
+ * @param stdClass $game
+ * @param string $question
+ * @param stdClass $context
  */
 function game_print_question( $game, $question, $context) {
     if ($question->qtype == 'multichoice') {
@@ -1869,9 +1874,9 @@ function game_print_question( $game, $question, $context) {
 /**
  * Print question multichoice
  *
- * @param $game
- * @param $question
- * @param $context
+ * @param stdClass $game
+ * @param string $question
+ * @param stdClass $context
  */
 function game_print_question_multichoice( $game, $question, $context) {
     global $CFG;
@@ -1933,8 +1938,8 @@ foreach ($anss as $answer) {
  * Print question multianswer
  *
  * @param object $game the game object.
- * @param $question
- * @param $context
+ * @param stdClass $question
+ * @param stdClass $context
  */
 function game_print_question_multianswer( $game, $question, $context) {
     global $CFG;
@@ -1997,7 +2002,7 @@ foreach ($anss as $answer) {
  *
  * @param stdClass $game
  * @param stdClass $question
- * @param $context
+ * @param stdClass $context
  */
 function game_print_question_shortanswer( $game, $question, $context) {
     $questiontext = $question->questiontext;
@@ -2157,9 +2162,9 @@ function game_export_createtempdir() {
 /**
  * Create zip
  *
- * @param $srcdir
- * @param $couseid
- * @param $filename
+ * @param string $srcdir
+ * @param int $courseid
+ * @param string $filename
  */
 function game_create_zip( $srcdir, $courseid, $filename) {
     global $CFG;
@@ -2193,9 +2198,9 @@ function game_create_zip( $srcdir, $courseid, $filename) {
 /**
  * Get string lang
  *
- * @param $identifier
- * @param $module
- * @param $lang
+ * @param string $identifier
+ * @param string $module
+ * @param string $lang
  */
 function game_get_string_lang( $identifier, $module, $lang) {
     global $CFG;
@@ -2206,9 +2211,9 @@ function game_get_string_lang( $identifier, $module, $lang) {
 /**
  * Get string from file
  *
- * @param $identifier
- * @param $lanfile
- * @param $destination
+ * @param string $identifier
+ * @param string $lanfile
+ * @param string $destination
  */
 function get_string_from_file($identifier, $langfile, $destination) {
     static $strings;    // Keep the strings cached in memory.
@@ -2277,13 +2282,13 @@ function game_get_contexts() {
 /**
  * Export split files
  *
- * @param $courseid
- * @param $context
- * @param $filearea
- * @param $id
- * @param $line
- * @param $destdir
- * @pram $files
+ * @param int $courseid
+ * @param stdClass $context
+ * @param string $filearea
+ * @param int $id
+ * @param string $line
+ * @param string $destdir
+ * @pram array $files
  */
 function game_export_split_files( $courseid, $context, $filearea, $id, $line, $destdir, &$files) {
     global $CFG, $DB;
@@ -2346,7 +2351,7 @@ function game_export_split_files( $courseid, $context, $filearea, $id, $line, $d
 /**
  * Grade questions
  *
- * @param $questions
+ * @param array $questions
  */
 function game_grade_questions( $questions) {
     $grades = array();
@@ -2445,7 +2450,7 @@ function game_can_start_new_attempt( $game) {
 /**
  * strlen
  *
- * @param $str
+ * @param string $str
  */
 function game_strlen( $str) {
     if (game_get_moodle_version() >= '02.08') {
@@ -2489,7 +2494,7 @@ function game_substr() {
 /**
  * strtoupper
  *
- * @param $str
+ * @param string $str
  */
 function game_strtoupper( $str) {
     if (game_get_moodle_version() >= '02.08') {
@@ -2507,9 +2512,9 @@ function game_strtoupper( $str) {
 /**
  * strpos
  *
- * @param $haystack
- * @param $needle
- * @param $offset
+ * @param string $haystack
+ * @param string $needle
+ * @param int $offset
  */
 function game_strpos( $haystack, $needle, $offset = 0) {
     if (game_get_moodle_version() >= '02.08') {
@@ -2527,8 +2532,8 @@ function game_strpos( $haystack, $needle, $offset = 0) {
  * show query
  *
  * @param object $game the game
- * @param $query
- * @param $text
+ * @param stdClass $query
+ * @param string $text
  */
 function game_show_query( $game, $query, $text) {
     if ($game->glossaryid) {

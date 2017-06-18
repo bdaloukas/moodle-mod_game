@@ -20,6 +20,7 @@
  * @package   mod_game
  * @author    Alastair Munro <alastair@catalyst.net.nz>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2007 Vasilis Daloukas
  */
 
 defined('MOODLE_INTERNAL') || die();
@@ -431,8 +432,8 @@ class mod_game_mod_form extends moodleform_mod {
     /**
      * validation
      *
-     * @param $data
-     * @param $files
+     * @param stdClass $data
+     * @param array $files
      *
      * @return moodle_url
      */
@@ -451,7 +452,7 @@ class mod_game_mod_form extends moodleform_mod {
     /**
      * Set data
      *
-     * @param $defaultvalues
+     * @param array $defaultvalues
      */
     public function set_data($defaultvalues) {
         global $DB;
