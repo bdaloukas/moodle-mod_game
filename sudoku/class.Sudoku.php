@@ -144,10 +144,14 @@ class objects {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class cell extends objects {
+    /** @var $r */
     protected $r;
+    /** @var $c */
     protected $c;
 
+    /** @var $state */
     protected $state = array();
+    /** @var $applied */
     protected $applied = false;
 
     /**
@@ -746,7 +750,10 @@ class r extends rcs {
      */
 
     /**
-     * @see RCS::coupling
+     * see RCS::coupling
+     *
+     * @param $therow
+     * @param $thecolumn
      */
     public function coupling($therow, $thecolumn) {
         return $thestate = $this->_coupling($thecolumn);
@@ -755,7 +762,7 @@ class r extends rcs {
     /**
      * Heavy lifting for row/column coupling calculations.
      *
-     * @see RCS::coupling
+     * RCS::coupling
      * @param integer $theIndex the index of the cell within the row or column.
      * @return integer the "coupling coefficient" for the cell.  The sum of the
      *          sizes of the intersection between this and all other

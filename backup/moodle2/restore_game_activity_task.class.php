@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Restores a game
+ *
  * @package mod_game
  * @subpackage backup-moodle2
  * @copyright 2007 Vasilis Daloukas

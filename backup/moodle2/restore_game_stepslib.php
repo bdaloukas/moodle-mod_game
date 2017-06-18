@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Structure step to restore one game activity
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_game_activity_structure_step extends restore_activity_structure_step {
 

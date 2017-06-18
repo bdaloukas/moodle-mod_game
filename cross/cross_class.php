@@ -512,8 +512,8 @@ class Cross
     /**
      * Swaps two variables.
      *
-     * @param $a
-     * @param $b
+     * @param &$a
+     * @param &$b
      */
     public function swap( &$a, &$b) {
         $temp = $a;

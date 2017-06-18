@@ -1071,7 +1071,8 @@ function game_get_user_attempts( $gameid, $userid, $status = 'finished') {
 
 
 /**
- * Returns an unfinished attempt (if there is one) for the given user on the given game. This function does not return preview attempts.
+ * Returns an unfinished attempt (if there is one) for the given user on the given game.
+ * This function does not return preview attempts.
  *
  * @param integer $gameid the id of the game.
  * @param integer $userid the id of the user.
@@ -1555,7 +1556,7 @@ function game_filterquestion_answer( $questiontext, $questionid, $contextid, $co
  * @param $text
  * @param $courseid
  */
- function game_filtertext( $text, $courseid) {
+function game_filtertext( $text, $courseid) {
     $formatoptions = new stdClass();
     $formatoptions->noclean = true;
     $formatoptions->filter = 1;
@@ -2518,7 +2519,7 @@ function game_strpos( $haystack, $needle, $offset = 0) {
 /**
  * show query
  *
- * @param object $game the game 
+ * @param object $game the game
  * @param $query
  * @param $text
  */

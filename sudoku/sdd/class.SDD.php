@@ -71,8 +71,6 @@ class sdd {
 
     /*
      * Close the log file.
-     *
-     * @abstract
      */
     public function close() {
     }
@@ -279,7 +277,6 @@ class sdd {
     /*
      * Write a debugging value to a log file.
      *
-     * @abstract
      * @param mixed Data to be logged.
      * @param string $theHeader [optional] string to be emitted prior to
      *               logging the data.  By default it is a date/time
@@ -348,7 +345,6 @@ class sdd {
     /*
      * Write data to the log file.
      *
-     * @abstract
      * @parameter string $theData [by reference] the data to be written
      *                       into the log file.
      * @return integer the number of bytes written into the log file.

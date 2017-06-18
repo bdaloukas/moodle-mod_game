@@ -17,7 +17,7 @@
 /**
  * Form for creating and modifying a game
  *
- * @package   game
+ * @package   mod_game
  * @author    Alastair Munro <alastair@catalyst.net.nz>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

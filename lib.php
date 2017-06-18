@@ -263,7 +263,7 @@ function game_user_outline($course, $user, $mod, $game) {
 }
 
 /**
- * Print a detailed representation of what a user has done with a given particular instance of this module, for user activity reports.
+ * Print a detailed representation of what a user has done with a given particular game,(user activity reports).
 
  * @param stdClass $course
  * @param stdClass $user
@@ -379,7 +379,7 @@ function game_get_user_grades($game, $userid=0) {
 }
 
 /**
- * Must return an array of user records (all data) who are participants for a given instance of game. Must include every user involved
+ * Must return an array of user records (all data) who are participants for a given instance of game.
  *
  * @param int $gameid ID of an instance of this module
  * @return mixed boolean/array of students
@@ -1208,7 +1208,7 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
 }
 
 /**
- * Implementation of the function for printing the form elements that control whether the course reset functionality affects the Game.
+ * Add reset buttons to form.
  *
  * @param object $mform form passed by reference
  */
