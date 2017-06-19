@@ -17,34 +17,34 @@ if (!document.all) {
 }
 
 /**
- * Initializes popup code on load.	
+ * Initializes popup code on load.
  */
 function initPopUp() {
     // Add the HTML to the body
-    theBody = document.getElementsByTagName('BODY')[0];
-    popmask = document.createElement('div');
+    var theBody = document.getElementsByTagName('BODY')[0];
+    var popmask = document.createElement('div');
     popmask.id = 'popupMask';
-    popcont = document.createElement('div');
+    var popcont = document.createElement('div');
     popcont.id = 'popupContainer';
     popcont.innerHTML = '' +
         '<div id="popupInner">' +
             '<div id="popupTitleBar">' +
                 '<div id="popupTitle"></div>' +
                 '<div id="popupControls">' +
-	            '<img src="close.gif" onclick="hidePopWin(false);" id="popCloseBox" />' +
+                '<img src="close.gif" onclick="hidePopWin(false);" id="popCloseBox" />' +
                 '</div>' +
             '</div>' +
-            '<iframe src="'+ gDefaultPage +
-            '" style="width:100%;height:100%;background-color:transparent;" scrolling="auto"' + 
-            ' frameborder="0" allowtransparency="true" id="popupFrame" name="popupFrame" ' + 
+            '<iframe src="' + gDefaultPage +
+            '" style="width:100%;height:100%;background-color:transparent;" scrolling="auto"' +
+            ' frameborder="0" allowtransparency="true" id="popupFrame" name="popupFrame" ' +
             ' width="100%" height="100%"></iframe>' +
-		'</div>';
+        '</div>';
     theBody.appendChild(popmask);
     theBody.appendChild(popcont);
 
     gPopupMask = document.getElementById("popupMask");
     gPopupContainer = document.getElementById("popupContainer");
-    gPopFrame = document.getElementById("popupFrame");	
+    gPopFrame = document.getElementById("popupFrame");
 
     // check to see if this is IE version 6 or lower. hide select boxes if so
     // maybe they'll fix this in version 7?
@@ -55,19 +55,20 @@ function initPopUp() {
 
     // Add onclick handlers to 'a' elements of class submodal or submodal-width-height
     var elms = document.getElementsByTagName('a');
-    for (i = 0; i < elms.length; i++) {
-        if (elms[i].className.indexOf("submodal") == 0) { 
-            elms[i].onclick = function(){
+    for (var i = 0; i < elms.length; i++) {
+        if (elms[i].className.indexOf("submodal") == 0) {
+            elms[i].onclick = function() {
                 // default width and height
                 var width = 400;
                 var height = 200;
                 // Parse out optional width and height from className
-                params = this.className.split('-');
+                var params = this.className.split('-');
                 if (params.length == 3) {
                     width = parseInt(params[1]);
                     height = parseInt(params[2]);
                 }
-                showPopWin(this.href,width,height,null); return false;
+                showPopWin(this.href,width,height,null);
+                return false;
             }
         }
     }
@@ -83,7 +84,7 @@ addEvent(window, "load", initPopUp);
  */
 function showPopWin(url, width, height, returnFunc, showCloseBox) {
     // show or hide the window close widget
-    if (showCloseBox == null || showCloseBox == true) {
+    if (showCloseBox === null || showCloseBox == true) {
         document.getElementById("popCloseBox").style.display = "block";
     } else {
         document.getElementById("popCloseBox").style.display = "none";
@@ -120,7 +121,7 @@ function showPopWin(url, width, height, returnFunc, showCloseBox) {
 var gi = 0;
 function centerPopWin(width, height) {
     if (gPopupIsShown == true) {
-        if (width == null || isNaN(width)) {
+        if (width === null || isNaN(width)) {
             width = gPopupContainer.offsetWidth;
         }
         if (height == null) {
@@ -128,11 +129,11 @@ function centerPopWin(width, height) {
         }
 	
         var theBody = document.getElementsByTagName("BODY")[0];
-        var scTop = parseInt(getScrollTop(),10);
-        var scLeft = parseInt(theBody.scrollLeft,10);
+        var scTop = parseInt(getScrollTop(), 10);
+        var scLeft = parseInt(theBody.scrollLeft, 10);
 
         setMaskSize();
-	
+
         var titleBarHeight = parseInt(document.getElementById("popupTitleBar").offsetHeight, 10);
 	
         var fullHeight = getViewportHeight();
@@ -155,6 +156,7 @@ function setMaskSize() {
 		
     var fullHeight = getViewportHeight();
     var fullWidth = getViewportWidth();
+    var popHeight;
 
     // Determine what's bigger, scrollHeight or fullHeight / width
     if (fullHeight > theBody.scrollHeight) {
@@ -252,7 +254,7 @@ function restoreTabIndexes() {
 function hideSelectBoxes() {
     var x = document.getElementsByTagName("SELECT");
 
-    for (i=0;x && i < x.length; i++) {
+    for (var i=0;x && i < x.length; i++) {
         x[i].style.visibility = "hidden";
     }
 }
@@ -267,7 +269,7 @@ function hideSelectBoxes() {
 function displaySelectBoxes() {
     var x = document.getElementsByTagName("SELECT");
 
-    for (i=0;x && i < x.length; i++){
+    for (var i=0;x && i < x.length; i++){
         x[i].style.visibility = "visible";
     }
 }
