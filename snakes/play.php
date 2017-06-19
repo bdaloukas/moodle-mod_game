@@ -74,7 +74,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
     $board = game_snakes_get_board( $game);
     $showboard = false;
 
-    if ($snakes->position > $board->cols * $board->rows && $snakes->queryid <> 0) {
+    if ($snakes->position > $board->usedcols * $board->usedrows && $snakes->queryid <> 0) {
         $finish = true;
 
         if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
@@ -180,11 +180,11 @@ top:<?php p( -2 * round($board->height / 3));?>px; ">
  * @param stdClass $board
  */
 function game_snakes_computeplayerposition( $snakes, $board) {
-    $x = ($snakes->position - 1) % $board->cols;
-    $y = floor( ($snakes->position - 1) / $board->cols);
+    $x = ($snakes->position - 1) % $board->usedcols;
+    $y = floor( ($snakes->position - 1) / $board->usedcols);
 
-    $cellwidth = ($board->width - $board->headerx - $board->footerx) / $board->cols;
-    $cellheight = ($board->height - $board->headery - $board->footery) / $board->rows;
+    $cellwidth = ($board->width - $board->headerx - $board->footerx) / $board->usedcols;
+    $cellheight = ($board->height - $board->headery - $board->footery) / $board->usedrows;
 
     $pos = new stdClass();
     $pos->width = 22;
@@ -196,7 +196,7 @@ function game_snakes_computeplayerposition( $snakes, $board) {
     switch( $board->direction) {
         case 1:
             if (($y % 2) == 1) {
-                $x = $board->cols - $x - 1;
+                $x = $board->usedcols - $x - 1;
             }
             $pos->x = $board->headerx + $x * $cellwidth + ($cellwidth - $pos->width) / 2 + $pos->ofsx;
             $pos->y = $board->footery + $y * $cellheight + ($cellheight - $pos->height) / 2 + $pos->ofsy;
@@ -488,8 +488,8 @@ function game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query, 
     }
 
     $board = $DB->get_record_select( 'game_snakes_database', "id=$snakes->snakesdatabaseid");
-    $gradeattempt = $snakes->position / ($board->cols * $board->rows);
-    $finished = ( $snakes->position > $board->cols * $board->rows ? 1 : 0);
+    $gradeattempt = $snakes->position / ($board->usedcols * $board->usedrows);
+    $finished = ( $snakes->position > $board->usedcols * $board->usedrows ? 1 : 0);
 
     game_updateattempts( $game, $attempt, $gradeattempt, $finished);
 

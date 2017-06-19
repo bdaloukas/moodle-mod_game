@@ -508,8 +508,8 @@ class mod_game_mod_form extends moodleform_mod {
                 if ($board != 0) {
                     $rec = $DB->get_record( 'game_snakes_database', array( 'id' => $board));
                     $defaultvalues->snakes_data = $rec->data;
-                    $defaultvalues->snakes_cols = $rec->cols;
-                    $defaultvalues->snakes_rows = $rec->rows;
+                    $defaultvalues->snakes_cols = $rec->usedcols;
+                    $defaultvalues->snakes_rows = $rec->usedrows;
                     $defaultvalues->snakes_headerx = $rec->headerx;
                     $defaultvalues->snakes_headery = $rec->headery;
                     $defaultvalues->snakes_footerx = $rec->footerx;

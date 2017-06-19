@@ -287,8 +287,8 @@
       <FIELDS>
         <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
         <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="cols" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="rows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usedcols" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="usedrows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="data" TYPE="text" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="fileboard" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="direction" TYPE="int" LENGTH="2" NOTNULL="false" SEQUENCE="false"/>

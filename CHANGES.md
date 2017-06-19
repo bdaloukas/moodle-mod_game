@@ -1,7 +1,9 @@
 Changes in version 2017-06-19 (20170619)
-- Fix Moodle 3.4 compatibility problems
-- Fix codeprechecks problems
-- Stable version
+- Change field name game_snakes_database.cols => usedcols
+- Change field name game_snakes_database.rows => usedrows
+
+Changes in version 2017-06-10 (20170610)
+- Fix phpdocs problems
 
 Changes in version 2017-06-09 (20170609)
 - Fix Moodle 3.4 compatibility problems
