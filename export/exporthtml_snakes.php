@@ -518,6 +518,9 @@ function move_pawn() {
 </html>
 
 <?php
+/**
+ * Javascript code
+ */
 function createsubmodaljs() {
 ?>
 <script type="text/javascript" src="js/common.js">
@@ -553,11 +556,11 @@ function initPopUp() {
         '<div id="popupInner">' +
         '<div id="popupTitleBar">' +
         '<div id="popupTitle"></div>' +
-		'<div id="popupControls">' +
-		'<img src="close.gif" onclick="hidePopWin(false);" id="popCloseBox" />' +
-		'</div>' +
-		'</div>' +
-		'<iframe src="'+ gDefaultPage +'" style="width:100%;height:100%;background-color:transparent;" ' +
+        '<div id="popupControls">' +
+        '<img src="close.gif" onclick="hidePopWin(false);" id="popCloseBox" />' +
+        '</div>' +
+        '</div>' +
+        '<iframe src="'+ gDefaultPage +'" style="width:100%;height:100%;background-color:transparent;" ' +
         ' scrolling="auto" frameborder="0" allowtransparency="true" id="popupFrame" name="popupFrame" ' + 
         ' width="100%" height="100%"></iframe>' +
         '</div>';
@@ -566,7 +569,7 @@ function initPopUp() {
 
     gPopupMask = document.getElementById("popupMask");
     gPopupContainer = document.getElementById("popupContainer");
-    gPopFrame = document.getElementById("popupFrame");	
+    gPopFrame = document.getElementById("popupFrame");
 
     // check to see if this is IE version 6 or lower. hide select boxes if so
     // maybe they'll fix this in version 7?
@@ -648,18 +651,18 @@ function centerPopWin(width, height) {
         if (height == null) {
             height = gPopupContainer.offsetHeight;
         }
-	
+
         var theBody = document.getElementsByTagName("BODY")[0];
         var scTop = parseInt(getScrollTop(),10);
         var scLeft = parseInt(theBody.scrollLeft,10);
 
         setMaskSize();
-	
+
         var titleBarHeight = parseInt(document.getElementById("popupTitleBar").offsetHeight, 10);
-	
+
         var fullHeight = getViewportHeight();
         var fullWidth = getViewportWidth();
-	
+
         gPopupContainer.style.top = (scTop + ((fullHeight - (height+titleBarHeight)) / 2)) + "px";
         gPopupContainer.style.left =  (scLeft + ((fullWidth - width) / 2)) + "px";
     }
@@ -674,7 +677,7 @@ window.onscroll = centerPopWin;
  */
 function setMaskSize() {
     var theBody = document.getElementsByTagName("BODY")[0];
-		
+	
     var fullHeight = getViewportHeight();
     var fullWidth = getViewportWidth();
 
