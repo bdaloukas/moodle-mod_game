@@ -67,7 +67,6 @@ body
 // Snakes for Moodle by Maria Rigkou.
 
 var boards = 1;
-var board_images = new Array( boards);
 var board_names = new Array( boards);
 var pawn_width = new Array(boards);
 var pawn_height = new Array(boards);
@@ -96,7 +95,6 @@ var quest_feedb = "";   // feedback
 var quest_total = 25; // Count of questions
 
 board_names[ 0] = "<?php echo $game->name; ?>";
-board_images[ 0] = '<?php echo $board->fileboard; ?>';
 board_cols [0] = <?php echo $board->cols; ?>;
 board_rows [0] = <?php echo $board->rows; ?>;
 board_contents [0] = '<?php echo $board->data; ?>';
@@ -163,8 +161,6 @@ function ShowMainForm()
     var col_width = (board_width[current_board]-board_headerx[current_board]-board_footerx[current_board])/cols;
     var col_height = (board_height[current_board]-board_headery[current_board]-board_footery[current_board])/rows;
 
-    document.write('<img id="boardimage" src="images/meter.png">');
-    document.getElementById("boardimage").src = "images/" + board_images[ current_board];
     document.write('<div id="dicecont">&nbsp;</div>');
 
     if( current_position  >= 0) {
@@ -182,11 +178,6 @@ function ShowMainForm()
         document.write('<div id="pawn1"><img id="pawn" alt="" src="images/player1.png"></div>');
         move_pawn();
     }
-}
-
-function selectBoard() {
-    current_board = document.getElementById("boardtype").value;
-    document.getElementById("boardimage").src = "images/" + board_images[ current_board];
 }
 
 function select_quest() {

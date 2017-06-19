@@ -13,7 +13,6 @@
 }
 
 #dicecont {
-    float: right;
     width: 250px;
     background-image: url(../images/meter.png);
     background-repeat: repeat;
