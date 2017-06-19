@@ -543,7 +543,7 @@ if (!document.all) {
 }
 
 /**
- * Initializes popup code on load.	
+ * Initializes popup code on load.
  */
 function initPopUp() {
     // Add the HTML to the body
@@ -677,7 +677,7 @@ window.onscroll = centerPopWin;
  */
 function setMaskSize() {
     var theBody = document.getElementsByTagName("BODY")[0];
-	
+
     var fullHeight = getViewportHeight();
     var fullWidth = getViewportWidth();
 
