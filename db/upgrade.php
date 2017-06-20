@@ -47,7 +47,7 @@ defined('MOODLE_INTERNAL') || die();
  *
  * @param string $table the name of table
  * @param string $from the name of source field
- * @param string $to the name of destination field 
+ * @param string $to the name of destination field
  */
 function mpgame_db_copy_string_to_int( $table, $from, $to) {
     global $CFG, $DB;
