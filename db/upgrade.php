@@ -59,6 +59,9 @@ function mpgame_db_copy_string_to_int( $table, $from, $to) {
         if ($rec->$to == $val) {
             continue;
         }
+        if ($val == 0) {
+            continue;
+        }
         $updrec = new stdClass;
         $updrec->id = $rec->id;
         $updrec->$to = $val;
