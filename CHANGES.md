@@ -1,3 +1,6 @@
+Changes in version 2017-06-27 (20170627)
+- Fix conversation of columns (cols,rows) from string to int
+
 Changes in version 2017-06-20 (20170620)
 - Fix conversation of columns (cols,rows) from string to int
 

@@ -52,7 +52,7 @@ defined('MOODLE_INTERNAL') || die();
 function mpgame_db_copy_string_to_int( $table, $from, $to) {
     global $CFG, $DB;
 
-    $sql = "SELECT id,$from,$to FROM {$CFG->prefix}$table";
+    $sql = "SELECT * FROM {$CFG->prefix}$table";
     $recs = $DB->get_records_sql( $sql);
     foreach ($recs as $rec) {
         $val = intval( $rec->$from);
@@ -1581,7 +1581,7 @@ function xmldb_game_upgrade($oldversion) {
         $dbman->change_field_type($table, $field);
     }
 
-    if ($oldversion < ($ver = 2017062002)) {
+    if ($oldversion < ($ver = 2017062701)) {
         $table = new xmldb_table('game_cross');
         $field = new xmldb_field('usedrows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
         if (!$dbman->field_exists($table, $field)) {
@@ -1597,7 +1597,7 @@ function xmldb_game_upgrade($oldversion) {
         }
     }
 
-    if ($oldversion < ($ver = 2017062002)) {
+    if ($oldversion < ($ver = 2017062701)) {
         $table = new xmldb_table('game_cross');
         $field = new xmldb_field('usedcols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
         if (!$dbman->field_exists($table, $field)) {
@@ -1613,7 +1613,7 @@ function xmldb_game_upgrade($oldversion) {
         }
     }
 
-    if ($oldversion < ($ver = 2017062002)) {
+    if ($oldversion < ($ver = 2017062701)) {
         $table = new xmldb_table('game_snakes_database');
         $field = new xmldb_field('usedrows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
         if (!$dbman->field_exists($table, $field)) {
@@ -1629,7 +1629,7 @@ function xmldb_game_upgrade($oldversion) {
         }
     }
 
-    if ($oldversion < ($ver = 2017062002)) {
+    if ($oldversion < ($ver = 2017062701)) {
         $table = new xmldb_table('game_snakes_database');
         $field = new xmldb_field('usedcols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
         if (!$dbman->field_exists($table, $field)) {
