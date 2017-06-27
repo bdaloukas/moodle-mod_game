@@ -277,7 +277,7 @@ width:	240pt;
 
     echo '<table border=0>';
     echo '<tr><td>';
-    $cryptex->displaycryptex( $crossm->cols, $crossm->rows, $cryptexrec->letters, $mask, $showsolution, $textdir);
+    $cryptex->displaycryptex( $crossm->usedcols, $crossm->usedrows, $cryptexrec->letters, $mask, $showsolution, $textdir);
 ?>
 </td>
 

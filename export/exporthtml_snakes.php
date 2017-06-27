@@ -100,8 +100,8 @@ var quest_total = 25; // Count of questions
 
 board_images[ 0] = '<?php echo $board->fileboard; ?>';
 board_names[ 0] = "<?php echo $game->name; ?>";
-board_cols [0] = <?php echo $board->cols; ?>;
-board_rows [0] = <?php echo $board->rows; ?>;
+board_cols [0] = <?php echo $board->usedcols; ?>;
+board_rows [0] = <?php echo $board->usedrows; ?>;
 board_contents [0] = '<?php echo $board->data; ?>';
 board_headerx [0] = <?php echo $board->headerx; ?>;
 board_headery [0] = <?php echo $board->headery; ?>;

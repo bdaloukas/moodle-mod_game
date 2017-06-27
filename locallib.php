@@ -2078,7 +2078,7 @@ function game_snakes_create_user_defined_board( &$game) {
         if ($f === false) {
             print_error( 'No image specified');
         }
-        $im = game_createsnakesboard($f->get_content(), $board->cols, $board->rows, $board->headery, $board->headery,
+        $im = game_createsnakesboard($f->get_content(), $board->usedcols, $board->usedrows, $board->headery, $board->headery,
             $board->footerx, $board->headerx, $board->data, $board->width, $board->height);
         ob_start();
         imagepng($im);

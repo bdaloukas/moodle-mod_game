@@ -39,8 +39,8 @@ function game_importsnakes() {
 
     $newrec = new stdClass();
     $newrec->name = '8x8 - 4 Snakes - 4 Ladders';
-    $newrec->cols = 8;
-    $newrec->rows = 8;
+    $newrec->usedcols = 8;
+    $newrec->usedrows = 8;
     $newrec->fileboard = 'fidaki.jpg';
     $newrec->direction = 1;
     $newrec->headerx = 4;
@@ -54,8 +54,8 @@ function game_importsnakes() {
 
     $newrec = new stdClass();
     $newrec->name = '6x6 - 3 Snakes - 3 Ladders';
-    $newrec->cols = 6;
-    $newrec->rows = 6;
+    $newrec->usedcols = 6;
+    $newrec->usedrows = 6;
     $newrec->fileboard = 'fidaki2.jpg';
     $newrec->direction = 1;
     $newrec->headerx = 8;
