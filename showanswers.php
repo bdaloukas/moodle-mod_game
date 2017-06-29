@@ -222,7 +222,12 @@ function game_showanswers_question( $game, $context) {
 
     $showcategories = ($game->gamekind == 'bookquiz');
     $order = ($showcategories ? 'category,questiontext' : 'questiontext');
-    game_showanswers_question_select( $game, '{question} q', $select, '*', $order, $showcategories, $game->course, $context);
+    $table = '{question} q';
+    if ($game->gamekind == 'millionaire') {
+        $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
+        $table = '{question} q, {qtype_multichoice_options} qmo';
+    }
+    game_showanswers_question_select( $game, $table, $select, '*', $order, $showcategories, $game->course, $context);
 }
 
 /**
@@ -330,7 +335,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
         echo '<td>';
         echo "<a title=\"Edit\" ".
             "href=\"{$CFG->wwwroot}/question/question.php?inpopup=1&amp;id=$question->id&courseid=$courseid\" target=\"_blank\">";
-        echo "<img src=\"".$OUTPUT->pix_url('t/edit')."\" alt=\"Edit\" /></a> ";
+        echo "<img src=\"".game_pix_url('t/edit')."\" alt=\"Edit\" /></a> ";
 
         echo game_filterquestion(str_replace( array( "\'", '\"'), array( "'", '"'),
             $question->questiontext), $question->id, $context->id, $game->course);
