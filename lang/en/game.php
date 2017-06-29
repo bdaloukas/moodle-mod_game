@@ -341,6 +341,7 @@ $string[ 'clearrepetitions'] = 'Clear statistics';
 $string[ 'computerepetitions'] = 'Compute statistics again';
 $string[ 'feedbacks'] = 'Messages correct answer';
 $string[ 'repetitions'] = 'Repetitions';
+$string[ 'millionaire_also_multichoice'] = 'Multichoice answers without single correct answer';
 
 // File showattempts.php.
 $string[ 'lastip'] = 'IP student';
