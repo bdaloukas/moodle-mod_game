@@ -117,14 +117,18 @@ class mod_game_mod_form extends moodleform_mod {
                 }
                 $select = 'g.id IN ('.substr( $select, 1).')';
             }
-            $select .= ' AND g.id=gc.glossaryid';
-            $table = "{glossary} g, {glossary_categories} gc";
             $a = array();
             $a[ ] = '';
-            $sql = "SELECT gc.id,gc.name,g.name as name2 FROM $table WHERE $select ORDER BY g.name,gc.name";
+            $sql2 = "SELECT COUNT(*) ".
+            " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
+            " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
+            $sql = "SELECT gc.id,gc.name,g.name as name2, ($sql2) as c ".
+            " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g".
+            " WHERE $select AND gc.glossaryid=g.id".
+            " ORDER BY g.name, gc.name";
             if ($recs = $DB->get_records_sql( $sql)) {
                 foreach ($recs as $rec) {
-                    $a[$rec->id] = $rec->name2.' -> '.$rec->name;
+                    $a[$rec->id] = $rec->name2.' -> '.$rec->name.' ('.$rec->c.')';
                 }
             }
             $mform->addElement('select', 'glossarycategoryid', get_string('sourcemodule_glossarycategory', 'game'), $a);
