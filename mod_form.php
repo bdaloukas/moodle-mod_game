@@ -442,12 +442,27 @@ class mod_game_mod_form extends moodleform_mod {
      * @return moodle_url
      */
     public function validation($data, $files) {
+        global $CFG, $DB;
+
         $errors = parent::validation($data, $files);
 
         // Check open and close times are consistent.
         if ($data['timeopen'] != 0 && $data['timeclose'] != 0 &&
                 $data['timeclose'] < $data['timeopen']) {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
+        }
+
+        if( $data['glossarycategoryid'] != 0) {
+            $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
+            " WHERE id=".$data[ 'glossarycategoryid'];
+            $rec = $DB->get_record_sql( $sql);
+            if( $rec != false) {
+                if( $data[ 'glossaryid'] != $rec->glossaryid) {
+                    $s = get_string( 'different_glossary_category', 'game');
+                    $errors['glossaryid'] = $s;
+                    $errors['glossarycategoryid'] = $s;
+                }
+            }
         }
 
         return $errors;

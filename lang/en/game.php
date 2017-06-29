@@ -300,6 +300,7 @@ $string[ 'sudoku_maxquestions'] = 'Maximum number of questions';
 $string[ 'sudoku_options'] = 'Sudoku options';
 $string[ 'toptext'] = 'Text at the top of page';
 $string[ 'userdefined'] = 'User defined';
+$string[ 'different_glossary_category'] = "The selected category doesn't corespond to selected glossary";
 
 // File preview.php.
 $string[ 'only_teachers'] = 'Only teacher can see this page';
