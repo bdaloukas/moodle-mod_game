@@ -118,7 +118,13 @@ class mod_game_mod_form extends moodleform_mod {
                 $select = 'g.id IN ('.substr( $select, 1).')';
             }
             $a = array();
-            $a[ ] = '';
+            $sql = "SELECT g.id, g.name, COUNT(*) as c ".
+            "FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary g ".
+            "WHERE $select AND ge.glossaryid=g.id";
+            $recs = $DB->get_records_sql( $sql);
+            foreach( $recs as $rec) {
+                $a[ -$rec->id] = $rec->name.' -> ('.$rec->c.')';
+            }
             $sql2 = "SELECT COUNT(*) ".
             " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
             " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
