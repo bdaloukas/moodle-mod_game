@@ -1,3 +1,7 @@
+Changes in version 2017-06-30 (2017063002)
+- in mod_form.php shows the correct numbers of correspondings questions/glossaryentries
+- in showanswrs.php shows the correspondings questions/glossaryentries
+
 Changes in version 2017-06-27 (20170627)
 - Fix conversation of columns (cols,rows) from string to int
 

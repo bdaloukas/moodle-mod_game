@@ -420,14 +420,14 @@ class mod_game_mod_form extends moodleform_mod {
 
         $a = array();
 
-        //Fills with the count of entries in each glossary.
+        // Fills with the count of entries in each glossary.
         $sql2 = "SELECT COUNT(*) FROM {$CFG->prefix}glossary_entries ge WHERE ge.glossaryid=g.id";
         $sql = "SELECT id, name, ($sql2) as c FROM {$CFG->prefix}glossary g WHERE $select";
         $recs = $DB->get_records_sql( $sql);
-        foreach( $recs as $rec) {
+        foreach ( $recs as $rec) {
             $a[ - $rec->id] = $rec->name.' -> ('.$rec->c.')';
         }
-        //Fills with the count of entries in each category.
+        // Fills with the count of entries in each category.
         $sql2 = "SELECT COUNT(*) ".
         " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
         " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
@@ -448,6 +448,7 @@ class mod_game_mod_form extends moodleform_mod {
      * Computes the categories of all question of the current course;
      *
      * @param int $courseid
+     * @param string $gamekind
      *
      * @return array of question categories
      */
@@ -459,7 +460,7 @@ class mod_game_mod_form extends moodleform_mod {
         $a = array();
         $table = "{$CFG->prefix}question q";
         $select = '';
-        if( $gamekind == 'millionaire') {
+        if ($gamekind == 'millionaire') {
             if (game_get_moodle_version() < '02.06') {
                 $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
                 $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.question=q.id";
@@ -468,7 +469,7 @@ class mod_game_mod_form extends moodleform_mod {
                 $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.questionid=q.id";
             }
         } else if (($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
-            //Single answer questions.
+            // Single answer questions.
             $select = " AND q.qtype='shortanswer'";
         }
         $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
@@ -501,13 +502,13 @@ class mod_game_mod_form extends moodleform_mod {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
 
-        if( array_key_exists( 'glossarycategoryid', $data)) {
-            if( $data['glossarycategoryid'] != 0) {
+        if (array_key_exists( 'glossarycategoryid', $data)) {
+            if ($data['glossarycategoryid'] != 0) {
                 $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
                 " WHERE id=".$data[ 'glossarycategoryid'];
                 $rec = $DB->get_record_sql( $sql);
-                if( $rec != false) {
-                    if( $data[ 'glossaryid'] != $rec->glossaryid) {
+                if ($rec != false) {
+                    if ($data[ 'glossaryid'] != $rec->glossaryid) {
                         $s = get_string( 'different_glossary_category', 'game');
                         $errors['glossaryid'] = $s;
                         $errors['glossarycategoryid'] = $s;

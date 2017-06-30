@@ -53,7 +53,7 @@ echo '<br><br>';
 $existsbook = ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id'));
 game_showanswers( $game, $existsbook, $context);
 if ($game->gamekind == 'millionaire') {
-   game_showanswers_extra_millionaire( $game);
+    game_showanswers_extra_millionaire( $game);
 }
 
 echo $OUTPUT->footer();
@@ -518,8 +518,12 @@ function game_showanswers_bookquiz( $game, $context) {
         "bc.pagenum,questiontext", $showcategories, $game->course, $context);
 }
 
-function game_showanswers_extra_millionaire( $game)
-{
+/**
+ * Show extra info for answers in millionaire
+ *
+ * @param stdClass $game
+ */
+function game_showanswers_extra_millionaire( $game) {
     global $CFG, $DB;
 
     if ($game->questioncategoryid == 0) {
@@ -533,19 +537,19 @@ function game_showanswers_extra_millionaire( $game)
         if (count( $cats)) {
             $select = 'q.category in ('.implode(',', $cats).')';
         }
-     }
+    }
 
-     if (game_get_moodle_version() < '02.06') {
+    if (game_get_moodle_version() < '02.06') {
         $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
         $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.question=q.id";
-     } else {
+    } else {
          $table = "{$CFG->prefix}question q, {$CFG->prefix}qtype_multichoice_options qmo";
         $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.questionid=q.id";
-     }
+    }
 
-     $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";
-     $rec = $DB->get_record_sql( $sql);
-     if ($rec->c != 0) {
-          echo get_string( 'millionaire_also_multichoice', 'game').': '.$rec->c;
-     }
+    $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";
+    $rec = $DB->get_record_sql( $sql);
+    if ($rec->c != 0) {
+        echo get_string( 'millionaire_also_multichoice', 'game').': '.$rec->c;
+    }
 }
