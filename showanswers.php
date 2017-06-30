@@ -223,16 +223,20 @@ function game_showanswers_question( $game, $context) {
     $select .= ' AND hidden = 0 ';
     $select .= game_showanswers_appendselect( $game);
 
-    $showcategories = ($game->gamekind == 'bookquiz');
+    $gamekind = $game->gamekind;
+    $showcategories = ($gamekind == 'bookquiz');
     $order = ($showcategories ? 'category,questiontext' : 'questiontext');
     $table = '{question} q';
-    if ($game->gamekind == 'millionaire') {
-        $select .= " AND q.qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
+    if ($gamekind == 'millionaire') {
         if (game_get_moodle_version() < '02.06') {
             $table .= ',{question_multichoice} qmo';
+            $select .= " AND q.qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
         } else {
             $table .= ',{qtype_multichoice_options} qmo';
+            $select .= " AND q.qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
         }
+    } else if ( ($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
+        $select .= " AND q.qtype = 'shortanswer'";
     }
     game_showanswers_question_select( $game, $table, $select, '*', $order, $showcategories, $game->course, $context);
 }
@@ -531,11 +535,12 @@ function game_showanswers_extra_millionaire( $game)
         }
      }
 
-     $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.question=q.id";
      if (game_get_moodle_version() < '02.06') {
         $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
+        $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.question=q.id";
      } else {
          $table = "{$CFG->prefix}question q, {$CFG->prefix}qtype_multichoice_options qmo";
+        $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.questionid=q.id";
      }
 
      $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";

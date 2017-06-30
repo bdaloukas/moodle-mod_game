@@ -106,37 +106,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->addElement('select', 'glossaryid', get_string('sourcemodule_glossary', 'game'), $a);
             $mform->disabledIf('glossaryid', 'sourcemodule', 'neq', 'glossary');
 
-            if (count( $a) == 0) {
-                $select = 'glossaryid=-1';
-            } else if (count( $a) == 1) {
-                $select = 'glossaryid='.$rec->id;
-            } else {
-                $select = '';
-                foreach ($recs as $rec) {
-                    $select .= ','.$rec->id;
-                }
-                $select = 'g.id IN ('.substr( $select, 1).')';
-            }
-            $a = array();
-            $sql = "SELECT g.id, g.name, COUNT(*) as c ".
-            "FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary g ".
-            "WHERE $select AND ge.glossaryid=g.id";
-            $recs = $DB->get_records_sql( $sql);
-            foreach( $recs as $rec) {
-                $a[ -$rec->id] = $rec->name.' -> ('.$rec->c.')';
-            }
-            $sql2 = "SELECT COUNT(*) ".
-            " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
-            " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
-            $sql = "SELECT gc.id,gc.name,g.name as name2, ($sql2) as c ".
-            " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g".
-            " WHERE $select AND gc.glossaryid=g.id".
-            " ORDER BY g.name, gc.name";
-            if ($recs = $DB->get_records_sql( $sql)) {
-                foreach ($recs as $rec) {
-                    $a[$rec->id] = $rec->name2.' -> '.$rec->name.' ('.$rec->c.')';
-                }
-            }
+            $a = $this->get_array_glossary_categories( $a);
             $mform->addElement('select', 'glossarycategoryid', get_string('sourcemodule_glossarycategory', 'game'), $a);
             $mform->disabledIf('glossarycategoryid', 'sourcemodule', 'neq', 'glossary');
 
@@ -147,20 +117,7 @@ class mod_game_mod_form extends moodleform_mod {
 
         // Question Category - Short Answer.
         if ($gamekind != 'bookquiz') {
-            $context = game_get_context_course_instance( $COURSE->id);
-            $select = " contextid in ($context->id)";
-
-            $a = array();
-            if ($recs = $DB->get_records_select('question_categories', $select, null, 'id,name')) {
-                foreach ($recs as $rec) {
-                    $s = $rec->name;
-                    if (($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0) {
-                        $s .= " ($count)";
-                    }
-                    $a[$rec->id] = $s;
-                }
-            }
-
+            $a = $this->get_array_question_categories( $COURSE->id, $gamekind );
             $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
             $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
 
@@ -440,6 +397,92 @@ class mod_game_mod_form extends moodleform_mod {
     }
 
     /**
+     * Computes the categories of all glossaries of the current course;
+     *
+     * @param array $a array of id of glossaries to each name
+     *
+     * @return array of glossary categories
+     */
+    public function get_array_glossary_categories( $a) {
+        global $CFG, $DB;
+
+        if (count( $a) == 0) {
+            $select = 'glossaryid=-1';
+        } else if (count($a) == 1) {
+            $select = 'glossaryid='.reset( $a);
+        } else {
+            $select = '';
+            foreach ($a as $id => $name) {
+                $select .= ','.$id;
+            }
+            $select = 'g.id IN ('.substr( $select, 1).')';
+        }
+
+        $a = array();
+
+        //Fills with the count of entries in each glossary.
+        $sql2 = "SELECT COUNT(*) FROM {$CFG->prefix}glossary_entries ge WHERE ge.glossaryid=g.id";
+        $sql = "SELECT id, name, ($sql2) as c FROM {$CFG->prefix}glossary g WHERE $select";
+        $recs = $DB->get_records_sql( $sql);
+        foreach( $recs as $rec) {
+            $a[ - $rec->id] = $rec->name.' -> ('.$rec->c.')';
+        }
+        //Fills with the count of entries in each category.
+        $sql2 = "SELECT COUNT(*) ".
+        " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
+        " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
+        $sql = "SELECT gc.id,gc.name,g.name as name2, ($sql2) as c ".
+        " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g".
+        " WHERE $select AND gc.glossaryid=g.id".
+        " ORDER BY g.name, gc.name";
+        if ($recs = $DB->get_records_sql( $sql)) {
+            foreach ($recs as $rec) {
+                $a[$rec->id] = $rec->name2.' -> '.$rec->name.' ('.$rec->c.')';
+            }
+        }
+
+        return $a;
+    }
+
+    /**
+     * Computes the categories of all question of the current course;
+     *
+     * @param int $courseid
+     *
+     * @return array of question categories
+     */
+    public function get_array_question_categories( $courseid, $gamekind) {
+        global $CFG, $DB;
+
+        $context = game_get_context_course_instance( $courseid);
+
+        $a = array();
+        $table = "{$CFG->prefix}question q";
+        $select = '';
+        if( $gamekind == 'millionaire') {
+            if (game_get_moodle_version() < '02.06') {
+                $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
+                $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.question=q.id";
+            } else {
+                $table = "{$CFG->prefix}question q, {$CFG->prefix}qtype_multichoice_options qmo";
+                $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.questionid=q.id";
+            }
+        } else if (($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
+            //Single answer questions.
+            $select = " AND q.qtype='shortanswer'";
+        }
+        $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
+        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
+        if ($recs = $DB->get_records_sql( $sql)) {
+            foreach ($recs as $rec) {
+                $a[$rec->id] = $rec->name.' ('.$rec->c.')';
+            }
+        }
+
+        return $a;
+    }
+
+    /**
      * validation
      *
      * @param stdClass $data
@@ -458,15 +501,17 @@ class mod_game_mod_form extends moodleform_mod {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
 
-        if( $data['glossarycategoryid'] != 0) {
-            $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
-            " WHERE id=".$data[ 'glossarycategoryid'];
-            $rec = $DB->get_record_sql( $sql);
-            if( $rec != false) {
-                if( $data[ 'glossaryid'] != $rec->glossaryid) {
-                    $s = get_string( 'different_glossary_category', 'game');
-                    $errors['glossaryid'] = $s;
-                    $errors['glossarycategoryid'] = $s;
+        if( array_key_exists( 'glossarycategoryid', $data)) {
+            if( $data['glossarycategoryid'] != 0) {
+                $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
+                " WHERE id=".$data[ 'glossarycategoryid'];
+                $rec = $DB->get_record_sql( $sql);
+                if( $rec != false) {
+                    if( $data[ 'glossaryid'] != $rec->glossaryid) {
+                        $s = get_string( 'different_glossary_category', 'game');
+                        $errors['glossaryid'] = $s;
+                        $errors['glossarycategoryid'] = $s;
+                    }
                 }
             }
         }
