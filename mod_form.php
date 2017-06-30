@@ -424,7 +424,7 @@ class mod_game_mod_form extends moodleform_mod {
         $sql2 = "SELECT COUNT(*) FROM {$CFG->prefix}glossary_entries ge WHERE ge.glossaryid=g.id";
         $sql = "SELECT id, name, ($sql2) as c FROM {$CFG->prefix}glossary g WHERE $select";
         $recs = $DB->get_records_sql( $sql);
-        foreach ( $recs as $rec) {
+        foreach ($recs as $rec) {
             $a[ - $rec->id] = $rec->name.' -> ('.$rec->c.')';
         }
         // Fills with the count of entries in each category.
