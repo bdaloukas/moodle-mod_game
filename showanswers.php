@@ -52,9 +52,9 @@ echo '<br><br>';
 
 $existsbook = ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id'));
 game_showanswers( $game, $existsbook, $context);
-if ($game->gamekind == 'millionaire') {
-    game_showanswers_extra_millionaire( $game);
-}
+$s = game_check_common_problems( $context, $game);
+if ($s != '')
+    echo '<hr>'.$s;
 
 echo $OUTPUT->footer();
 

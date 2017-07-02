@@ -230,6 +230,7 @@ $string[ 'convertfrom'] = '-';
 $string[ 'convertto'] = '-';
 $string[ 'gradeaverage'] = 'Average grade';
 $string[ 'gradehighest'] = 'Highest grade';
+$string[ 'common_problems'] = 'Common problems';
 
 // File mod_form.php.
 $string[ 'bookquiz_layout'] = 'Layout';
