@@ -24,6 +24,7 @@
 
 require_once("../../config.php");
 require_once( "headergame.php");
+require_once( "check.php");
 
 require_login();
 
@@ -53,8 +54,9 @@ echo '<br><br>';
 $existsbook = ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id'));
 game_showanswers( $game, $existsbook, $context);
 $s = game_check_common_problems( $context, $game);
-if ($s != '')
+if ($s != '') {
     echo '<hr>'.$s;
+}
 
 echo $OUTPUT->footer();
 

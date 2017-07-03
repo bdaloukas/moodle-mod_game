@@ -326,4 +326,12 @@ if ($buttontext) {
 }
 echo $OUTPUT->box_end();
 
+if (has_capability('mod/game:manage', $context)) {
+    require( 'check.php');
+    $s = game_check_common_problems( $context, $game);
+    if ($s != '') {
+        echo '<br>'.$s;
+    }
+}
+
 echo $OUTPUT->footer();

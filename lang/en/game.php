@@ -36,6 +36,12 @@ $string[ 'bookquiz_categories'] = 'Categories';
 $string[ 'bookquiz_chapters'] = 'Chapters';
 $string[ 'bookquiz_numquestions'] = 'Questions';
 
+// Check.php.
+$string[ 'common_problems'] = 'Common problems';
+$string[ 'millionaire_also_multichoice'] = 'Multichoice answers without single correct answer';
+$string[ 'common_problems_allowspaces'] = 'There are words with spaces but in the game, spaces are not allowed';
+$string[ 'common_problems_shortanswer_hangman'] = 'Not all characters are in the language of game';
+
 // Classes.
 $string[ 'eventgamecreated'] = 'Game created';
 $string[ 'eventgamedeleted'] = 'Game deleted';
@@ -230,7 +236,6 @@ $string[ 'convertfrom'] = '-';
 $string[ 'convertto'] = '-';
 $string[ 'gradeaverage'] = 'Average grade';
 $string[ 'gradehighest'] = 'Highest grade';
-$string[ 'common_problems'] = 'Common problems';
 
 // File mod_form.php.
 $string[ 'bookquiz_layout'] = 'Layout';
@@ -342,7 +347,6 @@ $string[ 'clearrepetitions'] = 'Clear statistics';
 $string[ 'computerepetitions'] = 'Compute statistics again';
 $string[ 'feedbacks'] = 'Messages correct answer';
 $string[ 'repetitions'] = 'Repetitions';
-$string[ 'millionaire_also_multichoice'] = 'Multichoice answers without single correct answer';
 
 // File showattempts.php.
 $string[ 'lastip'] = 'IP student';

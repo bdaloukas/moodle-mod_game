@@ -1,3 +1,6 @@
+Changes in version 2017-07-03 (2017073001)
+- New: Auto check for common problem (mod_form.php and view.php for teachers)
+
 Changes in version 2017-06-30 (2017063002)
 - in mod_form.php shows the correct numbers of correspondings questions/glossaryentries
 - in showanswrs.php shows the correspondings questions/glossaryentries

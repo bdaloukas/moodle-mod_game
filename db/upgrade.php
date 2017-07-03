@@ -1644,6 +1644,11 @@ function xmldb_game_upgrade($oldversion) {
         }
     }
 
+    if ($oldversion < ($ver = 2017070301)) {
+        $sql = "UPDATE {$CFG->prefix}game SET glossarycategoryid=0 WHERE glossarycategoryid < 0";
+        $DB->execute( $sql);
+    }
+
     return true;
 }
 
