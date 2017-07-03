@@ -42,5 +42,5 @@ $plugin->release   = '2017-07-02';
 $plugin->maturity = MATURITY_STABLE;
 
 if ($useplugin != 2) {
-    $module = $plugin
+    $module = $plugin;
 }
