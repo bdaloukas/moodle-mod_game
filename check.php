@@ -275,6 +275,6 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
     }
 
     if (count( $ret) != 0) {
-        $warnings[] = get_string( 'common_problems_shortanswer_hangman', 'game').': '.count($ret).' ('.implode( ', ', $ret);
+        $warnings[] = get_string( 'common_problems_shortanswer_hangman', 'game').': '.count($ret).' ('.implode( ', ', $ret).')';
     }
 }
