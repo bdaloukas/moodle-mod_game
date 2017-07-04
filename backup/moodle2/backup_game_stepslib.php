@@ -48,26 +48,26 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         // To know if we are including userinfo.
         $userinfo = $this->get_setting_value('userinfo');
 
-        // Define each element separated.
+        // Define each element separated (exclude fields: course).
         $game = new backup_nested_element('game', array('id'), array(
             'name', 'sourcemodule', 'timeopen', 'timeclose', 'quizid',
             'glossaryid', 'glossarycategoryid', 'questioncategoryid', 'bookid',
             'gamekind', 'param1', 'param2', 'param3',
-            'param4', 'param5', 'param6', 'param7', 'param8', 'param9',
+            'param4', 'param5', 'param6', 'param7', 'param8', 'param9', 'param10',
             'shuffle', 'timemodified', 'toptext', 'bottomtext',
             'grademethod', 'grade', 'decimalpoints', 'popup',
             'review', 'attempts', 'glossaryid2', 'glossarycategoryid2',
-            'language', 'subcategories', 'maxattempts'
+            'language', 'subcategories', 'maxattempts', 'userlanguage', 'disablesummarize', 'glossaryonlyapproved'
             ));
 
         $exporthtmls = new backup_nested_element('game_export_htmls');
         $exporthtml = new backup_nested_element('game_export_html', array('id'), array(
-            'filename', 'title', 'checkbutton', 'printbutton', 'inputsize', 'maxpicturewidth', 'maxpictureheight'));
+            'filename', 'title', 'checkbutton', 'printbutton', 'inputsize', 'maxpicturewidth', 'maxpictureheight', 'type'));
 
         $exportjavames = new backup_nested_element('game_export_javames');
         $exportjavame = new backup_nested_element('game_export_javame', array('id'), array(
             'filename', 'icon', 'createdby', 'vendor', 'name', 'description', 'version',
-            'maxpicturewidth', 'maxpictureheight'));
+            'maxpicturewidth', 'maxpictureheight', 'type'));
 
         $grades = new backup_nested_element('game_grades');
         $grade = new backup_nested_element('game_grade', array('id'), array(

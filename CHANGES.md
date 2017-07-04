@@ -1,4 +1,7 @@
-Changes in version 2017-07-03 (2017073001)
+Changes in version 2017-07-04 (2017070401)
+- Fix: Problems on backup/restore
+
+Changes in version 2017-07-03 (2017070301)
 - New: Auto check for common problem (mod_form.php and view.php for teachers)
 
 Changes in version 2017-06-30 (2017063002)
