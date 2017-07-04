@@ -1649,6 +1649,33 @@ function xmldb_game_upgrade($oldversion) {
         $DB->execute( $sql);
     }
 
+    if ($oldversion < ($ver = 2017070403)) {
+        $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database";
+        $recs = $DB->get_records_sql( $sql);
+        foreach ($recs as $rec) {
+            if (($rec->usedcols != 0) and ($rec->usedrows != 0)) {
+                continue;
+            }
+
+            $updrec = new stdClass;
+            $updrec->id = $rec->id;
+            if ( $rec->id == 1) {
+                $value = 8;
+            } else if ( $rec->id == 2) {
+                $value = 6;
+            } else {
+                continue;
+            }
+            if ($rec->usedcols == 0) {
+                $updrec->usedcols = $value;
+            }
+            if ($rec->usedrows == 0) {
+                $updrec->usedrows = $value;
+            }
+            $DB->update_record( 'game_snakes_database', $updrec);
+        }
+    }
+
     return true;
 }
 

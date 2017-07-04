@@ -85,6 +85,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         // Insert the game record.
         $newitemid = $DB->insert_record('game', $data);
 
+        $this->set_mapping('game', $oldid, $newitemid);
+
         // Immediately after inserting "activity" record, call this.
         $this->apply_activity_instance($newitemid);
     }
@@ -338,7 +340,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
+        $data->id = $this->get_mappingid('game', $data->id);
         $data->queryid = $this->get_mappingid('game_query', $data->queryid);
 
         $DB->insert_record('game_snakes', $data);

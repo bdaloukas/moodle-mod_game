@@ -187,7 +187,7 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
             $repetition->set_source_table('game_repetitions', array('gameid' => backup::VAR_ACTIVITYID));
 
             $attempt->set_source_table('game_attempts', array( 'gameid' => backup::VAR_ACTIVITYID));
-            $attempt->set_source_table('game_queries', array( 'attemptid' => backup::VAR_PARENTID));
+            $query->set_source_table('game_queries', array( 'attemptid' => backup::VAR_PARENTID));
 
             $bookquiz->set_source_table('game_bookquiz', array( 'id' => backup::VAR_ACTIVITYID));
             $bookquizchapter->set_source_table('game_bookquiz_chapters', array( 'id' => backup::VAR_PARENTID));
