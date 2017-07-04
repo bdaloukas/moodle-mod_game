@@ -407,15 +407,18 @@ class mod_game_mod_form extends moodleform_mod {
         global $CFG, $DB;
 
         if (count( $a) == 0) {
-            $select = 'glossaryid=-1';
+            $select = 'gc.glossaryid = -1';
         } else if (count($a) == 1) {
-            $select = 'glossaryid='.reset( $a);
+            foreach ($a as $id => $name) {
+                $select = 'gc.glossaryid = '.$id;
+                break;
+            }
         } else {
             $select = '';
             foreach ($a as $id => $name) {
                 $select .= ','.$id;
             }
-            $select = 'g.id IN ('.substr( $select, 1).')';
+            $select = 'gc.glossaryid IN ('.substr( $select, 1).')';
         }
 
         $a = array();
