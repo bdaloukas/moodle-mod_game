@@ -25,6 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/mod/game/locallib.php');
+
 /**
  * Structure step to restore one game activity
  * @copyright 2007 Vasilis Daloukas
@@ -52,17 +54,20 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
             $paths[] = new restore_path_element('game_grade', '/activity/game/game_grades/game_grade');
             $paths[] = new restore_path_element('game_repetition', '/activity/game/game_repetiotions/game_repetition');
             $paths[] = new restore_path_element('game_attempt', '/activity/game/game_attempts/game_attempt');
-            $paths[] = new restore_path_element('game_query', '/activity/game/game_querys/game_query');
-            $paths[] = new restore_path_element('game_bookquiz', '/activity/game/game_bookquizs/game_bookquiz');
+            $paths[] = new restore_path_element('game_query', '/activity/game/game_attempts/game_attempt/game_querys/game_query');
+
+            // The games.
+            $paths[] = new restore_path_element('game_bookquiz', '/activity/game/game_attempts/game_attempt/game_bookquiz');
             $paths[] = new restore_path_element('game_bookquiz_chapter',
-                '/activity/game/game_bookquiz_chapters/game_bookquiz_chapter');
-            $paths[] = new restore_path_element('game_cross', '/activity/game/game_crosss/game_cross');
-            $paths[] = new restore_path_element('game_cryptex', '/activity/game/game_cryptexs/game_cryptex');
-            $paths[] = new restore_path_element('game_hangman', '/activity/game/game_hangmans/game_hangman');
-            $paths[] = new restore_path_element('game_hiddenpicture', '/activity/game/game_hiddenpictures/game_hiddenpicture');
-            $paths[] = new restore_path_element('game_millionaire', '/activity/game/game_millionaires/game_millionaire');
-            $paths[] = new restore_path_element('game_snake', '/activity/game/game_snakes/game_snake');
-            $paths[] = new restore_path_element('game_sudoku', '/activity/game/game_sudokus/game_sudoku');
+                '/activity/game/game_attempts/game_attempt/game_bookquiz_chapters/game_bookquiz_chapter');
+            $paths[] = new restore_path_element('game_cross', '/activity/game/game_attempts/game_attempt/game_cross');
+            $paths[] = new restore_path_element('game_cryptex', '/activity/game/game_attempts/game_attempt/game_cryptex');
+            $paths[] = new restore_path_element('game_hangman', '/activity/game/game_attempts/game_attempt/game_hangman');
+            $paths[] = new restore_path_element('game_hiddenpicture',
+            '/activity/game/game_attempts/game_attempt/game_hiddenpicture');
+            $paths[] = new restore_path_element('game_millionaire', '/activity/game/game_attempts/game_attempt/game_millionaire');
+            $paths[] = new restore_path_element('game_snake', '/activity/game/game_attempts/game_attempt/game_snake');
+            $paths[] = new restore_path_element('game_sudoku', '/activity/game/game_attempts/game_attempt/game_sudoku');
         }
 
         // Return the paths wrapped into standard activity structure.
@@ -81,6 +86,13 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $oldid = $data->id;
         $data->course = $this->get_courseid();
         $data->timemodified = $this->apply_date_offset($data->timemodified);
+        $data->quizid = $this->get_mappingid('quiz', $data->quizid);
+        $data->glossaryid = $this->get_mappingid('glossary', $data->glossaryid);
+        $data->glossarycategoryid = $this->get_mappingid('glossary_categories', $data->glossarycategoryid);
+        $data->questioncategoryid = $this->get_mappingid('question_categories', $data->questioncategoryid);
+        $data->bookid = $this->get_mappingid('book', $data->bookid);
+        $data->glossaryid2 = $this->get_mappingid('glossary', $data->glossaryid2);
+        $data->glossarycategoryid2 = $this->get_mappingid('glossary_categories', $data->glossarycategoryid2);
 
         // Insert the game record.
         $newitemid = $DB->insert_record('game', $data);
@@ -153,6 +165,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data->gameid = $this->get_new_parentid('game');
         $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->questionid = $this->get_mappingid('question', $data->questionid);
+        $data->glossaryentrydid = $this->get_mappingid('glossary_entries', $data->questionid);
 
         $DB->insert_record('game_repetitions', $data);
     }
@@ -203,6 +217,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data->gameid = $this->get_new_parentid('game');
         $data->attemptid = get_mappingid('game_attempt', $data->attemptid);
         $data->userid = $this->get_mappingid('user', $data->userid);
+        $data->questionid = $this->get_mappingid('question', $data->questionid);
+        $data->glossaryentryid = $this->get_mappingid('glossary_entries', $data->glossaryentryid);
+        $data->answerid = $this->get_mappingid('question_answers', $data->answerid);
 
         $newitemid = $DB->insert_record('game_queries', $data);
         $this->set_mapping('game_query', $oldid, $newitemid);
@@ -219,6 +236,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data = (object)$data;
 
         $data->id = $this->get_new_parentid('game');
+        $data->lastchapterid = $this->get_mappingid('book_chapters', $data->lastchapterid);
 
         $DB->insert_record('game_bookquiz', $data);
     }
@@ -233,7 +251,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->gameid = $this->get_new_parentid('game');
+        $data->attemptid = $this->get_new_parentid('game_attempts');
+        $data->chapterid = $this->get_mappingid('book_chapters', $data->chapterid);
 
         $DB->insert_record('game_bookquiz_chapters', $data);
     }
@@ -249,6 +268,8 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data = (object)$data;
 
         $data->gameid = $this->get_new_parentid('game');
+        $data->chapterid = $this->get_mappingid('book_chapters', $data->chapterid);
+        $data->questioncategoryid = $this->get_mappingid('question_categories', $data->questioncategoryid);
 
         $DB->insert_record('game_bookquiz_questions', $data);
     }
@@ -263,9 +284,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
+        $data->id = $this->get_new_parentid('game_attempt');
 
-        $DB->insert_record('game_cross', $data);
+        game_insert_record( 'game_cross', $data);
     }
 
     /**
@@ -278,9 +299,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
+        $data->id = $this->get_new_parentid('game_attempt');
 
-        $DB->insert_record('game_cryptex', $data);
+        game_insert_record( 'game_cryptex', $data);
     }
 
     /**
@@ -293,10 +314,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
+        $data->id = $this->get_new_parentid('game_attempt');
         $data->queryid = $this->get_mappingid('game_query', $data->queryid);
 
-        $DB->insert_record('game_hangman', $data);
+        game_insert_record( 'game_hangman', $data);
     }
 
     /**
@@ -309,9 +330,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
+        $data->id = $this->get_new_parentid('game_attempt');
 
-        $DB->insert_record('game_hiddenpicture', $data);
+        game_insert_record( 'game_hiddenpicture', $data);
     }
 
     /**
@@ -324,10 +345,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
-        $data->queryid = $this->get_mappingid('game_query', $data->queryid);
+        $data->id = $this->get_new_parentid('game_attempt');
+        $data->queryid = $this->get_mappingid('game_queries', $data->queryid);
 
-        $DB->insert_record('game_millionaire', $data);
+        game_insert_record( 'game_millionaire', $data);
     }
 
     /**
@@ -340,10 +361,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_mappingid('game', $data->id);
-        $data->queryid = $this->get_mappingid('game_query', $data->queryid);
+        $data->id = $this->get_mappingid('game_attempt', $data->id);
+        $data->queryid = $this->get_mappingid('game_queries', $data->queryid);
 
-        $DB->insert_record('game_snakes', $data);
+        game_insert_record( 'game_snakes', $data);
     }
 
     /**
@@ -356,9 +377,10 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data = (object)$data;
 
-        $data->id = $this->get_new_parentid('game');
+        $data->id = $this->get_new_parentid('game_attempt');
+        $data->queryid = $this->get_mappingid('game_queries', $data->queryid);
 
-        $DB->insert_record('game_sudoku', $data);
+        game_insert_record( 'game_sudoku', $data);
     }
 
     /**
