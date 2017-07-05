@@ -156,6 +156,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 
     $query = new stdClass();
     $query->attemptid = $attempt->id;
+    $query->gamekind = $game->gamekind;
     $query->gameid = $game->id;
     $query->userid = $USER->id;
     $query->sourcemodule = $game->sourcemodule;

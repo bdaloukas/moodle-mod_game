@@ -176,10 +176,10 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         $grade->annotate_ids('user', 'userid');
         $repetition->annotate_ids('user', 'userid');
         $repetition->annotate_ids('question', 'questionid');
-        $repetition->annotate_ids('glossary_entry', 'glossaryentryid');
+        $repetition->annotate_ids('glossary_entries', 'glossaryentryid');
         $query->annotate_ids('user', 'userid');
         $query->annotate_ids('question', 'questionid');
-        $query->annotate_ids('glossary_enrty', 'glossaryentryid');
+        $query->annotate_ids('glossary_entries', 'glossaryentryid');
         $query->annotate_ids('question_answer', 'answerid');
 
         $bookquizquestion->annotate_ids('book_chapter', 'chapterid');

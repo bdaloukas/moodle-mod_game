@@ -1,4 +1,4 @@
-Changes in version 2017-07-04 (2017070401)
+Changes in version 2017-07-05 (2017070502)
 - Fix: Problems on backup/restore
 
 Changes in version 2017-07-03 (2017070301)

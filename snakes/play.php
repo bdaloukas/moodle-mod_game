@@ -246,6 +246,7 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query) {
     if (($query->glossaryentryid == 0) and ($query->questionid == 0)) {
         return false;
     }
+    $query->gamekind = $game->gamekind;
     $query->attemptid = $snakes->id;
     $query->gameid = $game->id;
     $query->userid = $USER->id;
@@ -282,7 +283,7 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query) {
  * @param stdClass $context
  */
 function game_snakes_showquestion( $id, $game, $snakes, $query, $context) {
-    if ($query->sourcemodule == 'glossary') {
+    if ($game->sourcemodule == 'glossary') {
         game_snakes_showquestion_glossary( $id, $snakes, $query, $game);
     } else {
         game_snakes_showquestion_question( $game, $id, $snakes, $query, $context);
