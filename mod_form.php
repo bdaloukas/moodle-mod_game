@@ -102,7 +102,7 @@ class mod_game_mod_form extends moodleform_mod {
             "WHERE course={$COURSE->id} OR globalglossary=1 ORDER BY globalglossary DESC,name";
             if ($recs = $DB->get_records_sql($sql)) {
                 foreach ($recs as $rec) {
-                    if( ($rec->globalglossary != 0) and ($rec->course != $COURSE->id)) {
+                    if (($rec->globalglossary != 0) and ($rec->course != $COURSE->id)) {
                         $rec->name = '*'.$rec->name;
                     }
                     $a[$rec->id] = $rec->name;

@@ -475,7 +475,7 @@ function game_showanswers_glossary( $game) {
         if ($game->param8 == 0) {        // Not allowed -.
             if (!( strpos( $question->concept, '-') === false)) {
                 continue;
-            } 
+            }
         }
 
         echo '<tr>';
