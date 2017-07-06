@@ -1,3 +1,6 @@
+Changes in version 2017-07-06 (2017070506)
+- New: Global glossaries
+
 Changes in version 2017-07-05 (2017070502)
 - Fix: Problems on backup/restore
 
