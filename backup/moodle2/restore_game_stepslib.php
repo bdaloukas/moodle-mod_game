@@ -88,11 +88,11 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data->timemodified = $this->apply_date_offset($data->timemodified);
         $data->quizid = $this->get_mappingid('quiz', $data->quizid);
         $data->glossaryid = $this->get_mappingid('glossary', $data->glossaryid);
-        $data->glossarycategoryid = $this->get_mappingid('glossary_categories', $data->glossarycategoryid);
-        $data->questioncategoryid = $this->get_mappingid('question_categories', $data->questioncategoryid);
+        $data->glossarycategoryid = $this->get_mappingid('glossary_category', $data->glossarycategoryid);
+        $data->questioncategoryid = $this->get_mappingid('question_category', $data->questioncategoryid);
         $data->bookid = $this->get_mappingid('book', $data->bookid);
         $data->glossaryid2 = $this->get_mappingid('glossary', $data->glossaryid2);
-        $data->glossarycategoryid2 = $this->get_mappingid('glossary_categories', $data->glossarycategoryid2);
+        $data->glossarycategoryid2 = $this->get_mappingid('glossary_category', $data->glossarycategoryid2);
 
         // Insert the game record.
         $newitemid = $DB->insert_record('game', $data);
@@ -271,7 +271,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
         $data->gameid = $this->get_new_parentid('game');
         $data->chapterid = $this->get_mappingid('book_chapters', $data->chapterid);
-        $data->questioncategoryid = $this->get_mappingid('question_categories', $data->questioncategoryid);
+        $data->questioncategoryid = $this->get_mappingid('question_category', $data->questioncategoryid);
 
         $DB->insert_record('game_bookquiz_questions', $data);
     }
@@ -380,7 +380,6 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data = (object)$data;
 
         $data->id = $this->get_new_parentid('game_attempt');
-        $data->queryid = $this->get_mappingid('game_queries', $data->queryid);
 
         game_insert_record( 'game_sudoku', $data);
     }
