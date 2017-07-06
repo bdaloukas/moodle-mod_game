@@ -366,7 +366,8 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         $questiontext = str_replace( array("\'", '\"'), array("'", '"'), $query->questiontext);
         $query->questiontext = game_filterquestion($questiontext, $query->questionid, $context->id, $game->course);
     } else {
-        $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
+        $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
+        $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
         $contextglossary = game_get_context_module_instance( $cmglossary->id);
         $query->questiontext = game_filterglossary(str_replace( '\"', '"',
             $query->questiontext), $query->glossaryentryid, $contextglossary->id, $game->course);

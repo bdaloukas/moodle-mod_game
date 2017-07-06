@@ -98,8 +98,13 @@ class mod_game_mod_form extends moodleform_mod {
 
         if ($hasglossary) {
             $a = array();
-            if ($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')) {
+            $sql = "SELECT id,name,globalglossary,course FROM {$CFG->prefix}glossary ".
+            "WHERE course={$COURSE->id} OR globalglossary=1 ORDER BY globalglossary DESC,name";
+            if ($recs = $DB->get_records_sql($sql)) {
                 foreach ($recs as $rec) {
+                    if( ($rec->globalglossary != 0) and ($rec->course != $COURSE->id)) {
+                        $rec->name = '*'.$rec->name;
+                    }
                     $a[$rec->id] = $rec->name;
                 }
             }
@@ -429,7 +434,7 @@ class mod_game_mod_form extends moodleform_mod {
         $sql2 = "SELECT COUNT(*) ".
         " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
         " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
-        $sql = "SELECT gc.id,gc.name,g.name as name2, ($sql2) as c ".
+        $sql = "SELECT gc.id,gc.name,g.name as name2,g.globalglossary,g.course, ($sql2) as c ".
         " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g".
         " WHERE $select AND gc.glossaryid=g.id".
         " ORDER BY g.name, gc.name";

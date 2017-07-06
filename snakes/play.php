@@ -353,7 +353,9 @@ function game_snakes_showquestion_glossary( $id, $snakes, $query, $game) {
     // Add a hidden field with glossaryentryid.
     echo '<input type="hidden" name="glossaryentryid" value="'.$query->glossaryentryid."\" />\n";
 
-    $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
+    $sql = "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}";
+    $glossary = $DB->get_record_sql( $sql);
+    $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
     $contextglossary = game_get_context_module_instance( $cmglossary->id);
     $s = game_filterglossary(str_replace( '\"', '"', $entry->definition), $query->glossaryentryid,
         $contextglossary->id, $game->course);

@@ -770,6 +770,8 @@ class Cross
      * @param stdClass $game
      */
     public function showhtml_base( $crossm, $crossd, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game) {
+        global $CFG, $DB;
+
         $this->mLegendh = array();
         $this->mLegendv = array();
 
@@ -790,7 +792,9 @@ class Cross
         $legendh = array();
 
         if ($game->glossaryid) {
-            $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
+	    $sql = "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}";
+            $glossary = $DB->get_record_sql( $sql);
+            $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
             $contextglossary = game_get_context_module_instance( $cmglossary->id);
         }
         foreach ($crossd as $rec) {
