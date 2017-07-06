@@ -240,7 +240,7 @@ function game_showanswers_question( $game, $context) {
     } else if ( ($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
         $select .= " AND q.qtype = 'shortanswer'";
     }
-    game_showanswers_question_select( $game, $table, $select, '*', $order, $showcategories, $game->course, $context);
+    game_showanswers_question_select( $game, $table, $select, 'q.*', $order, $showcategories, $game->course, $context);
 }
 
 /**

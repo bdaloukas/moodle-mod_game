@@ -44,7 +44,7 @@ $gamegrademethod = array ( GAME_GRADEMETHOD_HIGHEST => get_string("gradehighest"
                              GAME_GRADEMETHOD_FIRST => get_string("attemptfirst", "game"),
                              GAME_GRADEMETHOD_LAST  => get_string("attemptlast", "game"));
 
-define( "CONST_GAME_TRIES_REPETITION", "3");
+define( "CONST_GAME_TRIES_REPETITION", "5");
 
 /**
  * Returns the version of Moodle.
