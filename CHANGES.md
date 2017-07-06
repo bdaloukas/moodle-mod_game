@@ -1,4 +1,4 @@
-Changes in version 2017-07-06 (2017070506)
+Changes in version 2017-07-06 (2017070606)
 - New: Global glossaries
 
 Changes in version 2017-07-05 (2017070502)

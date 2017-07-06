@@ -792,7 +792,7 @@ class Cross
         $legendh = array();
 
         if ($game->glossaryid) {
-        $sql = "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}";
+            $sql = "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}";
             $glossary = $DB->get_record_sql( $sql);
             $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
             $contextglossary = game_get_context_module_instance( $cmglossary->id);
