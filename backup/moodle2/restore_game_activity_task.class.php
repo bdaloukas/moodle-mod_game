@@ -116,5 +116,139 @@ class restore_game_activity_task extends restore_activity_task {
      * Do something at end of restore.
      */
     public function after_restore() {
+        global $DB;
+
+        // Get the blockid.
+        $gameid = $this->get_activityid();
+
+        // Extract Game configdata and update it to point to the new glossary.
+        $rec = $DB->get_record_select( 'game', 'id='.$gameid,
+            null, 'id,quizid,glossaryid,glossarycategoryid,questioncategoryid,bookid,glossaryid2,glossarycategoryid2');
+
+        $restoreid = $this->get_restoreid();
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'quiz', $rec->quizid);
+        if ($ret != false) {
+            $rec->quizid = $ret->newitemid;
+        }
+
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary', $rec->glossaryid);
+        if ($ret != false) {
+            $rec->glossaryid = $ret->newitemid;
+        }
+
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_categories', $rec->glossarycategoryid);
+        if ($ret != false) {
+            $rec->glossarycategoryid = $ret->newitemid;
+        }
+
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'question_categories', $rec->questioncategoryid);
+        if ($ret != false) {
+            $rec->questioncategoryid = $ret->newitemid;
+        }
+
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'book', $rec->bookid);
+        if ($ret != false) {
+            $rec->bookid = $ret->newitemid;
+        }
+
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary', $rec->glossaryid2);
+        if ($ret != false) {
+            $rec->glossaryid2 = $ret->newitemid;
+        }
+
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_categories', $rec->glossarycategoryid);
+        if ($ret != false) {
+            $rec->glossarycategoryid = $ret->newitemid;
+        }
+
+        $DB->update_record( 'game', $rec);
+
+        // Read game_repetitions.
+        $recs = $DB->get_records_select( 'game_repetitions', 'gameid='.$gameid, null, '',
+                'id,questionid,glossaryentryid');
+        if ($recs != false) {
+            foreach ($recs as $rec) {
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'question', $rec->questionid);
+                if ($ret != false) {
+                    $rec->questionid = $ret->newitemid;
+                }
+
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'glossary_entry', $rec->glossaryentryid);
+                if ($ret != false) {
+                    $rec->glossaryentryid = $ret->newitemid;
+                }
+
+                $DB->update_record( 'game_repetitions', $rec);
+            }
+        }
+
+        // Read game_queries.
+        $recs = $DB->get_records_select( 'game_queries', 'gameid='.$gameid, null, '',
+                'id,questionid,glossaryentryid,answerid');
+        if ($recs != false) {
+            foreach ($recs as $rec) {
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'question', $rec->questionid);
+                if ($ret != false) {
+                    $rec->questionid = $ret->newitemid;
+                }
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'glossary_entry', $rec->glossaryentryid);
+                if ($ret != false) {
+                    $rec->glossaryentryid = $ret->newitemid;
+                }
+
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'question_answers', $rec->glossaryentryid);
+                if ($ret != false) {
+                    $rec->answerid = $ret->newitemid;
+                }
+
+                $DB->update_record( 'game_queries', $rec);
+            }
+        }
+
+        // Read bookquiz.
+        $recs = $DB->get_records_select( 'game_bookquiz', 'id='.$gameid, null, '', 'id,lastchapterid');
+        if ($recs != false) {
+            foreach ($recs as $rec) {
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'book_chapters', $rec->lastchapterid);
+                if ($ret != false) {
+                    $rec->lastchapterid = $ret->newitemid;
+                }
+
+                $DB->update_record( 'game_bookquiz', $rec);
+            }
+        }
+
+        // Read bookquiz_chapters.
+        $sql = "SELECT gbc.* ".
+            "FROM {game_bookquiz_chapters} gbc LEFT JOIN {game_attempts} a ON gbc.attemptid = a.id".
+            " WHERE a.gameid=$gameid";
+        $recs = $DB->get_records_sql( $sql);
+        if ($recs != false) {
+            foreach ($recs as $rec) {
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'book_chapters', $rec->chapterid);
+                if ($ret != false) {
+                    $rec->chapterid = $ret->newitemid;
+                }
+                $DB->update_record( 'game_bookquiz_chapter', $rec);
+            }
+        }
+
+        // Read bookquiz_questions.
+        $recs = $DB->get_records_select( 'game_bookquiz_questions', 'id='.$gameid, null, '', 'id,chapterid,questioncategoryid');
+        if ($recs != false) {
+            foreach ($recs as $rec) {
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'book_chapters', $rec->chapterid);
+                if ($ret != false) {
+                    $rec->chapterid = $ret->newitemid;
+                }
+
+                $ret = restore_dbops::get_backup_ids_record($this->get_restoreid(), 'book_chapters', $rec->questioncategoryid);
+                if ($ret != false) {
+                    $rec->questioncategoryid = $ret->newitemid;
+                }
+
+                $DB->update_record( 'game_bookquiz_questions', $rec);
+            }
+        }
     }
 }

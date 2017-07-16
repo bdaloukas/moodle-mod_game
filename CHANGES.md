@@ -1,3 +1,6 @@
+Changes in version 2017-07-16 (2017071601)
+- Fix: Cloning a game
+
 Changes in version 2017-07-06 (2017070606)
 - New: Global glossaries
 
