@@ -1,3 +1,6 @@
+Changes in version 2017-07-18 (2017071801)
+- New: icon.png and icon.svg
+
 Changes in version 2017-07-16 (2017071601)
 - Fix: Cloning a game
 
