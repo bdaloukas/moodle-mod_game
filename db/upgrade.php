@@ -1582,6 +1582,8 @@ function xmldb_game_upgrade($oldversion) {
 
         // Launch change of type for field thisfield.
         $dbman->change_field_type($table, $field);
+
+        upgrade_mod_savepoint(true, $ver, 'game');
     }
 
     if ($oldversion < ($ver = 2017062801)) {
@@ -1597,6 +1599,7 @@ function xmldb_game_upgrade($oldversion) {
         } else {
             $dbman->add_field($table, $field);
         }
+
     }
 
     if ($oldversion < ($ver = 2017062801)) {
@@ -1642,11 +1645,15 @@ function xmldb_game_upgrade($oldversion) {
         } else {
             $dbman->add_field($table, $field);
         }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
     }
 
     if ($oldversion < ($ver = 2017070301)) {
         $sql = "UPDATE {$CFG->prefix}game SET glossarycategoryid=0 WHERE glossarycategoryid < 0";
         $DB->execute( $sql);
+
+        upgrade_mod_savepoint(true, $ver, 'game');
     }
 
     if ($oldversion < ($ver = 2017070403)) {
@@ -1674,6 +1681,35 @@ function xmldb_game_upgrade($oldversion) {
             }
             $DB->update_record( 'game_snakes_database', $updrec);
         }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017071901)) {
+
+        // Define field completionattemptsexhausted to be added to quiz.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('completionattemptsexhausted', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
+
+        // Conditionally launch add field completionattemptsexhausted.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017071902)) {
+        // Define field completionpass to be added to quiz.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, null, null, 0, 'completionattemptsexhausted');
+
+        // Conditionally launch add field completionpass.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
     }
 
     return true;

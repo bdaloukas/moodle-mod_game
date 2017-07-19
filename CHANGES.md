@@ -1,3 +1,6 @@
+Changes in version 2017-07-19 (2017071902)
+- Fix: Completion support
+
 Changes in version 2017-07-18 (2017071801)
 - New: icon.png and icon.svg
 

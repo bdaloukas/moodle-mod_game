@@ -1352,8 +1352,6 @@ function game_reset_userdata($data) {
 function game_get_completion_state($course, $cm, $userid, $type) {
     global $CFG, $DB;
 
-    require_once($CFG->dirroot . '/mod/game/locallib.php');
-
     if (($cm->completion == 0) or ($cm->completion == 1)) {
         // Completion option is not enabled so just return $type.
         return $type;
@@ -1368,9 +1366,25 @@ function game_get_completion_state($course, $cm, $userid, $type) {
         print_error('invalidcoursemodule');
     }
 
-    $grade = $DB->get_record_select('game_grades', "userid=$userid AND gameid = $cm->instance", null, 'id,score');
+    // Check for passing grade.
+    if ($game->completionpass) {
+        require_once($CFG->libdir . '/gradelib.php');
+        $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
+                'itemmodule' => 'game', 'iteminstance' => $cm->instance, 'outcomeid' => null));
+        if ($item) {
+            $grades = grade_grade::fetch_users_grades($item, array($userid), false);
+            if (!empty($grades[$userid])) {
+                return $grades[$userid]->is_passed($item);
+            }
+        }
+    }
 
-    return $grade && $grade->score > 0;
+    return false;
+
+    //$sql = "SELECT MAX(score) as score FROM {$CFG->prefix}game_grades WHERE gameid=$cm->instance AND userid=$userid";
+    //$grade = $DB->get_record_sql( $sql);
+
+    //return $grade && $grade->score > 0;
 }
 
 /**
@@ -1440,4 +1454,39 @@ function game_pix_url( $filename, $module='') {
     } else {
         return $OUTPUT->pix_url($filename, $module);
     }
+}
+
+/**
+ * Callback which returns human-readable strings describing the active completion custom rules for the module instance.
+ *
+ * @param cm_info|stdClass $cm object with fields ->completion and ->customdata['customcompletionrules']
+ * @return array $descriptions the array of descriptions for the custom rules.
+ */
+function mod_game_get_completion_active_rule_descriptions($cm) {
+    // Values will be present in cm_info, and we assume these are up to date.
+    if (empty($cm->customdata['customcompletionrules'])
+        || $cm->completion != COMPLETION_TRACKING_AUTOMATIC) {
+        return [];
+    }
+
+    $descriptions = [];
+    foreach ($cm->customdata['customcompletionrules'] as $key => $val) {
+        switch ($key) {
+            case 'completionattemptsexhausted':
+                if (empty($val)) {
+                    continue;
+                }
+                $descriptions[] = get_string('completionattemptsexhausteddesc', 'quiz');
+                break;
+            case 'completionpass':
+                if (empty($val)) {
+                    continue;
+                }
+                $descriptions[] = get_string('completionpassdesc', 'quiz', format_time($val));
+                break;
+            default:
+                break;
+        }
+    }
+    return $descriptions;
 }

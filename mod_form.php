@@ -162,9 +162,12 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('selectyesno', 'disablesummarize', get_string('disablesummarize', 'game'));
 
         // Grade options.
-        $mform->addElement('header', 'gradeoptions', get_string('grades', 'grades'));
+        //$mform->addElement('header', 'gradeoptions', get_string('grades', 'grades'));
+        $this->standard_grading_coursemodule_elements();
+        $mform->removeElement('grade');
         $mform->addElement('text', 'grade', get_string( 'grademax', 'grades'), array('size' => 4));
         $mform->setType('grade', PARAM_INT);
+
         $gradingtypeoptions = array();
         $gradingtypeoptions[ GAME_GRADEHIGHEST] = get_string('gradehighest', 'game');
         $gradingtypeoptions[ GAME_GRADEAVERAGE] = get_string('gradeaverage', 'game');
@@ -520,6 +523,19 @@ class mod_game_mod_form extends moodleform_mod {
             }
         }
 
+        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
+            $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
+
+            // Show an error if require passing grade was selected and the grade to pass was set to 0.
+            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
+                if (isset($data['completionpass'])) {
+                    $errors['completionpassgroup'] = get_string('gradetopassnotset', 'quiz');
+                } else {
+                    $errors['gradepass'] = get_string('gradetopassmustbeset', 'quiz');
+                }
+            }
+        }
+
         return $errors;
     }
 
@@ -601,5 +617,38 @@ class mod_game_mod_form extends moodleform_mod {
         }
 
         parent::set_data($defaultvalues);
+    }
+
+    /**
+     * Display module-specific activity completion rules.
+     * Part of the API defined by moodleform_mod
+     * @return array Array of string IDs of added items, empty array if none
+     */
+    public function add_completion_rules() {
+        $mform = $this->_form;
+        $items = array();
+
+        $group = array();
+        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'quiz'),
+                array('group' => 'cpass'));
+
+        $group[] = $mform->createElement('advcheckbox', 'completionattemptsexhausted', null,
+                get_string('completionattemptsexhausted', 'quiz'),
+                array('group' => 'cattempts'));
+        $mform->disabledIf('completionattemptsexhausted', 'completionpass', 'notchecked');
+        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'quiz'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup', 'completionpass', 'quiz');
+        $items[] = 'completionpassgroup';
+        return $items;
+    }
+
+    /**
+     * Called during validation. Indicates whether a module-specific completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated)
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        return !empty($data['completionattemptsexhausted']) || !empty($data['completionpass']);
     }
 }
