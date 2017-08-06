@@ -282,6 +282,13 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
     }
 }
 
+/**
+ * Checks for common problems (check crossword/cryptex parameters)
+ *
+ * @param stdClass $game
+ * @param string $warnings
+ * @param array $a the words contained
+ */
 function game_check_common_problems_crossword_cryptex($game, &$warnings) {
 
     global $CFG, $DB;
