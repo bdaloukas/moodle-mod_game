@@ -1380,11 +1380,6 @@ function game_get_completion_state($course, $cm, $userid, $type) {
     }
 
     return false;
-
-    //$sql = "SELECT MAX(score) as score FROM {$CFG->prefix}game_grades WHERE gameid=$cm->instance AND userid=$userid";
-    //$grade = $DB->get_record_sql( $sql);
-
-    //return $grade && $grade->score > 0;
 }
 
 /**

@@ -162,7 +162,6 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('selectyesno', 'disablesummarize', get_string('disablesummarize', 'game'));
 
         // Grade options.
-        //$mform->addElement('header', 'gradeoptions', get_string('grades', 'grades'));
         $this->standard_grading_coursemodule_elements();
         $mform->removeElement('grade');
         $mform->addElement('text', 'grade', get_string( 'grademax', 'grades'), array('size' => 4));

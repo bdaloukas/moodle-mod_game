@@ -42,9 +42,12 @@ function game_check_common_problems($context, $game) {
             game_check_common_problems_multichoice( $game, $warnings);
             break;
         case 'hangman':
+            game_check_common_problems_shortanswer( $game, $warnings);
+            break;
         case 'cross':
         case 'cryptex':
             game_check_common_problems_shortanswer( $game, $warnings);
+            game_check_common_problems_crossword_cryptex( $game, $warnings);
             break;
     }
 
@@ -278,3 +281,13 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
         $warnings[] = get_string( 'common_problems_shortanswer_hangman', 'game').': '.count($ret).' ('.implode( ', ', $ret).')';
     }
 }
+
+function game_check_common_problems_crossword_cryptex($game, &$warnings) {
+
+    global $CFG, $DB;
+
+    if ($game->param1 < 10) {
+        $warnings[] = get_string( 'common_problems_crossword_param1', 'game').' (='.$game->param1.')';
+    }
+}
+
