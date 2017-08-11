@@ -344,8 +344,7 @@ echo $OUTPUT->footer();
 /**
  * Computes high score for this game. Shows the names of $game->highscore students.
  *
- * @param stdClass $table the name of table
- * @return string the high score
+ * @param stdClass $game
  */
 function game_highscore( $game) {
     global $CFG, $DB, $OUTPUT;
