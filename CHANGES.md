@@ -1,3 +1,6 @@
+Changes in version 2017-08-11 (2017081103)
+- New: High score
+
 Changes in version 2017-08-08 (2017080601)
 - New: check params of crossword/cryptex
 

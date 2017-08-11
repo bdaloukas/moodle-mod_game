@@ -1687,7 +1687,7 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < ($ver = 2017071901)) {
 
-        // Define field completionattemptsexhausted to be added to quiz.
+        // Define field completionattemptsexhausted to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('completionattemptsexhausted', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
 
@@ -1700,7 +1700,7 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < ($ver = 2017071902)) {
-        // Define field completionpass to be added to quiz.
+        // Define field completionpass to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, null, null, 0, 'completionattemptsexhausted');
 
@@ -1708,6 +1708,17 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017081102)) {
+        // Define field highscore to be added to game.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('highscore', XMLDB_TYPE_INTEGER, '2', null, null, null, 0);
+
+        // Conditionally launch add field completionpass.
+        $dbman->add_field($table, $field);
 
         upgrade_mod_savepoint(true, $ver, 'game');
     }

@@ -161,6 +161,10 @@ class mod_game_mod_form extends moodleform_mod {
         // Disable summarize.
         $mform->addElement('selectyesno', 'disablesummarize', get_string('disablesummarize', 'game'));
 
+        // Enable high score.
+        $mform->addElement('text', 'highscore', get_string('highscore', 'game'));
+        $mform->setType('highscore', PARAM_INT);
+
         // Grade options.
         $this->standard_grading_coursemodule_elements();
         $mform->removeElement('grade');

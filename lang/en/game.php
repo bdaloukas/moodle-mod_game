@@ -308,6 +308,7 @@ $string[ 'sudoku_options'] = 'Sudoku options';
 $string[ 'toptext'] = 'Text at the top of page';
 $string[ 'userdefined'] = 'User defined';
 $string[ 'different_glossary_category'] = "The selected category doesn't corespond to selected glossary";
+$string[ 'highscore'] = 'Show high score (number of students)';
 
 // File preview.php.
 $string[ 'only_teachers'] = 'Only teacher can see this page';
@@ -322,6 +323,7 @@ $string[ 'reviewofattempt'] = 'Review of Attempt {$a}';
 $string[ 'showall'] = 'Show all';
 $string[ 'startagain'] = 'Start again';
 $string[ 'timetaken'] = 'Time taken';
+$string[ 'col_highscores'] = 'High scores';
 
 // File settings.php.
 $string[ 'hangmanimagesets'] = 'Number of image sets used by hangman';

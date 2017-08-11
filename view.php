@@ -326,6 +326,11 @@ if ($buttontext) {
 }
 echo $OUTPUT->box_end();
 
+if ($game->highscore > 0) {
+    // Display high score.
+    game_highscore( $game);
+}
+
 if (has_capability('mod/game:manage', $context)) {
     require( 'check.php');
     $s = game_check_common_problems( $context, $game);
@@ -335,3 +340,67 @@ if (has_capability('mod/game:manage', $context)) {
 }
 
 echo $OUTPUT->footer();
+
+/**
+ * Computes high score for this game. Shows the names of $game->highscore students.
+ *
+ * @param stdClass $table the name of table
+ * @return string the high score
+ */
+function game_highscore( $game) {
+    global $CFG, $DB, $OUTPUT;
+
+    $sql = "SELECT userid, MAX(score) as maxscore".
+    " FROM {$CFG->prefix}game_attempts ".
+    " WHERE gameid={$game->id} AND score > 0".
+    " GROUP BY userid".
+    " ORDER BY score DESC";
+    $score = 0;
+    $recs = $DB->get_records_sql( $sql);
+    foreach ($recs as $rec) {
+        $score = $rec->maxscore;
+    }
+    if ($score == 0) {
+        return;
+    }
+
+    $sql = "SELECT u.id, u.lastname, u.firstname, MAX(ga.score) as maxscore".
+    " FROM {$CFG->prefix}user u, {$CFG->prefix}game_attempts ga ".
+    " WHERE ga.gameid={$game->id} AND ga.userid = u.id".
+    " GROUP BY u.id,u.lastname,u.firstname".
+    " HAVING MAX(ga.score) >= $score".
+    " ORDER BY MAX(ga.score) DESC";
+
+    $recs = $DB->get_records_sql( $sql, null, 0, $game->highscore);
+    if (count( $recs) == 0) {
+        return false;
+    }
+
+    // Prepare table header.
+    $table = new html_table();
+    $table->attributes['class'] = 'generaltable gameattemptsummary';
+    $table->head = array();
+    $table->align = array();
+    $table->size = array();
+
+    $table->head[] = get_string('students');
+    $table->align[] = 'left';
+    $table->size[] = '';
+
+    $table->head[] = get_string('percent', 'grades');
+    $table->align[] = 'center';
+    $table->size[] = '';
+
+    foreach ($recs as $rec) {
+        echo "<tr>";
+        $row = array();
+        $row[] = $rec->firstname.' '.$rec->lastname;
+        $row[] = round( $rec->maxscore * 100).' %';
+
+        $table->data[$rec->id] = $row;
+    }
+
+    echo '<br>'.$OUTPUT->heading(get_string('col_highscores', 'game'));
+
+    echo html_writer::table($table);
+}
