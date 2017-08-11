@@ -292,7 +292,7 @@ function game_check_common_problems_crossword_cryptex($game, &$warnings) {
 
     global $CFG, $DB;
 
-    if ($game->param1 < 10) {
+    if (($game->param1 < 10) && ($game->param1 > 0)) {
         $warnings[] = get_string( 'common_problems_crossword_param1', 'game').' (='.$game->param1.')';
     }
 }
