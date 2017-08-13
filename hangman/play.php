@@ -311,7 +311,10 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
     echo "<br/><br/>".get_string( 'grade', 'game').' : '.round( $query->percent * 100).' %';
     if ($hangman->maxtries > 1) {
         $percent = ($correct - $wrong / $max) / game_strlen( $query->answertext);
-        $score = $hangman->corrects / $hangman->maxtries + $percent / 100;
+        if( $done) {
+            $percent = 0;
+        }
+        $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
         echo '<br/><br/>'.get_string( 'hangman_gradeinstance', 'game').' : '.
             round( $score * 100).' %';
     }
@@ -482,7 +485,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
     }
     if( $hangman->maxtries > 0) {
         $percent = ($correct - $wrong / $max) / game_strlen( $word);
-        $score = $hangman->corrects / $hangman->maxtries + $percent / 100;
+        $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
     }
     game_updateattempts( $game, $attempt, $score, $finished);
     game_update_queries( $game, $attempt, $query, $score, $answer);
