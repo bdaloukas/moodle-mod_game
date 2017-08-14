@@ -100,6 +100,7 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
             $select = 'q.category in ('.implode(',', $cats).')';
         }
     }
+    $select0 = $select;
 
     if (game_get_moodle_version() < '02.06') {
         $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
@@ -113,6 +114,19 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
     $rec = $DB->get_record_sql( $sql);
     if ($rec->c != 0) {
         $warnings[] = get_string( 'millionaire_also_multichoice', 'game').': '.$rec->c;
+    }
+
+    $select = $select0;
+    if (game_get_moodle_version() < '02.06') {
+        $select .= " AND qtype='multichoice' AND qmo.single = 1 AND qmo.question=q.id";
+    } else {
+        $select .= " AND qtype='multichoice' AND qmo.single = 1 AND qmo.questionid=q.id";
+    }
+
+    $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";
+    $rec = $DB->get_record_sql( $sql);
+    if ($rec->c == 0) {
+        $warnings[] = get_string( 'millionaire_no_multichoice_questions', 'game');
     }
 }
 
@@ -216,8 +230,10 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     foreach ($recs as $rec) {
         // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
         $sql = "SELECT DISTINCT answer FROM {$CFG->prefix}question_answers WHERE question={$rec->id} ORDER BY fraction DESC";
-        if (($rec2 = $DB->get_record_sql( $sql, null, 0, 1)) != false) {
+        $recs2 = $DB->get_records_sql( $sql);
+        foreach( $recs2 as $rec2) {
             $a[] = $rec2->answer;
+            break;
         }
     }
     game_check_common_problems_shortanswer_allowspaces( $game, $warnings, $a);

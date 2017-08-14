@@ -42,6 +42,7 @@ $string[ 'millionaire_also_multichoice'] = 'Multichoice answers without single c
 $string[ 'common_problems_allowspaces'] = 'There are words with spaces but in the game, spaces are not allowed';
 $string[ 'common_problems_shortanswer_hangman'] = 'Not all characters are in the language of game';
 $string[ 'common_problems_crossword_param1'] = "'Maximum number of cols/rows' is too small";
+$string[ 'millionaire_no_multichoice_questions'] = 'There are no multichoice questions';
 
 // Classes.
 $string[ 'eventgamecreated'] = 'Game created';

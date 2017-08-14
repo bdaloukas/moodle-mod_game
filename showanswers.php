@@ -206,7 +206,9 @@ function game_showanswers_question( $game, $context) {
 
         if ($game->subcategories) {
             $cats = question_categorylist( $game->questioncategoryid);
-            if (strpos( $cats, ',') > 0) {
+            if (is_array( $cats)) {
+                $select = ' category in ('.implode( ',', $cats).')';
+            } else if (strpos( $cats, ',') > 0) {
                 $select = ' category in ('.$cats.')';
             }
         }
