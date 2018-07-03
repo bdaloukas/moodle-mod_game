@@ -1723,6 +1723,17 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
+    if ($oldversion < ($ver = 2018060402)) {
+        // Change the number of imageset on hangman to 2.
+        $config = get_config('game');
+        if( $config->hangmanimagesets < 2) {
+            set_config( 'hangmanimagesets', 2, 'game');
+        }
+        
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }
 

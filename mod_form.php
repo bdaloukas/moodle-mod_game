@@ -554,6 +554,7 @@ class mod_game_mod_form extends moodleform_mod {
             // Default values for every game.
             if ($defaultvalues->type == 'hangman') {
                 $defaultvalues->param10 = 6;    // Maximum number of wrongs.
+                $defaultvalues->param3 = 2;
             } else if ($defaultvalues->type == 'snakes') {
                 $defaultvalues->gamekind = $defaultvalues->type;
                 $defaultvalues->param3 = 1;

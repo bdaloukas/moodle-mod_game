@@ -53,6 +53,6 @@ if ($ADMIN->fulltree) {
         get_string('hidesudoku', 'game'), get_string('confighidesudoku', 'game'), 0));
 
     $settings->add(new admin_setting_configtext('game/hangmanimagesets', get_string('hangmanimagesets', 'game'),
-            get_string('confighangmanimagesets', 'game'), 1, PARAM_INT));
+            get_string('confighangmanimagesets', 'game'), 2, PARAM_INT));
 
 }
