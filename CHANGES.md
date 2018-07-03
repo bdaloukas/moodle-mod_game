@@ -1,6 +1,7 @@
 Changes in version 2018-07-04 (2018070402)
 - Fix in high score
 - New image set on hangman
+- New image set on "Snakes and Ladders"
 
 Changes in version 2017-08-11 (2017081103)
 - New: High score
