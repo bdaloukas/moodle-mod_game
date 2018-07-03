@@ -1712,7 +1712,7 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
-    if ($oldversion < ($ver = 2017081102)) {
+    if ($oldversion < ($ver = 2018060401)) {
         // Define field highscore to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('highscore', XMLDB_TYPE_INTEGER, '2', null, null, null, 0);
