@@ -67,6 +67,14 @@ function game_importsnakes() {
     $newrec->data = 'L2-25,S4-23,L8-18,S16-20,L19-29,S27-33';
     game_importsnakes_do( $newrec);
 
+    game_importsnakes3();
+    game_importsnakes4();
+}
+
+/**
+ * Imports the snakes database for fidaki3.jpg
+ */
+function game_importsnakes3() {
     $newrec = new stdClass();
     $newrec->name = '8x8 - 4 Snakes - 4 Ladders (new)';
     $newrec->usedcols = 8;
@@ -81,7 +89,12 @@ function game_importsnakes() {
     $newrec->height = 487;
     $newrec->data = 'L3-18,S5-19,S8-27,L24-39,L29-53,S32-62,S41-58,L48-63';
     game_importsnakes_do( $newrec);
+}
 
+/**
+ * Imports the snakes database for fidaki4.jpg
+ */
+function game_importsnakes4() {
     $newrec = new stdClass();
     $newrec->name = '6x6 - 3 Snakes - 3 Ladders (new)';
     $newrec->usedcols = 6;

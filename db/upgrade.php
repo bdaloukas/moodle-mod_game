@@ -1734,6 +1734,24 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
+    if ($oldversion < ($ver = 2018060404)) {
+        // Import 2 new boards
+        
+        require( 'importsnakes.php');
+        $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki3.jpg'";
+        $rec = $DB->get_record_sql( $sql);
+        if( $rec === false) {
+            game_importsnakes3();
+        }
+        $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki4.jpg'";
+        $rec = $DB->get_record_sql( $sql);
+        if( $rec === false) {
+            game_importsnakes4();
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }
 
