@@ -557,7 +557,7 @@ class mod_game_mod_form extends moodleform_mod {
                 $defaultvalues->param3 = 2;
             } else if ($defaultvalues->type == 'snakes') {
                 $defaultvalues->gamekind = $defaultvalues->type;
-                $defaultvalues->param3 = 1;
+                $defaultvalues->param3 = 3;
                 $defaultvalues->questioncategoryid = 0;
             } else if ($defaultvalues->type == 'millionaire') {
                 $defaultvalues->shuffle = 1;
