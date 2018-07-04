@@ -229,7 +229,8 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     $a = array();
     foreach ($recs as $rec) {
         // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
-        $sql = "SELECT DISTINCT answer, fraction FROM {$CFG->prefix}question_answers WHERE question={$rec->id} ORDER BY fraction DESC";
+        $sql = "SELECT DISTINCT answer, fraction ".
+        "FROM {$CFG->prefix}question_answers WHERE question={$rec->id} ORDER BY fraction DESC";
         $recs2 = $DB->get_records_sql( $sql);
         foreach ($recs2 as $rec2) {
             $a[] = $rec2->answer;
