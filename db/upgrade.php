@@ -1718,7 +1718,9 @@ function xmldb_game_upgrade($oldversion) {
         $field = new xmldb_field('highscore', XMLDB_TYPE_INTEGER, '2', null, null, null, 0);
 
         // Conditionally launch add field completionpass.
-        $dbman->add_field($table, $field);
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
 
         upgrade_mod_savepoint(true, $ver, 'game');
     }
