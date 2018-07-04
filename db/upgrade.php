@@ -1728,26 +1728,25 @@ function xmldb_game_upgrade($oldversion) {
     if ($oldversion < ($ver = 2018060402)) {
         // Change the number of imageset on hangman to 2.
         $config = get_config('game');
-        if( $config->hangmanimagesets < 2) {
+        if ($config->hangmanimagesets < 2) {
             set_config( 'hangmanimagesets', 2, 'game');
         }
-        
 
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
     if ($oldversion < ($ver = 2018060404)) {
-        // Import 2 new boards
+        // Import 2 new boards.
         
         require( 'importsnakes.php');
         $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki3.jpg'";
         $rec = $DB->get_record_sql( $sql);
-        if( $rec === false) {
+        if ($rec === false) {
             game_importsnakes3();
         }
         $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki4.jpg'";
         $rec = $DB->get_record_sql( $sql);
-        if( $rec === false) {
+        if ($rec === false) {
             game_importsnakes4();
         }
 
