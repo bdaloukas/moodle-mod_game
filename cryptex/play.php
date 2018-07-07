@@ -358,7 +358,16 @@ foreach ($questions as $key => $q) {
     }
 
     $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
-    $question2 = strip_tags($question); // ADDED BY DP (AUG 2009) - fixes " breaking the Answer button for this question.
+    if ($q->questionid) {
+        $question2 = str_replace( array("\'", '\"'), array("'", '"'), $question);
+        $question2 = game_filterquestion($question2, $q->questionid, $context->id, $game->course);
+    } else {
+        $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
+        $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
+        $contextglossary = game_get_context_module_instance( $cmglossary->id);
+        $question2 = str_replace( '\"', '"', $question);
+        $question2 = game_filterglossary($question2, $q->glossaryentryid, $contextglossary->id, $game->course);
+    }
 
     echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
     if (($onlyshow == false) and ($showsolution == false)) {

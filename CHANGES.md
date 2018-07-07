@@ -1,3 +1,6 @@
+Changes in version 2018-07-07 (2018070701)
+- Fix in cryptex when contains audio files
+
 Changes in version 2018-07-04 (2018070402)
 - Fix in high score
 - New image set on hangman
