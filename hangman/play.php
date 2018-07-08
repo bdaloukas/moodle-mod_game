@@ -384,8 +384,17 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
             echo "<br/><b>".$s.'</b>';
         }
         if ($query->attachment != '') {
-            $file = "{$CFG->wwwroot}/file.php/$game->course/moddata/$query->attachment";
-            echo "<img src=\"$file\" />";
+            $args = explode( '/', $query->attachment);
+            $sql = "SELECT mimetype,filesize FROM {$CFG->prefix}files ".
+            "WHERE component='mod_glossary' AND filearea='attachment' AND itemid =".$args[ 2].
+            " ORDER BY filesize DESC LIMIT 1";
+            $entry = $DB->get_record_sql( $sql);
+            if( $entry != NULL) {
+                if( substr( $entry->mimetype, 0, 6) == 'image/') {
+                    $file = "{$CFG->wwwroot}/file.php/$game->course/moddata/$query->attachment";
+                    echo "<img src=\"$file\" />";
+                }
+            }
         }
         echo "<br/><br/>";
     }
