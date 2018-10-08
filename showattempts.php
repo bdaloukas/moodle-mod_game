@@ -183,9 +183,9 @@ function game_showgroups($game) {
  * @param stdClass $game
  */
 function game_showattempts($game) {
-    global $CFG, $DB, $OUTPUT;
+    global $CFG, $DB, $OUTPUT, $context;
 
-    $allowdelete = optional_param('allowdelete', 0, PARAM_INT);
+    $allowdelete = has_capability('mod/game:manage', $context);
 
     $userid = optional_param('userid', 0, PARAM_INT);
     $limitfrom = optional_param('limitfrom',  0, PARAM_INT);
