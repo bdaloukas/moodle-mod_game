@@ -146,7 +146,7 @@
         <FIELD NAME="usedrows" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="words" TYPE="int" LENGTH="3" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="wordsall" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="createscore" TYPE="float" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="createscore" TYPE="float" NOTNULL="false" DEFAULT="0" SEQUENCE="false"/>
         <FIELD NAME="createtries" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="createtimelimit" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
         <FIELD NAME="createconnectors" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>

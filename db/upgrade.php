@@ -1753,6 +1753,16 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
+    if ($oldversion < ($ver = 2018100800)) {
+        // Import 2 new boards.
+
+        require( 'importsnakes.php');
+        $sql = "UPDATE {$CFG->prefix}game_cross SET createscore=0 WHERE createscore IS NULL";
+        $DB->execute( $sql);
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }
 
