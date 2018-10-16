@@ -174,6 +174,10 @@ function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow, $showsoluti
 function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers, &$correctquestions) {
     global $CFG, $DB;
 
+    $offsetquestions = array();
+    if( $attempt == null) {
+        return $offsetquestions;
+    }
     $select = "attemptid = $attempt->id";
 
     $fields = 'id, col, score';
@@ -191,7 +195,7 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
         $DB->execute( "DELETE FROM {$CFG->prefix}game_sudoku WHERE id={$attempt->id}");
         print_error( 'There are no questions '.$attempt->id);
     }
-    $offsetquestions = array();
+
     $numbers = array();
     $correctquestions = array();
     foreach ($recs as $rec) {
@@ -359,13 +363,22 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
 
     echo '<B><br>'.get_string( 'win', 'game').'</B><BR>';
     echo '<br>';
-    echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id\">".
+    echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id&finishattempt=1\">".
         get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
     echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
 
-    game_updateattempts( $game, $attempt, 1, 1);
+    game_updateattempts( $game, $attempt, 1, game_sudoku_check_found_all_numbers());
 
     return $count;
+}
+
+/**
+ * Check that all numbers are found
+ *
+ * @param 
+ */
+function game_sudoku_check_found_all_numbers() {
+    return false;
 }
 
 /**
@@ -593,10 +606,11 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
  * @param stdClass $sudoku
  */
 function game_sudoku_showquestion_onfinish( $id, $game, $attempt, $sudoku) {
+/*
     if (!set_field( 'game_attempts', 'finish', 1, 'id', $attempt->id)) {
         print_error( "game_sudoku_showquestion_onfinish: Can't update game_attempts id=$attempt->id");
     }
-
+*/
     echo '<B>'.get_string( 'win', 'game').'</B><BR>';
     echo '<br>';
     echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
@@ -757,7 +771,6 @@ function game_sudoku_check_number( $id, $game, $attempt, $sudoku, $pos, $num, $c
     global $DB;
 
     $correct = game_substr( $sudoku->data, $pos - 1, 1);
-
     if ($correct != $num) {
         game_sudoku_play( $id, $game, $attempt, $sudoku, false, false, $context);
         return;
