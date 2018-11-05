@@ -136,7 +136,10 @@ class restore_game_activity_task extends restore_activity_task {
             $rec->glossaryid = $ret->newitemid;
         }
 
-        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_categories', $rec->glossarycategoryid);
+        // +++ MBS-HACK (Andreas Wagner) - Fix wrong itemname for matching glossary categories (MBS-3094).
+        // Correct itemname is 'glossary_category' (see /glossary/backup/moodle2/restore_glossary_stepslib.php)
+        // $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_categories', $rec->glossarycategoryid);
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_category', $rec->glossarycategoryid);
         if ($ret != false) {
             $rec->glossarycategoryid = $ret->newitemid;
         }
@@ -156,10 +159,12 @@ class restore_game_activity_task extends restore_activity_task {
             $rec->glossaryid2 = $ret->newitemid;
         }
 
-        $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_categories', $rec->glossarycategoryid);
-        if ($ret != false) {
-            $rec->glossarycategoryid = $ret->newitemid;
-        }
+        // +++ MBS-HACK (Andreas Wagner) - Fix wrong itemname for matching glossary categories (MBS-3094).
+        // This is duplicate code (see above!).
+        // $ret = restore_dbops::get_backup_ids_record($restoreid, 'glossary_categories', $rec->glossarycategoryid);
+        // if ($ret != false) {
+        //    $rec->glossarycategoryid = $ret->newitemid;
+        // }
 
         $DB->update_record( 'game', $rec);
 
