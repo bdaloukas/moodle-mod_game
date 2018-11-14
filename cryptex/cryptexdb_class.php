@@ -221,7 +221,7 @@ class CryptexDB extends CrossDB {
      */
     public function gethash( $word) {
         $x = 37;
-        $len = count( game_strlen( $word));
+        $len = game_strlen( $word);
 
         for ($i = 0; $i < $len; $i++) {
             $x = $x xor ord( game_substr( $word, $i, 1));

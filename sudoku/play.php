@@ -109,7 +109,7 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $conte
         $query->gamekind = $game->gamekind;
         $query->gameid = $game->id;
         $query->userid = $USER->id;
-        $query->col = $closed[ $i++];
+        $query->mycol = $closed[ $i++];
         $query->sourcemodule = $game->sourcemodule;
         $query->questionid = $rec->questionid;
         $query->glossaryentryid = $rec->glossaryentryid;
@@ -180,7 +180,7 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
     }
     $select = "attemptid = $attempt->id";
 
-    $fields = 'id, col, score';
+    $fields = 'id, mycol, score';
     switch( $sourcemodule)
     {
         case 'quiz':
@@ -199,10 +199,10 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
     $numbers = array();
     $correctquestions = array();
     foreach ($recs as $rec) {
-        $offsetquestions[ $rec->col] = $rec->id2;
-        $numbers[ $rec->id2] = $rec->col;
+        $offsetquestions[ $rec->mycol] = $rec->id2;
+        $numbers[ $rec->id2] = $rec->mycol;
         if ( $rec->score == 1) {
-            $correctquestions[ $rec->col] = 1;
+            $correctquestions[ $rec->mycol] = 1;
         }
     }
 
@@ -714,7 +714,7 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
         }
         // Correct answer.
         $select = "attemptid=$attempt->id";
-        $select .= " AND glossaryentryid=$entry->id AND col>0";
+        $select .= " AND glossaryentryid=$entry->id AND mycol>0";
         // Check the student guesses not source glossary entry.
         $select .= " AND questiontext is null";
 
