@@ -487,17 +487,17 @@ class Cross
 
             $rec = new stdClass();
 
-            $rec->col = $col;
-            $rec->row = $row;
+            $rec->mycol = $col;
+            $rec->myrow = $row;
             $rec->horizontal = ($dir == "h" ? 1 : 0);
 
             $rec->answertext = $word;
             $rec->questiontext = $this->minputanswers[ $word];
 
             if ($rec->horizontal) {
-                $key = sprintf( 'h%10d %10d', $rec->row, $rec->col);
+                $key = sprintf( 'h%10d %10d', $rec->myrow, $rec->mycol);
             } else {
-                $key = sprintf( 'v%10d %10d', $rec->col, $rec->row);
+                $key = sprintf( 'v%10d %10d', $rec->mycol, $rec->myrow);
             }
 
             $crossd[ $key] = $rec;
@@ -822,8 +822,8 @@ class Cross
             } else {
                 $sguess .= ",''";
             }
-            $swordx .= ",".($rec->col - 1);
-            $swordy .= ",".($rec->row - 1);
+            $swordx .= ",".($rec->mycol - 1);
+            $swordy .= ",".($rec->myrow - 1);
             if ($showsolution) {
                 $ssolutions .= ',"'.$rec->answertext.'"';
             } else {
@@ -838,16 +838,16 @@ class Cross
 
             $s = $rec->questiontext.$attachment;
             if ($rec->horizontal) {
-                if (array_key_exists( $rec->row, $legendh)) {
-                    $legendh[ $rec->row][] = $s;
+                if (array_key_exists( $rec->myrow, $legendh)) {
+                    $legendh[ $rec->myrow][] = $s;
                 } else {
-                    $legendh[ $rec->row] = array( $s);
+                    $legendh[ $rec->myrow] = array( $s);
                 }
             } else {
-                if (array_key_exists( $rec->col, $legendv)) {
-                    $legendv[ $rec->col][] = $s;
+                if (array_key_exists( $rec->mycol, $legendv)) {
+                    $legendv[ $rec->mycol][] = $s;
                 } else {
-                    $legendv[ $rec->col] = array( $s);
+                    $legendv[ $rec->mycol] = array( $s);
                 }
             }
         }

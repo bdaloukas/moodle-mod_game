@@ -197,7 +197,7 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
             break;
     }
     if ($continue) {
-        game_create( $game, $id, $forcenew, $course, $context);
+        game_create( $game, $id, $forcenew, $course, $context, $finishattempt);
     }
     // Finish the page.
     echo $OUTPUT->footer();
@@ -212,7 +212,7 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
  * @param stdClass $course
  * @param stdClass $context
  */
-function game_create( $game, $id, $forcenew, $course, $context) {
+function game_create( $game, $id, $forcenew, $course, $context, $finishattempt) {
     global $USER, $CFG, $DB;
 
     $attempt = game_getattempt( $game, $detail);
@@ -234,7 +234,7 @@ function game_create( $game, $id, $forcenew, $course, $context) {
             game_bookquiz_continue( $id, $game, $attempt, $detail, $chapterid, $context);
             break;
         case 'sudoku':
-            game_sudoku_continue( $id, $game, $attempt, $detail, '', $context);
+            game_sudoku_continue( $id, $game, $attempt, $detail, $finishattempt, $context);
             break;
         case 'cryptex':
             game_cryptex_continue( $id, $game, $attempt, $detail, $forcenew, $context);

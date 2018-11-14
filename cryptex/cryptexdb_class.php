@@ -82,7 +82,7 @@ class CryptexDB extends CrossDB {
         $freqs1 = array();
         $count1 = $count2 = 0;
         foreach ($crossd as $rec) {
-            $pos = $rec->col - 1 + ($rec->row - 1) * $cols;
+            $pos = $rec->mycol - 1 + ($rec->myrow - 1) * $cols;
             $s = $rec->answertext;
             $len = game_strlen( $s);
 
@@ -257,7 +257,7 @@ class CryptexDB extends CrossDB {
                 $questions[ $key] = $rec;
 
                 $word = $rec->answertext;
-                $pos = $crossm->usedcols * ($rec->row - 1) + ($rec->col - 1);
+                $pos = $crossm->usedcols * ($rec->myrow - 1) + ($rec->mycol - 1);
                 $len = game_strlen( $word);
                 $found = ($rec->answertext == $rec->studentanswer);
 

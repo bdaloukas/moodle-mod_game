@@ -134,9 +134,9 @@ class CrossDB extends Cross {
             $a = array();
             foreach ($recs as $rec) {
                 if ($rec->horizontal) {
-                    $key = sprintf( 'h%10d %10d', $rec->row, $rec->col);
+                    $key = sprintf( 'h%10d %10d', $rec->myrow, $rec->mycol);
                 } else {
-                    $key = sprintf( 'v%10d %10d', $rec->col, $rec->row);
+                    $key = sprintf( 'v%10d %10d', $rec->mycol, $rec->myrow);
                 }
                 $a[ $key] = $rec;
             }
@@ -150,7 +150,7 @@ class CrossDB extends Cross {
                     $wrongletters, $restletters, $game, $attempt, $crossrec, $loadfromdb);
                 $b[] = $rec;
 
-                if (($rec->col != 0) and ($rec->row != 0)) {
+                if (($rec->mycol != 0) and ($rec->myrow != 0)) {
                     $load = true;
                 }
                 if ($language == '') {
