@@ -175,7 +175,7 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
     global $CFG, $DB;
 
     $offsetquestions = array();
-    if( $attempt == null) {
+    if ($attempt == null) {
         return $offsetquestions;
     }
     $select = "attemptid = $attempt->id";
@@ -374,8 +374,6 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
 
 /**
  * Check that all numbers are found
- *
- * @param 
  */
 function game_sudoku_check_found_all_numbers() {
     return false;
@@ -606,11 +604,6 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
  * @param stdClass $sudoku
  */
 function game_sudoku_showquestion_onfinish( $id, $game, $attempt, $sudoku) {
-/*
-    if (!set_field( 'game_attempts', 'finish', 1, 'id', $attempt->id)) {
-        print_error( "game_sudoku_showquestion_onfinish: Can't update game_attempts id=$attempt->id");
-    }
-*/
     echo '<B>'.get_string( 'win', 'game').'</B><BR>';
     echo '<br>';
     echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".

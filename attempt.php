@@ -211,6 +211,7 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
  * @param int $forcenew
  * @param stdClass $course
  * @param stdClass $context
+ * @param boolean $finishattempt
  */
 function game_create( $game, $id, $forcenew, $course, $context, $finishattempt) {
     global $USER, $CFG, $DB;
