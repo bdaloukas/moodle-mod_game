@@ -1,3 +1,6 @@
+Changes in version 2018-11-18 (2018111800)
+- Completion support
+
 Changes in version 2018-07-07 (2018070701)
 - Fix in hangmang with glossary that contains attached imaged image files
 

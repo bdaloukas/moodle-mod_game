@@ -27,13 +27,14 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Plays the millionaire
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $millionaire
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context) {
+function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {
     // User must select quiz or question as a source module.
     if (($game->quizid == 0) and ($game->questioncategoryid == 0)) {
         if ($game->sourcemodule == 'quiz') {
@@ -45,7 +46,7 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context
 
     if ($attempt != false and $millionaire != false) {
         // Continue an existing game.
-        return game_millionaire_play( $id, $game, $attempt, $millionaire, $context);
+        return game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course);
     }
 
     if ($attempt == false) {
@@ -62,19 +63,20 @@ function game_millionaire_continue( $id, $game, $attempt, $millionaire, $context
         print_error( 'error inserting in game_millionaire');
     }
 
-    game_millionaire_play( $id, $game, $attempt, $newrec, $context);
+    game_millionaire_play( $cm, $game, $attempt, $newrec, $context, $course);
 }
 
 /**
  * Plays the millionaire
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $millionaire
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
+function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course) {
     global $DB;
 
     $buttons = optional_param('buttons', 0, PARAM_INT);
@@ -94,7 +96,7 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
         $name = 'btAnswer'.$i;
         $answer = optional_param($name, '', PARAM_RAW);
         if (!empty($answer)) {
-            game_millionaire_OnAnswer( $id, $game, $attempt, $millionaire, $query, $i, $context);
+            game_millionaire_OnAnswer( $cm, $game, $attempt, $millionaire, $query, $i, $context, $course);
             $found = 1;
         }
     }
@@ -102,15 +104,15 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
     if ($found == 1) {
         $found = $found; // Nothing.
     } else if (!empty($help5050x)) {
-        game_millionaire_OnHelp5050( $game, $id,  $millionaire, $game, $query, $context);
+        game_millionaire_OnHelp5050( $game, $cm->id,  $millionaire, $game, $query, $context);
     } else if (!empty($helptelephonex)) {
-        game_millionaire_OnHelpTelephone( $game, $id, $millionaire, $query, $context);
+        game_millionaire_OnHelpTelephone( $game, $cm->id, $millionaire, $query, $context);
     } else if (!empty($helppeoplex)) {
-        game_millionaire_OnHelpPeople( $game, $id, $millionaire, $query, $context);
+        game_millionaire_OnHelpPeople( $game, $cm->id, $millionaire, $query, $context);
     } else if (!empty($quitx)) {
-        game_millionaire_OnQuit( $id,  $game, $attempt, $query, $context);
+        game_millionaire_OnQuit( $cm->id,  $game, $attempt, $query, $context);
     } else {
-        game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire, $context);
+        game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
     }
 }
 
@@ -124,6 +126,7 @@ function game_millionaire_play( $id, $game, $attempt, $millionaire, $context) {
  * @param array $aanswer
  * @param stdClass $info
  * @param stdClass $context
+ * @param stdClass $course
  */
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context) {
     global $CFG, $OUTPUT;
@@ -317,20 +320,21 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
 /**
  * Show next question
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $millionaire
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, $context) {
-    game_millionaire_selectquestion( $aanswer, $game, $attempt, $millionaire, $query, $context);
+function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, $context, $course) {
+    game_millionaire_selectquestion( $aanswer, $game, $attempt, $millionaire, $query, $context, $cm, $course);
 
     if ($game->toptext != '') {
         echo $game->toptext.'<br><br>';
     }
 
-    game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, "", $context);
+    game_millionaire_showgrid( $game, $millionaire, $cm->id, $query, $aanswer, "", $context, $course);
 
     if ($game->bottomtext != '') {
         echo '<br>'.$game->bottomtext;
@@ -346,8 +350,10 @@ function game_millionaire_shownextquestion( $id, $game, $attempt, $millionaire, 
  * @param stdClass $millionaire
  * @param stdClass $query
  * @param stdClass $context
+ * @param stdClass $cm
+ * @param stdClass $course
  */
-function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context) {
+function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
     global $DB, $USER;
 
     if (($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
@@ -468,7 +474,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     }
 
     $score = $millionaire->level / 15;
-    game_updateattempts( $game, $attempt, $score, 0);
+    game_updateattempts( $game, $attempt, $score, 0, $cm, $course);
     game_update_queries( $game, $attempt, $query, $score, '');
 }
 
@@ -687,15 +693,16 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
 /**
  * Millionaire on answer
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $millionaire
  * @param stdClass $query
  * @param string $answer
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query, $answer, $context) {
+function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query, $answer, $context, $course) {
     global $DB;
 
     game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
@@ -713,7 +720,7 @@ function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query,
     $score = $millionaire->level / 15;
 
     game_update_queries( $game, $attempt, $query, $scorequestion, $answer);
-    game_updateattempts( $game, $attempt, $score, $finish);
+    game_updateattempts( $game, $attempt, $score, $finish, $cm, $course);
 
     $updrec = new stdClass();
     $updrec->id = $millionaire->id;
@@ -731,14 +738,14 @@ function game_millionaire_onanswer( $id, $game, $attempt, &$millionaire, $query,
         } else {
             $millionaire->queryid = 0;  // So the next function select a new question.
         }
-        game_millionaire_ShowNextQuestion( $id, $game, $attempt, $millionaire, $context);
+        game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
     } else {
         // Wrong answer.
         $info = get_string( 'millionaire_info_wrong_answer', 'game').
             '<br><br><b><center>'.$aanswer[ $query->correct - 1].'</b>';
 
         $millionaire->state = 15;
-        game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aanswer, $info, $context);
+        game_millionaire_ShowGrid( $game, $millionaire, $cm->id, $query, $aanswer, $info, $context);
     }
 }
 

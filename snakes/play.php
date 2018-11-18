@@ -26,15 +26,16 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Plays the game "Snakes and Ladders".
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
+function game_snakes_continue( $cm, $game, $attempt, $snakes, $context, $course) {
     if ($attempt != false and $snakes != false) {
-        return game_snakes_play( $id, $game, $attempt, $snakes, $context);
+        return game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course);
     }
 
     if ($attempt === false) {
@@ -54,7 +55,7 @@ function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
         print_error( 'game_snakes_continue: error inserting in game_snakes');
     }
 
-    game_updateattempts( $game, $attempt, 0, 0);
+    game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
 
     return game_snakes_play( $id, $game, $attempt, $newrec, $context);
 }
@@ -62,13 +63,14 @@ function game_snakes_continue( $id, $game, $attempt, $snakes, $context) {
 /**
  * Plays the game "Snakes and Ladders".
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
+function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
     global $CFG, $DB, $OUTPUT;
 
     $board = game_snakes_get_board( $game);
@@ -89,7 +91,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
 
         $gradeattempt = 1;
         $finish = 1;
-        game_updateattempts( $game, $attempt, $gradeattempt, $finish);
+        game_updateattempts( $game, $attempt, $gradeattempt, $finish, $cm, $course);
     } else {
         $finish = false;
         if ($snakes->queryid == 0) {
@@ -104,7 +106,7 @@ function game_snakes_play( $id, $game, $attempt, $snakes, $context) {
     }
 
     if ($showboard and $game->param8 == 0) {
-        game_snakes_showquestion( $id, $game, $snakes, $query, $context);
+        game_snakes_showquestion( $cm->id, $game, $snakes, $query, $context);
     }
 ?>
     <script language="javascript" event="onload" for="window">
@@ -370,19 +372,20 @@ function game_snakes_showquestion_glossary( $id, $snakes, $query, $game) {
 /**
  * Checks if answer is correct.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
+function game_snakes_check_questions( $cm, $game, $attempt, $snakes, $context, $course) {
     global $CFG, $DB;
 
     $responses = data_submitted();
 
     if ($responses->queryid != $snakes->queryid) {
-        game_snakes_play( $id, $game, $attempt, $snakes, $context);
+        game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course);
         return;
     }
 
@@ -409,25 +412,26 @@ function game_snakes_check_questions( $id, $game, $attempt, $snakes, $context) {
     }
 
     // Set the grade of the whole game.
-    game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query, $context);
+    game_snakes_position( $cm, $game, $attempt, $snakes, $correct, $query, $context, $course);
 }
 
 /**
  * Checks if the glossary answer is correct.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_snakes_check_glossary( $id, $game, $attempt, $snakes, $context) {
+function game_snakes_check_glossary( $cm, $game, $attempt, $snakes, $context, $course) {
     global $CFG, $DB;
 
     $responses = data_submitted();
 
     if ($responses->queryid != $snakes->queryid) {
-        game_snakes_play( $id, $game, $attempt, $snakes, $context);
+        game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course);
         return;
     }
 
@@ -450,21 +454,22 @@ function game_snakes_check_glossary( $id, $game, $attempt, $snakes, $context) {
     }
 
     // Set the grade of the whole game.
-    game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query, $context);
+    game_snakes_position( $cm, $game, $attempt, $snakes, $correct, $query, $context, $course);
 }
 
 /**
  * Computes the position.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param boolean $correct
  * @param stdClasss $query
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query, $context) {
+function game_snakes_position( $cm, $game, $attempt, $snakes, $correct, $query, $context, $course) {
     global $DB;
 
     $data = $DB->get_field( 'game_snakes_database', 'data', array( 'id' => $snakes->snakesdatabaseid));
@@ -494,11 +499,11 @@ function game_snakes_position( $id, $game, $attempt, $snakes, $correct, $query, 
     $gradeattempt = $snakes->position / ($board->usedcols * $board->usedrows);
     $finished = ( $snakes->position > $board->usedcols * $board->usedrows ? 1 : 0);
 
-    game_updateattempts( $game, $attempt, $gradeattempt, $finished);
+    game_updateattempts( $game, $attempt, $gradeattempt, $finished, $cm, $course);
 
     game_snakes_computenextquestion( $game, $snakes, $query);
 
-    game_snakes_play( $id, $game, $attempt, $snakes, $context);
+    game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course);
 }
 
 /**

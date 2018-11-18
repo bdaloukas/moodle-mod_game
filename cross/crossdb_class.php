@@ -107,7 +107,7 @@ class CrossDB extends Cross {
      * @param stdClass $context
      */
     public function loadcross( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution,
-    &$finishattempt, $showhtmlsolutions, &$language, $showstudentguess, $context) {
+    &$finishattempt, $showhtmlsolutions, &$language, $showstudentguess, $context, $course, $cm) {
         global $DB;
 
         $info = '';
@@ -158,7 +158,7 @@ class CrossDB extends Cross {
                 }
             }
             $info = $this->game_cross_computecheck( $correctletters,  $wrongletters,
-                $restletters, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt);
+                $restletters, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt, $course, $cm);
             $html = $this->showhtml_base( $crossrec, $b, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game);
         }
 
@@ -181,9 +181,11 @@ class CrossDB extends Cross {
      * @param boolean $onlyshow
      * @param boolean $showsolution
      * @param boolean $finishattempt
+     * @param stdClass $course
+     * @param stdClass $cm
      */
     public function game_cross_computecheck( $correctletters,  $wrongletters, $restletters, $game,
-        $attempt, &$done, $onlyshow, $showsolution, $finishattempt) {
+        $attempt, &$done, $onlyshow, $showsolution, $finishattempt, $course, $cm) {
 
         $ret = '';
 
@@ -230,10 +232,10 @@ class CrossDB extends Cross {
             $done = 1;
         }
 
-        $grade = $correctletters / ($correctletters + $restletters);
-        $ret .= '<br>'.get_string( 'grade', 'game').' '.round( $grade * 100).' %';
+        $score = $correctletters / ($correctletters + $restletters);
+        $ret .= '<br>'.get_string( 'grade', 'game').' '.round( $score * 100).' %';
 
-        game_updateattempts( $game, $attempt, $grade, $done);
+        game_updateattempts( $game, $attempt, $score, $done, $cm, $course);
 
         return $ret;
     }

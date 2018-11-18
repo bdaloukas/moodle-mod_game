@@ -867,10 +867,12 @@ function game_insert_record( $table, $rec) {
  * @param stdClass $attempt
  * @param float $score
  * @param boolean $finished
+ * @param stdClass cm
+ * @param stdClass course
  *
  * @return the record
  */
-function game_updateattempts( $game, $attempt, $score, $finished) {
+function game_updateattempts( $game, $attempt, $score, $finished, $cm, $course) {
     global $DB, $USER;
 
     if ($attempt != false) {
@@ -913,6 +915,15 @@ function game_updateattempts( $game, $attempt, $score, $finished) {
     if ($finished) {
         game_save_best_score( $game);
     }
+
+    // Update completion state
+    $completion=new completion_info( $course);
+    if( $completion->is_enabled( $cm) && $game->completionpass) {
+        if (!$finished) {
+            game_save_best_score( $game);
+        }
+        $completion->update_state( $cm, COMPLETION_COMPLETE);
+    }
 }
 
 /**
@@ -922,10 +933,12 @@ function game_updateattempts( $game, $attempt, $score, $finished) {
  * @param stdClass $attempt
  * @param float $grade
  * @param boolean $finished
+ * @param stdClass $cm
+ * @param stdClass $course
  *
  * @return the record
  */
-function game_updateattempts_maxgrade( $game, $attempt, $grade, $finished) {
+function game_updateattempts_maxgrade( $game, $attempt, $grade, $finished, $cm, $course) {
     global $DB;
 
     $recgrade = $DB->get_field( 'game_attempts', 'score', array( 'id' => $attempt->id));
@@ -934,7 +947,7 @@ function game_updateattempts_maxgrade( $game, $attempt, $grade, $finished) {
         $grade = -1;    // Don't touch the grade.
     }
 
-    game_updateattempts( $game, $attempt, $grade, $finished);
+    game_updateattempts( $game, $attempt, $grade, $finished, $cm, $course);
 }
 
 /**

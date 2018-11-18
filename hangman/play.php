@@ -27,15 +27,16 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Plays the game hangman
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $hangman
  * @param string $newletter
  * @param string $action
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $action, $context) {
+function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $action, $context, $course) {
     global $DB, $USER;
 
     if ($attempt != false and $hangman != false) {
@@ -45,7 +46,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
                 error( "game_hangman_continue: Can't update game_hangman");
             }
         } else {
-            return game_hangman_play( $id, $game, $attempt, $hangman, false, false, $context);
+            return game_hangman_play( $cm, $game, $attempt, $hangman, false, false, $context, $course, $cm);
         }
     }
 
@@ -209,22 +210,24 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
 
     game_update_repetitions( $game->id, $USER->id, $query->questionid, $query->glossaryentryid);
 
-    game_hangman_play( $id, $game, $attempt, $newrec, false, false, $context);
+    game_hangman_play( $cm, $game, $attempt, $newrec, false, false, $context, $course);
 }
 
 /**
  * On finish game.
  *
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $hangman
+ * @param stdClass $course
  */
-function game_hangman_onfinishgame( $game, $attempt, $hangman) {
+function game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course) {
     global $DB;
 
     $score = $hangman->corrects / $hangman->maxtries;
 
-    game_updateattempts( $game, $attempt, $score, true);
+    game_updateattempts( $game, $attempt, $score, true, $cm, $course);
 
     if (!$DB->set_field( 'game_hangman', 'finishedword', 0, array( 'id' => $hangman->id))) {
         print_error( "game_hangman_onfinishgame: Can't update game_hangman");
@@ -234,15 +237,16 @@ function game_hangman_onfinishgame( $game, $attempt, $hangman) {
 /**
  * Plays the hangman game.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $hangman
  * @param boolean $onlyshow
  * @param boolean $showsolution
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolution, $context) {
+function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolution, $context, $course) {
     global $CFG, $DB, $OUTPUT;
 
     $query = $DB->get_record( 'game_queries', array( 'id' => $hangman->queryid));
@@ -263,7 +267,7 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
         $max = 6;
     }
     hangman_showpage( $done, $correct, $wrong, $max, $wordline, $wordline2, $links, $game,
-        $attempt, $hangman, $query, $onlyshow, $showsolution, $context);
+        $attempt, $hangman, $query, $onlyshow, $showsolution, $context, $course, $cm);
 
     if (!$done) {
         if ($wrong > $max) {
@@ -278,7 +282,7 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
 
         if ($wrong >= $max) {
             // This word is incorrect. If reach the max number of word I have to finish else continue with next word.
-            hangman_onincorrect( $id, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution);
+            hangman_onincorrect( $cm->id, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution);
         } else {
             $i = $max - $wrong;
             if ($i > 1) {
@@ -305,7 +309,7 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
         }
     } else {
         // This word is correct. If reach the max number of word I have to finish else continue with next word.
-        hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query);
+        hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course);
     }
 
     echo "<br/><br/>".get_string( 'grade', 'game').' : '.round( $query->percent * 100).' %';
@@ -341,12 +345,12 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
  * @param boolean $onlyshow
  * @param boolean $showsolution
  * @param stdClass $context
+ * @param stdClass $course\
+ * @param stdClass $cm
  */
 function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordline2, &$links,
-    $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution, $context) {
+    $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution, $context, $course, $cm) {
     global $USER, $CFG, $DB;
-
-    $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
 
     $word = $query->answertext;
 
@@ -435,7 +439,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
 
         if (game_strpos($letters, $char) === false) {
             // User doesn't select this character.
-            $params = 'id='.$id.'&amp;newletter='.urlencode( $char);
+            $params = 'id='.$cm->id.'&amp;newletter='.urlencode( $char);
             if ($onlyshow or $showsolution) {
                 $links .= $char;
             } else {
@@ -498,21 +502,22 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         $percent = ($correct - $wrong / $max) / game_strlen( $word);
         $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
     }
-    game_updateattempts( $game, $attempt, $score, $finished);
+    game_updateattempts( $game, $attempt, $score, $finished, $cm, $course);
     game_update_queries( $game, $attempt, $query, $score, $answer);
 }
 
 /**
  * This word is correct. If reach the max number of words I have to finish else continue with next word.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param string $wordline
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $hangman
  * @param stdClass $query
+ * @param stdClass $course
  */
-function hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query) {
+function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course) {
     global $DB;
 
     echo "<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
@@ -525,7 +530,7 @@ function hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query) {
         }
     }
 
-    game_hangman_show_nextword( $id, $game, $attempt, $hangman);
+    game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course);
 }
 
 /**
@@ -565,12 +570,13 @@ function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, 
 /**
  * Shows the next word.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $hangman
+ * @param stdClass $course
  */
-function game_hangman_show_nextword( $id, $game, $attempt, $hangman) {
+function game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course) {
     global $CFG, $DB;
 
     echo '<br/>';
@@ -579,17 +585,13 @@ function game_hangman_show_nextword( $id, $game, $attempt, $hangman) {
         $params = "id=$id&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
         echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?$params";
     } else {
-        game_hangman_onfinishgame( $game, $attempt, $hangman);
+        game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course);
 
         if (game_can_start_new_attempt( $game)) {
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">".
                 get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     }
 
-    if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
-        print_error( "Course Module ID was incorrect id=$id");
-    }
-
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\">".get_string( 'finish', 'game').'</a> ';
 }

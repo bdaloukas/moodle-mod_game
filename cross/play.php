@@ -31,15 +31,16 @@ require( "crossdb_class.php");
 /**
  * Plays the game crossword.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $cross
  * @param string $g
  * @param boolean $endofgame
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $context) {
+function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $context, $course) {
     if ($endofgame) {
         if ($g == '') {
             game_updateattempts( $game, $attempt, -1, true);
@@ -48,8 +49,8 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $con
     }
 
     if ($attempt != false and $cross != false) {
-        return game_cross_play( $id, $game, $attempt, $cross, $g, false, false, $endofgame,
-            false, false, false, false, true, $context);
+        return game_cross_play( $cm, $game, $attempt, $cross, $g, false, false, $endofgame,
+            false, false, false, false, true, $context, $course);
     }
 
     if ($attempt == false) {
@@ -57,8 +58,8 @@ function game_cross_continue( $id, $game, $attempt, $cross, $g, $endofgame, $con
     }
 
     game_cross_new( $game, $attempt->id, $crossm);
-    game_updateattempts( $game, $attempt, 0, 0);
-    return game_cross_play( $id, $game, $attempt, $crossm, '', false, false, false, false, false, false, false, true, $context);
+    game_updateattempts( $game, $attempt, 0, 0, $course, $cm);
+    return game_cross_play( $cm, $game, $attempt, $crossm, '', false, false, false, false, false, false, false, true, $context, $course);
 }
 
 /**
@@ -146,7 +147,7 @@ function showlegend( $legend, $title) {
 /**
  * Plays the game crossword.
  *
- * @param int $id
+ * @param int $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $crossrec
@@ -160,9 +161,10 @@ function showlegend( $legend, $title) {
  * @param boolean $showhtmlprintbutton
  * @param boolean $showstudentguess
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
-    $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton, $showstudentguess, $context) {
+function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
+    $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton, $showstudentguess, $context, $course) {
     global $CFG, $DB;
 
     $cross = new CrossDB();
@@ -170,7 +172,7 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
     $language = $attempt->language;
     $info = $cross->loadcross( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow,
         $showsolution, $endofgame, $showhtmlsolutions, $attempt->language,
-        $showstudentguess, $context);
+        $showstudentguess, $context, $course, $cm);
 
     if ($language != $attempt->language) {
         if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))) {
@@ -179,16 +181,12 @@ function game_cross_play( $id, $game, $attempt, $crossrec, $g, $onlyshow, $shows
     }
 
     if ($done or $endofgame) {
-        if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
-            print_error("Course Module ID was incorrect id=$id");
-        }
-
         if ($endofgame == false) {
             echo '<B>'.get_string( 'win', 'game').'</B><BR>';
         }
         if (game_can_start_new_attempt( $game)) {
             echo '<br>';
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id&forcenew=1\">".
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">".
                 get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     } else if ($info != '') {
@@ -813,7 +811,7 @@ function CheckServerClick( endofgame) {
     <?php
     if ($onlyshow == false) {
         global $CFG;
-        $params = 'id='.$id.'&action=crosscheck&g=';
+        $params = 'id='.$cm->id.'&action=crosscheck&g=';
         echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
     }
     ?>
@@ -826,7 +824,7 @@ function OnPrint()
 {
 <?php
     global $CFG;
-    $params = "id=$id&gameid=$game->id";
+    $params = "id=$cm->id&gameid=$game->id";
     echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";
 ?>
 }
