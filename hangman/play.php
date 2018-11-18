@@ -582,7 +582,7 @@ function game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course) {
     echo '<br/>';
     if (($hangman->try < $hangman->maxtries) or ($hangman->maxtries == 0)) {
         // Continue to next word.
-        $params = "id=$id&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
+        $params = "id={$cm->id}&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
         echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?$params";
     } else {
         game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course);

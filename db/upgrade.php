@@ -1763,7 +1763,7 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
-    if ($oldversion < ($ver = 2018111400)) {
+    if ($oldversion < ($ver = 2018111804)) {
         $table = new xmldb_table( 'game_queries');
         $field = new xmldb_field( 'col', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
         if ($dbman->field_exists($table, $field)) {
@@ -1772,7 +1772,7 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
-    if ($oldversion < ($ver = 2018111401)) {
+    if ($oldversion < ($ver = 2018111805)) {
         $table = new xmldb_table( 'game_queries');
         $field = new xmldb_field( 'row', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
         if ($dbman->field_exists($table, $field)) {
