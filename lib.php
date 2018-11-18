@@ -442,7 +442,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
                  WHERE m.name='game' AND m.id=cm.module AND cm.instance=a.id";echo $sql;
         if ($rs = $DB->get_recordset_sql( $sql)) {
             while ($game = $DB->rs_fetch_next_record( $rs)) {
-                if ($game->grade != 0) {echo "ZERO";
+                if ($game->grade != 0) {
                     game_update_grades( $game, 0, false);
                 } else {
                     game_grade_item_update( $game);
@@ -490,7 +490,7 @@ function game_grade_item_update($game, $grades=null) {
         $params['reset'] = true;
         $grades = null;
     }
-//echo "<HR>grade_update ";print_r( $grades);debug_print_backtrace();
+
     return grade_update('mod/game', $game->course, 'mod', 'game', $game->id, 0, $grades, $params);
 }
 

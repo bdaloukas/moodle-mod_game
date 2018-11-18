@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {echo "game_millionaire_continue cm=$cm->id course=$course->id<br>";
+function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {
     // User must select quiz or question as a source module.
     if (($game->quizid == 0) and ($game->questioncategoryid == 0)) {
         if ($game->sourcemodule == 'quiz') {
@@ -62,7 +62,7 @@ function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context
     if (!game_insert_record(  'game_millionaire', $newrec)) {
         print_error( 'error inserting in game_millionaire');
     }
-echo "game_millionaire_continue cm=$cm->id course=$course->id<br>";
+
     game_millionaire_play( $cm, $game, $attempt, $newrec, $context, $course);
 }
 
@@ -76,7 +76,7 @@ echo "game_millionaire_continue cm=$cm->id course=$course->id<br>";
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course) {echo "game_millionaire_play cm=$cm->id course=$course->id<br>";
+function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course) {
     global $DB;
 
     $buttons = optional_param('buttons', 0, PARAM_INT);
@@ -760,7 +760,7 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
  */
 function game_millionaire_onquit( $cm, $game, $attempt, $query, $course) {
     global $CFG, $DB;
-echo "game_millionaire_onquit cm=$cm->id course=$course->id";
+
     game_updateattempts( $game, $attempt, -1, true, $cm, $course);
 
     echo '<br>';

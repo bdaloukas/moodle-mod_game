@@ -251,7 +251,8 @@ function game_hiddenpicture_play( $cm, $game, $attempt, $hiddenpicture, $showsol
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
     unset( $offsetquestions[ 0]);
 
-    game_hiddenpicture_showhiddenpicture( $cm->id, $game, $attempt, $hiddenpicture, $showsolution, $offsetquestions, $correctquestions);
+    game_hiddenpicture_showhiddenpicture( $cm->id, $game, $attempt, $hiddenpicture, $showsolution,
+        $offsetquestions, $correctquestions);
 
     // Show questions.
     $onlyshow = false;
