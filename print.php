@@ -73,6 +73,9 @@ function game_print_cross( $cm, $game, $context, $course) {
     require( "cross/play.php");
 
     $attempt = game_getattempt( $game, $crossrec);
+    if( $attempt === false) {
+        return;
+    }
 
     $g = '';
     $onlyshow = true;
@@ -111,6 +114,9 @@ function game_print_cryptex( $cm, $game, $context, $course) {
     require( "cryptex/play.php");
 
     $attempt = game_getattempt( $game, $crossrec);
+    if( $attempt === false) {
+        return;
+    }
 
     $updateattempt = false;
     $onlyshow = true;

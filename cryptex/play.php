@@ -253,7 +253,7 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
 
     if (($onlyshow == false) and ($showsolution == false)) {
         if ($finished) {
-            game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec);
+            game_cryptex_onfinished( $cm, $game, $attempt, $cryptexrec, $course);
         }
     }
 ?>
@@ -416,22 +416,19 @@ if ($print) {
 /**
  * On finished.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $cryptexrec
+ * @param stdClass $course
  */
-function game_cryptex_onfinished( $id, $game, $attempt, $cryptexrec) {
+function game_cryptex_onfinished( $cm, $game, $attempt, $cryptexrec, $course) {
     global $CFG, $DB;
-
-    if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
-        print_error( "Course Module ID was incorrect id=$id");
-    }
 
     echo '<B>'.get_string( 'win', 'game').'</B><br>';
     echo '<br>';
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id&forcenew=1\">".
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">".
         get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id={$cm->course}\">".get_string( 'finish', 'game').'</a> ';
     echo "<br><br>\r\n";
 }
