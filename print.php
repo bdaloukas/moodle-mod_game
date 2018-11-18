@@ -35,31 +35,41 @@ require_login( $game->course);
 $context = game_get_context_module_instance( $id);
 require_capability('mod/game:view', $context);
 
-game_print( $game, $id, $context);
+if (!$course = $DB->get_record('course', array('id' => $game->course))) {
+    print_error('invalidcourseid');
+}
+
+if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
+    print_error('invalidcoursemodule');
+}
+
+game_print( $cm, $game, $context, $course);
 
 /**
  * Print
  *
+ * @param stdClass $cm
  * @param stdClass $game
- * @param boolean $update
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_print( $game, $update, $context) {
+function game_print( $cm, $game, $context, $course) {
     if ( $game->gamekind == 'cross') {
-        game_print_cross( $game, $update, $context);
+        game_print_cross( $cm, $game, $context, $course);
     } else if ($game->gamekind == 'cryptex') {
-        game_print_cryptex( $game, $update, $context);
+        game_print_cryptex( $cm, $game, $context, $course);
     }
 }
 
 /**
  * Prints a cross.
  *
+ * @param stdClass $cm
  * @param stdClass $game
-   @param boolean $update
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_print_cross( $game, $update, $context) {
+function game_print_cross( $cm, $game, $context, $course) {
     require( "cross/play.php");
 
     $attempt = game_getattempt( $game, $crossrec);
@@ -80,19 +90,20 @@ function game_print_cross( $game, $update, $context) {
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?php
-    game_cross_play( $update, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
+    game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
         $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
-        $showstudentguess, $context);
+        $showstudentguess, $context, $course);
 }
 
 /**
  * Prints a cryptex.
  *
+   @param stdClass $cm
  * @param stdClass $game
-   @param boolean $update
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_print_cryptex( $game, $update, $context) {
+function game_print_cryptex( $cm, $game, $context, $course) {
     global $DB;
 
     require( 'cross/cross_class.php');
@@ -114,6 +125,6 @@ function game_print_cryptex( $game, $update, $context) {
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <?php
-    game_cryptex_play( $update, $game, $attempt, $crossrec, $crossm, $updateattempt,
-        $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton);
+    game_cryptex_play( $cm, $game, $attempt, $crossrec, $crossm, $updateattempt,
+        $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton, $course);
 }

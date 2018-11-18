@@ -175,7 +175,7 @@ function game_do_attempt( $game, $action, $course, $context, $cm) {
             break;
         case 'cryptexcheck':    // The user tries to guess a question.
             $attempt = game_getattempt( $game, $detail);
-            game_cryptex_check( $cm, $game, $attempt, $detail, $q, $answer, $finishattempt, $context);
+            game_cryptex_check( $cm, $game, $attempt, $detail, $q, $answer, $finishattempt, $context, $course);
             break;
         case 'bookquizcheck':   // The student tries to answer a question.
             $attempt = game_getattempt( $game, $detail);
