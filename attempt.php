@@ -191,7 +191,7 @@ function game_do_attempt( $game, $action, $course, $context, $cm) {
             break;
         case 'hiddenpicturecheckg': // The student tries to guess a glossaryentry.
             $attempt = game_getattempt( $game, $detail);
-            game_hiddenpicture_check_mainquestion( $cm, $game, $attempt, $detail, $endofgame, $context);
+            game_hiddenpicture_check_mainquestion( $cm, $game, $attempt, $detail, $endofgame, $context, $course);
             break;
         default:
             $continue = true;
