@@ -34,7 +34,7 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {
+function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {echo "game_millionaire_continue cm=$cm->id course=$course->id<br>";
     // User must select quiz or question as a source module.
     if (($game->quizid == 0) and ($game->questioncategoryid == 0)) {
         if ($game->sourcemodule == 'quiz') {
@@ -62,7 +62,7 @@ function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context
     if (!game_insert_record(  'game_millionaire', $newrec)) {
         print_error( 'error inserting in game_millionaire');
     }
-
+echo "game_millionaire_continue cm=$cm->id course=$course->id<br>";
     game_millionaire_play( $cm, $game, $attempt, $newrec, $context, $course);
 }
 
@@ -76,7 +76,7 @@ function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course) {
+function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course) {echo "game_millionaire_play cm=$cm->id course=$course->id<br>";
     global $DB;
 
     $buttons = optional_param('buttons', 0, PARAM_INT);
@@ -110,7 +110,7 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
     } else if (!empty($helppeoplex)) {
         game_millionaire_OnHelpPeople( $game, $cm->id, $millionaire, $query, $context);
     } else if (!empty($quitx)) {
-        game_millionaire_OnQuit( $cm->id,  $game, $attempt, $query, $context);
+        game_millionaire_OnQuit( $cm,  $game, $attempt, $query, $course);
     } else {
         game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
     }
@@ -734,7 +734,7 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
         // Correct.
         if ($finish) {
             echo get_string( 'win', 'game');
-            game_millionaire_OnQuit( $id, $game, $attempt, $query);
+            game_millionaire_OnQuit( $cm, $game, $attempt, $query, $course);
         } else {
             $millionaire->queryid = 0;  // So the next function select a new question.
         }
@@ -752,22 +752,19 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
 /**
  * Millionaire on quit
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $query
+ * @param stdClass $course
  */
-function game_millionaire_onquit( $id, $game, $attempt, $query) {
+function game_millionaire_onquit( $cm, $game, $attempt, $query, $course) {
     global $CFG, $DB;
-
-    game_updateattempts( $game, $attempt, -1, true);
-
-    if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
-        print_error( "Course Module ID was incorrect id=$id");
-    }
+echo "game_millionaire_onquit cm=$cm->id course=$course->id";
+    game_updateattempts( $game, $attempt, -1, true, $cm, $course);
 
     echo '<br>';
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">".
         get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
     echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
 }
