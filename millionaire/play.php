@@ -126,7 +126,6 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
  * @param array $aanswer
  * @param stdClass $info
  * @param stdClass $context
- * @param stdClass $course
  */
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context) {
     global $CFG, $OUTPUT;

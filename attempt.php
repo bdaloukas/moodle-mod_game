@@ -126,11 +126,11 @@ function game_show_header( &$id, &$game, &$course, &$context, &$cm) {
 /**
  * Do one attempt.
  *
- * @param int $id
  * @param stdClass $game
  * @param string $action
  * @param stdClass $course
  * @param stdClass $context
+ * @param stdClass $cm
  */
 function game_do_attempt( $game, $action, $course, $context, $cm) {
     global $OUTPUT;

@@ -345,7 +345,7 @@ function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolu
  * @param boolean $onlyshow
  * @param boolean $showsolution
  * @param stdClass $context
- * @param stdClass $course\
+ * @param stdClass $course
  * @param stdClass $cm
  */
 function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordline2, &$links,

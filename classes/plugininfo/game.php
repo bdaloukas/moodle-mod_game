@@ -28,7 +28,17 @@ use core\plugininfo\base;
 defined('MOODLE_INTERNAL') || die();
 
 
+/**
+ * The class game extents base.
+ *
+ * @package    mod_game
+ * @copyright  2018 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class game extends base {
+    /**
+     * Return always true.
+     */
     public function is_uninstall_allowed() {
         return true;
     }
@@ -39,7 +49,6 @@ class game extends base {
      * This is intended for disabling of plugin, some DB table purging, etc.
      *
      * NOTE: to be called from uninstall_plugin() only.
-     * @private
      */
     public function uninstall_cleanup() {
         global $DB;

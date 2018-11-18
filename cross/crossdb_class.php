@@ -105,6 +105,8 @@ class CrossDB extends Cross {
      * @param string $language
      * @param boolean $showstudentguess
      * @param stdClass $context
+     * @param stdClass $course
+     * @param stdClass $cm
      */
     public function loadcross( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution,
     &$finishattempt, $showhtmlsolutions, &$language, $showstudentguess, $context, $course, $cm) {

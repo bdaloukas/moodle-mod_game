@@ -268,10 +268,9 @@ function game_sudoku_getclosed( $data) {
  * @param boolean $bshowsolution
  * @param int $offsetquestions
  * @param int $correctquestions
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $attempt
  * @param stdClass $game
- * @param stdClass $cm
  * @param stdClass $course
  */
 function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $offsetquestions,
@@ -623,12 +622,13 @@ function game_sudoku_checkanswers() {
 /**
  * Checks questions
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $sudoku
  * @param boolean $finishattempt
  * @param stdClass $course
+ * @param stdClass $context
  */
 function game_sudoku_check_questions( $cm, $game, $attempt, $sudoku, $finishattempt, $course, $context) {
     global $DB;
@@ -672,12 +672,12 @@ function game_sudoku_check_questions( $cm, $game, $attempt, $sudoku, $finishatte
 /**
  * Check glossary entries
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $sudoku
  * @param boolean $finishattempt
- * @param string $course
+ * @param stdClass $course
  */
 function game_sudoku_check_glossaryentries( $cm, $game, $attempt, $sudoku, $finishattempt, $course) {
     global $DB;

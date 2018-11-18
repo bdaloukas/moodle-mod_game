@@ -171,7 +171,7 @@ function game_cryptex_check( $cm, $game, $attempt, $cryptexrec, $q, $answer, $fi
 /**
  * Plays the game cryptex.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $cryptexrec
@@ -182,6 +182,7 @@ function game_cryptex_check( $cm, $game, $attempt, $cryptexrec, $q, $answer, $fi
  * @param stdClass $context
  * @param boolean $print
  * @param boolean $showhtmlprintbutton
+ * @param stdClass $course
  */
 function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
         $updateattempt, $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton, $course) {
