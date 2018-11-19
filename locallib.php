@@ -867,8 +867,8 @@ function game_insert_record( $table, $rec) {
  * @param stdClass $attempt
  * @param float $score
  * @param boolean $finished
- * @param stdClass cm
- * @param stdClass course
+ * @param stdClass $cm
+ * @param stdClass $course
  *
  * @return the record
  */
