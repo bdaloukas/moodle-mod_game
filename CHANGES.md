@@ -1,3 +1,7 @@
+Changes in version 2018-11-20 (2018112000)
+- CSS of crossword in a different file
+- Square cell on crossword by changing the css
+
 Changes in version 2018-11-18 (2018111800)
 - Completion support
 
