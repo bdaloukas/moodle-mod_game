@@ -1781,6 +1781,28 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
+    if ($oldversion < ($ver = 2018112004)) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('lastip');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112005)) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('lastremotehost');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }
 

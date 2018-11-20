@@ -196,7 +196,7 @@ function game_showattempts($game) {
     $table = "{game_attempts} as ga, {user} u, {game} as g";
     $select = "ga.userid=u.id AND ga.gameid={$game->id} AND g.id={$game->id}";
     $fields = "ga.id, u.lastname, u.firstname, ga.attempts,".
-        "timestart, timefinish, timelastattempt, score, ga.lastip, ga.lastremotehost";
+        "timestart, timefinish, timelastattempt, score";
     if ($userid != 0) {
         $select .= ' AND u.id='.$userid;
     }
@@ -223,7 +223,6 @@ function game_showattempts($game) {
     if (($recs = $DB->get_records_sql( $sql, null, $recslimitfrom, $recslimitnum)) != false) {
         echo '<table border="1">';
         echo '<tr><td><b>'.get_string( 'delete').'</td><td><b>'.get_string('user').'</td>';
-        echo '<td><b>'.get_string('lastip', 'game').'</b></td>';
         echo '<td><b>'.get_string('timestart', 'game').'</b></td>';
         echo '<td><b>'.get_string('timelastattempt', 'game').'</b></td>';
         echo '<td><b>'.get_string('timefinish', 'game').'</b></td>';
@@ -247,7 +246,6 @@ function game_showattempts($game) {
             }
             echo '</center></td>';
             echo '<td><center>'.$rec->firstname. ' '.$rec->lastname.'</center></td>';
-            echo '<td><center>'.(strlen( $rec->lastremotehost) > 0 ? $rec->lastremotehost : $rec->lastip).'</center></td>';
             echo '<td><center>'.( $rec->timestart != 0 ? userdate($rec->timestart) : '')."</center></td>\r\n";
             echo '<td><center>'.( $rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '').'</center></td>';
             echo '<td><center>'.( $rec->timefinish != 0 ? userdate($rec->timefinish) : '').'</center></td>';

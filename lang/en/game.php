@@ -51,6 +51,24 @@ $string[ 'eventgamesupdated'] = 'Game updated';
 $string[ 'eventgameviewed'] = 'Game viewed';
 $string[ 'eventgameplayed'] = 'Game played';
 
+// Classes/privacy/provider.php.
+$string[ 'privacy:metadata:game'] = 'The game activity makes use of game reports.';
+$string[ 'privacy:metadata:game_attempts'] = 'Details about each attempt on a game.';
+$string[ 'privacy:metadata:game_attempts:attempt'] = 'The attempt number.';
+$string[ 'privacy:metadata:game_attempts:preview'] = 'Whether this is a preview of the game.';
+$string[ 'privacy:metadata:game_attempts:timestart'] = 'The time that the attempt was started.';
+$string[ 'privacy:metadata:game_attempts:timefinish'] = 'The time that the attempt was completed.';
+$string[ 'privacy:metadata:game_attempts:timemodified'] = 'The time that the attempt was updated.';
+$string[ 'privacy:metadata:game_attempts:timelastattempt'] = '';
+$string[ 'privacy:metadata:game_attempts:score'] = 'The score (percent) in the attempt.';
+$string[ 'privacy:metadata:game_attempts:language'] = 'The lanuage that used.';
+$string[ 'privacy:metadata:game_grades'] = 'Details about the overall grade for this game.';
+$string[ 'privacy:metadata:game_grades:score'] = 'The overall score (percent) for this game.';
+$string[ 'privacy:metadata:game_grades:game'] = 'The game that was graded.';
+$string[ 'privacy:metadata:game_grades:timemodified'] = 'The time that the grade was modified.';
+$string[ 'privacy:metadata:game_grades:userid'] = 'The user who was graded.';
+
+
 // File cross/cross_class.php.
 $string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
@@ -354,7 +372,6 @@ $string[ 'feedbacks'] = 'Messages correct answer';
 $string[ 'repetitions'] = 'Repetitions';
 
 // File showattempts.php.
-$string[ 'lastip'] = 'IP student';
 $string[ 'showsolution'] = 'solution';
 $string[ 'timefinish'] = 'End of game';
 $string[ 'timelastattempt'] = 'Last attempt';
