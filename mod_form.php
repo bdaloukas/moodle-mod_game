@@ -547,7 +547,7 @@ class mod_game_mod_form extends moodleform_mod {
      *
      * @param array $defaultvalues
      */
-    public function set_data($defaultvalues) {
+    public function set_data( $defaultvalues) {
         global $DB;
 
         if (isset( $defaultvalues->type)) {
@@ -620,7 +620,19 @@ class mod_game_mod_form extends moodleform_mod {
             }
         }
 
-        parent::set_data($defaultvalues);
+        if (isset( $defaultvalues->toptext)) {
+            $a = array();
+            $a[ 'text'] = $defaultvalues->toptext;
+            $defaultvalues->toptext = $a;
+        }
+
+        if (isset( $defaultvalues->bottomtext)) {
+            $a = array();
+            $a[ 'text'] = $defaultvalues->bottomtext;
+            $defaultvalues->bottomtext = $a;
+        }
+
+        parent::set_data( $defaultvalues);
     }
 
     /**

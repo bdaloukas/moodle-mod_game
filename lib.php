@@ -105,7 +105,7 @@ function game_update_instance($game) {
         $game->param1 = 0;
     }
 
-    if ($game->param1 == '') {
+    if ($game->param1 == 0) {
         $game->param1 = 0;
     }
 
@@ -113,7 +113,7 @@ function game_update_instance($game) {
         $game->param2 = 0;
     }
 
-    if ($game->param2 == '') {
+    if ($game->param2 == 0) {
         $game->param2 = 0;
     }
 
@@ -123,6 +123,13 @@ function game_update_instance($game) {
 
     game_before_add_or_update( $game);
 
+    if (isset( $game->toptext)) {
+        $game->toptext = $game->toptext[ 'text'];
+    }
+
+    if (isset( $game->bottomtext)) {
+        $game->bottomtext = $game->bottomtext[ 'text'];
+    }
     if (!$DB->update_record("game", $game)) {
         return false;
     }

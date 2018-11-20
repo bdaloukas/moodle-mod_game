@@ -128,7 +128,7 @@ class provider implements
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = ".CONTEXT_MODULE."
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modname
                   JOIN {game} q ON q.id = cm.instance
-                  JOIN {game_attempts} qa ON qa.game = q.id          
+                  JOIN {game_attempts} qa ON qa.game = q.id
             WHERE qa.userid = $userid AND qa.preview = 0";
 
         $resultset = new contextlist();
