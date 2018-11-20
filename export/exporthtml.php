@@ -87,8 +87,10 @@ function game_onexporthtml_cross( $game, $context, $html, $destdir) {
 
     ob_start();
 
-    game_cross_play( 0, $game, $attempt, $crossrec, '', true, false, false, false,
-        $html->checkbutton, true, $html->printbutton, false, $context);
+    $cm = new stdClass;
+    $cm->id = 0;
+    game_cross_play( $cm, $game, $attempt, $crossrec, '', true, false, false, false,
+        $html->checkbutton, true, $html->printbutton, false, $context, null);
 
     $outputstring = ob_get_contents();
     ob_end_clean();

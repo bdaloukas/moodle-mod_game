@@ -209,8 +209,8 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
         $textdir = '';
     }
 
+    echo '<style>'.file_get_contents( 'cross/styles.css').'</style>';
 ?>
-<link href="cross/styles.css" rel="stylesheet" type="text/css" />
 </head>
 
 <?php
