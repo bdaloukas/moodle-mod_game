@@ -1763,24 +1763,6 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
-    if ($oldversion < ($ver = 2018111804)) {
-        $table = new xmldb_table( 'game_queries');
-        $field = new xmldb_field( 'col', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->rename_field($table, $field, 'mycol');
-        }
-        upgrade_mod_savepoint(true, $ver, 'game');
-    }
-
-    if ($oldversion < ($ver = 2018111805)) {
-        $table = new xmldb_table( 'game_queries');
-        $field = new xmldb_field( 'row', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
-        if ($dbman->field_exists($table, $field)) {
-            $dbman->rename_field($table, $field, 'myrow');
-        }
-        upgrade_mod_savepoint(true, $ver, 'game');
-    }
-
     if ($oldversion < ($ver = 2018112004)) {
         $table = new xmldb_table('game_attempts');
         $field = new xmldb_field('lastip');
@@ -1803,6 +1785,23 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, $ver, 'game');
     }
 
+    if ($oldversion < ($ver = 2018112100)) {
+        $table = new xmldb_table( 'game_queries');
+        $field = new xmldb_field( 'col', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'mycol');
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112101)) {
+        $table = new xmldb_table( 'game_queries');
+        $field = new xmldb_field( 'row', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'myrow');
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
     return true;
 }
 
