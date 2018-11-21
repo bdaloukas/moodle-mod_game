@@ -233,17 +233,14 @@ class provider implements
                   JOIN {game_attempts} qa ON qa.game = q.id
             WHERE qa.userid = :userid";
 
-        $params = array_merge(
-                [
+        $params = array(
                     'contextlevel'      => CONTEXT_MODULE,
                     'modname'           => 'game',
-                    'userid'          => $userid,
-                ],
-                $qubaid->from_where_params()
+                    'userid'          => $userid
             );
 
         $resultset = new contextlist();
-        $resultset->add_from_sql($sql, $params);
+//$resultset->add_from_sql($sql, $params);
 
         return $resultset;
     }
@@ -255,7 +252,7 @@ class provider implements
      */
     public static function export_user_data(approved_contextlist $contextlist) {
         global $DB;
-
+/*
         if (!count($contextlist)) {
             return;
         }
@@ -269,7 +266,6 @@ class provider implements
                     qg.id AS hasgrade,
                     qg.grade AS bestgrade,
                     qg.timemodified AS grademodified,
-                    qo.id AS hasoverride,
                     qo.timeopen AS override_timeopen,
                     qo.timeclose AS override_timeclose,
                     qo.timelimit AS override_timelimit,
@@ -279,7 +275,7 @@ class provider implements
             INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
             INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
             INNER JOIN {game} q ON q.id = cm.instance
-             LEFT JOIN {game_grades} qg ON qg.game = q.id AND qg.userid = :qguserid
+             LEFT JOIN {game_grades} qg ON qg.game = q.id AND qg.userid = :userid
                  WHERE c.id {$contextsql}";
 
         $params = [
@@ -297,6 +293,7 @@ class provider implements
             $context = $gameobj->get_context();
 
             $gamedata = \core_privacy\local\request\helper::get_context_data($context, $contextlist->get_user());
+
             \core_privacy\local\request\helper::export_context_files($context, $contextlist->get_user());
 
             if (!empty($gamedata->timeopen)) {
@@ -311,21 +308,6 @@ class provider implements
 
             $gamedata->accessdata = (object) [];
 
-            $components = \core_component::get_plugin_list('gameaccess');
-            $exportparams = [
-                    $gameobj,
-                    $user,
-                ];
-            foreach (array_keys($components) as $component) {
-                $classname = manager::get_provider_classname_for_component("gameaccess_$component");
-                if (class_exists($classname) && is_subclass_of($classname, gameaccess_provider::class)) {
-                    $result = component_class_callback($classname, 'export_gameaccess_user_data', $exportparams);
-                    if (count((array) $result)) {
-                        $gamedata->accessdata->$component = $result;
-                    }
-                }
-            }
-
             if (empty((array) $gamedata->accessdata)) {
                 unset($gamedata->accessdata);
             }
@@ -337,6 +319,7 @@ class provider implements
 
         // Store all game attempt data.
         static::export_game_attempts($contextlist);
+*/
     }
 
     /**
@@ -345,6 +328,7 @@ class provider implements
      * @param   context                 $context   The specific context to delete data for.
      */
     public static function delete_data_for_all_users_in_context(\context $context) {
+/*
         if ($context->contextlevel != CONTEXT_MODULE) {
             // Only game module will be handled.
             return;
@@ -361,6 +345,7 @@ class provider implements
 
         // This will delete all question attempts, game attempts, and game grades for this game.
         game_delete_all_attempts($game);
+*/
     }
 
     /**
@@ -370,7 +355,7 @@ class provider implements
      */
     public static function delete_data_for_user(approved_contextlist $contextlist) {
         global $DB;
-
+/*
         foreach ($contextlist as $context) {
             if ($context->contextlevel != CONTEXT_MODULE) {
                 // Only game module will be handled.
@@ -391,6 +376,7 @@ class provider implements
             // This will delete all question attempts, game attempts, and game grades for this game.
             game_delete_user_attempts($gameobj, $user);
         }
+*/
     }
 
     /**
@@ -400,33 +386,24 @@ class provider implements
      */
     protected static function export_game_attempts(approved_contextlist $contextlist) {
         global $DB;
-
+/*
         $userid = $contextlist->get_user()->id;
         list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
-        $qubaid = \core_question\privacy\provider::get_related_question_usages_for_user('rel', 'mod_game', 'qa.uniqueid', $userid);
 
         $sql = "SELECT
                     c.id AS contextid,
                     cm.id AS cmid,
-                    qa.*
+                    ga.*
                   FROM {context} c
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
                   JOIN {modules} m ON m.id = cm.module AND m.name = 'game'
                   JOIN {game} q ON q.id = cm.instance
-                  JOIN {game_attempts} qa ON qa.game = q.id
-            " . $qubaid->from. "
-            WHERE (
-                qa.userid = :qauserid OR
-                " . $qubaid->where() . "
-            ) AND qa.preview = 0
-        ";
+                  JOIN {game_attempts} ga ON ga.game = q.id
+            WHERE ga.userid = :userid";
 
-        $params = array_merge(
-                [
+        $params = array(
                     'contextlevel'      => CONTEXT_MODULE,
-                    'qauserid'          => $userid,
-                ],
-                $qubaid->from_where_params()
+                    'qauserid'          => $userid
             );
 
         $attempts = $DB->get_recordset_sql($sql, $params);
@@ -487,5 +464,6 @@ class provider implements
             }
         }
         $attempts->close();
+*/
     }
 }

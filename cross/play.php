@@ -236,7 +236,8 @@ if ($game->toptext != '') {
 <p><table cellpadding="0" cellspacing="0" border="0">
 
 <?php
-if ($game->param3 == 2) {
+if ($game->param3 == 1) {
+// Legends is at the right.
     echo "<tr>\r\n";
     game_cross_show_welcome( $game);
     echo "</tr>\r\n";
@@ -892,9 +893,10 @@ if ($showhtmlsolutions) {
 </table></td>
 
 <?php
-if ($game->param3 == 2) {
-    echo '<td>&nbsp &nbsp &nbsp</td>';
+if ($game->param3 == 1) {
+    echo '<td>&nbsp &nbsp &nbsp</td><td>';
     game_cross_show_legends( $cross);
+    echo '</td>';
 } else {
     game_cross_show_welcome( $game);
 }
@@ -941,7 +943,7 @@ if ($showhtmlprintbutton) {
     echo '</button>';
 }
 
-if ($game->param3 == 2) {
+if ($game->param3 == 1) {
     echo '<td>&nbsp &nbsp &nbsp</td>';
     game_cross_show_welcome( $game);
 } else {
@@ -990,7 +992,7 @@ if ($showsolution == false) {
  * @param stdClass $game
  */
 function game_cross_show_welcome( $game) {
-    if ($game->param3 <> 2) {
+    if ($game->param3 == 0) {
         game_cross_show_welcome0( $game);
     } else {
         game_cross_show_welcome1();
