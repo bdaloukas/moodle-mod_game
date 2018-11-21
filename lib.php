@@ -123,13 +123,6 @@ function game_update_instance($game) {
 
     game_before_add_or_update( $game);
 
-    if (isset( $game->toptext)) {
-        $game->toptext = $game->toptext[ 'text'];
-    }
-
-    if (isset( $game->bottomtext)) {
-        $game->bottomtext = $game->bottomtext[ 'text'];
-    }
     if (!$DB->update_record("game", $game)) {
         return false;
     }
@@ -146,6 +139,15 @@ function game_update_instance($game) {
  * @param stdClass $game
  */
 function game_before_add_or_update(&$game) {
+
+    if (isset( $game->toptext)) {
+        $game->toptext = $game->toptext[ 'text'];
+    }
+
+    if (isset( $game->bottomtext)) {
+        $game->bottomtext = $game->bottomtext[ 'text'];
+    }
+
     if (isset( $game->questioncategoryid)) {
         $pos = strpos( $game->questioncategoryid, ',');
         if ($pos != false) {
