@@ -68,6 +68,87 @@ $string[ 'privacy:metadata:game_grades:game'] = 'The game that was graded.';
 $string[ 'privacy:metadata:game_grades:timemodified'] = 'The time that the grade was modified.';
 $string[ 'privacy:metadata:game_grades:userid'] = 'The user who was graded.';
 
+$string[ 'privacy:metadata:game_cross'] = 'game_cross';
+$string[ 'privacy:metadata:game_cross:id'] = 'the id on table game_attempts';
+$string[ 'privacy:metadata:game_cross:usedcols'] = 'Number of cols that includes';
+$string[ 'privacy:metadata:game_cross:usedrows'] = 'Number of rows that includes';
+$string[ 'privacy:metadata:game_cross:words'] = 'Number of words that includes';
+$string[ 'privacy:metadata:game_cross:wordsall'] = 'Number of words that tried to include';
+$string[ 'privacy:metadata:game_cross:createscore'] = 'The grade of cross (how good crossword is)';
+$string[ 'privacy:metadata:game_cross:createtries'] = 'The number of tries that tried to make the best crossword';
+$string[ 'privacy:metadata:game_cross:createlimit'] = 'The number of seconds that tried to make the best crossword';
+$string[ 'privacy:metadata:game_cross:createconnectors'] = 'The number of connectors in the crossword';
+$string[ 'privacy:metadata:game_cross:createfilleds'] = 'The number of filleds the crossword';
+$string[ 'privacy:metadata:game_cross:createspaces'] = 'The number of spaces in crossword';
+$string[ 'privacy:metadata:game_cross:triesplay'] = 'The number of times that user played the crossword';
+
+
+$string[ 'privacy:metadata:game_cryptex'] = 'game_cryptex';
+$string[ 'privacy:metadata:game_cryptex:id'] = 'the id on table game_attempts';
+$string[ 'privacy:metadata:game_cryptex:letters'] = 'The letters that has the cryptex (horizontaly and the verticaly)';
+
+$string[ 'privacy:metadata:game_hangman'] = 'game_hangman';
+$string[ 'privacy:metadata:game_hangman:id'] = 'the id on table game_attempts';
+$string[ 'privacy:metadata:game_hangman:queryid'] = 'Link to game_queries';
+$string[ 'privacy:metadata:game_hangman:letters'] = 'Letters that used';
+$string[ 'privacy:metadata:game_hangman:allletters'] = 'All letters';
+$string[ 'privacy:metadata:game_hangman:try'] = 'The number of tries that user tried to play the Hangman game';
+$string[ 'privacy:metadata:game_hangman:maxtries'] = 'Maximum numbers of tried allowed user to play';
+$string[ 'privacy:metadata:game_hangman:finishedword'] = '1 if user finished the Hangman game';
+$string[ 'privacy:metadata:game_hangman:corrects'] = 'The number of correct letters';
+$string[ 'privacy:metadata:game_hangman:iscorrect'] = '1 if it is correct';
+
+$string[ 'privacy:metadata:game_hiddenpicture'] = 'game_hiddenpicture';
+$string[ 'privacy:metadata:game_hiddenpicture:id'] = 'the id on table game_attempts';
+$string[ 'privacy:metadata:game_hiddenpicture:corect'] = 'Number of correct';
+$string[ 'privacy:metadata:game_hiddenpicture:wrong'] = 'Number of wrong';
+$string[ 'privacy:metadata:game_hiddenpicture:found'] = '1 if user found the correct answer';
+
+$string[ 'privacy:metadata:game_millionaire'] = 'the id on table game_millionaire';
+$string[ 'privacy:metadata:game_millionaire:id'] = 'the id on table game_attempts';
+$string[ 'privacy:metadata:game_millionaire:queryid'] = 'Link to game_queries';
+$string[ 'privacy:metadata:game_millionaire:state'] = 'The state';
+$string[ 'privacy:metadata:game_millionaire:level'] = 'The level';
+
+$string[ 'privacy:metadata:game_queries'] = 'game_queries';
+$string[ 'privacy:metadata:game_queries:id'] = 'id';
+$string[ 'privacy:metadata:game_queries:attemptid'] = 'attemptid';
+$string[ 'privacy:metadata:game_queries:questionid'] = 'questionid';
+$string[ 'privacy:metadata:game_queries:glossaryentryid'] = 'glossaryentryid';
+$string[ 'privacy:metadata:game_queries:questiontext'] = 'questiontext';
+$string[ 'privacy:metadata:game_queries:score'] = 'score';
+$string[ 'privacy:metadata:game_queries:timelastattempt'] = 'timelastattempt';
+$string[ 'privacy:metadata:game_queries:studentanswer'] = 'studentanswer';
+$string[ 'privacy:metadata:game_queries:mycol'] = 'mycol';
+$string[ 'privacy:metadata:game_queries:myrow'] = 'myrow';
+$string[ 'privacy:metadata:game_queries:horizontal'] = 'horizontal';
+$string[ 'privacy:metadata:game_queries:answertext'] = 'answertext';
+$string[ 'privacy:metadata:game_queries:correct'] = 'correct';
+$string[ 'privacy:metadata:game_queries:attachment'] = 'attachment';
+$string[ 'privacy:metadata:game_queries:answerid'] = 'answerid';
+$string[ 'privacy:metadata:game_queries:tries'] = 'tries';
+
+$string[ 'privacy:metadata:game_repetitions'] = 'game_repetitions';
+$string[ 'privacy:metadata:game_repetitions:id'] = 'id';
+$string[ 'privacy:metadata:game_repetitions:gameid'] = 'gameid';
+$string[ 'privacy:metadata:game_repetitions:userid'] = 'userid';
+$string[ 'privacy:metadata:game_repetitions:questionid'] = 'questionid';
+$string[ 'privacy:metadata:game_repetitions:glossaryentryid'] = 'glossaryentryid';
+$string[ 'privacy:metadata:game_repetitions:repetitions'] = 'repetitions';
+
+$string[ 'privacy:metadata:game_snakes'] = 'game_snakes';
+$string[ 'privacy:metadata:game_snakes:id'] = 'id';
+$string[ 'privacy:metadata:game_snakes:snakesdatabaseid'] = 'Which board is used';
+$string[ 'privacy:metadata:game_snakes:position'] = 'The position in the board';
+$string[ 'privacy:metadata:game_snakes:queryid'] = 'queryid';
+$string[ 'privacy:metadata:game_snakes:dice'] = 'dice';
+
+$string[ 'privacy:metadata:game_sudoku'] = 'game_sudoku';
+$string[ 'privacy:metadata:game_sudoku:id'] = 'id';
+$string[ 'privacy:metadata:game_sudoku:level'] = 'level';
+$string[ 'privacy:metadata:game_sudoku:data'] = 'data';
+$string[ 'privacy:metadata:game_sudoku:opened'] = 'opened';
+$string[ 'privacy:metadata:game_sudoku:guess'] = 'guess';
 
 // File cross/cross_class.php.
 $string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';

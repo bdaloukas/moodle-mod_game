@@ -72,10 +72,44 @@ class provider implements
                 'language'             => 'privacy:metadata:game_attempts:language',
             ], 'privacy:metadata:game_attempts');
 
-        // The table 'game_feedback' contains the feedback responses which will be shown to users depending upon the
-        // grade they achieve in the game.
-        // It does not identify the user who wrote the feedback item so cannot be returned directly and is not
-        // described, but relevant feedback items will be included with the game export for a user who has a grade.
+        // The table 'game_bookquiz' contains data about the structure of a game.
+        // It does not contain any user identifying data and does not need a mapping.
+
+        // The table 'game_bookquiz_chapters' contains data about the structure of a game.
+        // It does not contain any user identifying data and does not need a mapping.
+
+        // The table 'game_bookquiz_questions' contains data about the structure of a game.
+        // It does not contain any user identifying data and does not need a mapping.
+
+        // The table 'game_cross' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_cross', [
+                'id'               => 'privacy:metadata:game_cross:id',
+                'usedcols'               => 'privacy:metadata:game_cross:usedcols',
+                'usedrows'             => 'privacy:metadata:game_cross:usedrows',
+                'words'            => 'privacy:metadata:game_cross:words',
+                'wordsall'            => 'privacy:metadata:game_cross:wordsall',
+                'createscore'            => 'privacy:metadata:game_cross:createscore',
+                'createtries'            => 'privacy:metadata:game_cross:createtries',
+                'createlimit'            => 'privacy:metadata:game_cross:createlimit',
+                'createconnectors'            => 'privacy:metadata:game_cross:createconnectors',
+                'createfilleds'            => 'privacy:metadata:game_cross:createfilleds',
+                'createspaces'            => 'privacy:metadata:game_cross:createspaces',
+                'triesplay'            => 'privacy:metadata:game_cross:triesplay',
+            ], 'privacy:metadata:game_cross');
+
+        // The table 'game_cryptex' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_cryptex', [
+                'id'               => 'privacy:metadata:game_cryptex:id',
+                'letters'               => 'privacy:metadata:game_cryptex:letters',
+            ], 'privacy:metadata:game_cryptex');
+
+        // The table 'game_export_html' contains data about the structure of a game.
+        // It does not contain any user identifying data and does not need a mapping.
+
+        // The table 'game_export_javame' contains data about the structure of a game.
+        // It does not contain any user identifying data and does not need a mapping.
 
         // The table 'game_grades' contains the current grade for each game/user combination.
         $items->add_database_table('game_grades', [
@@ -85,27 +119,95 @@ class provider implements
                 'timemodified'          => 'privacy:metadata:game_grades:timemodified',
             ], 'privacy:metadata:game_grades');
 
-        // These define the structure of the game.
+        // The table 'game_hangman' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_hangman', [
+                'id'               => 'privacy:metadata:game_hangman:id',
+                'queryid'               => 'privacy:metadata:game_hangman:queryid',
+                'letters'               => 'privacy:metadata:game_hangman:letters',
+                'allletters'               => 'privacy:metadata:game_hangman:allletters',
+                'try'               => 'privacy:metadata:game_hangman:try',
+                'maxtries'               => 'privacy:metadata:game_hangman:maxtries',
+                'finishedword'               => 'privacy:metadata:game_hangman:finishedword',
+                'corrects'               => 'privacy:metadata:game_hangman:corrects',
+                'iscorrect'               => 'privacy:metadata:game_hangman:iscorrect',
+            ], 'privacy:metadata:game_hangman');
 
-        // The table 'game_course' contains data about the structure of a game.
-        // It does not contain any user identifying data and does not need a mapping.
+        // The table 'game_hiddenpicture' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_hiddenpicture', [
+                'id'               => 'privacy:metadata:game_hiddenpicture:id',
+                'correct'               => 'privacy:metadata:game_hiddenpicture:corect',
+                'wrong'               => 'privacy:metadata:game_hiddenpicture:wrong',
+                'found'               => 'privacy:metadata:game_hiddenpicture:found',
+            ], 'privacy:metadata:game_hiddenpicture');
 
-        // The table 'game_course_inputs' contains data about the structure of a game.
-        // It does not contain any user identifying data and does not need a mapping.
+        // The table 'game_millionaire' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_millionaire', [
+                'id'               => 'privacy:metadata:game_millionaire:id',
+                'queryid'               => 'privacy:metadata:game_millionaire:queryid',
+                'state'               => 'privacy:metadata:game_millionaire:state',
+                'level'               => 'privacy:metadata:game_millionaire:level',
+            ], 'privacy:metadata:game_millionaire');
 
-        // The table 'game_export_html' contains data about the structure of a game.
-        // It does not contain any user identifying data and does not need a mapping.
+        // The table 'game_queries' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_queries', [
+                'id'               => 'privacy:metadata:game_queries:id',
+                'attemptid'               => 'privacy:metadata:game_queries:attemptid',
+                'questionid'               => 'privacy:metadata:game_queries:questionid',
+                'glossaryentryid'               => 'privacy:metadata:game_queries:glossaryentryid',
+                'questiontext'               => 'privacy:metadata:game_queries:questiontext',
+                'score'               => 'privacy:metadata:game_queries:score',
+                'timelastattempt'               => 'privacy:metadata:game_queries:timelastattempt',
+                'studentanswer'               => 'privacy:metadata:game_queries:studentanswer',
+                'mycol'               => 'privacy:metadata:game_queries:mycol',
+                'myrow'               => 'privacy:metadata:game_queries:myrow',
+                'horizontal'               => 'privacy:metadata:game_queries:horizontal',
+                'answertext'               => 'privacy:metadata:game_queries:answertext',
+                'correct'               => 'privacy:metadata:game_queries:correct',
+                'attachment'               => 'privacy:metadata:game_queries:attachment',
+                'answerid'               => 'privacy:metadata:game_queries:answerid',
+                'tries'               => 'privacy:metadata:game_queries:tries',
+            ], 'privacy:metadata:game_queries');
 
-        // The table 'game_export_javame' contains data about the structure of a game.
-        // It does not contain any user identifying data and does not need a mapping.
+        // The table 'game_repetitions' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_repetitions', [
+                'id'               => 'privacy:metadata:game_repetitions:id',
+                'gameid'               => 'privacy:metadata:game_repetitions:gameid',
+                'userid'               => 'privacy:metadata:game_repetitions:userid',
+                'questionid'               => 'privacy:metadata:game_repetitions:questionid',
+                'glossaryentryid'               => 'privacy:metadata:game_repetitions:glossaryentryid',
+                'repetitions'               => 'privacy:metadata:game_repetitions:repetitions',
+            ], 'privacy:metadata:game_repetitions');
+
+        // The table 'game_snakes' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_snakes', [
+                'id'               => 'privacy:metadata:game_snakes:id',
+                'snakesdatabaseid'               => 'privacy:metadata:game_snakes:snakesdatabaseid',
+                'position'               => 'privacy:metadata:game_snakes:position',
+                'queryid'               => 'privacy:metadata:game_snakes:queryid',
+                'dice'               => 'privacy:metadata:game_snakes:dice',
+            ], 'privacy:metadata:game_snakes');
 
         // The table 'game_snakes_database' contains data about the structure of a game.
         // It does not contain any user identifying data and does not need a mapping.
 
+        // The table 'game_snakes' stores a record of each attempt at cross game.
+        // It contains id that linked to game_attempts.
+        $items->add_database_table('game_sudoku', [
+                'id'               => 'privacy:metadata:game_sudoku:id',
+                'level'               => 'privacy:metadata:game_sudoku:level',
+                'data'               => 'privacy:metadata:game_sudoku:data',
+                'opened'               => 'privacy:metadata:game_sudoku:opened',
+                'guess'               => 'privacy:metadata:game_sudoku:guess',
+            ], 'privacy:metadata:game_sudoku');
+
         // The table 'game_sudoku_database' contains data about the structure of a game.
         // It does not contain any user identifying data and does not need a mapping.
-
-        // The game doesn't store data to other systems.
 
         // Although the game supports the core_completion API and defines custom completion items, these will be
         // noted by the manager as all activity modules are capable of supporting this functionality.
@@ -125,14 +227,23 @@ class provider implements
         // Select the context of any game attempt where a user has an attempt, plus the related usages.
         $sql = "SELECT c.id
                   FROM {context} c
-                  JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = ".CONTEXT_MODULE."
+                  JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modname
                   JOIN {game} q ON q.id = cm.instance
                   JOIN {game_attempts} qa ON qa.game = q.id
-            WHERE qa.userid = $userid AND qa.preview = 0";
+            WHERE qa.userid = :userid";
+
+        $params = array_merge(
+                [
+                    'contextlevel'      => CONTEXT_MODULE,
+                    'modname'           => 'game',
+                    'userid'          => $userid,
+                ],
+                $qubaid->from_where_params()
+            );
 
         $resultset = new contextlist();
-        $resultset->add_from_sql( $sql);
+        $resultset->add_from_sql($sql, $params);
 
         return $resultset;
     }

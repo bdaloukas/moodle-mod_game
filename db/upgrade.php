@@ -1802,6 +1802,25 @@ function xmldb_game_upgrade($oldversion) {
         }
         upgrade_mod_savepoint(true, $ver, 'game');
     }
+
+    if ($oldversion < ($ver = 2018112102)) {
+        $table = new xmldb_table('game_course');
+
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112103)) {
+        $table = new xmldb_table('game_course_inputs');
+
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }
 
