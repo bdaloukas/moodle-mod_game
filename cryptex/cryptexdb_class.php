@@ -142,7 +142,7 @@ class CryptexDB extends CrossDB {
      * @param boolean $textdir
      */
     public function displaycryptex( $cols, $rows, $letters, $mask, $showsolution, $textdir) {
-        echo "<table border=1 $textdir>";
+        echo "<table border=1 $textdir class=\"mod-game-cryptex\">";
         for ($row = 0; $row < $rows; $row++) {
             echo "<tr>";
             for ($col = 0; $col < $cols; $col++) {
@@ -151,11 +151,11 @@ class CryptexDB extends CrossDB {
                 $m = game_substr( $mask, $pos, 1);
 
                 if ($showsolution and $m > '0') {
-                    echo "<td align=center><b><FONT color=red>".$c."</font></td>";
+                    echo "<td><b><font color=red>".$c."</font></td>";
                 } else if ( $m == '1') {
-                    echo "<td align=center><b><FONT color=red>".$c."</font></td>";
+                    echo "<td><b><font color=red>".$c."</font></td>";
                 } else {
-                    echo "<td align=center>".$c."</td>";
+                    echo "<td>".$c."</td>";
                 }
             }
             echo "</tr>\r\n";

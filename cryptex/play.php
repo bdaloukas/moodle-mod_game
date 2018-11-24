@@ -408,6 +408,8 @@ if ($game->bottomtext != '') {
         }
     </script>
 <?php
+echo '<style>'.file_get_contents( 'cryptex/styles.css').'</style>';
+echo '</head>';
 if ($print) {
     echo '<body onload="window.print()">';
 } else {
