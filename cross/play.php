@@ -237,7 +237,7 @@ if ($game->toptext != '') {
 
 <?php
 if ($game->param3 == 1) {
-// Legends is at the right.
+    // Legends is at the right.
     echo "<tr>\r\n";
     game_cross_show_welcome( $game);
     echo "</tr>\r\n";
