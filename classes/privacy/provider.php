@@ -229,9 +229,9 @@ class provider implements
                   FROM {context} c
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
                   JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-                  JOIN {game} q ON q.id = cm.instance
-                  JOIN {game_attempts} qa ON qa.game = q.id
-            WHERE qa.userid = :userid";
+                  JOIN {game} g ON g.id = cm.instance
+                  JOIN {game_attempts} ga ON ga.gameid = g.id
+            WHERE ga.userid = :userid";
 
         $params = array(
                     'contextlevel'      => CONTEXT_MODULE,
@@ -240,7 +240,7 @@ class provider implements
             );
 
         $resultset = new contextlist();
-//$resultset->add_from_sql($sql, $params);
+$resultset->add_from_sql($sql, $params);
 
         return $resultset;
     }
@@ -251,8 +251,8 @@ class provider implements
      * @param   approved_contextlist    $contextlist    The approved contexts to export information for.
      */
     public static function export_user_data(approved_contextlist $contextlist) {
-        global $DB;
-/*
+        global $CFG, $DB;
+
         if (!count($contextlist)) {
             return;
         }
@@ -262,20 +262,17 @@ class provider implements
         list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT
-                    q.*,
-                    qg.id AS hasgrade,
-                    qg.grade AS bestgrade,
-                    qg.timemodified AS grademodified,
-                    qo.timeopen AS override_timeopen,
-                    qo.timeclose AS override_timeclose,
-                    qo.timelimit AS override_timelimit,
+                    g.*,
+                    gg.id AS hasgrade,
+                    gg.score AS bestscore,
+                    gg.timemodified AS grademodified,
                     c.id AS contextid,
                     cm.id AS cmid
                   FROM {context} c
             INNER JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
             INNER JOIN {modules} m ON m.id = cm.module AND m.name = :modname
-            INNER JOIN {game} q ON q.id = cm.instance
-             LEFT JOIN {game_grades} qg ON qg.game = q.id AND qg.userid = :userid
+            INNER JOIN {game} g ON g.id = cm.instance
+             LEFT JOIN {game_grades} gg ON gg.gameid = g.id AND gg.userid = :userid
                  WHERE c.id {$contextsql}";
 
         $params = [
@@ -289,37 +286,24 @@ class provider implements
         $games = $DB->get_recordset_sql($sql, $params);
         foreach ($games as $game) {
             list($course, $cm) = get_course_and_cm_from_cmid($game->cmid, 'game');
-            $gameobj = new \game($game, $cm, $course);
-            $context = $gameobj->get_context();
+            $context = game_get_context_module_instance( $cm->id);
 
             $gamedata = \core_privacy\local\request\helper::get_context_data($context, $contextlist->get_user());
 
             \core_privacy\local\request\helper::export_context_files($context, $contextlist->get_user());
 
-            if (!empty($gamedata->timeopen)) {
-                $gamedata->timeopen = transform::datetime($game->timeopen);
-            }
-            if (!empty($gamedata->timeclose)) {
-                $gamedata->timeclose = transform::datetime($game->timeclose);
-            }
-            if (!empty($gamedata->timelimit)) {
-                $gamedata->timelimit = $game->timelimit;
-            }
-
             $gamedata->accessdata = (object) [];
-
+            
             if (empty((array) $gamedata->accessdata)) {
                 unset($gamedata->accessdata);
             }
 
-            writer::with_context($context)
-                ->export_data([], $gamedata);
+            writer::with_context($context)->export_data([], $gamedata);
         }
         $games->close();
 
         // Store all game attempt data.
         static::export_game_attempts($contextlist);
-*/
     }
 
     /**
@@ -386,84 +370,66 @@ class provider implements
      */
     protected static function export_game_attempts(approved_contextlist $contextlist) {
         global $DB;
-/*
+
         $userid = $contextlist->get_user()->id;
         list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT
                     c.id AS contextid,
-                    cm.id AS cmid,
+                    cm.id AS cmid, g.gamekind,
                     ga.*
                   FROM {context} c
                   JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
                   JOIN {modules} m ON m.id = cm.module AND m.name = 'game'
-                  JOIN {game} q ON q.id = cm.instance
-                  JOIN {game_attempts} ga ON ga.game = q.id
+                  JOIN {game} g ON g.id = cm.instance
+                  JOIN {game_attempts} ga ON ga.gameid = g.id
             WHERE ga.userid = :userid";
 
         $params = array(
                     'contextlevel'      => CONTEXT_MODULE,
-                    'qauserid'          => $userid
+                    'userid'          => $userid
             );
 
         $attempts = $DB->get_recordset_sql($sql, $params);
         foreach ($attempts as $attempt) {
-            $game = $DB->get_record('game', ['id' => $attempt->game]);
-            $context = \context_module::instance($attempt->cmid);
             $attemptsubcontext = helper::get_game_attempt_subcontext($attempt, $contextlist->get_user());
-            $options = game_get_review_options($game, $attempt, $context);
+            $context = game_get_context_module_instance( $attempt->cmid);
 
-            if ($attempt->userid == $userid) {
-                // This attempt was made by the user.
-                // They 'own' all data on it.
-                // Store the question usage data.
-                \core_question\privacy\provider::export_question_usage($userid,
-                        $context,
-                        $attemptsubcontext,
-                        $attempt->uniqueid,
-                        $options,
-                        true
-                    );
+            // Store the game attempt data.
+            $data = (object) [];
 
-                // Store the game attempt data.
-                $data = (object) [
-                    'state' => \game_attempt::state_name($attempt->state),
-                ];
-
-                if (!empty($attempt->timestart)) {
-                    $data->timestart = transform::datetime($attempt->timestart);
-                }
-                if (!empty($attempt->timefinish)) {
-                    $data->timefinish = transform::datetime($attempt->timefinish);
-                }
-                if (!empty($attempt->timemodified)) {
-                    $data->timemodified = transform::datetime($attempt->timemodified);
-                }
-
-                if ($options->marks == \question_display_options::MARK_AND_MAX) {
-                    $grade = game_rescale_grade($attempt->sumgrades, $game, false);
-                    $data->grade = (object) [
-                            'grade' => game_format_grade($game, $grade),
-                            'feedback' => game_feedback_for_grade($grade, $game, $context),
-                        ];
-                }
-
-                writer::with_context($context)
-                    ->export_data($attemptsubcontext, $data);
-            } else {
-                // This attempt was made by another user.
-                // The current user may have marked part of the game attempt.
-                \core_question\privacy\provider::export_question_usage(
-                        $userid,
-                        $context,
-                        $attemptsubcontext,
-                        $attempt->uniqueid,
-                        $options,
-                        false
-                    );
+            if (!empty($attempt->timestart)) {
+                $data->timestart = transform::datetime($attempt->timestart);
             }
+            if (!empty($attempt->timefinish)) {
+                $data->timefinish = transform::datetime($attempt->timefinish);
+            }
+            if (!empty($attempt->timelastattempt)) {
+                $data->timemodified = transform::datetime($attempt->timelastattempt);
+            }
+            $data->score = $attempt->score;
+            $data->attempts = $attempt->attempts;
+            $data->language = $attempt->language;
+
+            switch( $attempt->gamekind) {
+            case 'cryptex':
+                provider::export_game_attempts_cryptex( $attempt, $data);
+                break;
+            }
+
+            writer::with_context($context)->export_data($attemptsubcontext, $data);
         }
         $attempts->close();
-*/
+    }
+
+    static function export_game_attempts_cryptex( $attempt, &$data) {
+        global $CFG, $DB;
+
+        $sql = "SELECT * FROM {$CFG->prefix}game_cryptex WHERE id={$attempt->id}";
+        $cryptex = $DB->get_record_sql( $sql);
+        if( $cryptex === false) {
+            return;
+        }
+        $data->cryptex_letters = $cryptex->letters;
     }
 }
