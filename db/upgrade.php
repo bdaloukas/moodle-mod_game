@@ -1738,7 +1738,7 @@ function xmldb_game_upgrade($oldversion) {
     if ($oldversion < ($ver = 2018060404)) {
         // Import 2 new boards.
 
-        require( 'importsnakes.php');
+        require_once( 'importsnakes.php');
         $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki3.jpg'";
         $rec = $DB->get_record_sql( $sql);
         if ($rec === false) {
@@ -1756,7 +1756,7 @@ function xmldb_game_upgrade($oldversion) {
     if ($oldversion < ($ver = 2018100800)) {
         // Import 2 new boards.
 
-        require( 'importsnakes.php');
+        require_once( 'importsnakes.php');
         $sql = "UPDATE {$CFG->prefix}game_cross SET createscore=0 WHERE createscore IS NULL";
         $DB->execute( $sql);
 
