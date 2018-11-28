@@ -177,10 +177,10 @@ $string[ 'game:view'] = 'view';
 $string[ 'game:viewreports'] = 'viewreports';
 
 // File hangman/play.php.
-$string[ 'hangman_correct_phrase'] = 'The correct phrase was: ';
-$string[ 'hangman_correct_word'] = 'The correct word was: ';
+$string[ 'hangman_correct_phrase'] = 'The correct phrase was: &nbsp';
+$string[ 'hangman_correct_word'] = 'The correct word was: &nbsp';
 $string[ 'hangman_gradeinstance'] = 'Grade in whole game';
-$string[ 'hangman_letters'] = 'Letters: ';
+$string[ 'hangman_letters'] = 'Letters: &nbsp';
 $string[ 'hangman_restletters_many'] = 'You have <b>{$a}</b> tries';
 $string[ 'hangman_restletters_one'] = 'You have <b>ONLY 1</b> try';
 $string[ 'hangman_wrongnum'] = 'Wrong: %d out of %d';
@@ -258,7 +258,7 @@ $string[ 'html_hangman_new'] = 'New';
 // File exporthtml_millionaire.php.
 $string[ 'millionaire_helppeople'] = 'Help of people';
 $string[ 'millionaire_info_people'] = 'People say';
-$string[ 'millionaire_info_telephone'] = 'I think that the correct answer is ';
+$string[ 'millionaire_info_telephone'] = 'I think that the correct answer is &nbsp';
 $string[ 'millionaire_info_wrong_answer'] = 'Your answer is wrong<br>The right answer is:';
 $string[ 'millionaire_quit'] = 'Quit';
 $string[ 'millionaire_sourcemodule_must_quiz_question'] = 'For the millionaire the source must be {$a} or questions and not';
