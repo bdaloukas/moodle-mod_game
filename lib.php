@@ -1495,3 +1495,36 @@ function mod_game_get_completion_active_rule_descriptions($cm) {
     }
     return $descriptions;
 }
+
+/**
+ * Delete all the attempts belonging to a user in a particular game.
+ *
+ * @param int $gameid The id of game.
+ * @param object $user The user object.
+ */
+function game_delete_user_attempts( $gameid, $user) {
+    global $CFG, $DB;
+    require_once($CFG->dirroot . '/mod/game/locallib.php');
+
+    $sql = "SELECT id FROM {$CFG->prefix}game_attempts WHERE gameid=$gameid AND userid={$user->id}";
+    $recs = $DB->get_records_sql( $sql);
+    foreach ($recs as $rec) {
+        $params = [ 'id' => $rec->id];
+        $DB->delete_records('game_bookquiz', $params);
+        $DB->delete_records('game_cross', $params);
+        $DB->delete_records('game_cryptex', $params);
+        $DB->delete_records('game_hangman', $params);
+        $DB->delete_records('game_hiddenpicture', $params);
+        $DB->delete_records('game_millionaire', $params);
+        $DB->delete_records('game_snakes', $params);
+        $DB->delete_records('game_sudoku', $params);
+    }
+
+    $params = [ 'game' => $gameid, 'userid' => $user->id];
+    $DB->delete_records('game_grades', $params);
+
+    $params = [ 'gameid' => $gameid, 'userid' => $user->id];
+    $DB->delete_records('game_attempts', $params);
+    $DB->delete_records('game_repetitions', $params);
+    $DB->delete_records('game_queries', $params);
+}
