@@ -1,3 +1,7 @@
+Changes in version 2018-11-30 (20181130)
+- GDPR compliant
+- The game "Book with questions" is now hidden by default
+
 Changes in version 2018-11-28-02 (2018112802)
 - CSS of crossword in a different file
 - Square cell on crossword by changing the css
