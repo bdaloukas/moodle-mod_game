@@ -179,7 +179,7 @@ function game_do_attempt( $game, $action, $course, $context, $cm) {
             break;
         case 'bookquizcheck':   // The student tries to answer a question.
             $attempt = game_getattempt( $game, $detail);
-            game_bookquiz_check_questions( $cm, $game, $attempt, $detail, $context);
+            game_bookquiz_check_questions( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'snakescheck':     // The student tries to answer a question.
             $attempt = game_getattempt( $game, $detail);

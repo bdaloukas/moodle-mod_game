@@ -32,10 +32,11 @@ defined('MOODLE_INTERNAL') || die();
  * @param stdClass $bookquiz
  * @param int $chapterid
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $context) {
+function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
     if ($attempt != false and $bookquiz != false) {
-        return game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context);
+        return game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context, $course);
     }
 
     if ($attempt == false) {
@@ -51,7 +52,7 @@ function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $c
         print_error( 'game_bookquiz_continue: error inserting in game_bookquiz');
     }
 
-    return game_bookquiz_play( $id, $game, $attempt, $bookquiz, 0, $context);
+    return game_bookquiz_play( $id, $game, $attempt, $bookquiz, 0, $context, $course);
 }
 
 /**
@@ -63,8 +64,9 @@ function game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $chapterid, $c
  * @param stdClass $bookquiz
  * @param int $chapterid
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context) {
+function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
     global $DB, $OUTPUT, $cm;
 
     if ($bookquiz->lastchapterid == 0) {
@@ -150,7 +152,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
 
     if ($previd) {
         $chnavigation .= '<a title="'.get_string('navprev', 'book').'" href="attempt.php?id='.$id.
-        '&chapterid='.$previd.'"><img src="'.$OUTPUT->pix_url('bookquiz/nav_prev', 'mod_game').
+        '&chapterid='.$previd.'"><img src="'.game_pix_url('bookquiz/nav_prev', 'mod_game').
         '" class="bigicon" alt="'.get_string('navprev', 'book').'"/></a>';
     } else {
         $chnavigation .= '<img src="'.game_pix_url('bookquiz/nav_prev_dis', 'mod_game').'" class="bigicon" alt="" />';
@@ -169,7 +171,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
             $nextbutton  .= '<input type="submit" value="'.get_string( 'continue').'">';
             $nextbutton  .= '</center>';
             $showquestions = false;
-            game_updateattempts_maxgrade( $game, $attempt, $scoreattempt, 0);
+            game_updateattempts_maxgrade( $game, $attempt, $scoreattempt, 0, $cm, $course);
         }
     } else {
         game_updateattempts_maxgrade( $game, $attempt, 1, 0);
@@ -186,7 +188,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
             print_error("Course Module ID was incorrect id=$id");
         }
         $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="attempt.php?id='.
-            $id.'&chapterid='.$lastid.'><img src="'.$OUTPUT->pix_url('bookquiz/nav_exit', 'mod_game').
+            $id.'&chapterid='.$lastid.'><img src="'.game_pix_url('bookquiz/nav_exit', 'mod_game').
             '" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';
     }
 
@@ -387,13 +389,14 @@ function game_bookquiz_selectrandomquestion( $questions) {
 /**
  * Check if the answers are correct.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $bookquiz
  * @param stdClass $context
+ * @param stdClass $course
  */
-function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz, $context) {
+function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $context, $course) {
     global $USER, $DB;
 
     $scoreattempt = optional_param('scoreattempt',  0, PARAM_INT);
@@ -448,7 +451,7 @@ function game_bookquiz_check_questions( $id, $game, $attempt, $bookquiz, $contex
     $query->timelastattempt = time();
     game_update_queries( $game, $attempt, $query, $scorequestion, '');
 
-    game_updateattempts( $game, $attempt, $scoreattempt, 0);
+    game_updateattempts( $game, $attempt, $scoreattempt, 0, $cm, $course);
 
-    game_bookquiz_continue( $id, $game, $attempt, $bookquiz, $bookquiz->lastchapterid, $context);
+    game_bookquiz_continue( $cm->id, $game, $attempt, $bookquiz, $bookquiz->lastchapterid, $context, $course);
 }
