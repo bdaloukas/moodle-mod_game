@@ -153,7 +153,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
         '&chapterid='.$previd.'"><img src="'.$OUTPUT->pix_url('bookquiz/nav_prev', 'mod_game').
         '" class="bigicon" alt="'.get_string('navprev', 'book').'"/></a>';
     } else {
-        $chnavigation .= '<img src="'.$OUTPUT->pix_url('bookquiz/nav_prev_dis', 'mod_game').'" class="bigicon" alt="" />';
+        $chnavigation .= '<img src="'.game_pix_url('bookquiz/nav_prev_dis', 'mod_game').'" class="bigicon" alt="" />';
     }
 
     $nextbutton = '';
@@ -161,7 +161,7 @@ function game_bookquiz_play( $id, $game, $attempt, $bookquiz, $chapterid, $conte
         if (!$showquestions) {
             $chnavigation .= '<a title="'.get_string('navnext', 'book').'" href="attempt.php?id='.
             $id.'&chapterid='.$nextid.'"><img src="'.
-            $OUTPUT->pix_url('bookquiz/nav_next', 'mod_game').'" class="bigicon" alt="'.get_string('navnext', 'book').'" ></a>';
+            game_pix_url('bookquiz/nav_next', 'mod_game').'" class="bigicon" alt="'.get_string('navnext', 'book').'" ></a>';
             $nextbutton = '<center>';
             $nextbutton  .= '<form name="form" method="get" action="attempt.php">';
             $nextbutton  .= '<input type="hidden" name="id" value="'.$id.'" >'."\r\n";
@@ -324,7 +324,7 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
 
     // Add a hidden field with the quiz id.
     echo '<div>';
-    echo '<input type="hidden" name="id" value="' . s($id) . "\" />\n";
+    echo '<input type="hidden" name="id" value="' . $id . "\" />\n";
     echo '<input type="hidden" name="action" value="bookquizcheck" />';
     echo '<input type="hidden" name="chapterid" value="'.$chapterid.'" />';
     echo '<input type="hidden" name="scoreattempt" value="'.$scoreattempt.'" />';

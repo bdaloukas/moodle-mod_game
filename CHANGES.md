@@ -1,3 +1,6 @@
+Changes in version 2018-12-01 (20181201)
+- Book with questions works again
+
 Changes in version 2018-11-30 (20181130)
 - GDPR compliant
 - The game "Book with questions" is now hidden by default
