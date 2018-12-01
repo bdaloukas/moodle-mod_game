@@ -125,7 +125,7 @@ if ($print) {
             } else {
                 if (array_key_exists( $ch->id, $okchapters)) {
                     $toc .= '<a title="'.htmlspecialchars($title).'" href="attempt.php?id='
-                        .$id.'&chapterid='.$ch->id.'">'.$title.'</a>';
+                        .$cm->id.'&chapterid='.$ch->id.'">'.$title.'</a>';
                 } else {
                     $toc .= htmlspecialchars($title);
                 }

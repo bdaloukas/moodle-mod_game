@@ -25,6 +25,8 @@ require_once( "../../../config.php");
 require_once( "../headergame.php");
 require_once("../locallib.php");
 
+require_login($course->id, false, $cm);
+
 $attempt = game_getattempt( $game, $detail);
 if ($game->bookid == 0) {
     print_error( get_string( 'bookquiz_not_select_book', 'game'));

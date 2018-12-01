@@ -233,7 +233,7 @@ function game_create( $game, $forcenew, $course, $context, $finishattempt, $cm) 
             game_millionaire_continue( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'bookquiz':
-            game_bookquiz_continue( $cm->id, $game, $attempt, $detail, $chapterid, $context, $course);
+            game_bookquiz_continue( $cm, $game, $attempt, $detail, $chapterid, $context, $course);
             break;
         case 'sudoku':
             game_sudoku_continue( $cm, $game, $attempt, $detail, $finishattempt, $context, $course);
