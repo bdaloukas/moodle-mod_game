@@ -57,7 +57,7 @@ function game_snakes_continue( $cm, $game, $attempt, $snakes, $context, $course)
 
     game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
 
-    return game_snakes_play( $id, $game, $attempt, $newrec, $context);
+    return game_snakes_play( $id, $game, $attempt, $newrec, $context, $course);
 }
 
 /**
