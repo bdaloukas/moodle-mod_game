@@ -472,12 +472,12 @@ class provider implements
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_hangman WHERE id={$attempt->id}";
-        $cryptex = $DB->get_record_sql( $sql);
+        $hangman = $DB->get_record_sql( $sql);
         if ($hangman === false) {
             return;
         }
         $data->hangman_letters = $hangman->letters;
-        $data->hangman_allletters = $hangman->all_letters;
+        $data->hangman_allletters = $hangman->allletters;
         $data->hangman_try = $hangman->try;
         $data->hangman_maxtries = $hangman->maxtries;
         $data->hangman_finishedword = $hangman->finishedword;
