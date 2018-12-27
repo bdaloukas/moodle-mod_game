@@ -350,7 +350,7 @@ function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolu
  */
 function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordline2, &$links,
     $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution, $context, $course, $cm) {
-    global $USER, $CFG, $DB;
+    global $USER, $CFG, $DB, $cm;
 
     $word = $query->answertext;
 

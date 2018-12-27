@@ -64,17 +64,17 @@ switch( $gamekind) {
         $checkbutton = false;
         $showhtmlsolutions = false;
         $showhtmlprintbutton = true;
-        $showstudentguess = false;
+        $showstudentguess = true;
         game_cross_play( $update, $game, $attempt, $detail, $g, $onlyshow, $solution,
             $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
-            $showstudentguess, $context);
+            $showstudentguess, $context, $course);
         break;
     case 'sudoku':
         game_sudoku_play( $update, $game, $attempt, $detail, true, $solution, $context);
         break;
     case 'hangman':
         $preview = ($action == 'preview');
-        game_hangman_play( $update, $game, $attempt, $detail, $preview, $solution, $context);
+        game_hangman_play( $update, $game, $attempt, $detail, $preview, $solution, $context, $course);
         break;
     case 'cryptex':
         $crossm = $DB->get_record( 'game_cross', array('id' => $attemptid));

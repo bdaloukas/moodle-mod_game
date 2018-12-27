@@ -713,8 +713,9 @@ function CheckServerClick( endofgame) {
 function OnPrint()
 {
 <?php
-    global $CFG;
-    $params = "id=$cm->id&gameid=$game->id";
+    global $CFG, $game, $cm;
+
+    $params = "id={$cm->id}&gameid={$game->id}";
     echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";
 ?>
 }
