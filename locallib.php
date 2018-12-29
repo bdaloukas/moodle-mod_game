@@ -910,10 +910,12 @@ function game_updateattempts( $game, $attempt, $score, $finished, $cm, $course) 
 
     // Update completion state.
     $completion = new completion_info( $course);
-    if ($completion->is_enabled( $cm) && $game->completionpass) {
+    if ($completion->is_enabled($cm) && ($game->completionattemptsexhausted || $game->completionpass)) {
         if (!$finished) {
             game_save_best_score( $game);
         }
+        $completion->update_state( $cm, COMPLETION_COMPLETE);
+    } else if( $completion->is_enabled($cm) && (! is_null($cm->completiongradeitemnumber)) && ($game->completionpass == 0)) {
         $completion->update_state( $cm, COMPLETION_COMPLETE);
     }
 }

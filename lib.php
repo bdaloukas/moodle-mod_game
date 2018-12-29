@@ -1387,6 +1387,14 @@ function game_get_completion_state($course, $cm, $userid, $type) {
                 return $grades[$userid]->is_passed($item);
             }
         }
+    } else if (!is_null( $cm->completiongradeitemnumber)) {
+        require_once($CFG->libdir . '/gradelib.php');
+        $item = grade_item::fetch(array('courseid' => $course->id, 'itemtype' => 'mod',
+                'itemmodule' => 'game', 'iteminstance' => $cm->instance, 'outcomeid' => null));
+        if ($item) {
+            $grades = grade_grade::fetch_users_grades($item, array($userid), false);
+            return !empty($grades[$userid]);
+        }
     }
 
     return false;

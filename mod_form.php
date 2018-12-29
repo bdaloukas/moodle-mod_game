@@ -493,6 +493,23 @@ class mod_game_mod_form extends moodleform_mod {
     }
 
     /**
+     * data_preprocessing
+     *
+     * @param stdClass $toform
+     */
+    public function data_preprocessing(&$toform) {
+        if (isset($toform['grade'])) {
+            // Convert to a real number, so we don't get 0.0000.
+            $toform['grade'] = $toform['grade'] + 0;
+        }
+
+        // Completion settings check.
+        if (empty($toform['completionusegrade'])) {
+            $toform['completionpass'] = 0; // Forced unchecked.
+        }
+    }
+
+    /**
      * validation
      *
      * @param stdClass $data
@@ -647,7 +664,7 @@ class mod_game_mod_form extends moodleform_mod {
         $group = array();
         $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'quiz'),
                 array('group' => 'cpass'));
-
+        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
         $group[] = $mform->createElement('advcheckbox', 'completionattemptsexhausted', null,
                 get_string('completionattemptsexhausted', 'quiz'),
                 array('group' => 'cattempts'));
