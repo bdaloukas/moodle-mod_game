@@ -907,9 +907,7 @@ function game_updateattempts( $game, $attempt, $score, $finished, $cm, $course) 
     }
 
     // Update table game_grades.
-    if ($finished) {
-        game_save_best_score( $game);
-    }
+    game_save_best_score( $game);
 
     // Update completion state.
     $completion = new completion_info( $course);
