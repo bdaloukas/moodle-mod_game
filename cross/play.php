@@ -43,7 +43,6 @@ require( "crossdb_class.php");
 function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $context, $course) {
     if ($endofgame) {
         if ($g == '') {
-            game_updateattempts( $game, $attempt, -1, true, $cm, $course);
             $endofgame = false;
         }
     }
@@ -58,7 +57,9 @@ function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $con
     }
 
     game_cross_new( $game, $attempt->id, $crossm);
-    game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
+    if( $g != '') {
+        game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
+    }
     return game_cross_play( $cm, $game, $attempt, $crossm, '', false, false, false,
         false, false, false, false, true, $context, $course);
 }
