@@ -108,9 +108,6 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
         game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
     }
 
-    // The score is zero.
-    game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
-
     game_hiddenpicture_play( $cm, $game, $attempt, $newrec, false, $context, $course);
 }
 
