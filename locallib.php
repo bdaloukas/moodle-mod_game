@@ -861,7 +861,8 @@ function game_insert_record( $table, $rec) {
 }
 
 /**
- * If score is negative doesn't update the record score is between 0 and 1.
+ * If score is negative doesn't update the record. The field score is between 0 and 1.
+ * Updates score on table game_attempts
  *
  * @param stdClass $game
  * @param stdClass $attempt
@@ -899,6 +900,8 @@ function game_updateattempts( $game, $attempt, $score, $finished, $cm, $course) 
         $grades->userid = $USER->id;
         $grades->rawgrade = game_score_to_grade($score, $game);
         $grades->datesubmitted = time();
+
+        // Updates table grade_grades.
         game_grade_item_update( $game, $grades);
         game_update_grades( $game, $grades->userid);
     }

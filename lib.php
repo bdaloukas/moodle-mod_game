@@ -448,7 +448,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
     } else {
         $sql = "SELECT a.*, cm.idnumber as cmidnumber, a.course as courseid
                   FROM {game} a, {course_modules} cm, {modules} m
-                 WHERE m.name='game' AND m.id=cm.module AND cm.instance=a.id";echo $sql;
+                 WHERE m.name='game' AND m.id=cm.module AND cm.instance=a.id";
         if ($rs = $DB->get_recordset_sql( $sql)) {
             while ($game = $DB->rs_fetch_next_record( $rs)) {
                 if ($game->grade != 0) {
@@ -464,6 +464,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
 
 /**
  * Create grade item for given game
+ * Updates table grade_grades
  *
  * @param object $game object with extra cmidnumber
  * @param stdClass $grades
