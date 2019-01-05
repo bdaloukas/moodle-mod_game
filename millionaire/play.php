@@ -473,7 +473,6 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     }
 
     $score = $millionaire->level / 15;
-    game_updateattempts( $game, $attempt, $score, 0, $cm, $course);
     game_update_queries( $game, $attempt, $query, $score, '');
 }
 
