@@ -503,7 +503,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         $percent = ($correct - $wrong / $max) / game_strlen( $word);
         $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
     }
-    if( $userplayed) {
+    if ($userplayed) {
         game_updateattempts( $game, $attempt, $score, $finished, $cm, $course);
     }
     game_update_queries( $game, $attempt, $query, $score, $answer);
