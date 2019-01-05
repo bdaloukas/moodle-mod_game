@@ -106,8 +106,6 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
         $cryptexrec = $cryptex->savecryptex( $game, $crossm, $newcrossd, $attempt->id, $letters);
     }
 
-    game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
-
     return game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
 }
 
@@ -157,7 +155,7 @@ function game_cryptex_check( $cm, $game, $attempt, $cryptexrec, $q, $answer, $fi
     }
     if ($equal == false) {
         game_update_queries( $game, $attempt, $query, 0, $answer2, true);
-        game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, true, false, false, $context, $course);
+        game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, true, false, false, $context, false, false, $course);
         return;
     }
 
