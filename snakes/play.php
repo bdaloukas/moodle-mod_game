@@ -55,9 +55,7 @@ function game_snakes_continue( $cm, $game, $attempt, $snakes, $context, $course)
         print_error( 'game_snakes_continue: error inserting in game_snakes');
     }
 
-    game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
-
-    return game_snakes_play( $id, $game, $attempt, $newrec, $context, $course);
+    return game_snakes_play( $cm, $game, $attempt, $newrec, $context, $course);
 }
 
 /**
