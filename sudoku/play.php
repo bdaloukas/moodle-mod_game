@@ -122,8 +122,6 @@ function game_sudoku_continue( $cm, $game, $attempt, $sudoku, $endofgame, $conte
         game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
     }
 
-    game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
-
     game_sudoku_play( $cm, $game, $attempt, $newrec, false, false, $context, $course);
 }
 
