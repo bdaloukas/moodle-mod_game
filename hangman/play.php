@@ -198,11 +198,11 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
     $newrec->letters = $letters;
 
     if ($updatehangman == false) {
-        if (!game_insert_record(  'game_hangman', $newrec)) {
+        if (!game_insert_record( 'game_hangman', $newrec)) {
             print_error( 'game_hangman_continue: error inserting in game_hangman');
         }
     } else {
-        if (!$DB->update_record(  'game_hangman', $newrec)) {
+        if (!$DB->update_record( 'game_hangman', $newrec)) {
             print_error( 'game_hangman_continue: error updating in game_hangman');
         }
         $newrec = $DB->get_record( 'game_hangman', array( 'id' => $newrec->id));
@@ -355,6 +355,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
     $word = $query->answertext;
 
     $newletter  = optional_param('newletter', "", PARAM_TEXT);
+    $userplayed = $newletter != '';
     if ( $newletter == '_') {
         $newletter = ' ';
     }
@@ -502,7 +503,9 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         $percent = ($correct - $wrong / $max) / game_strlen( $word);
         $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
     }
-    game_updateattempts( $game, $attempt, $score, $finished, $cm, $course);
+    if( $userplayed) {
+        game_updateattempts( $game, $attempt, $score, $finished, $cm, $course);
+    }
     game_update_queries( $game, $attempt, $query, $score, $answer);
 }
 
