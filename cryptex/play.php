@@ -89,7 +89,11 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
 
     // The game->param4 is minimum words.
     // The game->param2 is maximum words.
-    $badwords = array( 'NO', 'ON', 'ASS', 'SSA', 'SEX', 'XES');
+    $badwords = array( 'NO', 'ASS', 'SEX', 'FUCK', 'WANK', 'BITCH', 'BASTARD', 'TWAT', 'CUNT');
+    $a = $badwords;
+    foreach( $a as $word) {
+        $badwords[] = strrev( $word);
+    }
     $cryptex->setbadwords( $badwords);
     if ($cryptex->computedata( $crossm, $crossd, $letters, $game->param4, $game->param2, $game->param3)) {
         $newcrossd = array();
