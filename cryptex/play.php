@@ -91,7 +91,7 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
     // The game->param2 is maximum words.
     $badwords = array( 'NO', 'ASS', 'SEX', 'FUCK', 'WANK', 'BITCH', 'BASTARD', 'TWAT', 'CUNT');
     $a = $badwords;
-    foreach( $a as $word) {
+    foreach ($a as $word) {
         $badwords[] = strrev( $word);
     }
     $cryptex->setbadwords( $badwords);
