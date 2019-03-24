@@ -32,6 +32,21 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class CryptexDB extends CrossDB {
+
+    /** @var array Contains the words that cannot be created in the game. */
+    protected $badwords;
+
+    /**
+     * Sets bad words.
+     *
+     * @param array $badwords
+     *
+     * @return the saved record
+     */
+    public function setbadwords( $badwords) {
+        $this->badwords = $badwords;
+    }
+
     /**
      * Save cryptex.
      *
@@ -43,13 +58,6 @@ class CryptexDB extends CrossDB {
      *
      * @return the saved record
      */
-
-    protected $badwords;
-
-    public function setbadwords( $badwords) {
-        $this->badwords = $badwords;
-    }
-
     public function savecryptex( $game, &$crossm, $crossd, $id, $letters) {
         global $USER;
 
@@ -385,7 +393,7 @@ class CryptexDB extends CrossDB {
      *
      * @param array $letters
      * @param array $freqs1
-     * @param string $originalletters
+     * @param string $original
      * @param array $badwords
      * @param int $cols
      * @param int $rows
