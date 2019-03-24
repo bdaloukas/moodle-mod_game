@@ -282,7 +282,7 @@ function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolu
 
         if ($wrong >= $max) {
             // This word is incorrect. If reach the max number of word I have to finish else continue with next word.
-            hangman_onincorrect( $cm->id, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution);
+            hangman_onincorrect( $cm, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution, $course);
         } else {
             $i = $max - $wrong;
             if ($i > 1) {
@@ -539,7 +539,7 @@ function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $
 /**
  * On incorrect.
  *
- * @param int $id
+ * @param stdClass $cm
  * @param string $wordline
  * @param string $word
  * @param stdClass $game
@@ -547,8 +547,9 @@ function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $
  * @param stdClass $hangman
  * @param boolean $onlyshow
  * @param boolean $showsolution
+ * @param stdClass $course
  */
-function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution) {
+function hangman_onincorrect( $cm, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution, $course) {
     echo "\r\n<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
 
     if ( $onlyshow or $showsolution) {
@@ -567,7 +568,7 @@ function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, 
         echo '<B>'.$word."</B><BR/><BR/>\r\n";
     }
 
-    game_hangman_show_nextword( $id, $game, $attempt, $hangman, true);
+    game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course);
 }
 
 /**

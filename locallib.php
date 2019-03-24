@@ -911,6 +911,7 @@ function game_updateattempts( $game, $attempt, $score, $finished, $cm, $course) 
 
     // Update completion state.
     $completion = new completion_info( $course);
+
     if ($completion->is_enabled($cm) && ($game->completionattemptsexhausted || $game->completionpass)) {
         if (!$finished) {
             game_save_best_score( $game);
