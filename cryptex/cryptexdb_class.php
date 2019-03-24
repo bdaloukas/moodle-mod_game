@@ -43,6 +43,13 @@ class CryptexDB extends CrossDB {
      *
      * @return the saved record
      */
+
+    protected $badwords;
+
+    public function setbadwords( $badwords) {
+        $this->badwords = $badwords;
+    }
+
     public function savecryptex( $game, &$crossm, $crossd, $id, $letters) {
         global $USER;
 
@@ -70,16 +77,17 @@ class CryptexDB extends CrossDB {
      *
      * @param array $crossm
      * @param array $crossd
+     * @param array $badwords
      *
      * @return the letters.
      */
-    public function computeletters( $crossm, $crossd) {
+    public function computeletters( $crossm, $crossd, $badwords) {
         $letters = '';
         $cols = $crossm->usedcols + 1;
         $letters = str_repeat('.', $crossm->usedcols).'#';
         $letters = str_repeat($letters, $crossm->usedrows);
 
-        $freqs1 = array();
+        $freqs1 = array();  // If one letter appears three times there is three times in the array.
         $count1 = $count2 = 0;
         foreach ($crossd as $rec) {
             $pos = $rec->mycol - 1 + ($rec->myrow - 1) * $cols;
@@ -110,6 +118,7 @@ class CryptexDB extends CrossDB {
             }
         }
 
+        $originalletters = $letters;
         $step = 1;
         while ($spaces) {
             if ($step == 1) {
@@ -127,6 +136,8 @@ class CryptexDB extends CrossDB {
         for ($row = 0; $row < $crossm->usedrows; $row++) {
             $retletters .= game_substr( $letters, $cols * $row, ($cols - 1));
         }
+
+        $this->repair_bad_words( $retletters, $freqs1, $originalletters, $badwords, $crossm);
 
         return $retletters;
     }
@@ -313,8 +324,114 @@ class CryptexDB extends CrossDB {
             return false;
         }
 
-        $letters = $this->computeletters( $crossm, $crossd);
+        $letters = $this->computeletters( $crossm, $crossd, $this->badwords);
 
         return true;
+    }
+
+    /**
+     * Removed bad words.
+     *
+     * @param array $letters
+     * @param array $freqs1
+     * @param string $original
+     * @param array $badwords
+     * @param stdClass $crossm
+     */
+    public function repair_bad_words( &$letters, $freqs1, $original, $badwords, $crossm) {
+        $cols = $crossm->usedcols;
+        $rows = $crossm->usedrows;
+        for (;;) {
+            $ret = false;
+            // Horizontaly.
+            for ($y = 0; $y < $rows; $y++) {
+                $ret |= $this->repair_bad_words_step( $letters, $freqs1, $original, $badwords, $cols, $rows, 0, $y, 1, 0);
+            }
+            // Verticaly.
+            for ($x = 0; $x < $cols; $x++) {
+                $ret |= $this->repair_bad_words_step( $letters, $freqs1, $original, $badwords, $cols, $rows, $x, 0, 0, 1);
+            }
+
+            // Diagonial 1.
+            for ($x = 0; $x < $cols; $x++) {
+                $ret |= $this->repair_bad_words_step( $letters, $freqs1, $original, $badwords, $cols, $rows, $x, 0, 1, 1);
+            }
+
+            // Diagonial 2.
+            for ($x = 0; $x < $cols; $x++) {
+                $ret |= $this->repair_bad_words_step( $letters, $freqs1, $original, $badwords, $cols, $rows, $x, $rows - 1, 1, -1);
+            }
+
+            // Diagonial 3.
+            for ($x = 0; $x < $cols; $x++) {
+                $ret |= $this->repair_bad_words_step( $letters, $freqs1, $original, $badwords, $cols, $rows, $x, 0, -1, 1);
+            }
+
+            // Diagonial 4.
+            for ($x = 0; $x < $cols; $x++) {
+                $ret |= $this->repair_bad_words_step( $letters, $freqs1, $original, $badwords, $cols, $rows, $cols - 1,
+                    $rows - 1, -1, -1);
+            }
+
+            if ($ret == false) {
+                break;
+            }
+        }
+    }
+
+
+    /**
+     * Removes bad words horizontally.
+     *
+     * @param array $letters
+     * @param array $freqs1
+     * @param string $originalletters
+     * @param array $badwords
+     * @param int $cols
+     * @param int $rows
+     * @param int $x
+     * @param int $y
+     * @param int $dx
+     * @param int $dy
+     */
+    public function repair_bad_words_step( &$letters, $freqs1, $original, $badwords, $cols, $rows, $x, $y, $dx, $dy) {
+
+        $xx = $x;
+        $yy = $y;
+
+        $found = false;
+        $max = $cols > $rows ? $cols : $rows;
+        $nl = $no = '';
+        for ($i = 0; $i < $max; $i++) {
+            if (($x >= $cols) || ($x < 0) || ($y >= $rows) || ($y < 0)) {
+                break;
+            }
+
+            $nl .= game_substr( $letters, $x + $cols * $y, 1);
+            $no .= game_substr( $original, $x + ($cols + 1) * $y, 1);
+
+            $x += $dx;
+            $y += $dy;
+        }
+
+        foreach ($badwords as $bad) {
+            $pos = game_strpos( $nl, $bad);
+            if ($pos === false) {
+                continue;
+            }
+            $lenb = game_strlen( $bad);
+            for ($i = 0; $i < $lenb; $i++) {
+                if (game_substr( $no, $pos + $i, 1) != '.') {
+                    continue;
+                }
+
+                $new = $freqs1[ array_rand( $freqs1)];
+                $pos2 = $xx + ($i + $pos) * $dx + ($yy + $i * $dy + $pos * $dy) * $cols;
+                $this->setchar( $letters, $pos2, $new);
+                $found = true;
+            }
+        }
+
+        return $found;
     }
 }
