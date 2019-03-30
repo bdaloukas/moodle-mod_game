@@ -709,7 +709,7 @@ function game_supports($feature) {
         case FEATURE_GROUPMEMBERSONLY:
             return true;
         case FEATURE_MOD_INTRO:
-            return false;
+            return true;
         case FEATURE_COMPLETION_TRACKS_VIEWS:
             return true;
         case FEATURE_COMPLETION_HAS_RULES:
@@ -720,7 +720,8 @@ function game_supports($feature) {
             return false;
         case FEATURE_BACKUP_MOODLE2:
             return true;
-
+        case FEATURE_SHOW_DESCRIPTION:
+            return true;
         default:
             return null;
     }
@@ -1532,4 +1533,35 @@ function game_delete_user_attempts( $gameid, $user) {
     $DB->delete_records('game_attempts', $params);
     $DB->delete_records('game_repetitions', $params);
     $DB->delete_records('game_queries', $params);
+}
+
+/**
+ * Add a get_coursemodule_info function in case any game type wants to add 'extra' information
+ * for the course (see resource).
+ *
+ * Given a course_module object, this function returns any "extra" information that may be needed
+ * when printing this activity in a course listing.  See get_array_of_activities() in course/lib.php.
+ *
+ * @param stdClass $coursemodule The coursemodule object (record).
+ * @return cached_cm_info An object on information that the courses
+ *                        will know about (most noticeably, an icon).
+ */
+function game_get_coursemodule_info($coursemodule) {
+    global $DB;
+
+    $dbparams = ['id' => $coursemodule->instance];
+    $fields = 'id, name, intro, introformat';
+    if (!$game = $DB->get_record('game', $dbparams, $fields)) {
+        return false;
+    }
+
+    $result = new cached_cm_info();
+    $result->name = $game->name;
+
+    if ($coursemodule->showdescription) {
+        // Convert intro to html. Do not filter cached version, filters run at display time.
+        $result->content = format_module_intro('game', $game, $coursemodule->id, false);
+    }
+
+    return $result;
 }

@@ -116,6 +116,7 @@ echo $OUTPUT->heading(format_string($game->name));
 
 // Display information about this game.
 echo $OUTPUT->box_start('quizinfo');
+echo $game->intro.'<br>';
 if ($game->attempts != 1) {
     echo get_string('gradingmethod', 'quiz', game_get_grading_option_name($game->grademethod));
 }

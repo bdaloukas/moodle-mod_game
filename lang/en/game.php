@@ -361,6 +361,7 @@ $string[ 'hiddenpicture_height'] = 'Set height of picture to (in pixels)';
 $string[ 'hiddenpicture_options'] = '\'Hidden Picture\' options';
 $string[ 'hiddenpicture_pictureglossary'] = 'The glossary for main question and picture';
 $string[ 'hiddenpicture_width'] = 'Set width of picture to (in pixels)';
+$string[ 'introduction'] = 'Description';
 $string[ 'millionaire_background'] = 'Background color';
 $string[ 'millionaire_options'] = 'Millionaire\' options';
 $string[ 'millionaire_shuffle'] = 'Randomize questions';

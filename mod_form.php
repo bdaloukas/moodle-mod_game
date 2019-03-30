@@ -82,6 +82,9 @@ class mod_game_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
 
+        // Introduction.
+        $this->standard_intro_elements(get_string('introduction', 'game'));
+
         $hasglossary = ($gamekind == 'hangman' || $gamekind == 'cross' ||
                 $gamekind == 'cryptex' || $gamekind == 'sudoku' ||
                 $gamekind == 'hiddenpicture' || $gamekind == 'snakes');

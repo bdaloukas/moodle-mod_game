@@ -1,3 +1,6 @@
+Changes in version 2019-03-30 (20190330)
+- Adds intro text.
+
 Changes in version 2019-03-24 (20190324)
 - Fixes problem on hangman on incorrect answer
 - Removes some bad words from cryptex

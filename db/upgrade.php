@@ -1820,6 +1820,25 @@ function xmldb_game_upgrade($oldversion) {
         }
         upgrade_mod_savepoint(true, $ver, 'game');
     }
+
+    if ($oldversion < ($ver = 2019033000)) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, null, null, '', 'course');
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2019033001)) {
+        // Define field timeclose to be added to game.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0', 'intro');
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }        upgrade_mod_savepoint(true, $ver, 'game');
+    }
     return true;
 }
 
