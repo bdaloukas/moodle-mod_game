@@ -77,13 +77,9 @@ function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
     if ($snakes->position > $board->usedcols * $board->usedrows && $snakes->queryid <> 0) {
         $finish = true;
 
-        if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
-            print_error("Course Module ID was incorrect id=$id");
-        }
-
         echo '<B>'.get_string( 'win', 'game').'</B><BR>';
         echo '<br>';
-        echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id\">".
+        echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}\">".
             get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
 

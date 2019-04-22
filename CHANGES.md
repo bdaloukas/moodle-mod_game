@@ -1,3 +1,6 @@
+Changes in version 2019-04-22-01 (2019042201)
+- Snakes and Laders: Fix problem at ending.
+
 Changes in version 2019-03-30 (20190330)
 - Adds intro text.
 
