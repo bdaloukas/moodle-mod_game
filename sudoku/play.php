@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once( "../../lib/questionlib.php");
+require_once(dirname(__FILE__).'/../../../lib/questionlib.php');
 
 /**
  * Plays the game Sudoku

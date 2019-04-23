@@ -675,6 +675,8 @@ function game_questions_shortanswer( $game) {
         case 'question';
             $recs = game_questions_shortanswer_question( $game);
             break;
+        default:
+            print_error( 'No sourcemodule '.$game->sourcemodule);
     }
 
     return $recs;

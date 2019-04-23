@@ -25,8 +25,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require( "cross_class.php");
-require( "crossdb_class.php");
+require_once( "cross_class.php");
+require_once( "crossdb_class.php");
 
 /**
  * Plays the game crossword.
@@ -210,7 +210,7 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
         $textdir = '';
     }
 
-    echo '<style>'.file_get_contents( 'cross/styles.css').'</style>';
+    echo '<style>'.file_get_contents( dirname(__FILE__).'/styles.css').'</style>';
 ?>
 </head>
 
@@ -714,7 +714,7 @@ function CheckServerClick( endofgame) {
 function OnPrint()
 {
 <?php
-    global $CFG, $game, $cm;
+    global $CFG;
 
     $params = "id={$cm->id}&gameid={$game->id}";
     echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";

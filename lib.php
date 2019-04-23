@@ -376,6 +376,9 @@ function game_get_user_grades($game, $userid=0) {
 
     $user = $userid ? "AND u.id = $userid" : "";
 
+    if (!isset( $game->grade)) {
+        $game->grade = 1;
+    }
     $sql = 'SELECT u.id, u.id AS userid, '.$game->grade.
             ' * g.score AS rawgrade, g.timemodified AS dategraded, MAX(a.timefinish) AS datesubmitted
             FROM {user} u, {game_grades} g, {game_attempts} a
