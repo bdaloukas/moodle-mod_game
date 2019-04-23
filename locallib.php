@@ -847,17 +847,7 @@ function game_insert_record( $table, $rec) {
         }
     }
 
-    if (isset( $rec->question)) {
-        $temp = $rec->question;
-        $rec->question = addslashes( $rec->question);
-    }
-    $ret = $DB->update_record( $table, $rec);
-
-    if (isset( $rec->question)) {
-        $rec->question = $temp;
-    }
-
-    return $ret;
+    return $DB->update_record( $table, $rec);
 }
 
 /**
