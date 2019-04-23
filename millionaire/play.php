@@ -457,7 +457,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     $query->sourcemodule = $game->sourcemodule;
     $query->glossaryentryid = 0;
     $query->questionid = $questionid;
-    $query->questiontext = addslashes( $q->questiontext);
+    $query->questiontext = $q->questiontext;
     $query->answertext = implode( ',', $ids);
     $query->correct = array_search( $correct, $ids) + 1;
     if (!$query->id = $DB->insert_record(  'game_queries', $query)) {
