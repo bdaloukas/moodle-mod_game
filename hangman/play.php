@@ -164,7 +164,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
     $query->questionid = $min->questionid;
     $query->glossaryentryid = $min->glossaryentryid;
     $query->attachment = $min->attachment;
-    $query->questiontext = addslashes( $min->questiontext);
+    $query->questiontext = $min->questiontext;
     $query->score = 0;
     $query->timelastattempt = time();
     $query->answertext = $min->answer;
