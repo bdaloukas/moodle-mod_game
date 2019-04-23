@@ -56,7 +56,7 @@ class CrossDB extends Cross {
 
         foreach ($crossd as $rec) {
             $rec->attemptid = $id;
-            $rec->questiontext = addslashes( $rec->questiontext);
+            $rec->questiontext = $rec->questiontext;
 
             $rec->gamekind = $game->gamekind;
             $rec->gameid = $game->id;
