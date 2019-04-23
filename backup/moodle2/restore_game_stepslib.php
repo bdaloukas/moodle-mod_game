@@ -86,6 +86,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $oldid = $data->id;
         $data->course = $this->get_courseid();
         $data->timemodified = $this->apply_date_offset($data->timemodified);
+        if (!isset( $data->intro)) {
+            $data->intro = '';
+        }
 
         // Insert the game record.
         $newitemid = $DB->insert_record('game', $data);

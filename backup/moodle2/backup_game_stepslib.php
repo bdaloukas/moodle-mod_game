@@ -50,7 +50,7 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
 
         // Define each element separated (exclude fields: course).
         $game = new backup_nested_element('game', array('id'), array(
-            'name', 'sourcemodule', 'timeopen', 'timeclose', 'quizid',
+            'name', 'intro', 'introformat', 'sourcemodule', 'timeopen', 'timeclose', 'quizid',
             'glossaryid', 'glossarycategoryid', 'questioncategoryid', 'bookid',
             'gamekind', 'param1', 'param2', 'param3',
             'param4', 'param5', 'param6', 'param7', 'param8', 'param9', 'param10',
