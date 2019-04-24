@@ -1,5 +1,6 @@
-Changes in version 2019-04-23-05 (2019042305)
+Changes in version 2019-04-23 (2019042311)
 - New: Supports test
+- CONTRIB-7692 Module Game: Intro fields definition inconsistency
 
 Changes in version 2019-04-22-01 (2019042201)
 - Snakes and Laders: Fix problem at ending.
