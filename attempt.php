@@ -170,7 +170,7 @@ function game_do_attempt( $game, $action, $course, $context, $cm) {
             break;
         case 'sudokucheckn':    // The user tries to guess a number.
             $attempt = game_getattempt( $game, $detail);
-            game_sudoku_check_number( $cm, $game, $attempt, $detail, $pos, $num, $context);
+            game_sudoku_check_number( $cm, $game, $attempt, $detail, $pos, $num, $context, $course);
             $continue = false;
             break;
         case 'cryptexcheck':    // The user tries to guess a question.
