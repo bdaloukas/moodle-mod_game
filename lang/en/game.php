@@ -309,6 +309,10 @@ $string[ 'reset_game_deleted_course'] = 'Delete tries from deleted courses';
 $string[ 'results'] = 'Results';
 $string[ 'showanswers'] = 'Show answers';
 $string[ 'showattempts'] = 'Show attempts';
+$string[ 'viewbook'] = 'View book <b>{$a}</b>';
+$string[ 'viewglossary'] = 'View glossary <b>{$a}</b>';
+$string[ 'viewquiz'] = 'View quiz <b>{$a}</b>';
+$string[ 'viewquestions'] = 'View questions';
 
 // File locallib.php.
 $string[ 'attemptfirst'] = 'First attempt';
@@ -391,6 +395,7 @@ $string[ 'toptext'] = 'Text at the top of page';
 $string[ 'userdefined'] = 'User defined';
 $string[ 'different_glossary_category'] = "The selected category doesn't corespond to selected glossary";
 $string[ 'highscore'] = 'Show high score (number of students)';
+$string[ 'missingbook'] = 'Missing book';
 
 // File preview.php.
 $string[ 'only_teachers'] = 'Only teacher can see this page';

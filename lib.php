@@ -855,6 +855,39 @@ function game_extend_settings_navigation($settings, $gamenode) {
             null, null, new pix_icon('t/edit', ''));
     }
 
+    if (has_capability('mod/game:manage', $context)) {
+        $gameid = $PAGE->cm->instance;
+        $sql = "SELECT id,gamekind,sourcemodule,bookid,course,glossaryid,quizid,questioncategoryid ".
+            "FROM {$CFG->prefix}game WHERE id=$gameid";
+        $game = $DB->get_record_sql( $sql);
+        if (($game->gamekind == 'bookquiz') && ($game->bookid != 0)) {
+            $book = $DB->get_record_sql( "SELECT id,name FROM {$CFG->prefix}book WHERE id={$game->bookid}");
+            $cmd = get_coursemodule_from_instance('book', $game->bookid, $game->course);
+            $url = new moodle_url('/mod/book/view.php', array('id' => $cmd->id));
+            $gamenode->add(get_string('viewbook', 'game', $book->name), $url, navigation_node::TYPE_SETTING,
+                null, null, new pix_icon('t/edit', ''));
+        }
+        if (($game->sourcemodule == 'glossary') && ($game->glossaryid != 0)) {
+            $glossary = $DB->get_record_sql( "SELECT id,name FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
+            $cmd = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
+            $url = new moodle_url('/mod/glossary/view.php', array('id' => $cmd->id));
+            $gamenode->add(get_string('viewglossary', 'game', $glossary->name), $url, navigation_node::TYPE_SETTING,
+                null, null, new pix_icon('t/edit', ''));
+        }
+        if (($game->sourcemodule == 'quiz') && ($game->quizid != 0)) {
+            $quiz = $DB->get_record_sql( "SELECT id,name FROM {$CFG->prefix}quiz WHERE id={$game->quizid}");
+            $cmd = get_coursemodule_from_instance('quiz', $game->quizid, $game->course);
+            $url = new moodle_url('/mod/quiz/view.php', array('id' => $cmd->id));
+            $gamenode->add(get_string('viewquiz', 'game', $quiz->name), $url, navigation_node::TYPE_SETTING,
+                null, null, new pix_icon('t/edit', ''));
+        }
+        if ($game->sourcemodule == 'question') {
+            $url = new moodle_url('/question/edit.php', array('courseid' => $game->course));
+            $gamenode->add(get_string('viewquestions', 'game'), $url, navigation_node::TYPE_SETTING,
+                null, null, new pix_icon('t/edit', ''));
+        }
+    }
+
     if (has_capability('mod/game:viewreports', $context)) {
         $url = new moodle_url('/mod/game/showanswers.php', array('q' => $PAGE->cm->instance));
         $reportnode = $gamenode->add(get_string('showanswers', 'game'), $url, navigation_node::TYPE_SETTING,
