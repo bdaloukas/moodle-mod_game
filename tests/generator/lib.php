@@ -35,6 +35,14 @@ defined('MOODLE_INTERNAL') || die();
  */
 class mod_game_generator extends testing_module_generator {
 
+    /**
+     * Creates instance of game record with default values.
+     *
+     * @param stdClass $record
+     * @param array $options
+     *
+     * @return the game instance
+     */
     public function create_instance($record = null, array $options = null) {
         global $CFG;
         require_once($CFG->libdir.'/resourcelib.php');
@@ -48,6 +56,16 @@ class mod_game_generator extends testing_module_generator {
         return parent::create_instance($record, (array)$options);
     }
 
+    /**
+     * Creates a glossary entry.
+     *
+     * @param stdClass $glossary
+     * @param stdClass $record
+     * @param string $concept
+     * @param string $definition
+     *
+     * @return the glossary_entries
+     */
     public function create_glossary_content($glossary, $record = array(), $concept, $definition) {
         global $DB, $USER, $CFG;
 
