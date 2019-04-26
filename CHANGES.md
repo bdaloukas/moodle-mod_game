@@ -1,3 +1,6 @@
+Changes in version 2019-04-26 (2019042600)
+- CONTRIB-7699 Problem with upgrading game plugin
+
 Changes in version 2019-04-23 (2019042311)
 - New: Supports test
 - CONTRIB-7692 Module Game: Intro fields definition inconsistency
