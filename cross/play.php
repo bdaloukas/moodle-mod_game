@@ -910,9 +910,11 @@ if ($game->param3 == 1) {
 if ($onlyshow == false) {
     echo '<div style="margin-top: 1em;">';
 
-    echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.
-    get_string( 'cross_checkbutton', 'game');
-    echo '</button>';
+    if (!$done) {
+        echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.
+        get_string( 'cross_checkbutton', 'game');
+        echo '</button>';
+    }
 
     echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
     ' type="button" onclick="CheckServerClick( 1);" style="display: none;">'.

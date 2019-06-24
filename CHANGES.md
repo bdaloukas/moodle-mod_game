@@ -1,3 +1,6 @@
+Changes in version 2019-06-24
+- Hide "Check crossword" when crossword is finished.
+
 Changes in version 2019-04-26 (2019042600)
 - CONTRIB-7699 Problem with upgrading game plugin
 
