@@ -55,22 +55,23 @@ $solution = ($action == 'solution');
 
 $PAGE->navbar->add(get_string('preview', 'game'));
 
+$onlyshow = true;
+$endofgame = false;
+$print = false;
+$checkbutton = false;
+$showhtmlsolutions = false;
+$showhtmlprintbutton = true;
+$showstudentguess = true;
+
 switch( $gamekind) {
     case 'cross':
         $g = '';
-        $onlyshow = true;
-        $endofgame = false;
-        $print = false;
-        $checkbutton = false;
-        $showhtmlsolutions = false;
-        $showhtmlprintbutton = true;
-        $showstudentguess = true;
-        game_cross_play( $update, $game, $attempt, $detail, $g, $onlyshow, $solution,
+        game_cross_play( $cm, $game, $attempt, $detail, $g, $onlyshow, $solution,
             $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
             $showstudentguess, $context, $course);
         break;
     case 'sudoku':
-        game_sudoku_play( $update, $game, $attempt, $detail, true, $solution, $context);
+        game_sudoku_play( $cm, $game, $attempt, $detail, $onlyshow, $solution, $context, $course);
         break;
     case 'hangman':
         $preview = ($action == 'preview');
@@ -78,7 +79,8 @@ switch( $gamekind) {
         break;
     case 'cryptex':
         $crossm = $DB->get_record( 'game_cross', array('id' => $attemptid));
-        game_cryptex_play( $update, $game, $attempt, $detail, $crossm, false, true, $solution, $context);
+        game_cryptex_play( $cm, $game, $attempt, $detail, $crossm, false, true, $solution, $context,
+            $print, $showhtmlprintbutton, $course);
         break;
 }
 
