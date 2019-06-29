@@ -312,7 +312,7 @@ width:	240pt;
 
 <?php
 
-if ($showhtmlprintbutton) {
+if ($showhtmlprintbutton && !$finished) {
     echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >'.get_string( 'finish', 'game');
     echo '</button>';
     echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string( 'print', 'game');
