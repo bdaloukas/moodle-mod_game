@@ -469,7 +469,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
             if ($hangman->try > $hangman->maxtries) {
                 $finished = true;
             }
-            if ($done && !$onlyshow)) {
+            if ($done && !$onlyshow) {
                 $hangman->corrects = $hangman->corrects + 1;
                 $updrec->corrects = $hangman->corrects;
             }
