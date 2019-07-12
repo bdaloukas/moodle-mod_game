@@ -282,7 +282,7 @@ function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolu
 
         if ($wrong >= $max) {
             // This word is incorrect. If reach the max number of word I have to finish else continue with next word.
-            hangman_onincorrect( $cm, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution, $course);
+            hangman_onincorrect( $cm, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution, $course, $wordline2);
         } else {
             $i = $max - $wrong;
             if ($i > 1) {
@@ -309,13 +309,13 @@ function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolu
         }
     } else {
         // This word is correct. If reach the max number of word I have to finish else continue with next word.
-        hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course);
+        hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course, $onlyshow, $showsolution);
     }
 
     echo "<br/><br/>".get_string( 'grade', 'game').' : '.round( $query->percent * 100).' %';
     if ($hangman->maxtries > 1) {
         $percent = ($correct - $wrong / $max) / game_strlen( $query->answertext);
-        if ($done) {
+        if ($done || $onlyshow || $showsolution) {
             $percent = 0;
         }
         $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
@@ -469,7 +469,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
             if ($hangman->try > $hangman->maxtries) {
                 $finished = true;
             }
-            if ($done) {
+            if ($done && !$onlyshow)) {
                 $hangman->corrects = $hangman->corrects + 1;
                 $updrec->corrects = $hangman->corrects;
             }
@@ -519,8 +519,10 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
  * @param stdClass $hangman
  * @param stdClass $query
  * @param stdClass $course
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
  */
-function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course) {
+function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course, $onlyshow, $showsolution) {
     global $DB;
 
     echo "<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
@@ -531,6 +533,10 @@ function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $
         if ($feedback != '') {
             echo "$feedback<br>";
         }
+    }
+
+    if ($onlyshow or $showsolution) {
+        return;
     }
 
     game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course);
@@ -548,10 +554,16 @@ function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $
  * @param boolean $onlyshow
  * @param boolean $showsolution
  * @param stdClass $course
+ * @param string $wordline2
  */
-function hangman_onincorrect( $cm, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution, $course) {
+function hangman_onincorrect( $cm, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution, $course, $wordline2) {
     echo "\r\n<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
 
+    if ( $showsolution && $wordline2 != '') {
+        echo "<br/><font size=\"5\">\n$wordline2</font>\r\n";
+    }
+
+        
     if ( $onlyshow or $showsolution) {
         return;
     }
