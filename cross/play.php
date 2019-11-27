@@ -1039,8 +1039,8 @@ if ($game->param3 == 2) {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
 <td align="right">
-<button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;">OK</button> &nbsp;
-<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();">Cancel</button>
+<button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;"><?php echo get_string('ok'); ?></button> &nbsp;
+<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
 </td></tr></table>
 
 </div>
@@ -1069,8 +1069,8 @@ function game_cross_show_welcome1() {
 
 <table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
 <td align="right">
-<button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;">OK</button> &nbsp;
-<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();">Cancel</button>
+<button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;"><?php echo get_string('ok'); ?></button> &nbsp;
+<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
 </td></tr></table>
 
 </td><td>&nbsp</td><td>
