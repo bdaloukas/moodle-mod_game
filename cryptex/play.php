@@ -38,7 +38,7 @@ require_once( "cryptexdb_class.php");
  * @param stdClass $course
  */
 function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $context, $course) {
-    global $DB, $USER;
+    global $CFG, $DB, $USER;
 
     if ($endofgame) {
         game_updateattempts( $game, $attempt, -1, true, $cm, $course);
@@ -51,6 +51,9 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
     }
 
     if ($attempt === false) {
+        if( !game_can_start_new_attempt( $game)) {
+            return;
+        }
         $attempt = game_addattempt( $game);
     }
 

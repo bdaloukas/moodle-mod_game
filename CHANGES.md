@@ -1,3 +1,8 @@
+Changes in version 2020-05-10
+- Fix: typo problem in corrert character
+- Fix: max attempts in cryptex
+
+
 Changes in version 2019-06-24
 - Fixes in Hangman by Filippos Kolovos
 
