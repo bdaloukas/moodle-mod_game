@@ -135,7 +135,7 @@ $string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
 // File cross/crossdb_class.php.
 $string[ 'and'] = 'and';
-$string[ 'cross_correct'] = 'corrert character';
+$string[ 'cross_correct'] = 'correct character';
 $string[ 'cross_corrects'] = 'correct characters';
 $string[ 'cross_error'] = 'wrong character';
 $string[ 'cross_errors'] = 'wrong characters';
