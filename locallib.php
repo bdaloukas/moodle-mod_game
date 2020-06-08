@@ -2393,8 +2393,7 @@ function game_grade_questions( $questions) {
  * Extract question id from the prefix of form element names
  *
  * @return integer      The question id
- * @param string $name  The name that contains a prefix that was
- *                      constructed with {@link question_make_name_prefix()}
+ * @param string $name  The name that contains a prefix that was constructed with question_make_name_prefix()
  */
 function game_question_get_id_from_name_prefix($name) {
     if (!preg_match('/^resp([0-9]+)_/', $name, $matches)) {

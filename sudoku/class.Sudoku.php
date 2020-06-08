@@ -1215,7 +1215,7 @@ class sudoku extends ObjectS {
      *              puzzle generator.
      * @param array $theclues A set of values for each pair in $theCluesPositions.
      * @return array NULL array if no solution is possible, otherwise a set of triples
-     *               suitable for feeding to {@link Sudoku::initializePuzzleFromArray}
+     *               suitable for feeding to initializePuzzleFromArray
      */
     protected function _generatepuzzle($theavailablepositions, $thecluespositions, $theclues) {
         $this->thelevel++;
@@ -1463,8 +1463,8 @@ class sudoku extends ObjectS {
         $thestring = str_pad($thestring, 81, " ");
 
         for ($i = 0; $i < 81; $i++) {
-            if ($thestring{$i} != " ") {
-                $thearray[] = array((int)($i / 9) + 1, ($i % 9) + 1, (int)$thestring{$i});
+            if ($thestring[$i] != " ") {
+                $thearray[] = array((int)($i / 9) + 1, ($i % 9) + 1, (int)$thestring[$i]);
             }
         }
 

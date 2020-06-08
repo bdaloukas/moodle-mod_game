@@ -51,7 +51,7 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
     }
 
     if ($attempt === false) {
-        if( !game_can_start_new_attempt( $game)) {
+        if (!game_can_start_new_attempt( $game)) {
             return;
         }
         $attempt = game_addattempt( $game);
