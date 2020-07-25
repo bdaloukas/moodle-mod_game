@@ -736,7 +736,9 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
         } else {
             $millionaire->queryid = 0;  // So the next function select a new question.
         }
-        game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
+        if (!$finish) {
+            game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
+        }
     } else {
         // Wrong answer.
         $info = get_string( 'millionaire_info_wrong_answer', 'game').
