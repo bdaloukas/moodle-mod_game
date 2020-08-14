@@ -93,9 +93,6 @@ function game_cross_new( $game, $attemptid, &$crossm) {
             }
         }
 
-        // +++ MBS-HACK (Peter Mayer) - Fixes issue with wrong word length of words with ß (MBS-2997).
-        $rec->answertext = str_replace( "ß", "ss", $rec->answertext);
-
         $rec->answertext = game_upper( $rec->answertext);
         $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
         $infos[$rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
