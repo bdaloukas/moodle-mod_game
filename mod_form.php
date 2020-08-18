@@ -83,7 +83,11 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addRule('name', null, 'required', null, 'client');
 
         // Introduction.
-        $this->standard_intro_elements(get_string('introduction', 'game'));
+        if (game_get_moodle_version() >= '02.09') {
+            $this->standard_intro_elements(get_string('introduction', 'game'));
+        } else {
+            $this->add_intro_editor(true);
+        }
 
         $hasglossary = ($gamekind == 'hangman' || $gamekind == 'cross' ||
                 $gamekind == 'cryptex' || $gamekind == 'sudoku' ||

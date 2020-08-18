@@ -1,3 +1,6 @@
+Changes in version 2020-08-19
+- Fix: Moodle 2.72 compatibility
+
 Changes in version 2020-07-25
 - Fix: Problem when finishing Millionaire game
 
