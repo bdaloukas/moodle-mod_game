@@ -1,4 +1,4 @@
-Changes in version 2021-05-07
+Changes in version 2021-05-08
 * Fix: Compatibility problems for Moodle 3.11
 
 Changes in version 2021-05-03
