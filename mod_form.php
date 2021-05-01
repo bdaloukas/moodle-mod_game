@@ -71,7 +71,7 @@ class mod_game_mod_form extends moodleform_mod {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        $mform->addElement('text', 'name', 'Name', array('size' => '64'));
+        $mform->addElement('text', 'name', get_string('name', 'game'), array('size' => '64'));
         if (!empty($CFG->formatstringstriptags)) {
             $mform->setType('name', PARAM_TEXT);
         } else {
@@ -403,6 +403,7 @@ class mod_game_mod_form extends moodleform_mod {
         }
 
         // Header/Footer options.
+
         $mform->addElement('header', 'headerfooteroptions', get_string('header_footer_options', 'game'));
         $mform->addElement('editor', 'toptext', get_string('toptext', 'game'));
         $mform->addElement('editor', 'bottomtext', get_string('bottomtext', 'game'));
