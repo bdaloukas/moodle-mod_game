@@ -144,7 +144,7 @@ class game_report extends game_default_report {
                     " WHERE i.gameid = '$game->id' AND q.id = i.questionid".
                     "   AND q.id IN ($questionlist)";
             if (!$questions = get_records_sql($sql)) {
-                print_error('No questions found');
+                throw new moodle_exception('game_error', 'game', 'No questions found');
             }
             $number = 1;
             foreach ($questionids as $key => $id) {

@@ -65,7 +65,7 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
     $answers = array();
     $recs = game_questions_shortanswer( $game);
     if ($recs == false) {
-        print_error( get_string( 'no_words', 'game'));
+        throw new moodle_exception( 'no_words', 'game');
     }
 
     $infos = array();
@@ -207,7 +207,7 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
 
     if ($language != $attempt->language) {
         if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))) {
-            print_error( "game_cross_play: Can't set language");
+            throw new moodle_exception( 'cryptex_error', 'game', 'game_cross_play: Can\'t set language');
         }
     }
 
@@ -267,17 +267,17 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
 ?>
 <style type="text/css"><!--
 
-.answerboxstyle  {
-background-color:	#FFFAF0;
-border-color:	#808080;
-border-style:	solid;
-border-width:	1px;
-display:	block;
-padding:	.75em;
-width:	240pt;
+.answerboxstyle {
+background-color: #FFFAF0;
+border-color: #808080;
+border-style: solid;
+border-width: 1px;
+display: block;
+padding: .75em;
+width: 240pt;
 }
 --></style>
-<?php
+    <?php
 
     $grade = round( 100 * $gradeattempt);
     echo get_string( 'grade', 'game').' '.$grade.' %';
@@ -313,17 +313,17 @@ width:	240pt;
 </tr>
 </table>
 
-<?php
+    <?php
 
-if ($showhtmlprintbutton && !$finished) {
-    echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >'.get_string( 'finish', 'game');
-    echo '</button>';
-    echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string( 'print', 'game');
-    echo '</button><br>';
-}
+    if ($showhtmlprintbutton && !$finished) {
+        echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >'.get_string( 'finish', 'game');
+        echo '</button>';
+        echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string( 'print', 'game');
+        echo '</button><br>';
+    }
 
-if ($showhtmlprintbutton) {
-?>
+    if ($showhtmlprintbutton) {
+    ?>
 <script>
     function PrintHtmlClick() {
         document.getElementById("printbutton").style.display = "none";
@@ -334,70 +334,70 @@ if ($showhtmlprintbutton) {
     }
 
     function OnPrint() {
-<?php
+        <?php
         global $CFG;
 
         $params = "id={$cm->id}&gameid={$game->id}";
         echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\");";
-?>
+        ?>
     }
 
     function OnEndGame() {
-<?php
+        <?php
         global $CFG;
 
         $params = 'id='.$cm->id.'&action=cryptexcheck&g=&finishattempt=1';
         echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\";\r\n";
-?>
+        ?>
     }
 </script>
-<?php
-}
+        <?php
+    }
 
-$i = 0;
-$else = '';
-$contextglossary = false;
-foreach ($questions as $key => $q) {
-    $i++;
-    if ($showsolution == false) {
-        // When I want to show the solution a want to show the questions to.
-        if (array_key_exists( $q->id, $corrects)) {
-            continue;
+    $i = 0;
+    $else = '';
+    $contextglossary = false;
+    foreach ($questions as $key => $q) {
+        $i++;
+        if ($showsolution == false) {
+            // When I want to show the solution a want to show the questions to.
+            if (array_key_exists( $q->id, $corrects)) {
+                continue;
+            }
         }
-    }
 
-    $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
-    if ($q->questionid) {
-        $question2 = str_replace( array("\'", '\"'), array("'", '"'), $question);
-        $question2 = game_filterquestion($question2, $q->questionid, $context->id, $game->course);
-    } else {
-        $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
-        $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
-        $contextglossary = game_get_context_module_instance( $cmglossary->id);
-        $question2 = str_replace( '\"', '"', $question);
-        $question2 = game_filterglossary($question2, $q->glossaryentryid, $contextglossary->id, $game->course);
-    }
-
-    echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
-    if (($onlyshow == false) and ($showsolution == false)) {
-        if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
-            $question .= ' &nbsp;<input type="submit" value="'.
-            get_string( 'answer').'" onclick="OnCheck( '.$q->id.",msg{$q->id});\" />";
+        $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
+        if ($q->questionid) {
+            $question2 = str_replace( array("\'", '\"'), array("'", '"'), $question);
+            $question2 = game_filterquestion($question2, $q->questionid, $context->id, $game->course);
+        } else {
+            $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
+            $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
+            $contextglossary = game_get_context_module_instance( $cmglossary->id);
+            $question2 = str_replace( '\"', '"', $question);
+            $question2 = game_filterglossary($question2, $q->glossaryentryid, $contextglossary->id, $game->course);
         }
+
+        echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
+        if (($onlyshow == false) and ($showsolution == false)) {
+            if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
+                $question .= ' &nbsp;<input type="submit" value="'.
+                get_string( 'answer').'" onclick="OnCheck( '.$q->id.",msg{$q->id});\" />";
+            }
+        }
+        echo $question;
+
+        if ($showsolution) {
+            echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
+        }
+        echo '<br>';
     }
-    echo $question;
 
-    if ($showsolution) {
-        echo " &nbsp;&nbsp;&nbsp;$q->answertext<B></b>";
+    if ($game->bottomtext != '') {
+        echo '<br><br>'.$game->bottomtext;
     }
-    echo '<br>';
-}
 
-if ($game->bottomtext != '') {
-    echo '<br><br>'.$game->bottomtext;
-}
-
-?>
+    ?>
     <script>
         function OnCheck( id, question) {
             document.getElementById("q").value = id;
@@ -414,14 +414,14 @@ if ($game->bottomtext != '') {
             }
         }
     </script>
-<?php
-echo '<style>'.file_get_contents( 'cryptex/styles.css').'</style>';
-echo '</head>';
-if ($print) {
-    echo '<body onload="window.print()">';
-} else {
-    echo '<body>';
-}
+    <?php
+    echo '<style>'.file_get_contents( 'cryptex/styles.css').'</style>';
+    echo '</head>';
+    if ($print) {
+        echo '<body onload="window.print()">';
+    } else {
+        echo '<body>';
+    }
 }
 /**
  * On finished.

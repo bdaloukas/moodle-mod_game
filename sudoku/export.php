@@ -40,7 +40,7 @@ function export() {
     fwrite( $h, "require( \"../../../config.php\");\r\n\r\n");
 
     if (($recs = get_records_select( 'game_sudoku_database')) == false) {
-        print_error('empty');
+        throw new moodle_exception('snakes_error', 'game', 'empty');
     }
 
     $i = 0;

@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 if (empty($game)) {
-    print_error('You cannot call this script in that way');
+    throw new moodle_exception( 'game_error', 'game', 'You cannot call this script in that way');
 }
 if (!isset($currenttab)) {
     $currenttab = '';

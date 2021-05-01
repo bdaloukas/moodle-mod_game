@@ -535,7 +535,7 @@ var gReturnVal = null;
 
 var gTabIndexes = new Array();
 // Pre-defined list of tags we want to disable/enable tabbing into
-var gTabbableTags = new Array("A","BUTTON","TEXTAREA","INPUT","IFRAME");	
+var gTabbableTags = new Array('A', 'BUTTON', 'TEXTAREA', 'INPUT', 'IFRAME');
 
 // If using Mozilla or Firefox, use Tab-key trap.
 if (!document.all) {
@@ -796,5 +796,5 @@ function displaySelectBoxes() {
     }
 }
 </script>
-<?php
+    <?php
 }

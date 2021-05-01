@@ -40,7 +40,7 @@ require_once( "headergame.php");
 $context = game_get_context_module_instance( $cm->id);
 
 if (!has_capability('mod/game:viewreports', $context)) {
-    print_error( get_string( 'only_teachers', 'game'));
+    throw new moodle_exception('only_teachers', 'game');
 }
 
 $action  = required_param('action', PARAM_ALPHANUM);

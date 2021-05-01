@@ -28,7 +28,7 @@ require_login();
 require_once( "headergame.php");
 
 if (!has_capability('mod/game:viewreports', $context)) {
-    print_error( get_string( 'only_teachers', 'game'));
+    throw new moodle_exception( 'only_teachers', 'game');
 }
 
 $PAGE->navbar->add(get_string('showattempts', 'game'));

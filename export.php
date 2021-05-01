@@ -148,7 +148,7 @@ class mod_game_exporthtml_form extends moodleform {
         }
 
         if (!($DB->update_record( 'game_export_html', $html))) {
-            print_error("game_export_html: not updated id=$html->id");
+            throw new moodle_exception( 'game_error', 'game', "game_export_html: not updated id=$html->id");
         }
 
         $cm = get_coursemodule_from_instance('game', $game->id, $game->course);
@@ -260,7 +260,7 @@ class mod_game_exportjavame_form extends moodleform {
         $javame->maxpictureheight = $mform->getElementValue('maxpictureheight');
 
         if (!($DB->update_record( 'game_export_javame', $javame))) {
-            print_error("game_export_javame: not updated id=$javame->id");
+            throw new moodle_exception( 'game_error', 'game', "game_export_javame: not updated id=$javame->id");
         }
 
         require_once("export/exportjavame.php");
@@ -333,6 +333,6 @@ function game_send_stored_file($file) {
         readfile($file);
         exit;
     } else {
-        print_error("export.php: File does not exists ".$file);
+        throw new moodle_exception( 'game_error', 'game', "export.php: File does not exists ".$file);
     }
 }

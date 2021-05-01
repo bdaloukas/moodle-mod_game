@@ -49,7 +49,7 @@ function game_bookquiz_continue( $cm, $game, $attempt, $bookquiz, $chapterid, $c
     $bookquiz->bookid = $game->bookid;
 
     if ( !game_insert_record( 'game_bookquiz', $bookquiz)) {
-        print_error( 'game_bookquiz_continue: error inserting in game_bookquiz');
+        throw new moodle_exception( 'bookquiz_error_insert', 'mod_game');
     }
 
     return game_bookquiz_play( $cm, $game, $attempt, $bookquiz, 0, $context, $course);
@@ -74,21 +74,21 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
         game_bookquiz_play_computelastchapter( $game, $bookquiz);
 
         if ($bookquiz->lastchapterid == 0) {
-            print_error( get_string( 'bookquiz_empty', 'game'));
+            throw new moodle_exception( 'bookquiz_empty', 'game');
         }
     }
     if ($chapterid == 0) {
         $chapterid = $bookquiz->lastchapterid;
     } else {
         if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $chapterid, array( 'id' => $bookquiz->id))) == false) {
-            print_error( "Can't update table game_bookquiz with lastchapterid to $chapterid");
+            throw new moodle_exception( 'bookquiz_cant_update_lastchaperid', 'game', $chapterid);
         }
     }
 
     // Loads the last chapter.
     $book = $DB->get_record( 'book', array('id' => $game->bookid));
     if (!$chapter = $DB->get_record( 'book_chapters', array('id' => $chapterid))) {
-        print_error('Error reading book chapters.');
+        throw new moodle_exception( 'bookquiz_error', 'game', 'Error reading book chapters.');
     }
     $select = "bookid = $game->bookid AND hidden = 0";
     $chapters = $DB->get_records_select('book_chapters', $select, null, 'pagenum', 'id, pagenum, subchapter, title, hidden');
@@ -260,7 +260,7 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
     global $DB;
 
     if ($game->bookid == 0) {
-        print_error( 'Not defined a book on this game');
+        throw new moodle_exception( 'bookquiz_error', 'game', 'Not defined a book on this game');
     }
 
     $pagenum = $DB->get_field( 'book_chapters', 'min(pagenum) as p', array('bookid' => $game->bookid));
@@ -272,7 +272,8 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
             // Update the data in table game_bookquiz.
             if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid,
                 array('id' => $bookquiz->id))) == false) {
-                print_error( "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
+                throw new moodle_exception( 'bookquiz_error', 'game',
+                    "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
             }
         }
     }
@@ -410,7 +411,7 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
             $newrec->attemptid = $attempt->id;
             $newrec->chapterid = $chapterid;
             if (!$DB->insert_record( 'game_bookquiz_chapters', $newrec, false)) {
-                print_error( "Can't insert to table game_bookquiz_chapters");
+                throw new moodle_exception( 'bookquiz_error', 'game', 'Can\'t insert to table game_bookquiz_chapters');
             }
         }
 

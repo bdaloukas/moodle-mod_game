@@ -1215,7 +1215,7 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         $file = $args[ 1];
         $a = explode( '/', $context->path);
         if (!$contextcourse = game_get_context_course_instance( $course->id)) {
-            print_error('nocontext');
+            throw new moodle_exception( 'game_error', 'game', 'nocontext');
         }
         $a = array( 'component' => 'question', 'filearea' => 'questiontext',
             'itemid' => $questionid, 'filename' => $file, 'contextid' => $contextcourse->id);
@@ -1227,13 +1227,13 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         }
 
         // Finally send the file.
-        send_stored_file($file, 0, 0, true); // download MUST be forced - security!
+        send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
     } else if ($filearea == 'answer') {
         $answerid = $args[ 0];
         $file = $args[ 1];
 
         if (!$contextcourse = game_get_context_course_instance( $course->id)) {
-            print_error('nocontext');
+            throw new moodle_exception( 'game_error', 'game', 'nocontext');
         }
         $rec = $DB->get_record( 'files', array( 'component' => 'question', 'filearea' => 'answer',
             'itemid' => $answerid, 'filename' => $file, 'contextid' => $contextcourse->id));
@@ -1258,7 +1258,7 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
     }
 
     // Finally send the file.
-    send_stored_file($file, 0, 0, true); // download MUST be forced - security!
+    send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
 }
 
 /**
@@ -1411,7 +1411,7 @@ function game_get_completion_state($course, $cm, $userid, $type) {
     }
 
     if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
 
     // Check for passing grade.

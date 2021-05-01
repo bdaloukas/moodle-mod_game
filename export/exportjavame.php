@@ -134,7 +134,7 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
 
     $map = game_exmportjavame_getanswers( $game, $exportattachment, false, $destdir, $files);
     if ($map == false) {
-        print_error( 'No Questions');
+        throw new moodle_exception( 'game_error', 'game',  'No Questions');
     }
 
     if ($destmobiledir == 'hangmanp') {

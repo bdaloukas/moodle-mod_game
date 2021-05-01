@@ -120,6 +120,6 @@ function game_importsnakes_do( $newrec) {
     global $DB;
 
     if (!$DB->insert_record( 'game_snakes_database', $newrec)) {
-        print_error( "Can't insert to table game_snakes_database");
+        throw new moodle_exception( 'cross_error', 'game', 'Can\'t insert to table game_snakes_database');
     }
 }

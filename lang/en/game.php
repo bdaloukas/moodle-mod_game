@@ -30,6 +30,9 @@ $string[ 'bookquiz_not_select_book'] = 'You have not select book';
 // File bookquiz/play.php.
 $string[ 'bookquiz_empty'] = 'The book is empty';
 $string[ 'sudoku_submit'] = 'Grade answers';
+$string[ 'bookquiz_error_insert'] = 'game_bookquiz_continue: error inserting in game_bookquiz';
+$string[ 'bookquiz_cant_update_lastchaperid'] = 'Can\'t update table game_bookquiz with lastchapterid to %d';
+$string[ 'bookquiz_error'] = 'bookquiz: %s';
 
 // File bookquiz/questions.php.
 $string[ 'bookquiz_categories'] = 'Categories';
@@ -132,6 +135,7 @@ $string[ 'privacy:metadata:game_repetitions:repetitions'] = 'repetitions';
 
 // File cross/cross_class.php.
 $string[ 'lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+$string[ 'cross_error'] = 'Crossword error: %s';
 
 // File cross/crossdb_class.php.
 $string[ 'and'] = 'and';
@@ -163,6 +167,7 @@ $string[ 'win'] = 'Congratulations !!!';
 
 // File cryptex/play.php.
 $string[ 'finish'] = 'End of game';
+$string[ 'cryptex_error'] = 'Cryptex error: %s';
 
 // File db/access.php.
 $string[ 'game:addinstance'] = 'Add a new game';
@@ -194,11 +199,13 @@ $string[ 'hiddenpicture_norows'] = 'Have to specify the number of cols verticaly
 $string[ 'must_select_glossary'] = 'You must select a glossary';
 $string[ 'no_questions'] = "There are no questions";
 $string[ 'noglossaryentriesfound'] = 'No glossary entries found';
+$string[ 'hiddenpicture_error'] = 'Game HiddenPicture error: %s';
 
 // File millionaire/play.php.
 $string[ 'millionaire_must_select_questioncategory'] = 'You must select one question category';
 $string[ 'millionaire_must_select_quiz'] = 'You must select one quiz';
 $string[ 'millionaire_lettersall'] = '-';
+$string[ 'millionaire_error'] = 'Game Millionaire error: %s';
 
 // File report/overview/report.php.
 $string[ 'allattempts'] = 'Show all tries';
@@ -224,16 +231,22 @@ $string[ 'withselected'] = 'With selected';
 // File snakes/play.php.
 $string[ 'snakes_dice'] = 'Dice, $a spots.';
 $string[ 'snakes_player'] = 'Player, position: $a.';
+$string[ 'snakes_error'] = 'Snakes error: %s';
 
 // File sudoku/create.php.
 $string[ 'sudoku_create_count'] = 'Number of sudokus that will be created';
 $string[ 'sudoku_create_start'] = 'Start creating sudokus';
 $string[ 'sudoku_creating'] = 'Creating <b>{$a}</b> sudoku';
+$string[ 'sudoku_error'] = 'Game Sudoku error: %s';
 
 // File sudoku/play.php.
 $string[ 'sudoku_finishattemptbutton'] = 'End of game';
 $string[ 'sudoku_guessnumber'] = 'Guess the correct number';
 $string[ 'sudoku_noentriesfound'] = 'No words found in glossary';
+
+// File attept.php.
+$string[ 'gamenotfound'] = 'Game %s not found';
+$string[ 'game_error'] = 'Game error: %s';
 
 // File export.php.
 $string[ 'export'] = 'Export';
@@ -254,6 +267,7 @@ $string[ 'javame_version'] = 'Version:';
 // File exporthtml_hangman.php.
 $string[ 'hangman_loose'] = '<BIG><B>Game over</B></BIG>';
 $string[ 'html_hangman_new'] = 'New';
+$string[ 'hangman_error'] = 'Game Hangman error: %s';
 
 // File exporthtml_millionaire.php.
 $string[ 'millionaire_helppeople'] = 'Help of people';
@@ -411,6 +425,7 @@ $string[ 'showall'] = 'Show all';
 $string[ 'startagain'] = 'Start again';
 $string[ 'timetaken'] = 'Time taken';
 $string[ 'col_highscores'] = 'High scores';
+$string[ 'grade'] = 'Grade';
 
 // File settings.php.
 $string[ 'hangmanimagesets'] = 'Number of image sets used by hangman';

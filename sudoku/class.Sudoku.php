@@ -34,7 +34,7 @@
  *     Add a "pair" inference.
  *	Dick Munroe (munroe@csworks.com) 17-Nov-2005
  *		Add comments to input files.
- *		There was a bug in _applyTuple that caused premature exiting of the inference
+ *		There was a bug in applyTuple that caused premature exiting of the inference
  *		engine.
  *		If SDD isn't present, don't display error.
  *
@@ -186,7 +186,7 @@ class cell extends objects {
     }
 
     /**
-     * For more details on the pair tuple algorithm, see RCS::_pairSolution.
+     * For more details on the pair tuple algorithm, see RCS::pairSolution.
      *
      * Remove all values in the tuple, but only if the cell is a superset.
      * @param array $atuple to be eliminated from the cell's state.
@@ -224,7 +224,7 @@ class cell extends objects {
      * Assert pending solution.
      * Used to make sure that solved positions show up at print time.
      * The value is used as a candidate for "slicing and dicing" by elimination in
-     * Sudoku::_newSolvedPosition.
+     * Sudoku::newSolvedPosition.
      *
      * @param integer $value The value for the solved position.
      */
@@ -377,7 +377,7 @@ class rcs extends ObjectS {
      *
      * @return boolean True if a 23 solution exists and has been applied.
      */
-    public function _23solution() {
+    public function a23solution() {
         $thecounts = array();
         $thetuples = array();
         $theunsolved = 0;
@@ -446,7 +446,7 @@ class rcs extends ObjectS {
      *
      * @return boolean true if anything changes.
      */
-    protected function _applytuple(&$atuple) {
+    protected function applytuple(&$atuple) {
         $thereturn = false;
 
         for ($i = 1; $i <= 9; $i++) {
@@ -492,9 +492,9 @@ class rcs extends ObjectS {
     public function doaninference() {
         $this->theheader = null;
 
-        $thereturn = $this->_23solution();
-        $thereturn |= $this->_pairsolution();
-        $thereturn |= $this->_uniquesolution();
+        $thereturn = $this->a23solution();
+        $thereturn |= $this->pairsolution();
+        $thereturn |= $this->uniquesolution();
 
         return $thereturn;
     }
@@ -506,7 +506,7 @@ class rcs extends ObjectS {
      *
      * @return array of tuples that appear the same number of times as the size of the contents
      */
-    public function _findtuples(&$thearray) {
+    public function findtuples(&$thearray) {
         $thereturn = array();
         for ($i = 0; $i < count($thearray); $i++) {
             $thecount = 1;
@@ -563,7 +563,7 @@ class rcs extends ObjectS {
      *
      * @return boolean True if something changed.
      */
-    protected function _pairsolution() {
+    protected function pairsolution() {
         $thecounts = array();
         $thetuples = array();
 
@@ -597,7 +597,7 @@ class rcs extends ObjectS {
         $thereturn = false;
 
         foreach ($thepossibilities as $thevalue) {
-            $thetuples = $this->_findtuples($thevalue);
+            $thetuples = $this->findtuples($thevalue);
 
             if (count($thetuples) != 0) {
                 foreach ($thetuples as $atuple) {
@@ -646,7 +646,7 @@ class rcs extends ObjectS {
      *
      * @return boolean True if one or more values in the RCS has changed state.
      */
-    protected function _uniquesolution() {
+    protected function uniquesolution() {
         $theset = array();
 
         for ($i = 1; $i <= 9; $i++) {
@@ -763,7 +763,7 @@ class r extends rcs {
      * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
-        return $thestate = $this->_coupling($thecolumn);
+        return $thestate = $this->coupling($thecolumn);
     }
 
     /**
@@ -776,7 +776,7 @@ class r extends rcs {
      *          sizes of the intersection between this and all other
      *          cells in the row or column.
      */
-    protected function _coupling($theindex) {
+    protected function coupling($theindex) {
         $thecommonstate =& $this->getCell($theindex);
         $thecommonstate =& $thecommonstate->getstate();
 
@@ -820,7 +820,7 @@ class c extends r {
      * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
-        return $thestate = $this->_coupling($therow);
+        return $thestate = $this->coupling($therow);
     }
 }
 
@@ -969,7 +969,7 @@ class sudoku extends ObjectS {
             }
         }
 
-        $this->_buildrcs();
+        $this->buildrcs();
     }
 
     /**
@@ -982,7 +982,7 @@ class sudoku extends ObjectS {
      * @param integer $row The row of the board's element whose value is now fixed.
      * @param integer $col The column of the board's element whose value is now fixed.
      */
-    protected function _applysolvedposition($row, $col) {
+    protected function applysolvedposition($row, $col) {
         $thevalue = $this->theboard[$row][$col]->getstate();
 
         /*
@@ -1005,14 +1005,14 @@ class sudoku extends ObjectS {
      * @return boolean True if at least one solved position was applied, false
      *                 otherwise.
      */
-    protected function _applysolvedpositions() {
+    protected function applysolvedpositions() {
         $thereturn = false;
 
         for ($i = 1; $i <= 9; $i++) {
             for ($j = 1; $j <= 9; $j++) {
                 if (!$this->theboard[$i][$j]->isapplied()) {
                     if ($this->theboard[$i][$j]->solvedstate() == 0) {
-                        $this->_applysolvedposition($i, $j);
+                        $this->applysolvedposition($i, $j);
 
                         /*
                          * Update the solved position matrix and make sure that the board actually
@@ -1032,7 +1032,7 @@ class sudoku extends ObjectS {
     /**
      * build the row/column/square structures for the board.
      */
-    protected function _buildrcs() {
+    protected function buildrcs() {
         for ($i = 1; $i <= 9; $i++) {
             $this->therows[$i] = new r("Row",
                 $i,
@@ -1146,7 +1146,7 @@ class sudoku extends ObjectS {
                 }
             }
 
-            $theinitialstate = $this->_generatepuzzle($theavailablepositions, $thecluespositions, $theclues);
+            $theinitialstate = $this->generatepuzzle($theavailablepositions, $thecluespositions, $theclues);
 
             if ($theinitialstate) {
                 if ($thedifficultylevel != 10) {
@@ -1168,7 +1168,7 @@ class sudoku extends ObjectS {
 
                     /*
                      * Easy is defined as the number of derivable clues added to the minimum
-                     * required information to solve the puzzle as returned by _generatePuzzle.
+                     * required information to solve the puzzle as returned by generatePuzzle.
                      */
 
                     for ($i = 0; $i < (10 - $thedifficultylevel); $i++) {
@@ -1217,7 +1217,7 @@ class sudoku extends ObjectS {
      * @return array NULL array if no solution is possible, otherwise a set of triples
      *               suitable for feeding to initializePuzzleFromArray
      */
-    protected function _generatepuzzle($theavailablepositions, $thecluespositions, $theclues) {
+    protected function generatepuzzle($theavailablepositions, $thecluespositions, $theclues) {
         $this->thelevel++;
 
         $this->thegenerationiterations++;
@@ -1272,7 +1272,7 @@ class sudoku extends ObjectS {
         foreach ($theavailablepositions as $xxx) {
             $therowcoupling = $this->therows[$xxx[0]]->coupling($xxx[0], $xxx[1]);
             $thecolumncoupling = $this->thecolumns[$xxx[1]]->coupling($xxx[0], $xxx[1]);
-            $thesquarecoupling = $this->thesquares[$this->_squareindex($xxx[0], $xxx[1])]->coupling($xxx[0], $xxx[1]);
+            $thesquarecoupling = $this->thesquares[$this->squareindex($xxx[0], $xxx[1])]->coupling($xxx[0], $xxx[1]);
             $thecouplings[$therowcoupling + $thecolumncoupling + $thesquarecoupling][] = $xxx;
         }
 
@@ -1322,7 +1322,7 @@ class sudoku extends ObjectS {
 
             $theflag = $this->solve(false);
 
-            if ($this->_validatetrialsolution()) {
+            if ($this->validatetrialsolution()) {
                 if ($theflag) {
                     /*
                      * We're done, so we can return the clues and their positions to the caller.
@@ -1334,7 +1334,7 @@ class sudoku extends ObjectS {
 
                     return $thecluespositions;
                 } else {
-                    $xxx = $this->_generatepuzzle($theavailablepositions, $thecluespositions, $theclues);
+                    $xxx = $this->generatepuzzle($theavailablepositions, $thecluespositions, $theclues);
                     if ($xxx) {
                         return $xxx;
                     }
@@ -1347,7 +1347,7 @@ class sudoku extends ObjectS {
             */
 
             $this->theboard = $thecurrentboard;
-            $this->_buildrcs();
+            $this->buildrcs();
             array_pop($theclues);
         }
 
@@ -1496,7 +1496,7 @@ class sudoku extends ObjectS {
      *
      * @return boolean True if at least on pending solution existed, false otherwise.
      */
-    protected function _newsolvedposition() {
+    protected function newsolvedposition() {
         $thereturn = false;
 
         for ($i = 1; $i <= 9; $i++) {
@@ -1520,7 +1520,7 @@ class sudoku extends ObjectS {
      * @param string $theheader [optional] The header line to be output along
      *               with the intermediate solution.
      */
-    protected function _printintermediatesolution($theheader = null) {
+    protected function printintermediatesolution($theheader = null) {
         if ($this->thedebug) {
             $this->printsolution( $theheader);
         }
@@ -1629,15 +1629,15 @@ class sudoku extends ObjectS {
 
         do {
             do {
-                $this->_applysolvedpositions();
+                $this->applysolvedpositions();
                 if ($theinitialstateflag) {
-                    $this->_printintermediatesolution($theheader);
+                    $this->printintermediatesolution($theheader);
                     $theheader = null;
                 } else {
                     $theinitialstateflag = true;
                     $theheader = "<br />Apply Slice and Dice:";
                 }
-            } while ($this->_newsolvedposition());
+            } while ($this->newsolvedposition());
 
             $therowiteration = false;
 
@@ -1719,7 +1719,7 @@ class sudoku extends ObjectS {
                         $this->theboard[$i][$j]->flagsolvedposition($thevalue);
 
                         $thesolutionflag = $this->solve();
-                        $thetrialsolutionflag = $this->_validatetrialsolution();
+                        $thetrialsolutionflag = $this->validatetrialsolution();
 
                         if ($thetrialsolutionflag && $thesolutionflag) {
                             return array(array($i, $j, $thevalue));
@@ -1740,7 +1740,7 @@ class sudoku extends ObjectS {
                         }
 
                         $this->theboard = $thecurrentboard;
-                        $this->_buildrcs();
+                        $this->buildrcs();
                     }
 
                     return array();
@@ -1756,7 +1756,7 @@ class sudoku extends ObjectS {
      * @param integer $thecolumn the column coordinate.
      * @return integer the square index in the range 1..9
      */
-    protected function _squareindex($therow, $thecolumn) {
+    protected function squareindex($therow, $thecolumn) {
         $theindex = ((int)(($therow - 1) / 3) * 3) + (int)(($thecolumn - 1) / 3) + 1;
         return $theindex;
     }
@@ -1796,7 +1796,7 @@ class sudoku extends ObjectS {
      *
      * @return True when the intermediate soltuion is valid, false otherwise.
      */
-    protected function _validatetrialsolution() {
+    protected function validatetrialsolution() {
         for ($i = 1; $i <= 9; $i++) {
             if (!(($this->therows[$i]->validatetrialsolution()) &&
                 ($this->thecolumns[$i]->validatetrialsolution()) &&
@@ -1847,7 +1847,7 @@ class SudokuTemplates extends Sudoku
      * @param int $thedifficultylevel
      */
     public function generatepuzzlefromarray($thearray, $thedifficultylevel = 10) {
-        $this->_generatepuzzle($thearray, array(), array());
+        $this->generatepuzzle($thearray, array(), array());
 
         /*
         ** Because the generation process may infer values for some of the
@@ -1884,7 +1884,7 @@ class sudokuintermediatesolution extends sudoku {
      *
      * @param object $theheader
      */
-    protected function _printintermediatesolution($theheader = null) {
+    protected function printintermediatesolution($theheader = null) {
         $this->printsolution($theheader);
     }
 }

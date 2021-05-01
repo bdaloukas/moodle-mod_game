@@ -56,23 +56,23 @@ function game_show_header( &$id, &$game, &$course, &$context, &$cm) {
 
     if ($id) {
         if (! $cm = get_coursemodule_from_id('game', $id)) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'game');
         }
         if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-            print_error('coursemisconf');
+            throw new moodle_exception('coursemisconf', 'game');
         }
         if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'game');
         }
     } else {
         if (! $game = $DB->get_record('game', array('id' => $q))) {
-            print_error('invalidgameid', 'game');
+            throw new moodle_exception('invalidgameid', 'game');
         }
         if (! $course = $DB->get_record('course', array('id' => $game->course))) {
-            print_error('invalidcourseid');
+            throw new moodle_exception('invalidcourseid', 'game');
         }
         if (! $cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'game');
         }
     }
 
@@ -248,7 +248,7 @@ function game_create( $game, $forcenew, $course, $context, $finishattempt, $cm) 
             game_hiddenpicture_continue( $cm, $game, $attempt, $detail, $context, $course);
             break;
         default:
-            print_error( "Game {$game->gamekind} not found");
+            throw new moodle_exception( 'gamenotfound', 'game', $game->gamekind);
             break;
     }
 }

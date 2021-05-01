@@ -51,7 +51,7 @@ class CrossDB extends Cross {
         $this->delete_records( $id);
 
         if (!(game_insert_record( "game_cross", $crossm))) {
-            print_error( 'Insert page: new page game_cross not inserted');
+            throw new moodle_exception( 'cross_error', 'game', 'Insert page: new page game_cross not inserted');
         }
 
         foreach ($crossd as $rec) {
@@ -64,7 +64,7 @@ class CrossDB extends Cross {
             $rec->sourcemodule = $game->sourcemodule;
 
             if (!$DB->insert_record( 'game_queries', $rec)) {
-                print_error( 'Insert page: new page game_queries not inserted');
+                throw new moodle_exception( 'cross_error', 'game', 'Insert page: new page game_queries not inserted');
             }
             game_update_repetitions($game->id, $USER->id, $rec->questionid, $rec->glossaryentryid);
         }
@@ -81,10 +81,10 @@ class CrossDB extends Cross {
         global $DB;
 
         if (!$DB->delete_records( 'game_queries', array( 'attemptid' => $id))) {
-            print_error( "Can't delete from game_queries attemptid=$id");
+            throw new moodle_exception( 'cross_error', 'game',  "Can't delete from game_queries attemptid=$id");
         }
         if (!$DB->delete_records( 'game_cross', array( 'id' => $id))) {
-            print_error( "Can't delete from game_cross id=$id");
+            throw new moodle_exception( 'cross_error', 'game', "Can't delete from game_cross id=$id");
         }
     }
 
@@ -313,7 +313,7 @@ class CrossDB extends Cross {
         $updrec->studentanswer = $guess;
         $updrec->id = $rec->id;
         if (!$DB->update_record( 'game_queries', $updrec, $rec->id)) {
-            print_error( 'Update game_queries: not updated');
+            throw new moodle_exception( 'cross_error', 'game', 'Update game_queries: not updated');
         }
 
         $score = $correctletters / $len;

@@ -51,10 +51,10 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
     $cols = $game->param1;
     $rows = $game->param2;
     if ($cols == 0) {
-        print_error( get_string( 'hiddenpicture_nocols', 'game'));
+        throw new moodle_exception( 'hiddenpicture_nocols', 'game');
     }
     if ($rows == 0) {
-        print_error( get_string( 'hiddenpicture_norows', 'game'));
+        throw new moodle_exception( 'hiddenpicture_norows', 'game');
     }
 
     // New attempt.
@@ -65,7 +65,7 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
     $newrec = game_hiddenpicture_selectglossaryentry( $game, $attempt);
 
     if ($recs === false) {
-        print_error( get_string( 'no_questions', 'game'));
+        throw new moodle_exception( 'no_questions', 'game');
     }
 
     $positions = array();
@@ -103,7 +103,7 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
         $query->glossaryentryid = $rec->glossaryentryid;
         $query->score = 0;
         if (($query->id = $DB->insert_record( 'game_queries', $query)) == 0) {
-            print_error( 'error inserting in game_queries');
+            throw new moodle_exception( 'hiddenpicture_error', 'game', 'error inserting in game_queries');
         }
         game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
     }
@@ -124,7 +124,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     srand( (double)microtime() * 1000000);
 
     if ($game->glossaryid2 == 0) {
-        print_error( get_string( 'must_select_glossary', 'game'));
+        throw new moodle_exception( 'must_select_glossary', 'game');
     }
     $select = "ge.glossaryid={$game->glossaryid2}";
     $table = '{glossary_entries} ge';
@@ -140,7 +140,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     $sql = "SELECT ge.id,attachment FROM $table WHERE $select";
     if (($recs = $DB->get_records_sql( $sql)) == false) {
         $a->name = "'".$DB->get_field('glossary', 'name', array( 'id' => $game->glossaryid2))."'";
-        print_error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
+        throw new moodle_exception( 'hiddenpicture_nomainquestion', 'game', $a);
         return false;
     }
     $ids = array();
@@ -164,7 +164,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     if (count( $ids) == 0) {
         $a = new stdClass();
         $a->name = "'".$DB->get_field( 'glossary', 'name', array( 'id' => $game->glossaryid2))."'";
-        print_error( get_string( 'hiddenpicture_nomainquestion', 'game', $a));
+        throw new moodle_exception( 'hiddenpicture_nomainquestion', 'game', $a);
         return false;
     }
 
@@ -214,13 +214,13 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     $query->answertext = $rec->answertext;
     $query->score = 0;
     if (($query->id = $DB->insert_record( 'game_queries', $query)) == 0) {
-        print_error( 'Error inserting in game_queries');
+        throw new moodle_exception( 'hiddenpicture_error', 'game', 'Error inserting in game_queries');
     }
     $newrec = new stdClass();
     $newrec->id = $attempt->id;
     $newrec->correct = 0;
     if (!game_insert_record(  'game_hiddenpicture', $newrec)) {
-        print_error( 'Error inserting in game_hiddenpicture');
+        throw new moodle_exception( 'hiddenpicture_error', 'game',  'Error inserting in game_hiddenpicture');
     }
 
     game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
@@ -392,7 +392,7 @@ function game_hiddenpicture_check_mainquestion( $cm, $game, &$attempt, &$hiddenp
 
     // Load the glossary entry.
     if (!($entry = $DB->get_record( 'glossary_entries', array( 'id' => $glossaryentryid)))) {
-        print_error( get_string( 'noglossaryentriesfound', 'game'));
+        throw new moodle_exception( 'noglossaryentriesfound', 'game');
     }
     $answer = $responses->answer;
     $correct = false;
@@ -404,7 +404,7 @@ function game_hiddenpicture_check_mainquestion( $cm, $game, &$attempt, &$hiddenp
 
     // Load the query.
     if (!($query = $DB->get_record( 'game_queries', array( 'id' => $queryid)))) {
-        print_error( "The query $queryid not found");
+        throw new moodle_exception( 'hiddenpicture_error', 'game',  "The query $queryid not found");
     }
 
     game_update_queries( $game, $attempt, $query, $correct, $answer);
@@ -415,7 +415,7 @@ function game_hiddenpicture_check_mainquestion( $cm, $game, &$attempt, &$hiddenp
         $hiddenpicture->wrong++;
     }
     if (!$DB->update_record( 'game_hiddenpicture', $hiddenpicture)) {
-        print_error( 'game_hiddenpicture_check_mainquestion: error updating in game_hiddenpicture');
+        throw new moodle_exception( 'hiddenpicture_error', 'game', 'check_mainquestion: error updating');
     }
 
     $score = game_hidden_picture_computescore( $game, $hiddenpicture);

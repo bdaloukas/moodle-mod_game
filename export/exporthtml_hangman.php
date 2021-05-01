@@ -38,7 +38,7 @@ $destdir = game_export_createtempdir();
 $exportattachment = ( $html->type == 'hangmanp');
 $map = game_exmportjavame_getanswers( $game, $context, $exportattachment, $destdir, $files);
 if ($map == false) {
-    print_error( 'No Questions');
+    throw new moodle_exception( 'hangman_error', 'game', 'No Questions');
 }
 
 $questions = '';
@@ -191,9 +191,9 @@ if ($html->type != 'hangmanp') {
 ?>eval("document.hm.src=\"hangman_" + wrong_guesses + ".jpg\"");
         // Ιncortect letter guess.
         eval("document.hm.src=\"hangman_" + wrong_guesses + ".jpg\"");
-<?php
+    <?php
 }
-?>
+    ?>
         if (wrong_guesses == <?php echo $game->param10 + 1;?>) {
             // lost
             alert( "<?php echo strip_tags( game_get_string_lang( 'hangman_loose', 'mod_game', $lang)); ?>");

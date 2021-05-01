@@ -52,7 +52,7 @@ class mod_game_mod_form extends moodleform_mod {
             if ($g = $DB->get_record('game', array('id' => $id))) {
                 $gamekind = $g->gamekind;
             } else {
-                print_error('incorrect game');
+                throw new moodle_exception('game_error', 'game', 'incorrect game');
             }
         } else {
             $gamekind = required_param('type', PARAM_ALPHA);

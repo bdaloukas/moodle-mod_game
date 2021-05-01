@@ -33,23 +33,23 @@ $q = optional_param('q',  0, PARAM_INT);  // Game ID.
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('game', $id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
     if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-        print_error('coursemisconf');
+        throw new moodle_exception( 'game_error', 'game', 'coursemisconf');
     }
     if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
 } else {
     if (! $game = $DB->get_record('game', array('id' => $q))) {
-        print_error('invalidgameid q='.$q, 'game');
+        throw new moodle_exception( 'game_error', 'game', 'invalidgameid q='.$q, 'game');
     }
     if (!$course = $DB->get_record('course', array('id' => $game->course))) {
-        print_error('invalidcourseid');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcourseid');
     }
     if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
 }
 

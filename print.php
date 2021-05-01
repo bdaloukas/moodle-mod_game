@@ -36,11 +36,11 @@ $context = game_get_context_module_instance( $id);
 require_capability('mod/game:view', $context);
 
 if (!$course = $DB->get_record('course', array('id' => $game->course))) {
-    print_error('invalidcourseid');
+    throw new moodle_exception('game_error', 'game', 'invalidcourseid');
 }
 
 if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
 }
 
 game_print( $cm, $game, $context, $course);
@@ -92,7 +92,7 @@ function game_print_cross( $cm, $game, $context, $course) {
 <head>
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php
+    <?php
     game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
         $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
         $showstudentguess, $context, $course);
@@ -125,12 +125,12 @@ function game_print_cryptex( $cm, $game, $context, $course) {
     $print = true;
     $crossm = $DB->get_record_select( 'game_cross', "id=$attempt->id");
 
-?>
+    ?>
 <html  dir="ltr" lang="el" xml:lang="el" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<?php
+    <?php
     game_cryptex_play( $cm, $game, $attempt, $crossrec, $crossm, $updateattempt,
         $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton, $course);
 }

@@ -28,7 +28,7 @@ require_once("locallib.php");
 $id = required_param('id', PARAM_INT);   // It stores the courseid.
 
 if (! $course = $DB->get_record( 'course', array( 'id' => $id))) {
-    print_error( 'Course ID is incorrect');
+    throw new moodle_exception( 'game_error', 'game',  'Course ID is incorrect');
 }
 
 require_login($course->id);

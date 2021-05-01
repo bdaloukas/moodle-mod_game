@@ -34,15 +34,15 @@ $edit = optional_param('edit', -1, PARAM_BOOL);         // Edit mode.
  * =========================================================================
  */
 if (!$cm = get_coursemodule_from_id('book', $id)) {
-    print_error('Course Module ID was incorrect');
+    throw new moodle_exception( 'bookquiz_error', 'game', 'Course Module ID was incorrect');
 }
 
 if (!$course = $DB->get_record('course', array( 'id' => $cm->course))) {
-    print_error('Course is misconfigured');
+    throw new moodle_exception( 'bookquiz_error', 'game', 'Course is misconfigured');
 }
 
 if (!$book = $DB->get_record('book', array( 'id' => $cm->instance))) {
-    print_error('Course module is incorrect');
+    throw new moodle_exception( 'bookquiz_error', 'game', 'Course module is incorrect');
 }
 
 require_course_login($course, true, $cm);
@@ -69,7 +69,7 @@ if ($chapterid == '0') {
 }
 
 if (!$chapter = $DB->get_record('book_chapters', array('id' => $chapterid))) {
-    print_error('Error reading book chapters.');
+    throw new moodle_exception( 'bookquiz_error', 'game', 'Error reading book chapters.');
 }
 
 // Check all variables.
@@ -78,12 +78,12 @@ unset($chapterid);
 
 // Chapter is hidden for students.
 if (!$allowedit && $chapter->hidden) {
-    print_error('Error reading book chapters.');
+    throw new moodle_exception( 'bookquiz_error', 'game', ('Error reading book chapters.');
 }
 
 // Chapter not part of this book!
 if ($chapter->bookid != $book->id) {
-    print_error('Chapter not part of this book!');
+    throw new moodle_exception( 'bookquiz_error', 'game', 'Chapter not part of this book!');
 }
 /* =========================================================================
  * security checks  END

@@ -74,7 +74,7 @@ class CryptexDB extends CrossDB {
         $newrec->letters = $letters;
 
         if (!($cryptexid = game_insert_record( "game_cryptex", $newrec))) {
-            print_error( 'Insert page: new page game_cryptex not inserted');
+            throw new moodle_exception( 'cryptex_error', 'game', 'Insert page: new page game_cryptex not inserted');
         }
 
         return $newrec;

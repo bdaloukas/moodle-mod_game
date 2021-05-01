@@ -44,20 +44,20 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
     $files = array();
 
     if ( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
-        print_error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).
+        throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz').
             ' '.get_string( 'modulename', $game->sourcemodule));
     }
 
     if ( $game->sourcemodule == 'quiz') {
         if ( $game->quizid == 0) {
-            print_error( get_string( 'must_select_quiz', 'game'));
+            throw new moodle_exception( 'must_select_quiz', 'game');
         }
         $select = "qtype='multichoice' AND quiz='$game->quizid' ".
             " AND qqi.question=q.id";
         $table = "{question} q,{quiz_question_instances} qqi";
     } else {
         if ( $game->questioncategoryid == 0) {
-            print_error( get_string( 'must_select_questioncategory', 'game'));
+            throw new moodle_exception( 'must_select_questioncategory', 'game');
         }
 
         // Include subcategories.
@@ -506,25 +506,25 @@ var Base64 = {
 <tr style='background:#408080'><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </tr>
 
-<?php
-$letters = get_string( 'lettersall', 'game');
-for ($i = 1; $i <= $maxquestions; $i++) {
-    $s = game_substr( $letters, $i - 1, 1);
-    echo "<tr>\n";
-    echo "<td style='background:$colorback;color:$color1'>";
-    echo "<input style=\"background:$colorback;color:$color1;\"
-        type=\"submit\" name=\"btAnswer$i\" value=\"$s\" id=\"btAnswer$i\"";
-    echo " onmouseover=\"Highlite( $i);\" onmouseout=\"Restore( $i);\"  onmousedown=\"OnSelectAnswer( $i);\">";
-    echo "</td>\n";
-    echo "<td style=\"background:$colorback;color:$color1;\" width=100%> &nbsp; <span id=lblAnswer$i
-        style=\"background:$colorback;color:$color1\"
-        onmouseover=\"Highlite($i);\r \n\" onmouseout=\"Restore( $i);\" onmousedown=\"OnSelectAnswer( $i);\"></span></td>\n";
-    if ( $i == 1) {
-        echo "<td style='background:#408080' rowspan=".$maxquestions." colspan=3><div id=\"info\"></div></td>\n";
+    <?php
+    $letters = get_string( 'lettersall', 'game');
+    for ($i = 1; $i <= $maxquestions; $i++) {
+        $s = game_substr( $letters, $i - 1, 1);
+        echo "<tr>\n";
+        echo "<td style='background:$colorback;color:$color1'>";
+        echo "<input style=\"background:$colorback;color:$color1;\"
+            type=\"submit\" name=\"btAnswer$i\" value=\"$s\" id=\"btAnswer$i\"";
+        echo " onmouseover=\"Highlite( $i);\" onmouseout=\"Restore( $i);\"  onmousedown=\"OnSelectAnswer( $i);\">";
+        echo "</td>\n";
+        echo "<td style=\"background:$colorback;color:$color1;\" width=100%> &nbsp; <span id=lblAnswer$i
+            style=\"background:$colorback;color:$color1\"
+            onmouseover=\"Highlite($i);\r \n\" onmouseout=\"Restore( $i);\" onmousedown=\"OnSelectAnswer( $i);\"></span></td>\n";
+        if ( $i == 1) {
+            echo "<td style='background:#408080' rowspan=".$maxquestions." colspan=3><div id=\"info\"></div></td>\n";
+        }
+        echo "</tr>\n";
     }
-    echo "</tr>\n";
-}
-?>
+    ?>
 
 <tr><td colspan=10 style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 
@@ -533,5 +533,5 @@ for ($i = 1; $i <= $maxquestions; $i++) {
 
 </body>
 </html>
-<?php
+    <?php
 }

@@ -29,7 +29,7 @@ require_once( "check.php");
 require_login();
 
 if (!has_capability('mod/game:viewreports', $context)) {
-    print_error( get_string( 'only_teachers', 'game'));
+    throw new moodle_exception('only_teachers', 'game');
 }
 
 $PAGE->navbar->add(get_string('showanswers', 'game'));
@@ -75,7 +75,7 @@ function game_compute_repetitions($game) {
            "FROM {game_queries} WHERE gameid=$game->id AND userid=$USER->id GROUP BY questionid,glossaryentryid";
 
     if (!$DB->execute( $sql)) {
-        print_error('Problem on computing statistics for repetitions');
+        throw new moodle_exception('game_error', 'game', 'Problem on computing statistics for repetitions');
     }
 }
 

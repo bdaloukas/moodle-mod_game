@@ -48,7 +48,7 @@ function showform() {
     <td>
         <input type="text" name="count" size="6" value="2" /><br>
     </td>
-</tr>	
+</tr>
 <tr><td colspan=2><center><br><input type="submit" value="<?php  print_string('sudoku_create_start', 'game') ?>" /></td></tr>
 </table>
 <input type="hidden" name=action        value="create" >
@@ -57,7 +57,7 @@ function showform() {
 <input type="hidden" name=id        value="<?php  echo $id; ?>" />
 </form>
 
-<?php
+    <?php
 }
 
 /**
