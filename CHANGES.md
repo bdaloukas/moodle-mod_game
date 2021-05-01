@@ -1,3 +1,6 @@
+Changes in version 2021-05-01
+* Fix: Updated high score query for postgresql compatibility
+
 Changes in version 2020-08-19
 - Fix: Moodle 2.72 compatibility
 
