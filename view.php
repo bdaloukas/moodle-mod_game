@@ -354,7 +354,7 @@ function game_highscore( $game) {
     " FROM {$CFG->prefix}game_attempts ".
     " WHERE gameid={$game->id} AND score > 0".
     " GROUP BY userid".
-    " ORDER BY MAX(score) DESC";
+    " ORDER BY max(score) DESC";
     $score = 0;
     $recs = $DB->get_records_sql( $sql);
     foreach ($recs as $rec) {
