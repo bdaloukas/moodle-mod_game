@@ -1,3 +1,9 @@
+Changes in version 2021-05-03
+* Crossword: Makes better legend
+
+Changes in version 2021-05-02
+* Fix: Compatibility problems for Moodle 3.11
+
 Changes in version 2021-05-01
 * Fix: Updated high score query for postgresql compatibility
 

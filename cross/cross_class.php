@@ -816,7 +816,18 @@ class Cross
                 $rec->questiontext = game_repairquestion( $q);
             }
 
-            $sclue .= ',"'.game_tojavascriptstring( game_filtertext( $rec->questiontext, 0))."\"\r\n";
+            $s = game_filtertext( $rec->questiontext, 0);
+            while( substr( $s, -4) == '<br>') {
+                $s = substr( $s, 0, strlen( $s) - 4);
+            }
+            if( substr( $s, 0, 2) == '<p') {
+                $pos = strpos( $s, '>');
+                if( $pos != false) {
+                    $s = substr( $s, $pos +1);
+                }
+            }
+            $rec->questiontext = $s;
+            $sclue .= ',"'.game_tojavascriptstring( $s)."\"\r\n";
             if ($showstudentguess) {
                 $sguess .= ',"'.$rec->studentanswer.'"';
             } else {
@@ -879,8 +890,9 @@ class Cross
         ksort( $this->mlegendh);
         ksort( $this->mlegendv);
 
+        $sclue = game_substr( $sclue, 1);
         $sret .= "WordLength = new Array( ".game_substr( $swordlength, 1).");\n";
-        $sret .= "Clue = new Array( ".game_substr( $sclue, 1).");\n";
+        $sret .= "Clue = new Array( ".$sclue.");\n";
         $sguess = str_replace( ' ', '_', $sguess);
         $sret .= "Guess = new Array( ".game_substr( $sguess, 1).");\n";
         $sret .= "Solutions = new Array( ".game_substr( $ssolutions, 1).");\n";
