@@ -1217,7 +1217,7 @@ class sudoku extends ObjectS {
      * @return array NULL array if no solution is possible, otherwise a set of triples
      *               suitable for feeding to initializePuzzleFromArray
      */
-    protected function generatepuzzle($theavailablepositions, $thecluespositions, $theclues) {
+    protected function generatepuzzle2($theavailablepositions, $thecluespositions, $theclues) {
         $this->thelevel++;
 
         $this->thegenerationiterations++;
