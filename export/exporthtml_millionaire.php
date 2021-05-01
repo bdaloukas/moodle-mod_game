@@ -16,12 +16,25 @@
 
 /**
  * This page export the game millionaire to html
- * 
- * @author  bdaloukas
- * @version $Id: exporthtml_millionaire.php,v 1.14 2012/07/25 11:16:03 bdaloukas Exp $
- * @package game
- **/
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Exports millionaire.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param int $maxanswers
+ * @param int $countofquestions
+ * @param string $retfeedback
+ * @param string $destdir
+ * @param array $files
+ */
 function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files) {
     global $CFG, $DB, $USER;
 
@@ -31,20 +44,20 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
     $files = array();
 
     if ( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
-        print_error( get_string('millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz')).
+        throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz').
             ' '.get_string( 'modulename', $game->sourcemodule));
     }
 
     if ( $game->sourcemodule == 'quiz') {
         if ( $game->quizid == 0) {
-            print_error( get_string( 'must_select_quiz', 'game'));
+            throw new moodle_exception( 'must_select_quiz', 'game');
         }
         $select = "qtype='multichoice' AND quiz='$game->quizid' ".
             " AND qqi.question=q.id";
         $table = "{question} q,{quiz_question_instances} qqi";
     } else {
         if ( $game->questioncategoryid == 0) {
-            print_error( get_string( 'must_select_questioncategory', 'game'));
+            throw new moodle_exception( 'must_select_questioncategory', 'game');
         }
 
         // Include subcategories.
@@ -95,6 +108,13 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
     return $ret;
 }
 
+/**
+ * Exports to html a "Millionaire" game.
+ *
+ * @param stdClass $game
+ * @param string $questions
+ * @param int $maxquestions
+ */
 function game_millionaire_html_print( $game,  $questions, $maxquestions) {
     $color1 = 'black';
     $color2 = 'DarkOrange';
@@ -119,28 +139,28 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
     var countQuestions = 0;
     var maxQuestions = <?php echo $maxquestions;?>;
     
-	function Highlite( ans) {
-		document.getElementById( "btAnswer" + ans).style.backgroundColor = '<?php echo $color2;?>';
-	}
+    function Highlite( ans) {
+        document.getElementById( "btAnswer" + ans).style.backgroundColor = '<?php echo $color2;?>';
+    }
 
-	function Restore( ans) {
-		document.getElementById( "btAnswer" + ans).style.backgroundColor = '<?php echo $colorback;?>';
-	}
+    function Restore( ans) {
+        document.getElementById( "btAnswer" + ans).style.backgroundColor = '<?php echo $colorback;?>';
+    }
 
-	function OnSelectAnswer( ans) {
-	    if ( posCorrect == ans) {
-	        if( level+1 > 15) {
-	            alert( "<?php echo get_string( 'win', 'game');?>");
-	            Reset();
-	        } else {
-	            UpdateLevel( level+1);
-	            SelectNextQuestion();
-	        }
-	    } else {
-	        OnGameOver( ans);
-	    }
-	}
-	
+    function OnSelectAnswer( ans) {
+        if ( posCorrect == ans) {
+            if( level+1 > 15) {
+                alert( "<?php echo get_string( 'win', 'game');?>");
+                Reset();
+            } else {
+                UpdateLevel( level+1);
+                SelectNextQuestion();
+            }
+        } else {
+            OnGameOver( ans);
+        }
+    }
+
     function OnGameOver( ans) {
         document.getElementById( "info").innerHTML = "<?php echo get_string( 'millionaire_info_wrong_answer', 'game');?> " +
             document.getElementById( "lblAnswer" + posCorrect).innerHTML;
@@ -149,38 +169,38 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
         document.getElementById( "lblAnswer" + posCorrect).style.backgroundColor = '<?php echo $color2;?>';
         
         alert( "<?php echo strip_tags( get_string( 'hangman_loose', 'game')); ?>");
-       
+      
         Restore( posCorrect); 
         document.getElementById( "lblAnswer" + posCorrect).style.backgroundColor = '<?php echo $colorback;?>';
-        
+
         Reset();
     }
-    
-	function UpdateLevel( newlevel) {
-	    if ( level > 0) {
-	        document.getElementById( "levela" + level).bgColor = "<?php echo $colorback;?>";
-    	    document.getElementById( "levelb" + level).bgColor = "<?php echo $colorback;?>";
-	        document.getElementById( "levelc" + level).bgColor = "<?php echo $colorback;?>";
-	        document.getElementById( "levela" + level).style.color = "<?php echo $color1;?>";	    
-	        document.getElementById( "levelb" + level).style.color = "<?php echo $color1;?>";
-	        document.getElementById( "levelc" + level).style.color = "<?php echo $color1;?>";
-	    }
-	    
-	    level = newlevel;
 
-	    document.getElementById( "levela" + level).bgColor = "<?php echo $color2;?>";
-	    document.getElementById( "levelb" + level).bgColor = "<?php echo $color2;?>";
-	    document.getElementById( "levelc" + level).bgColor = "<?php echo $color2;?>";
-	    document.getElementById( "levela" + level).style.color = "<?php echo $colorback;?>";	    
-	    document.getElementById( "levelb" + level).style.color = "<?php echo $colorback;?>";
-	    document.getElementById( "levelc" + level).style.color = "<?php echo $colorback;?>";
-    }
-	
-	function OnHelp5050( ans) {
-	    if (flag5050) {
-	        return;
+    function UpdateLevel( newlevel) {
+        if ( level > 0) {
+            document.getElementById( "levela" + level).bgColor = "<?php echo $colorback;?>";
+            document.getElementById( "levelb" + level).bgColor = "<?php echo $colorback;?>";
+            document.getElementById( "levelc" + level).bgColor = "<?php echo $colorback;?>";
+            document.getElementById( "levela" + level).style.color = "<?php echo $color1;?>";
+            document.getElementById( "levelb" + level).style.color = "<?php echo $color1;?>";
+            document.getElementById( "levelc" + level).style.color = "<?php echo $color1;?>";
         }
-   
+
+        level = newlevel;
+
+        document.getElementById( "levela" + level).bgColor = "<?php echo $color2;?>";
+        document.getElementById( "levelb" + level).bgColor = "<?php echo $color2;?>";
+        document.getElementById( "levelc" + level).bgColor = "<?php echo $color2;?>";
+        document.getElementById( "levela" + level).style.color = "<?php echo $colorback;?>";
+        document.getElementById( "levelb" + level).style.color = "<?php echo $colorback;?>";
+        document.getElementById( "levelc" + level).style.color = "<?php echo $colorback;?>";
+   }
+
+    function OnHelp5050( ans) {
+        if (flag5050) {
+            return;
+        }
+
         document.getElementById( "Help5050").src = "5050x.png";
         flag5050 = 1;
 
@@ -189,54 +209,54 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
         for (i=1; i <= countQuestions; i++) {   
             if( (i != pos) && (i != posCorrect)) {         
                 document.getElementById( "lblAnswer" + i).style.visibility = 'hidden';
-        	    document.getElementById( "btAnswer" + i).style.visibility = 'hidden';
-        	}
+                document.getElementById( "btAnswer" + i).style.visibility = 'hidden';
+            }
         }
-	}
+    }
 
-	function OnHelpTelephone( ans) {
-	    if( flagTelephone) {
-	        return;
+    function OnHelpTelephone( ans) {
+        if( flagTelephone) {
+            return;
         }
-	    flagTelephone = 1;
+        flagTelephone = 1;
         document.getElementById( "HelpTelephone").src = "telephonex.png";
-	    
-		if (countQuestions < 2) {
-			wrong = posCorrect;
-		} else {
-			for(;;) {
-				wrong = 1 + Math.floor(Math.random() * countQuestions);
-				if ( wrong != posCorrect) {
-					break;
-                }
-			}
-		}
 
-		// With 80% gives the correct answer.
-		if (Math.random() <= 0.8) {
-			pos = posCorrect;
-		} else {
-			pos = wrong;
+        if (countQuestions < 2) {
+            wrong = posCorrect;
+        } else {
+            for(;;) {
+                wrong = 1 + Math.floor(Math.random() * countQuestions);
+                if ( wrong != posCorrect) {
+                    break;
+               }
+            }
         }
-			
+
+        // With 80% gives the correct answer.
+        if (Math.random() <= 0.8) {
+            pos = posCorrect;
+        } else {
+            pos = wrong;
+        }
+
         info = "<?php echo get_string( 'millionaire_info_telephone', 'game').'<br><b>';?> ";
         info += document.getElementById( "lblAnswer" + pos).innerHTML;
         document.getElementById( "info").innerHTML = info;
-	}
+    }
 
-	function OnHelpPeople( ans) {
+    function OnHelpPeople( ans) {
         if( flagPeople) {
-	        return;
+            return;
         }
-	    flagPeople = 1;
+        flagPeople = 1;
         document.getElementById( "HelpPeople").src = "peoplex.png";
-        
+
         sum = 0;
         var aPercent = new Array();
         for( i = 0; i < countQuestions-1; i++) {
-			percent = Math.floor(Math.random()*(100-sum));
-			aPercent[ i] = percent;
-			sum += percent;
+            percent = Math.floor(Math.random()*(100-sum));
+            aPercent[ i] = percent;
+            sum += percent;
         }
         aPercent[ countQuestions - 1] = 100 - sum;
         if( Math.random() <= 0.8) {
@@ -255,24 +275,24 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
         info = "<?php echo '<br>'.get_string( 'millionaire_info_people', 'game').':<br>';?>";
         for( i=0; i < countQuestions; i++) {
             info += "<br>" + letters.charAt( i) + " : " + aPercent[ i] + " %";
-		}
-	    
-	    document.getElementById( "info").innerHTML = info;
-	}
+        }
 
-	function OnQuit( ans) {
-	    Reset();
-	}
-	
-	function Reset() {
-	    for(i=1; i <= 15; i++) {
-	        document.getElementById( "levela" + i).bgColor = "<?php echo $colorback;?>";
-    	    document.getElementById( "levelb" + i).bgColor = "<?php echo $colorback;?>";	    
-	        document.getElementById( "levelc" + i).bgColor = "<?php echo $colorback;?>";
-	        document.getElementById( "levela" + i).style.color = "<?php echo $color1;?>";
-	        document.getElementById( "levelb" + i).style.color = "<?php echo $color1;?>";
-	        document.getElementById( "levelc" + i).style.color = "<?php echo $color1;?>";
-	    }
+        document.getElementById( "info").innerHTML = info;
+    }
+
+    function OnQuit( ans) {
+        Reset();
+    }
+
+    function Reset() {
+        for(i=1; i <= 15; i++) {
+            document.getElementById( "levela" + i).bgColor = "<?php echo $colorback;?>";
+            document.getElementById( "levelb" + i).bgColor = "<?php echo $colorback;?>";
+            document.getElementById( "levelc" + i).bgColor = "<?php echo $colorback;?>";
+            document.getElementById( "levela" + i).style.color = "<?php echo $color1;?>";
+            document.getElementById( "levelb" + i).style.color = "<?php echo $color1;?>";
+            document.getElementById( "levelc" + i).style.color = "<?php echo $color1;?>";
+        }
 
         flag5050 = 0;
         flagTelephone = 0;
@@ -282,10 +302,10 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
         document.getElementById( "HelpPeople").src = "people.png";
         document.getElementById( "HelpTelephone").src = "telephone.png";
 
-	    document.getElementById( "info").innerHTML = "";
-	    UpdateLevel( 1);
-	    SelectNextQuestion();
-	}
+        document.getElementById( "info").innerHTML = "";
+        UpdateLevel( 1);
+        SelectNextQuestion();
+    }
 
     function RandomizeAnswers( elements) {
         posCorrect = 1;
@@ -304,30 +324,27 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
         }
     }
     
-	function SelectNextQuestion()
-	{   
-	    current_question = Math.floor(Math.random()*questions.length);
-	    question = Base64.decode( questions[ current_question]);
-	    
-	    var elements = new Array();
+    function SelectNextQuestion() {   
+        current_question = Math.floor(Math.random()*questions.length);
+        question = Base64.decode( questions[ current_question]);
+
+        var elements = new Array();
         elements = question.split('#');
         
         RandomizeAnswers( elements);
 
-	    document.getElementById( "question").innerHTML = elements[ 0];
-	    for( i=1; i < elements.length; i++)
-	    {
-    	    document.getElementById( "lblAnswer" + i).innerHTML = elements[ i];
-    	    document.getElementById( "lblAnswer" + i).style.visibility = 'visible';
-    	    document.getElementById( "btAnswer" + i).style.visibility = 'visible';
-	    }
-	    for( i=elements.length; i<= maxQuestions; i++)
-	    {
-    	    document.getElementById( "lblAnswer" + i).style.visibility = 'hidden';
-    	    document.getElementById( "btAnswer" + i).style.visibility = 'hidden';
-    	}
-    	
-    	document.getElementById( "info").innerHTML = "";
+        document.getElementById( "question").innerHTML = elements[ 0];
+        for( i=1; i < elements.length; i++) {
+            document.getElementById( "lblAnswer" + i).innerHTML = elements[ i];
+            document.getElementById( "lblAnswer" + i).style.visibility = 'visible';
+            document.getElementById( "btAnswer" + i).style.visibility = 'visible';
+        }
+        for( i=elements.length; i<= maxQuestions; i++) {
+            document.getElementById( "lblAnswer" + i).style.visibility = 'hidden';
+            document.getElementById( "btAnswer" + i).style.visibility = 'hidden';
+        }
+
+        document.getElementById( "info").innerHTML = "";
     }
     
 /**
@@ -339,79 +356,71 @@ function game_millionaire_html_print( $game,  $questions, $maxquestions) {
  
 var Base64 = {
  
-	// private property
-	_keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
- 
-	// public method for decoding
-	decode : function (input) {
-		var output = "";
-		var chr1, chr2, chr3;
-		var enc1, enc2, enc3, enc4;
-		var i = 0;
- 
-		input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
- 
-		while (i < input.length) {
- 
-			enc1 = this._keyStr.indexOf(input.charAt(i++));
-			enc2 = this._keyStr.indexOf(input.charAt(i++));
-			enc3 = this._keyStr.indexOf(input.charAt(i++));
-			enc4 = this._keyStr.indexOf(input.charAt(i++));
- 
-			chr1 = (enc1 << 2) | (enc2 >> 4);
-			chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
-			chr3 = ((enc3 & 3) << 6) | enc4;
- 
-			output = output + String.fromCharCode(chr1);
- 
-			if (enc3 != 64) {
-				output = output + String.fromCharCode(chr2);
-			}
-			if (enc4 != 64) {
-				output = output + String.fromCharCode(chr3);
-			}
- 		}
- 
-		output = Base64._utf8_decode(output);
- 
-		return output;
- 
-	}, 
- 
-	// private method for UTF-8 decoding
-	_utf8_decode : function (utftext) {
-		var string = "";
-		var i = 0;
-		var c = c1 = c2 = 0;
-		while ( i < utftext.length ) {
-			c = utftext.charCodeAt(i);
- 
-			if (c < 128) {
-				string += String.fromCharCode(c);
-				i++;
-			}
-			else if((c > 191) && (c < 224)) {
-				c2 = utftext.charCodeAt(i+1);
-				string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
-				i += 2;
-			}
-			else {
-				c2 = utftext.charCodeAt(i+1);
-				c3 = utftext.charCodeAt(i+2);
-				string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
-				i += 3;
-			}
- 
-		}
- 
-		return string;
-	}
- 
+    // Private property.
+    _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
+
+    // Public method for decoding.
+    decode : function (input) {
+        var output = "";
+        var chr1, chr2, chr3;
+        var enc1, enc2, enc3, enc4;
+        var i = 0;
+
+        input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+        while (i < input.length) {
+
+            enc1 = this._keyStr.indexOf(input.charAt(i++));
+            enc2 = this._keyStr.indexOf(input.charAt(i++));
+            enc3 = this._keyStr.indexOf(input.charAt(i++));
+            enc4 = this._keyStr.indexOf(input.charAt(i++));
+
+            chr1 = (enc1 << 2) | (enc2 >> 4);
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+            chr3 = ((enc3 & 3) << 6) | enc4;
+
+            output = output + String.fromCharCode(chr1);
+
+            if (enc3 != 64) {
+                output = output + String.fromCharCode(chr2);
+            }
+            if (enc4 != 64) {
+                output = output + String.fromCharCode(chr3);
+            }
+        }
+
+        output = Base64._utf8_decode(output);
+
+        return output;
+    }, 
+
+    // private method for UTF-8 decoding
+    _utf8_decode : function (utftext) {
+        var string = "";
+        var i = 0;
+        var c = c1 = c2 = 0;
+        while ( i < utftext.length ) {
+            c = utftext.charCodeAt(i);
+
+            if (c < 128) {
+                string += String.fromCharCode(c);
+                i++;
+            } else if((c > 191) && (c < 224)) {
+                c2 = utftext.charCodeAt(i+1);
+                string += String.fromCharCode(((c & 31) << 6) | (c2 & 63));
+                i += 2;
+            } else {
+                c2 = utftext.charCodeAt(i+1);
+                c3 = utftext.charCodeAt(i+2);
+                string += String.fromCharCode(((c & 15) << 12) | ((c2 & 63) << 6) | (c3 & 63));
+                i += 3;
+            }
+        }
+
+        return string;
+    }
 }
-		
 </script>
-
-
 
 <table cellpadding=0 cellspacing=0 border=0>
 <tr style='background:#408080'>
@@ -497,7 +506,7 @@ var Base64 = {
 <tr style='background:#408080'><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 </tr>
 
-<?php
+    <?php
     $letters = get_string( 'lettersall', 'game');
     for ($i = 1; $i <= $maxquestions; $i++) {
         $s = game_substr( $letters, $i - 1, 1);
@@ -515,7 +524,7 @@ var Base64 = {
         }
         echo "</tr>\n";
     }
-?>
+    ?>
 
 <tr><td colspan=10 style='background:#408080'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>
 
@@ -524,5 +533,5 @@ var Base64 = {
 
 </body>
 </html>
-<?php
+    <?php
 }

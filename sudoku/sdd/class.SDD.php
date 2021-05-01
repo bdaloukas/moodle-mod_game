@@ -15,104 +15,52 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Dump structured data, i.e., Objects and Arrays, in either plain text or
- * html.  This is a class wrapper for a couple of utility routines that I use
+ * Dump structured data, i.e., Objects and Arrays, in either plain text or html.
+ *
+ * This is a class wrapper for a couple of utility routines that I use
  * all the time.  It's handier to have them as a class.
  *
- * Its also the class interface for logging functions that I use in developing
- * web enabled applications.
+ * @author Dick Munroe <munroe@csworks.com> original package StructuredDataDumper
+ * @copyright copyright @ by Dick Munroe, 2004
+ * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @package mod_game
+ */
+
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * This is a class wrapper for a couple of utility routines that I use all the time.
  *
  * @author Dick Munroe <munroe@csworks.com>
  * @copyright copyright @ by Dick Munroe, 2004
  * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- * @package StructuredDataDumper
- * @version 1.0.4
+ * @package mod_game
  */
-
-//
-// Edit History:
-//
-//  Dick Munroe munroe@cworks.com 04-Dec-2004
-//      Initial version created.
-//
-//  Dick Munroe munroe@csworks.com 08-Dec-2004
-//      Translate < to &lt; for html output.
-//
-//  Dick Munroe munroe@csworks.com 23-Dec-2004
-//      Add interface for writing "stuff".  Extend SDD
-//      to get things "written".
-//
-//  Dick Munroe munroe@csworks.com 25-Dec-2004
-//      If a class extends a base class, but doesn't add
-//      data members, a warning winds up appearing when
-//      printing.
-//      Added a memeber to fetch the state of the logging
-//      flag.
-//
-//  Dick Munroe munroe@csworks.com 11-Mar-2006
-//      The test for html flag should have assumed that
-//      $this can be defined for objects calling SDD::dump.
-//
-//  Dick Munroe (munroe@csworks.com) 22-Mar-2006
-//      Add a function to generate "newlines".
-//
-
 class sdd {
-    /*
-     * HTML to be generated flag.
-     */
-
+    /** @var HTML to be generated flag. */
     protected $m_htmlflag;
 
-    /*
-     * logging flag.
-     */
-
-    protected $m_logging = false;
-
-    /*
-     * In memory log file.
-     */
-
-    protected $m_log = array();
-
-    /*
+    /**
      * Constructor.
      *
-     * @access public
-     * @param boolean $theHTMLFlag [optional] True if HTML is to be generated.
+     * @param boolean $thehtmlflag [optional] True if HTML is to be generated.
      *                If omitted, $_SERVER is used to "guess" the state of
      *                    the HTML flag.  Be default, HTML is generated when
      *                    accessed by a web server.
-     * @param boolean $theLoggingFlag [optional] the state of logging for
-     *                this object.  By default, logging is off.
      */
-
-    public function init($thehtmlflag = null, $theloggingflag = false) {
+    public function init($thehtmlflag = null) {
         if ($thehtmlflag === null) {
             $thehtmlflag = (!empty($_SERVER['DOCUMENT_ROOT']));
         }
 
         $this->m_htmlflag = $thehtmlflag;
-        $this->m_logging = $theloggingflag;
     }
 
-    /*
-     * Close the log file.
-     *
-     * @access public
-     * @abstract
-     */
-
-    public function close() {
-    }
-
-    /*
+    /**
      * Dump a structured variable.
      *
-     * @static
-     * @param mixed $theVariable the variable to be dumped.
-     * @param boolean $theHtmlFlag [optional] true if HTML is to be generated,
+     * @param mixed $thevariable the variable to be dumped.
+     * @param boolean $thehtmlflag [optional] true if HTML is to be generated,
      *                false if plain text is to be generated, null (default) if
      *                dump is to guess which to display.
      * @return string The data to be displayed.
@@ -141,17 +89,16 @@ class sdd {
         }
     }
 
-    /*
+    /**
      * Dump the contents of an array.
      *
-     * @param array $theArray the array whose contents are to be displayed.
-     * @param boolean $theHTMLFlag True if an HTML table is to be generated,
+     * @param array $thearray the array whose contents are to be displayed.
+     * @param boolean $thehtmlflag True if an HTML table is to be generated,
      *                false otherwise.
-     * @param string $theIndent [optional] Used by SDD::dArray during recursion
+     * @param string $theindent [optional] Used by SDD::dArray during recursion
      *               to get indenting right.
      * @return string The display form of the array.
      */
-
     public function darray(&$thearray, $thehtmlflag, $theindent = "") {
         $theoutput = array();
 
@@ -190,7 +137,7 @@ class sdd {
         return $thestring;
     }
 
-    /*
+    /**
      * Dump the contents of an object.
      *
      * Provide a structured display of an object and all the
@@ -198,11 +145,10 @@ class sdd {
      * the object is displayed from most derived to the base
      * class, in order.
      *
-     * @param object $theObject the object to be dumped.
-     * @param boolean $theHTMLFlag true if HTML is to be generated.
+     * @param object $theobject the object to be dumped.
+     * @param boolean $thehtmlflag true if HTML is to be generated.
      * @return string the display form of the object.
      */
-
     public function dobject(&$theobject, $thehtmlflag) {
         $theobjectvars = get_object_vars($theobject);
 
@@ -308,45 +254,14 @@ class sdd {
         return $thestring;
     }
 
-    /*
-     * Write a debugging value to a log file.
+    /**
+     * Generate context specific new line equivalents.
      *
-     * @access public
-     * @abstract
-     * @param mixed Data to be logged.
-     * @param string $theHeader [optional] string to be emitted prior to
-     *               logging the data.  By default it is a date/time
-     *                   stamp.
-     */
-
-    public function log(&$thedata, $theheader = null) {
-        $theheader = date('[Y-m-d H:i:s]: ') . $theheader;
-
-        if ($this->m_logging) {
-            if ($this->m_htmlflag) {
-                $xxx = $this->dump($thedata);
-                if (substr($xxx, 0, 5) == '<pre>') {
-                    $xxx = '<pre>' . $theheader . substr($xxx, 5);
-                } else {
-                    $xxx = $theheader . $xxx;
-                }
-
-                $this->writeLog($xxx);
-            } else {
-                $xxx = $theheader . $this->dump($thedata);
-                $this->writelog($xxx);
-            }
-        }
-    }
-
-    /*
-     * @desc Generate context specific new line equivalents.
-     * @param integer [optional] the number of newlines.
-     * @param boolean [optional] true if generating html newlines.
+     * @param integer $thecount [optional] the number of newlines.
+     * @param boolean $thehtmlflag [optional] true if generating html newlines.
+     *
      * @return string newlines.
-     * @access public
      */
-
     public function newline($thecount = 1, $thehtmlflag = null) {
         if ($thehtmlflag === null) {
             if (empty($this)) {
@@ -367,54 +282,17 @@ class sdd {
         }
     }
 
-    /*
+    /**
      * Dump any scalar value
      *
-     * @param mixed $theVariable the variable to be dumped.
-     * @param boolean $theHtmlFlag true if html is to be generated.
+     * @param mixed $thevariable the variable to be dumped.
+     * @param boolean $thehtmlflag true if html is to be generated.
      */
-
     public function scalar(&$thevariable, $thehtmlflag) {
         if ($thehtmlflag) {
             return "<pre>" . preg_replace('|<|s', '&lt;', var_export($thevariable, true)) . "</pre>";
         } else {
             return var_export($thevariable, true);
         }
-    }
-
-    /*
-     * Write data to the log file.
-     *
-     * @access public
-     * @abstract
-     * @parameter string $theData [by reference] the data to be written
-     *                       into the log file.
-     * @return integer the number of bytes written into the log file.
-     */
-
-    public function writelog(&$thedata) {
-        return strlen($this->m_log[] = $thedata);
-    }
-
-    /*
-     * Return the state of the logging flag.
-     *
-     * @access public
-     * @return boolean
-     */
-
-    public function getlogging() {
-        return $this->m_logging;
-    }
-
-    /*
-     * Set the state of the logging flag.
-     *
-     * @access public
-     * @return boolean
-     */
-
-    public function setlogging($thelogging=false) {
-        $this->m_logging = $thelogging;
     }
 }

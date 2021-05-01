@@ -17,11 +17,14 @@
 /**
  * Check translation of module Game
  *
- * @author 
- * @version $Id: translate.php,v 1.10 2012/07/25 23:07:43 bdaloukas Exp $
- * @package game
- **/
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require( "../../config.php");
+
+require_login();
+
 require( 'locallib.php');
 
 ?>
@@ -249,6 +252,13 @@ if ($ret != '') {
     echo '<table border=1><tr><td><b>Word1</td><td><b>Word2</td><td><b>Translation</td></tr>'.$ret.'</table>';
 }
 
+/**
+ * Returns the language file for lang
+ *
+ * @param string $lang
+ *
+ * @return the path of language file
+ */
 function getlangfile( $lang) {
     global $CFG;
 
@@ -259,6 +269,12 @@ function getlangfile( $lang) {
     }
 }
 
+/**
+ * Reads the language file
+ *
+ * @param string $lang
+ * @param string $header
+ */
 function readlangfile( $lang, &$header) {
 
     $file = getlangfile( $lang);
@@ -288,6 +304,13 @@ function readlangfile( $lang, &$header) {
     return $a;
 }
 
+/**
+ * Split language definition for one line
+ *
+ * @param string $line
+ * @param string $name
+ * @param string $trans
+ */
 function splitlangdefinition($line, &$name, &$trans) {
     $pos1 = strpos( $line, '=');
     if ($pos1 == 0) {
@@ -314,6 +337,12 @@ function splitlangdefinition($line, &$name, &$trans) {
     return true;
 }
 
+/**
+ * Read source code
+ *
+ * @param string $file
+ * @param string $strings
+ */
 function readsourcecode( $file, &$strings) {
     global $CFG;
 
@@ -325,6 +354,13 @@ function readsourcecode( $file, &$strings) {
     return $strings;
 }
 
+/**
+ * Parse line
+ *
+ * @param string $strings
+ * @param string $line
+ * @param string $filename
+ */
 function parseline( &$strings, $line, $filename) {
     global $CFG;
 
@@ -376,6 +412,11 @@ function parseline( &$strings, $line, $filename) {
     }
 }
 
+/**
+ * get string
+ *
+ * @param string $s
+ */
 function gets( $s) {
     $s = trim( $s);
     if (substr( $s, 0, 1) == '"') {
@@ -388,6 +429,12 @@ function gets( $s) {
     return $s;
 }
 
+/**
+ * Read dir
+ *
+ * @param string $dir
+ * @param string $ext
+ */
 function read_dir($dir, $ext) {
     if ($ext != '') {
         $ext = '.' .$ext;
@@ -423,6 +470,17 @@ function read_dir($dir, $ext) {
     return $ret;
 }
 
+/**
+ * Compute difference
+ *
+ * @param string $en
+ * @param string $lang
+ * @param string $strings
+ * @param string $langname
+ * @param int $sum
+ * @param string $outdir
+ * @param int $untranslated
+ */
 function computediff( $en, $lang, $strings, $langname, &$sum, $outdir, &$untranslated) {
     global $CFG;
     $untranslated = '';

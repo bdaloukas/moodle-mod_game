@@ -16,15 +16,24 @@
 
 /**
  * This page export the game to html for games: cross, hangman
- * 
- * @author  bdaloukas
- * @version $Id: exporthtml.php,v 1.23 2012/07/25 11:16:03 bdaloukas Exp $
- * @package game
- **/
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once( "locallib.php");
 require_once( "exportjavame.php");
 
+/**
+ * Exports to html.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $html
+ */
 function game_onexporthtml( $game, $context, $html) {
     global $CFG;
 
@@ -48,6 +57,14 @@ function game_onexporthtml( $game, $context, $html) {
     remove_dir( $destdir);
 }
 
+/**
+ * Exports cross to html.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $html
+ * @param string $destdir
+ */
 function game_onexporthtml_cross( $game, $context, $html, $destdir) {
 
     global $CFG, $DB;
@@ -70,8 +87,10 @@ function game_onexporthtml_cross( $game, $context, $html, $destdir) {
 
     ob_start();
 
-    game_cross_play( 0, $game, $attempt, $crossrec, '', true, false, false, false,
-        $html->checkbutton, true, $html->printbutton, false, $context);
+    $cm = new stdClass;
+    $cm->id = 0;
+    game_cross_play( $cm, $game, $attempt, $crossrec, '', true, false, false, false,
+        $html->checkbutton, true, $html->printbutton, false, $context, null);
 
     $outputstring = ob_get_contents();
     ob_end_clean();
@@ -87,6 +106,14 @@ function game_onexporthtml_cross( $game, $context, $html, $destdir) {
     game_send_stored_file( $filename);
 }
 
+/**
+ * Repairs questions.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $filename
+ * @param string $destdir
+ */
 function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $destdir) {
     global $CFG, $DB;
 
@@ -144,7 +171,7 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
         if ($contextcourse === false) {
             mkdir( $destdir.'/images');
             if (!$contextcourse = get_context_instance(CONTEXT_COURSE, $game->course)) {
-                print_error('nocontext');
+                throw new moodle_exception( 'game_error', 'game', 'nocontext');
             }
             $fs = get_file_storage();
         }
@@ -205,6 +232,12 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
     return $filezip;
 }
 
+/**
+ * Prints the header.
+ *
+ * @param string $title
+ * @param boolean $showbody
+] */
 function game_export_printheader( $title, $showbody=true) {
     $ret = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'."\n";
     $ret .= '<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="el" xml:lang="el">'."\n";
@@ -220,6 +253,14 @@ function game_export_printheader( $title, $showbody=true) {
     return $ret;
 }
 
+/**
+ * Exports to html a hangman game.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $html
+ * @param string $destdir
+ */
 function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
 
     global $CFG, $DB;
@@ -241,7 +282,7 @@ function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
 
     $map = game_exmportjavame_getanswers( $game, $context, $exportattachment, $destdir, $files);
     if ($map == false) {
-        print_error( get_string('no_words', 'game'));
+        throw new moodle_exception( 'no_words', 'game');
     }
 
     ob_start();
@@ -281,6 +322,14 @@ function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
     game_send_stored_file( $filezip);
 }
 
+/**
+ * Exports to html.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $html
+ * @param string $destdir
+ */
 function game_onexporthtml_millionaire( $game, $context, $html, $destdir) {
 
     global $CFG, $DB;
@@ -334,6 +383,14 @@ function game_onexporthtml_millionaire( $game, $context, $html, $destdir) {
     game_send_stored_file($filezip);
 }
 
+/**
+ * Exports to html a "Snakes and Ladders" game.
+ *
+ * @param stdClass $game
+ * @param string $html
+ * @param string $destdir
+ * @param stdClass $context
+ */
 function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
     require_once( "exporthtml_millionaire.php");
 
@@ -415,6 +472,12 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
     game_send_stored_file($filezip);
 }
 
+/**
+ * Copy files from source directory to dest directory.
+ *
+ * @param string $src
+ * @param string $destdir
+ */
 function game_copyfiles( $src, $destdir) {
     $handle = opendir( $src);
     while (($item = readdir($handle)) !== false) {

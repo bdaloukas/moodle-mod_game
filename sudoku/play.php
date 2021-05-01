@@ -14,18 +14,39 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-require_once( "../../lib/questionlib.php");
+/**
+ * Plays the game "Sudoku".
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $context) {
+defined('MOODLE_INTERNAL') || die();
+
+require_once(dirname(__FILE__).'/../../../lib/questionlib.php');
+
+/**
+ * Plays the game Sudoku
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param boolean $endofgame
+ * @param stdClass $context
+ * @param stdClass $course
+ */
+function game_sudoku_continue( $cm, $game, $attempt, $sudoku, $endofgame, $context, $course) {
     global $CFG, $DB, $USER;
 
     if ($endofgame) {
-        game_updateattempts( $game, $attempt, -1, true);
+        game_updateattempts( $game, $attempt, -1, true, $cm, $course);
         $endofgame = false;
     }
 
     if ($attempt != false and $sudoku != false) {
-        return game_sudoku_play( $id, $game, $attempt, $sudoku, false, false, $context);
+        return game_sudoku_play( $cm, $game, $attempt, $sudoku, false, false, $context, $course);
     }
 
     if ($attempt == false) {
@@ -37,7 +58,7 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $conte
 
     $recsudoku = getrandomsudoku();
     if ($recsudoku == false) {
-        print_error( 'Empty sudoku database');
+        throw new moodle_exception( 'sudoku_error', 'game', 'Empty sudoku database');
     }
 
     $newrec = new stdClass();
@@ -60,7 +81,7 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $conte
     if ($recs === false) {
         $sql = "DELETE FROM {game_sudoku} WHERE id={$game->id}";
         $DB->execute( $sql);
-        print_error( get_string( 'no_questions', 'game'));
+        throw new moodle_exception( 'no_questions', 'game');
     }
 
     $closed = array_rand($closed, $n);
@@ -68,7 +89,7 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $conte
     $selectedrecs = game_select_from_repetitions( $game, $recs, $n);
 
     if (!game_insert_record('game_sudoku', $newrec)) {
-        print_error('error inserting in game_sudoku');
+        throw new moodle_exception( 'error inserting in game_sudoku');
     }
 
     $i = 0;
@@ -89,24 +110,34 @@ function game_sudoku_continue( $id, $game, $attempt, $sudoku, $endofgame, $conte
         $query->gamekind = $game->gamekind;
         $query->gameid = $game->id;
         $query->userid = $USER->id;
-        $query->col = $closed[ $i++];
+        $query->mycol = $closed[ $i++];
         $query->sourcemodule = $game->sourcemodule;
         $query->questionid = $rec->questionid;
         $query->glossaryentryid = $rec->glossaryentryid;
         $query->score = 0;
         if (($query->id = $DB->insert_record( 'game_queries', $query)) == 0) {
-            print_error( 'error inserting in game_queries');
+            throw new moodle_exception( 'sudoku_error', 'game', 'error inserting in game_queries');
         }
 
         game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
     }
 
-    game_updateattempts( $game, $attempt, 0, 0);
-
-    game_sudoku_play( $id, $game, $attempt, $newrec, false, false, $context);
+    game_sudoku_play( $cm, $game, $attempt, $newrec, false, false, $context, $course);
 }
 
-function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow, $showsolution, $context) {
+/**
+ * Plays the game Sudoku
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $context
+ * @param stdClass $course
+ */
+function game_sudoku_play( $cm, $game, $attempt, $sudoku, $onlyshow, $showsolution, $context, $course) {
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
 
     if ($game->toptext != '') {
@@ -114,15 +145,15 @@ function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow, $showsoluti
     }
 
     game_sudoku_showsudoku( $sudoku->data, $sudoku->guess, true, $showsolution, $offsetquestions,
-        $correctquestions, $id, $attempt, $game);
+        $correctquestions, $cm, $attempt, $game, $course);
     switch ($game->sourcemodule) {
         case 'quiz':
         case 'question':
-            game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetquestions,
+            game_sudoku_showquestions_quiz( $cm->id, $game, $attempt, $sudoku, $offsetquestions,
                 $numbers, $correctquestions, $onlyshow, $showsolution, $context);
             break;
         case 'glossary':
-            game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $offsetquestions,
+            game_sudoku_showquestions_glossary( $cm->id, $game, $attempt, $sudoku, $offsetquestions,
                 $numbers, $correctquestions, $onlyshow, $showsolution);
             break;
     }
@@ -132,13 +163,24 @@ function game_sudoku_play( $id, $game, $attempt, $sudoku, $onlyshow, $showsoluti
     }
 }
 
-// Returns a map with an offset and id of each question.
+/**
+ * Returns a map with an offset and id of each question.
+ *
+ * @param string $sourcemodule
+ * @param stdClass $attempt
+ * @param int $numbers
+ * @param int $correctquestions
+ */
 function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers, &$correctquestions) {
     global $CFG, $DB;
 
+    $offsetquestions = array();
+    if ($attempt == null) {
+        return $offsetquestions;
+    }
     $select = "attemptid = $attempt->id";
 
-    $fields = 'id, col, score';
+    $fields = 'id, mycol, score';
     switch( $sourcemodule)
     {
         case 'quiz':
@@ -151,16 +193,16 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
     }
     if (($recs = $DB->get_records_select( 'game_queries', $select, null, '', $fields)) == false) {
         $DB->execute( "DELETE FROM {$CFG->prefix}game_sudoku WHERE id={$attempt->id}");
-        print_error( 'There are no questions '.$attempt->id);
+        throw new moodle_exception( 'sudoku_error', 'game', 'There are no questions '.$attempt->id);
     }
-    $offsetquestions = array();
+
     $numbers = array();
     $correctquestions = array();
     foreach ($recs as $rec) {
-        $offsetquestions[ $rec->col] = $rec->id2;
-        $numbers[ $rec->id2] = $rec->col;
+        $offsetquestions[ $rec->mycol] = $rec->id2;
+        $numbers[ $rec->id2] = $rec->mycol;
         if ( $rec->score == 1) {
-            $correctquestions[ $rec->col] = 1;
+            $correctquestions[ $rec->mycol] = 1;
         }
     }
 
@@ -169,6 +211,9 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
     return $offsetquestions;
 }
 
+/**
+ * Select a sudoku randomly
+ */
 function getrandomsudoku() {
     global $DB;
 
@@ -193,6 +238,11 @@ function getrandomsudoku() {
     return false;
 }
 
+/**
+ * Get closed
+ *
+ * @param string $data
+ */
 function game_sudoku_getclosed( $data) {
     $a = array();
 
@@ -207,8 +257,22 @@ function game_sudoku_getclosed( $data) {
     return $a;
 }
 
+/**
+ * Shows the sudoku
+ *
+ * @param string $data
+ * @param string $guess
+ * @param boolean $bshowlegend
+ * @param boolean $bshowsolution
+ * @param int $offsetquestions
+ * @param int $correctquestions
+ * @param stdClass $cm
+ * @param stdClass $attempt
+ * @param stdClass $game
+ * @param stdClass $course
+ */
 function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $offsetquestions,
-    $correctquestions, $id, $attempt, $game) {
+    $correctquestions, $cm, $attempt, $game, $course) {
     global $CFG, $DB;
 
     $correct = $count = 0;
@@ -268,23 +332,22 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
         echo "</tr>";
     }
     echo "</table>\r\n";
-    $href = $CFG->wwwroot.'/mod/game/attempt.php?action=sudokucheckn&id='.$id;
+    $href = $CFG->wwwroot.'/mod/game/attempt.php?action=sudokucheckn&id='.$cm->id;
 
 ?>
-	<script language="javascript">
-			function OnCheck( pos)
-			{
-				s = window.prompt( "<?php echo get_string ( 'sudoku_guessnumber', 'game') ?>", "");
-				
-				if (s < "1")
-					return;
-				if (s > "9")
-					return;
+    <script language="javascript">
+        function OnCheck( pos) {
+            s = window.prompt( "<?php echo get_string ( 'sudoku_guessnumber', 'game') ?>", "");
 
-                window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
-			}
-		</script>
-	<?php	
+            if (s < "1")
+                return;
+            if (s > "9")
+                return;
+
+            window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
+        }
+    </script>
+    <?php
 
     // Here are the congratulations.
     if ($attempt->timefinish) {
@@ -295,21 +358,29 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
         return $count;
     }
 
-    if (! $cm = $DB->get_record( 'course_modules', array( 'id' => $id))) {
-        print_error( "Course Module ID was incorrect id=$id");
-    }
-
     echo '<B><br>'.get_string( 'win', 'game').'</B><BR>';
     echo '<br>';
-    echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id=$id\">".
+    echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}&finishattempt=1\">".
         get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
     echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
 
-    game_updateattempts( $game, $attempt, 1, 1);
+    game_updateattempts( $game, $attempt, 1, game_sudoku_check_found_all_numbers(), $cm, $course);
 
     return $count;
 }
 
+/**
+ * Check that all numbers are found
+ */
+function game_sudoku_check_found_all_numbers() {
+    return false;
+}
+
+/**
+ * Get question list
+ *
+ * @param int $offsetquestions
+ */
 function game_sudoku_getquestionlist( $offsetquestions) {
     $questionlist = '';
     foreach ($offsetquestions as $q) {
@@ -320,29 +391,51 @@ function game_sudoku_getquestionlist( $offsetquestions) {
     $questionlist = substr( $questionlist, 1);
 
     if ($questionlist == '') {
-        print_error( get_string('no_questions', 'game'));
+        throw new moodle_exception( 'no_questions', 'game');
     }
 
     return $questionlist;
 }
 
+/**
+ * Get glossary entries
+ *
+ * @param stdClass $game
+ * @param int $offsetentries
+ * @param string $entrylist
+ * @param int $numbers
+ */
 function game_sudoku_getglossaryentries( $game, $offsetentries, &$entrylist, $numbers) {
     global $DB;
 
     $entrylist = implode( ',', $offsetentries);
 
     if ($entrylist == '') {
-        print_error( get_string( 'sudoku_noentriesfound', 'game'));
+        throw new moodle_exception( 'sudoku_noentriesfound', 'game');
     }
 
     // Load the questions.
     if (!$entries = $DB->get_records_select( 'glossary_entries', "id IN ($entrylist)")) {
-        print_error( get_string('sudoku_noentriesfound', 'game'));
+        throw new moodle_exception( 'sudoku_noentriesfound', 'game');
     }
 
     return $entries;
 }
 
+/**
+ * Plays the game hangman
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param int $offsetquestions
+ * @param string $numbers
+ * @param int $correctquestions
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $context
+ */
 function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetquestions, $numbers,
      $correctquestions, $onlyshow, $showsolution, $context) {
     global $CFG;
@@ -412,7 +505,19 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
     }
 }
 
-// Show the sudoku and glossaryentries.
+/**
+ * Show the sudoku and glossaryentries.
+ *
+ * @param int $id
+ * @param string $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param int $offsetentries
+ * @param int $numbers
+ * @param int $correctentries
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ */
 function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $offsetentries, $numbers,
  $correctentries, $onlyshow, $showsolution) {
     global $CFG;
@@ -487,11 +592,15 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
     echo "</form>\n";
 }
 
+/**
+ * Show question onfinish
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ */
 function game_sudoku_showquestion_onfinish( $id, $game, $attempt, $sudoku) {
-    if (!set_field( 'game_attempts', 'finish', 1, 'id', $attempt->id)) {
-        print_error( "game_sudoku_showquestion_onfinish: Can't update game_attempts id=$attempt->id");
-    }
-
     echo '<B>'.get_string( 'win', 'game').'</B><BR>';
     echo '<br>';
     echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
@@ -499,13 +608,27 @@ function game_sudoku_showquestion_onfinish( $id, $game, $attempt, $sudoku) {
     echo "<a href=\"{$CFG->wwwroot}?id=$id\">".get_string( 'finish', 'game').'</a> ';
 }
 
+/**
+ * Check answers
+ */
 function game_sudoku_checkanswers() {
     $responses = data_submitted();
 
     $actions = question_extract_responses($questions, $responses, $event);
 }
 
-function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishattempt, $course) {
+/**
+ * Checks questions
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param boolean $finishattempt
+ * @param stdClass $course
+ * @param stdClass $context
+ */
+function game_sudoku_check_questions( $cm, $game, $attempt, $sudoku, $finishattempt, $course, $context) {
     global $DB;
 
     $responses = data_submitted();
@@ -541,10 +664,20 @@ function game_sudoku_check_questions( $id, $game, $attempt, $sudoku, $finishatte
         game_update_queries( $game, $attempt, $query, 1, $answertext);
     }
 
-    game_sudoku_check_last( $id, $game, $attempt, $sudoku, $finishattempt, $course);
+    game_sudoku_check_last( $cm, $game, $attempt, $sudoku, $finishattempt, $course);
 }
 
-function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $finishattempt, $course) {
+/**
+ * Check glossary entries
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param boolean $finishattempt
+ * @param stdClass $course
+ */
+function game_sudoku_check_glossaryentries( $cm, $game, $attempt, $sudoku, $finishattempt, $course) {
     global $DB;
 
     $responses = data_submitted();
@@ -556,7 +689,7 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
 
     // Load the glossary entries.
     if (!($entries = $DB->get_records_select( 'glossary_entries', "id IN ($entrieslist)"))) {
-        print_error( get_string('noglossaryentriesfound', 'game'));
+        throw new moodle_exception( 'noglossaryentriesfound', 'game');
     }
     foreach ($entries as $entry) {
         $answerundefined = optional_param('resp'.$entry->id, 'undefined', PARAM_TEXT);
@@ -572,7 +705,7 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
         }
         // Correct answer.
         $select = "attemptid=$attempt->id";
-        $select .= " AND glossaryentryid=$entry->id AND col>0";
+        $select .= " AND glossaryentryid=$entry->id AND mycol>0";
         // Check the student guesses not source glossary entry.
         $select .= " AND questiontext is null";
 
@@ -585,33 +718,53 @@ function game_sudoku_check_glossaryentries( $id, $game, $attempt, $sudoku, $fini
         game_update_queries( $game, $attempt, $query, 1, $answer);
     }
 
-    game_sudoku_check_last( $id, $game, $attempt, $sudoku, $finishattempt, $course);
+    game_sudoku_check_last( $cm, $game, $attempt, $sudoku, $finishattempt, $course);
 
     return true;
 }
 
-// This is the last function after submiting the answers.
-function game_sudoku_check_last( $id, $game, $attempt, $sudoku, $finishattempt, $course) {
+/**
+ * This is the last function after submiting the answers.
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param boolean $finishattempt
+ * @param stdClass $course
+ */
+function game_sudoku_check_last( $cm, $game, $attempt, $sudoku, $finishattempt, $course) {
     global $CFG, $DB;
 
     $correct = $DB->get_field_select( 'game_queries', 'COUNT(*) AS c', "attemptid=$attempt->id AND score > 0.9");
     $all = $DB->get_field_select( 'game_queries', 'COUNT(*) AS c', "attemptid=$attempt->id");
 
     if ($all) {
-        $grade = $correct / $all;
+        $score = $correct / $all;
     } else {
-        $grade = 0;
+        $score = 0;
     }
-    game_updateattempts( $game, $attempt, $grade, $finishattempt);
+    game_updateattempts( $game, $attempt, $score, $finishattempt, $cm, $course);
 }
 
-function game_sudoku_check_number( $id, $game, $attempt, $sudoku, $pos, $num, $context) {
+/**
+ * Check number
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $sudoku
+ * @param int $pos
+ * @param int $num
+ * @param stdClass $context
+ * @param stdClass $course
+ */
+function game_sudoku_check_number( $id, $game, $attempt, $sudoku, $pos, $num, $context, $course) {
     global $DB;
 
     $correct = game_substr( $sudoku->data, $pos - 1, 1);
-
     if ($correct != $num) {
-        game_sudoku_play( $id, $game, $attempt, $sudoku, false, false, $context);
+        game_sudoku_play( $id, $game, $attempt, $sudoku, false, false, $context, $course);
         return;
     }
 
@@ -623,8 +776,8 @@ function game_sudoku_check_number( $id, $game, $attempt, $sudoku, $pos, $num, $c
     game_setchar( $sudoku->guess, $pos - 1, $correct);
 
     if (!$DB->set_field_select('game_sudoku', 'guess', $sudoku->guess, "id=$sudoku->id")) {
-        print_error( 'game_sudoku_check_number: Cannot update table game_sudoku');
+        throw new moodle_exception( 'sudoku_error', 'game', 'game_sudoku_check_number: Cannot update table game_sudoku');
     }
 
-    game_sudoku_play( $id, $game, $attempt, $sudoku, false, false, $context);
+    game_sudoku_play( $id, $game, $attempt, $sudoku, false, false, $context, $course);
 }

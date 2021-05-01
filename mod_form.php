@@ -15,18 +15,31 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for creating and modifying a game 
+ * Form for creating and modifying a game
  *
- * @package   game
+ * @package   mod_game
  * @author    Alastair Munro <alastair@catalyst.net.nz>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @copyright  2007 Vasilis Daloukas
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once( $CFG->dirroot.'/course/moodleform_mod.php');
 require( 'locallib.php');
 
+/**
+ * The class defines the form of game parameters
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_game_mod_form extends moodleform_mod {
 
+    /**
+     * definition
+     */
     public function definition() {
         global $CFG, $DB, $COURSE;
 
@@ -39,7 +52,7 @@ class mod_game_mod_form extends moodleform_mod {
             if ($g = $DB->get_record('game', array('id' => $id))) {
                 $gamekind = $g->gamekind;
             } else {
-                print_error('incorrect game');
+                throw new moodle_exception('game_error', 'game', 'incorrect game');
             }
         } else {
             $gamekind = required_param('type', PARAM_ALPHA);
@@ -69,6 +82,13 @@ class mod_game_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
 
+        // Introduction.
+        if (game_get_moodle_version() >= '02.09') {
+            $this->standard_intro_elements(get_string('introduction', 'game'));
+        } else {
+            $this->add_intro_editor(true);
+        }
+
         $hasglossary = ($gamekind == 'hangman' || $gamekind == 'cross' ||
                 $gamekind == 'cryptex' || $gamekind == 'sudoku' ||
                 $gamekind == 'hiddenpicture' || $gamekind == 'snakes');
@@ -85,35 +105,20 @@ class mod_game_mod_form extends moodleform_mod {
 
         if ($hasglossary) {
             $a = array();
-            if ($recs = $DB->get_records('glossary', array( 'course' => $COURSE->id), 'id,name')) {
+            $sql = "SELECT id,name,globalglossary,course FROM {$CFG->prefix}glossary ".
+            "WHERE course={$COURSE->id} OR globalglossary=1 ORDER BY globalglossary DESC,name";
+            if ($recs = $DB->get_records_sql($sql)) {
                 foreach ($recs as $rec) {
+                    if (($rec->globalglossary != 0) and ($rec->course != $COURSE->id)) {
+                        $rec->name = '*'.$rec->name;
+                    }
                     $a[$rec->id] = $rec->name;
                 }
             }
             $mform->addElement('select', 'glossaryid', get_string('sourcemodule_glossary', 'game'), $a);
             $mform->disabledIf('glossaryid', 'sourcemodule', 'neq', 'glossary');
 
-            if (count( $a) == 0) {
-                $select = 'glossaryid=-1';
-            } else if (count( $a) == 1) {
-                $select = 'glossaryid='.$rec->id;
-            } else {
-                $select = '';
-                foreach ($recs as $rec) {
-                    $select .= ','.$rec->id;
-                }
-                $select = 'g.id IN ('.substr( $select, 1).')';
-            }
-            $select .= ' AND g.id=gc.glossaryid';
-            $table = "{glossary} g, {glossary_categories} gc";
-            $a = array();
-            $a[ ] = '';
-            $sql = "SELECT gc.id,gc.name,g.name as name2 FROM $table WHERE $select ORDER BY g.name,gc.name";
-            if ($recs = $DB->get_records_sql( $sql)) {
-                foreach ($recs as $rec) {
-                    $a[$rec->id] = $rec->name2.' -> '.$rec->name;
-                }
-            }
+            $a = $this->get_array_glossary_categories( $a);
             $mform->addElement('select', 'glossarycategoryid', get_string('sourcemodule_glossarycategory', 'game'), $a);
             $mform->disabledIf('glossarycategoryid', 'sourcemodule', 'neq', 'glossary');
 
@@ -124,20 +129,7 @@ class mod_game_mod_form extends moodleform_mod {
 
         // Question Category - Short Answer.
         if ($gamekind != 'bookquiz') {
-            $context = game_get_context_course_instance( $COURSE->id);
-            $select = " contextid in ($context->id)";
-
-            $a = array();
-            if ($recs = $DB->get_records_select('question_categories', $select, null, 'id,name')) {
-                foreach ($recs as $rec) {
-                    $s = $rec->name;
-                    if (($count = $DB->count_records('question', array( 'category' => $rec->id))) != 0) {
-                        $s .= " ($count)";
-                    }
-                    $a[$rec->id] = $s;
-                }
-            }
-
+            $a = $this->get_array_question_categories( $COURSE->id, $gamekind );
             $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
             $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
 
@@ -176,10 +168,16 @@ class mod_game_mod_form extends moodleform_mod {
         // Disable summarize.
         $mform->addElement('selectyesno', 'disablesummarize', get_string('disablesummarize', 'game'));
 
+        // Enable high score.
+        $mform->addElement('text', 'highscore', get_string('highscore', 'game'));
+        $mform->setType('highscore', PARAM_INT);
+
         // Grade options.
-        $mform->addElement('header', 'gradeoptions', get_string('grades', 'grades'));
+        $this->standard_grading_coursemodule_elements();
+        $mform->removeElement('grade');
         $mform->addElement('text', 'grade', get_string( 'grademax', 'grades'), array('size' => 4));
         $mform->setType('grade', PARAM_INT);
+
         $gradingtypeoptions = array();
         $gradingtypeoptions[ GAME_GRADEHIGHEST] = get_string('gradehighest', 'game');
         $gradingtypeoptions[ GAME_GRADEAVERAGE] = get_string('gradeaverage', 'game');
@@ -405,9 +403,10 @@ class mod_game_mod_form extends moodleform_mod {
         }
 
         // Header/Footer options.
-        $mform->addElement('header', 'headerfooteroptions', get_string('headerfooteroptions', 'game'));
-        $mform->addElement('htmleditor', 'toptext', get_string('toptext', 'game'));
-        $mform->addElement('htmleditor', 'bottomtext', get_string('bottomtext', 'game'));
+
+        $mform->addElement('header', 'headerfooteroptions', get_string('header_footer_options', 'game'));
+        $mform->addElement('editor', 'toptext', get_string('toptext', 'game'));
+        $mform->addElement('editor', 'bottomtext', get_string('bottomtext', 'game'));
 
         $features = new stdClass;
         $this->standard_coursemodule_elements($features);
@@ -416,7 +415,119 @@ class mod_game_mod_form extends moodleform_mod {
         $this->add_action_buttons();
     }
 
+    /**
+     * Computes the categories of all glossaries of the current course;
+     *
+     * @param array $a array of id of glossaries to each name
+     *
+     * @return array of glossary categories
+     */
+    public function get_array_glossary_categories( $a) {
+        global $CFG, $DB;
+
+        if (count( $a) == 0) {
+            $select = 'gc.glossaryid = -1';
+        } else if (count($a) == 1) {
+            foreach ($a as $id => $name) {
+                $select = 'gc.glossaryid = '.$id;
+                break;
+            }
+        } else {
+            $select = '';
+            foreach ($a as $id => $name) {
+                $select .= ','.$id;
+            }
+            $select = 'gc.glossaryid IN ('.substr( $select, 1).')';
+        }
+
+        $a = array();
+
+        // Fills with the count of entries in each glossary.
+        $a[ 0] = '';
+        // Fills with the count of entries in each category.
+        $sql2 = "SELECT COUNT(*) ".
+        " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
+        " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
+        $sql = "SELECT gc.id,gc.name,g.name as name2,g.globalglossary,g.course, ($sql2) as c ".
+        " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g".
+        " WHERE $select AND gc.glossaryid=g.id".
+        " ORDER BY g.name, gc.name";
+        if ($recs = $DB->get_records_sql( $sql)) {
+            foreach ($recs as $rec) {
+                $a[$rec->id] = $rec->name2.' -> '.$rec->name.' ('.$rec->c.')';
+            }
+        }
+
+        return $a;
+    }
+
+    /**
+     * Computes the categories of all question of the current course;
+     *
+     * @param int $courseid
+     * @param string $gamekind
+     *
+     * @return array of question categories
+     */
+    public function get_array_question_categories( $courseid, $gamekind) {
+        global $CFG, $DB;
+
+        $context = game_get_context_course_instance( $courseid);
+
+        $a = array();
+        $table = "{$CFG->prefix}question q";
+        $select = '';
+        if ($gamekind == 'millionaire') {
+            if (game_get_moodle_version() < '02.06') {
+                $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
+                $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.question=q.id";
+            } else {
+                $table = "{$CFG->prefix}question q, {$CFG->prefix}qtype_multichoice_options qmo";
+                $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.questionid=q.id";
+            }
+        } else if (($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
+            // Single answer questions.
+            $select = " AND q.qtype='shortanswer'";
+        }
+        $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
+        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
+        if ($recs = $DB->get_records_sql( $sql)) {
+            foreach ($recs as $rec) {
+                $a[$rec->id] = $rec->name.' ('.$rec->c.')';
+            }
+        }
+
+        return $a;
+    }
+
+    /**
+     * data_preprocessing
+     *
+     * @param stdClass $toform
+     */
+    public function data_preprocessing(&$toform) {
+        if (isset($toform['grade'])) {
+            // Convert to a real number, so we don't get 0.0000.
+            $toform['grade'] = $toform['grade'] + 0;
+        }
+
+        // Completion settings check.
+        if (empty($toform['completionusegrade'])) {
+            $toform['completionpass'] = 0; // Forced unchecked.
+        }
+    }
+
+    /**
+     * validation
+     *
+     * @param stdClass $data
+     * @param array $files
+     *
+     * @return moodle_url
+     */
     public function validation($data, $files) {
+        global $CFG, $DB;
+
         $errors = parent::validation($data, $files);
 
         // Check open and close times are consistent.
@@ -425,20 +536,57 @@ class mod_game_mod_form extends moodleform_mod {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
 
+        if (array_key_exists( 'glossarycategoryid', $data)) {
+            if ($data['glossarycategoryid'] != 0) {
+                $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
+                " WHERE id=".$data[ 'glossarycategoryid'];
+                $rec = $DB->get_record_sql( $sql);
+                if ($rec != false) {
+                    if ($data[ 'glossaryid'] != $rec->glossaryid) {
+                        $s = get_string( 'different_glossary_category', 'game');
+                        $errors['glossaryid'] = $s;
+                        $errors['glossarycategoryid'] = $s;
+                    }
+                }
+            }
+        }
+
+        if (array_key_exists('completion', $data) && $data['completion'] == COMPLETION_TRACKING_AUTOMATIC) {
+            $completionpass = isset($data['completionpass']) ? $data['completionpass'] : $this->current->completionpass;
+
+            // Show an error if require passing grade was selected and the grade to pass was set to 0.
+            if ($completionpass && (empty($data['gradepass']) || grade_floatval($data['gradepass']) == 0)) {
+                if (isset($data['completionpass'])) {
+                    $errors['completionpassgroup'] = get_string('gradetopassnotset', 'quiz');
+                } else {
+                    $errors['gradepass'] = get_string('gradetopassmustbeset', 'quiz');
+                }
+            }
+        }
+        // Check book.
+        if ($data['gamekind'] == 'bookquiz' && empty( $data['bookid'])) {
+            $errors['bookid'] = get_string('missingbook', 'game');
+        }
+
         return $errors;
     }
 
-
-    public function set_data($defaultvalues) {
+    /**
+     * Set data
+     *
+     * @param array $defaultvalues
+     */
+    public function set_data( $defaultvalues) {
         global $DB;
 
         if (isset( $defaultvalues->type)) {
             // Default values for every game.
             if ($defaultvalues->type == 'hangman') {
                 $defaultvalues->param10 = 6;    // Maximum number of wrongs.
+                $defaultvalues->param3 = 2;
             } else if ($defaultvalues->type == 'snakes') {
                 $defaultvalues->gamekind = $defaultvalues->type;
-                $defaultvalues->param3 = 1;
+                $defaultvalues->param3 = 3;
                 $defaultvalues->questioncategoryid = 0;
             } else if ($defaultvalues->type == 'millionaire') {
                 $defaultvalues->shuffle = 1;
@@ -483,8 +631,8 @@ class mod_game_mod_form extends moodleform_mod {
                 if ($board != 0) {
                     $rec = $DB->get_record( 'game_snakes_database', array( 'id' => $board));
                     $defaultvalues->snakes_data = $rec->data;
-                    $defaultvalues->snakes_cols = $rec->cols;
-                    $defaultvalues->snakes_rows = $rec->rows;
+                    $defaultvalues->snakes_cols = $rec->usedcols;
+                    $defaultvalues->snakes_rows = $rec->usedrows;
                     $defaultvalues->snakes_headerx = $rec->headerx;
                     $defaultvalues->snakes_headery = $rec->headery;
                     $defaultvalues->snakes_footerx = $rec->footerx;
@@ -501,6 +649,51 @@ class mod_game_mod_form extends moodleform_mod {
             }
         }
 
-        parent::set_data($defaultvalues);
+        if (isset( $defaultvalues->toptext)) {
+            $a = array();
+            $a[ 'text'] = $defaultvalues->toptext;
+            $defaultvalues->toptext = $a;
+        }
+
+        if (isset( $defaultvalues->bottomtext)) {
+            $a = array();
+            $a[ 'text'] = $defaultvalues->bottomtext;
+            $defaultvalues->bottomtext = $a;
+        }
+
+        parent::set_data( $defaultvalues);
+    }
+
+    /**
+     * Display module-specific activity completion rules.
+     * Part of the API defined by moodleform_mod
+     * @return array Array of string IDs of added items, empty array if none
+     */
+    public function add_completion_rules() {
+        $mform = $this->_form;
+        $items = array();
+
+        $group = array();
+        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'quiz'),
+                array('group' => 'cpass'));
+        $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
+        $group[] = $mform->createElement('advcheckbox', 'completionattemptsexhausted', null,
+                get_string('completionattemptsexhausted', 'quiz'),
+                array('group' => 'cattempts'));
+        $mform->disabledIf('completionattemptsexhausted', 'completionpass', 'notchecked');
+        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'quiz'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup', 'completionpass', 'quiz');
+        $items[] = 'completionpassgroup';
+        return $items;
+    }
+
+    /**
+     * Called during validation. Indicates whether a module-specific completion rule is selected.
+     *
+     * @param array $data Input data (not yet validated)
+     * @return bool True if one or more rules is enabled, false if none are.
+     */
+    public function completion_rule_enabled($data) {
+        return !empty($data['completionattemptsexhausted']) || !empty($data['completionpass']);
     }
 }

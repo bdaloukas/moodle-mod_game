@@ -14,7 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-// This page prints a particular instance of game.
+/**
+ * This file is the entry point to the game module. All pages are rendered from here
+ *
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
+ */
 
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir.'/gradelib.php');
@@ -23,13 +29,13 @@ require_once($CFG->dirroot.'/mod/game/locallib.php');
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
 
 if (! $cm = get_coursemodule_from_id('game', $id)) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
 }
 if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-    print_error('coursemisconf');
+    throw new moodle_exception( 'game_error', 'game', 'coursemisconf');
 }
 if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
-    print_error('invalidcoursemodule');
+    throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
 }
 
 // Check login and get context.
@@ -110,6 +116,7 @@ echo $OUTPUT->heading(format_string($game->name));
 
 // Display information about this game.
 echo $OUTPUT->box_start('quizinfo');
+echo $game->intro.'<br>';
 if ($game->attempts != 1) {
     echo get_string('gradingmethod', 'quiz', game_get_grading_option_name($game->grademethod));
 }
@@ -184,7 +191,7 @@ if ($attempts) {
     $table->size[] = '';
 
     if ($gradecolumn) {
-        $table->head[] = get_string('grade') . ' / ' . game_format_grade( $game, $game->grade);
+        $table->head[] = get_string('grade', 'game') . ' / ' . game_format_grade( $game, $game->grade);
         $table->align[] = 'center';
         $table->size[] = '';
     }
@@ -320,4 +327,80 @@ if ($buttontext) {
 }
 echo $OUTPUT->box_end();
 
+if ($game->highscore > 0) {
+    // Display high score.
+    game_highscore( $game);
+}
+
+if (has_capability('mod/game:manage', $context)) {
+    require( 'check.php');
+    $s = game_check_common_problems( $context, $game);
+    if ($s != '') {
+        echo '<br>'.$s;
+    }
+}
+
 echo $OUTPUT->footer();
+
+/**
+ * Computes high score for this game. Shows the names of $game->highscore students.
+ *
+ * @param stdClass $game
+ */
+function game_highscore( $game) {
+    global $CFG, $DB, $OUTPUT;
+
+    $sql = "SELECT userid, MAX(score) as maxscore".
+    " FROM {$CFG->prefix}game_attempts ".
+    " WHERE gameid={$game->id} AND score > 0".
+    " GROUP BY userid".
+    " ORDER BY max(score) DESC";
+    $score = 0;
+    $recs = $DB->get_records_sql( $sql);
+    foreach ($recs as $rec) {
+        $score = $rec->maxscore;
+    }
+    if ($score == 0) {
+        return;
+    }
+
+    $sql = "SELECT u.id, u.lastname, u.firstname, MAX(ga.score) as maxscore".
+    " FROM {$CFG->prefix}user u, {$CFG->prefix}game_attempts ga ".
+    " WHERE ga.gameid={$game->id} AND ga.userid = u.id".
+    " GROUP BY u.id,u.lastname,u.firstname".
+    " HAVING MAX(ga.score) >= $score".
+    " ORDER BY MAX(ga.score) DESC";
+
+    $recs = $DB->get_records_sql( $sql, null, 0, $game->highscore);
+    if (count( $recs) == 0) {
+        return false;
+    }
+
+    // Prepare table header.
+    $table = new html_table();
+    $table->attributes['class'] = 'generaltable gameattemptsummary';
+    $table->head = array();
+    $table->align = array();
+    $table->size = array();
+
+    $table->head[] = get_string('students');
+    $table->align[] = 'left';
+    $table->size[] = '';
+
+    $table->head[] = get_string('percent', 'grades');
+    $table->align[] = 'center';
+    $table->size[] = '';
+
+    foreach ($recs as $rec) {
+        echo "<tr>";
+        $row = array();
+        $row[] = $rec->firstname.' '.$rec->lastname;
+        $row[] = round( $rec->maxscore * 100).' %';
+
+        $table->data[$rec->id] = $row;
+    }
+
+    echo '<br>'.$OUTPUT->heading(get_string('col_highscores', 'game'));
+
+    echo html_writer::table($table);
+}

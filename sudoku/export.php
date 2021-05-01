@@ -14,10 +14,22 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Exports a sudoku.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require( "../../../config.php");
+require_login();
 
 export();
 
+/**
+ * Exports
+ */
 function export() {
     global $CFG;
 
@@ -28,7 +40,7 @@ function export() {
     fwrite( $h, "require( \"../../../config.php\");\r\n\r\n");
 
     if (($recs = get_records_select( 'game_sudoku_database')) == false) {
-        print_error('empty');
+        throw new moodle_exception('snakes_error', 'game', 'empty');
     }
 
     $i = 0;

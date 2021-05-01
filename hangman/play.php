@@ -14,9 +14,29 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-// This file plays the game hangman.
+/**
+ * This file plays the game hangman.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 
-function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $action, $context) {
+defined('MOODLE_INTERNAL') || die();
+
+/**
+ * Plays the game hangman
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param string $newletter
+ * @param string $action
+ * @param stdClass $context
+ * @param stdClass $course
+ */
+function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $action, $context, $course) {
     global $DB, $USER;
 
     if ($attempt != false and $hangman != false) {
@@ -26,7 +46,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
                 error( "game_hangman_continue: Can't update game_hangman");
             }
         } else {
-            return game_hangman_play( $id, $game, $attempt, $hangman, false, false, $context);
+            return game_hangman_play( $cm, $game, $attempt, $hangman, false, false, $context, $course, $cm);
         }
     }
 
@@ -123,7 +143,7 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
     }
 
     if ($found == false) {
-        print_error( get_string( 'no_words', 'game'));
+        throw new moodle_exception( 'no_words', 'game');
     }
 
     // Found one word for hangman.
@@ -132,24 +152,25 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
     }
 
     if (!$DB->set_field( 'game_attempts', 'language', $min->language, array( 'id' => $attempt->id))) {
-        print_error( "game_hangman_continue: Can't set language");
+        throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_continue: Can\'t set language');
     }
 
     $query = new stdClass();
     $query->attemptid = $attempt->id;
+    $query->gamekind = $game->gamekind;
     $query->gameid = $game->id;
     $query->userid = $USER->id;
     $query->sourcemodule = $game->sourcemodule;
     $query->questionid = $min->questionid;
     $query->glossaryentryid = $min->glossaryentryid;
     $query->attachment = $min->attachment;
-    $query->questiontext = addslashes( $min->questiontext);
+    $query->questiontext = $min->questiontext;
     $query->score = 0;
     $query->timelastattempt = time();
     $query->answertext = $min->answer;
     $query->answerid = $min->answerid;
     if (!($query->id = $DB->insert_record( 'game_queries', $query))) {
-        print_error( "game_hangman_continue: Can't insert to table game_queries");
+        throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_continue: Can\'t insert to table game_queries');
     }
 
     $newrec = new stdClass();
@@ -177,34 +198,55 @@ function game_hangman_continue( $id, $game, $attempt, $hangman, $newletter, $act
     $newrec->letters = $letters;
 
     if ($updatehangman == false) {
-        if (!game_insert_record(  'game_hangman', $newrec)) {
-            print_error( 'game_hangman_continue: error inserting in game_hangman');
+        if (!game_insert_record( 'game_hangman', $newrec)) {
+            throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_continue: error inserting in game_hangman');
         }
     } else {
-        if (!$DB->update_record(  'game_hangman', $newrec)) {
-            print_error( 'game_hangman_continue: error updating in game_hangman');
+        if (!$DB->update_record( 'game_hangman', $newrec)) {
+            throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_continue: error updating in game_hangman');
         }
         $newrec = $DB->get_record( 'game_hangman', array( 'id' => $newrec->id));
     }
 
     game_update_repetitions( $game->id, $USER->id, $query->questionid, $query->glossaryentryid);
 
-    game_hangman_play( $id, $game, $attempt, $newrec, false, false, $context);
+    game_hangman_play( $cm, $game, $attempt, $newrec, false, false, $context, $course);
 }
 
-function game_hangman_onfinishgame( $game, $attempt, $hangman) {
+/**
+ * On finish game.
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param stdClass $course
+ */
+function game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course) {
     global $DB;
 
     $score = $hangman->corrects / $hangman->maxtries;
 
-    game_updateattempts( $game, $attempt, $score, true);
+    game_updateattempts( $game, $attempt, $score, true, $cm, $course);
 
     if (!$DB->set_field( 'game_hangman', 'finishedword', 0, array( 'id' => $hangman->id))) {
-        print_error( "game_hangman_onfinishgame: Can't update game_hangman");
+        throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_onfinishgame: Can\'t update game_hangman');
     }
 }
 
-function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolution, $context) {
+/**
+ * Plays the hangman game.
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $context
+ * @param stdClass $course
+ */
+function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolution, $context, $course) {
     global $CFG, $DB, $OUTPUT;
 
     $query = $DB->get_record( 'game_queries', array( 'id' => $hangman->queryid));
@@ -225,7 +267,7 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
         $max = 6;
     }
     hangman_showpage( $done, $correct, $wrong, $max, $wordline, $wordline2, $links, $game,
-        $attempt, $hangman, $query, $onlyshow, $showsolution, $context);
+        $attempt, $hangman, $query, $onlyshow, $showsolution, $context, $course, $cm);
 
     if (!$done) {
         if ($wrong > $max) {
@@ -234,13 +276,14 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
         if ($game->param3 == 0) {
             $game->param3 = 1;
         }
-        echo "\r\n<br/><img src=\"".$OUTPUT->pix_url('hangman/'.$game->param3.'/hangman_'.$wrong, 'mod_game')."\"";
+        echo "\r\n<br/><img src=\"".game_pix_url('hangman/'.$game->param3.'/hangman_'.$wrong, 'mod_game')."\"";
         $message  = sprintf( get_string( 'hangman_wrongnum', 'game'), $wrong, $max);
         echo ' ALIGN="MIDDLE" BORDER="0" HEIGHT="100" alt="'.$message.'"/>';
 
         if ($wrong >= $max) {
             // This word is incorrect. If reach the max number of word I have to finish else continue with next word.
-            hangman_onincorrect( $id, $wordline, $query->answertext, $game, $attempt, $hangman, $onlyshow, $showsolution);
+            hangman_onincorrect( $cm, $wordline, $query->answertext, $game, $attempt, $hangman,
+                $onlyshow, $showsolution, $course, $wordline2);
         } else {
             $i = $max - $wrong;
             if ($i > 1) {
@@ -262,18 +305,23 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
             }
 
             if ($hangman->finishedword == false) {
-                echo "<br/><br/><BR/>".get_string( 'hangman_letters', 'game').$links."\r\n";
+                echo "<br/><br/><BR/>".get_string( 'hangman_letters', 'game').' '.$links."\r\n";
             }
         }
     } else {
         // This word is correct. If reach the max number of word I have to finish else continue with next word.
-        hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query);
+        hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course, $onlyshow, $showsolution);
     }
 
     echo "<br/><br/>".get_string( 'grade', 'game').' : '.round( $query->percent * 100).' %';
     if ($hangman->maxtries > 1) {
+        $percent = ($correct - $wrong / $max) / game_strlen( $query->answertext);
+        if ($done || $onlyshow || $showsolution) {
+            $percent = 0;
+        }
+        $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
         echo '<br/><br/>'.get_string( 'hangman_gradeinstance', 'game').' : '.
-            round( $hangman->corrects / $hangman->maxtries * 100).' %';
+            round( $score * 100).' %';
     }
 
     if ($game->bottomtext != '') {
@@ -281,15 +329,34 @@ function game_hangman_play( $id, $game, $attempt, $hangman, $onlyshow, $showsolu
     }
 }
 
+/**
+ * Shows page.
+ *
+ * @param boolean $done
+ * @param boolean $correct
+ * @param boolean $wrong
+ * @param int $max
+ * @param string $wordline
+ * @param string $wordline2
+ * @param array $links
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param stdClass $query
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $context
+ * @param stdClass $course
+ * @param stdClass $cm
+ */
 function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordline2, &$links,
-    $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution, $context) {
-    global $USER, $CFG, $DB;
-
-    $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
+    $game, &$attempt, &$hangman, &$query, $onlyshow, $showsolution, $context, $course, $cm) {
+    global $USER, $CFG, $DB, $cm;
 
     $word = $query->answertext;
 
     $newletter  = optional_param('newletter', "", PARAM_TEXT);
+    $userplayed = $newletter != '';
     if ( $newletter == '_') {
         $newletter = ' ';
     }
@@ -310,7 +377,8 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         $questiontext = str_replace( array("\'", '\"'), array("'", '"'), $query->questiontext);
         $query->questiontext = game_filterquestion($questiontext, $query->questionid, $context->id, $game->course);
     } else {
-        $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
+        $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
+        $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
         $contextglossary = game_get_context_module_instance( $cmglossary->id);
         $query->questiontext = game_filterglossary(str_replace( '\"', '"',
             $query->questiontext), $query->glossaryentryid, $contextglossary->id, $game->course);
@@ -322,8 +390,19 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
             echo "<br/><b>".$s.'</b>';
         }
         if ($query->attachment != '') {
-            $file = "{$CFG->wwwroot}/file.php/$game->course/moddata/$query->attachment";
-            echo "<img src=\"$file\" />";
+            $args = explode( '/', $query->attachment);
+            $sql = "SELECT id,mimetype,filesize,filename FROM {$CFG->prefix}files ".
+            "WHERE component='mod_glossary' AND filearea='attachment' AND itemid =".$args[ 2].
+            " ORDER BY filesize DESC LIMIT 1";
+            $entry = $DB->get_record_sql( $sql);
+            if ($entry != null) {
+                if (substr( $entry->mimetype, 0, 6) == 'image/') {
+                    $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
+                    $file = "{$CFG->wwwroot}/pluginfile.php/{$contextglossary->id}/mod_glossary/attachment/";
+                    $file .= "{$query->glossaryentryid}/{$entry->filename}";
+                    echo "<img src=\"$file\" />";
+                }
+            }
         }
         echo "<br/><br/>";
     }
@@ -362,7 +441,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
 
         if (game_strpos($letters, $char) === false) {
             // User doesn't select this character.
-            $params = 'id='.$id.'&amp;newletter='.urlencode( $char);
+            $params = 'id='.$cm->id.'&amp;newletter='.urlencode( $char);
             if ($onlyshow or $showsolution) {
                 $links .= $char;
             } else {
@@ -391,7 +470,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
             if ($hangman->try > $hangman->maxtries) {
                 $finished = true;
             }
-            if ($done) {
+            if ($done && !$onlyshow) {
                 $hangman->corrects = $hangman->corrects + 1;
                 $updrec->corrects = $hangman->corrects;
             }
@@ -411,7 +490,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
     }
 
     if (!$DB->update_record( 'game_hangman', $updrec)) {
-        print_error( "hangman_showpage: Can't update game_hangman id=$updrec->id");
+        throw new moodle_exception( 'hangman_error', 'game', "hangman_showpage: Can't update game_hangman id=$updrec->id");
     }
 
     if ($done) {
@@ -421,14 +500,30 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
     } else {
         $score = -1;
     }
-
-    game_updateattempts( $game, $attempt, $score, $finished);
+    if ($hangman->maxtries > 0) {
+        $percent = ($correct - $wrong / $max) / game_strlen( $word);
+        $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
+    }
+    if ($userplayed) {
+        game_updateattempts( $game, $attempt, $score, $finished, $cm, $course);
+    }
     game_update_queries( $game, $attempt, $query, $score, $answer);
 }
 
-// This word is correct.
-// If reach the max number of words I have to finish else continue with next word.
-function hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query) {
+/**
+ * This word is correct. If reach the max number of words I have to finish else continue with next word.
+ *
+ * @param stdClass $cm
+ * @param string $wordline
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param stdClass $query
+ * @param stdClass $course
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ */
+function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $course, $onlyshow, $showsolution) {
     global $DB;
 
     echo "<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
@@ -441,11 +536,33 @@ function hangman_oncorrect( $id, $wordline, $game, $attempt, $hangman, $query) {
         }
     }
 
-    game_hangman_show_nextword( $id, $game, $attempt, $hangman);
+    if ($onlyshow or $showsolution) {
+        return;
+    }
+
+    game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course);
 }
 
-function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution) {
+/**
+ * On incorrect.
+ *
+ * @param stdClass $cm
+ * @param string $wordline
+ * @param string $word
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param boolean $onlyshow
+ * @param boolean $showsolution
+ * @param stdClass $course
+ * @param string $wordline2
+ */
+function hangman_onincorrect( $cm, $wordline, $word, $game, $attempt, $hangman, $onlyshow, $showsolution, $course, $wordline2) {
     echo "\r\n<br/><br/><font size=\"5\">\n$wordline</font>\r\n";
+
+    if ( $showsolution && $wordline2 != '') {
+        echo "<br/><font size=\"5\">\n$wordline2</font>\r\n";
+    }
 
     if ( $onlyshow or $showsolution) {
         return;
@@ -463,29 +580,34 @@ function hangman_onincorrect( $id, $wordline, $word, $game, $attempt, $hangman, 
         echo '<B>'.$word."</B><BR/><BR/>\r\n";
     }
 
-    game_hangman_show_nextword( $id, $game, $attempt, $hangman, true);
+    game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course);
 }
 
-function game_hangman_show_nextword( $id, $game, $attempt, $hangman) {
+/**
+ * Shows the next word.
+ *
+ * @param stdClass $cm
+ * @param stdClass $game
+ * @param stdClass $attempt
+ * @param stdClass $hangman
+ * @param stdClass $course
+ */
+function game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course) {
     global $CFG, $DB;
 
     echo '<br/>';
     if (($hangman->try < $hangman->maxtries) or ($hangman->maxtries == 0)) {
         // Continue to next word.
-        $params = "id=$id&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
+        $params = "id={$cm->id}&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
         echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?$params";
     } else {
-        game_hangman_onfinishgame( $game, $attempt, $hangman);
+        game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course);
 
         if (game_can_start_new_attempt( $game)) {
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">".
                 get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     }
 
-    if (! $cm = $DB->get_record('course_modules', array( 'id' => $id))) {
-        print_error( "Course Module ID was incorrect id=$id");
-    }
-
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\">".get_string( 'finish', 'game').'</a> ';
 }

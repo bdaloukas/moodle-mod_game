@@ -15,10 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Capability definitions for the game module.
+ * Plugin capabilities
  *
- * For naming conventions, see lib/db/access.php.
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
+
 $capabilities = array(
 
 // Ability to see that the game exists, and the basic information about it, for example the start date and time limit.

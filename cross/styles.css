@@ -1,0 +1,108 @@
+.answerboxstyle {
+    background-color: #fffaf0;
+    border-color: #808080;
+    border-style: solid;
+    border-width: 1px;
+    display: block;
+    padding: .75em;
+}
+
+.gamebox {
+    border-style: solid;
+    border-width: 1px;
+    cursor: pointer;
+    font-size: .12in;
+    font-weight: bold;
+    overflow: hidden;
+    text-align: center;
+    width: 2rem;
+    height: 2rem;
+}
+
+.boxcheated_sel {
+    background-color: #fff1d7;
+    border-color: #c00000;
+    color: #2080d0;
+}
+
+.boxcheated_unsel {
+    background-color: #fff;
+    border-color: #606060;
+    color: #2080d0;
+}
+
+.boxerror_sel {
+    background-color: #fff1d7;
+    border-color: #c00000;
+    color: #bf0000;
+}
+
+.boxerror_unsel {
+    background-color: #fff0f0;
+    border-color: #606060;
+    color: #bf0000;
+}
+
+.boxnormal_sel {
+    background-color: #fff1d7;
+    border-color: #c00000;
+    color: #000;
+}
+
+.boxnormal_unsel {
+    background-color: #fff;
+    border-color: #606060;
+    color: #000;
+}
+
+.cluebox {
+    border-bottom-width: 1px;
+    border-color: #c0c0c0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-style: solid;
+    border-top-width: 1px;
+    font-size: 85%;
+    margin-top: 1em;
+    padding-bottom: .5em;
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: .5em;
+}
+
+.crosswordarea {
+    background-color: #d0d8e0;
+    border-color: #808080;
+    border-style: solid;
+    padding: .5em;
+}
+
+#region-game.body {
+    background-color: white;
+    cursor: default;
+}
+
+#region-game.body,
+#region-game.button,
+#region-game.input,
+#region-game.p,
+#region-game.td {
+    font-family: Verdana, Arial, Sans-Serif;
+    font-size: small;
+}
+
+#region-game.button {
+    cursor: pointer;
+}
+
+#region-game.h1,
+#region-game.h2,
+#region-game.h3 {
+    color: #5f78a2;
+    font-family: Franklin Gothic Medium, Arial, Sans-Serif;
+    font-weight: normal;
+}
+
+#region-game.p {
+    margin-top: 1em;
+}

@@ -33,7 +33,7 @@ This module gets input from quiz, glossary or questions and plays some games. Th
 * The hidden picture
 * Book with questions
 
-If you like the module Game please donate at http://bdaloukas.gr/donate/moodlegame/, help me to have more time to continue working on this project. This module is and will remain free, but your donation allows me to continue the development, and any amount is greatly appreciated.
+If you like the Game activity module please consider donating at https://www.paypal.me/moodlegame to help me have more time to continue working on this project. This module is and will remain free, but your donation allows me to continue the development, and any amount is greatly appreciated.
 
 * Changelog: CHANGES.md
 * Documentation: http://docs.moodle.org/en/Game_module

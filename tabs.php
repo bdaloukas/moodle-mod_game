@@ -17,13 +17,14 @@
 /**
  * Sets up the tabs used by the game pages based on the users capabilites.
  *
- * @author Vasilis Daloukas.
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package game
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 
 if (empty($game)) {
-    print_error('You cannot call this script in that way');
+    throw new moodle_exception( 'game_error', 'game', 'You cannot call this script in that way');
 }
 if (!isset($currenttab)) {
     $currenttab = '';
@@ -70,8 +71,8 @@ if ($currenttab == 'reports' and isset($mode)) {
     $activated[] = 'reports';
 
     $allreports = get_list_of_plugins("mod/game/report");
-    // Standard reports we want to show first
-    $reportlist = array ('overview' /*, 'regrade' , 'grading' , 'analysis'*/);
+    // Standard reports we want to show first.
+    $reportlist = array ('overview');
 
     foreach ($allreports as $report) {
         if (!in_array($report, $reportlist)) {

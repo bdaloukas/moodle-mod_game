@@ -17,11 +17,10 @@
 /**
  * This page lists all the instances of game module in a particular course
  *
- * @author 
- * @version $Id: index.php,v 1.8 2012/08/29 20:55:25 bdaloukas Exp $
- * @package game
- **/
-
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once("../../config.php");
 require_once("lib.php");
 require_once("locallib.php");
@@ -29,7 +28,7 @@ require_once("locallib.php");
 $id = required_param('id', PARAM_INT);   // It stores the courseid.
 
 if (! $course = $DB->get_record( 'course', array( 'id' => $id))) {
-    print_error( 'Course ID is incorrect');
+    throw new moodle_exception( 'game_error', 'game',  'Course ID is incorrect');
 }
 
 require_login($course->id);

@@ -14,6 +14,15 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * The header for many .php files.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+defined('MOODLE_INTERNAL') || die();
+
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir.'/gradelib.php');
 require_once($CFG->dirroot.'/mod/game/locallib.php');
@@ -24,23 +33,23 @@ $q = optional_param('q',  0, PARAM_INT);  // Game ID.
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('game', $id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
     if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-        print_error('coursemisconf');
+        throw new moodle_exception( 'game_error', 'game', 'coursemisconf');
     }
     if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
 } else {
     if (! $game = $DB->get_record('game', array('id' => $q))) {
-        print_error('invalidgameid q='.$q, 'game');
+        throw new moodle_exception( 'game_error', 'game', 'invalidgameid q='.$q, 'game');
     }
     if (!$course = $DB->get_record('course', array('id' => $game->course))) {
-        print_error('invalidcourseid');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcourseid');
     }
     if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
-        print_error('invalidcoursemodule');
+        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
     }
 }
 

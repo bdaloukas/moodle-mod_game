@@ -14,7 +14,16 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Creates an image dynamically.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
 require( '../../../config.php');
+require_login();
 
 $id = required_param('id', PARAM_INT); // Course Module ID.
 $attemptid = required_param('id2', PARAM_INT); // Course Module ID.
@@ -27,6 +36,18 @@ $rows = required_param('rows', PARAM_INT);
 $filenamenumbers = required_param('n', PARAM_PATH); // Path to numbers picture.
 create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
 
+/**
+ * Create an image.
+ *
+ * @param int $id
+ * @param int $attemptid
+ * @param boolean $foundcells
+ * @param stdClass $cells
+ * @param string $filehash
+ * @param int $cols
+ * @param int $rows
+ * @param string $filenamenumbers
+ */
 function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers) {
     global $CFG;
 
@@ -99,6 +120,18 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
     imagedestroy ($imghandle);
 }
 
+/**
+ * Show number.
+ *
+ * @param object $imghandle
+ * @param object $imgnumbers
+ * @param int $number
+ * @param int $x1
+ * @param int $y1
+ * @param int $width
+ * @param int $height
+ * @param int $sizenumbers
+ */
 function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
         $widthnumber = $sizenumbers[ 0] / 10;

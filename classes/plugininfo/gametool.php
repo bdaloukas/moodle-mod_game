@@ -29,8 +29,20 @@ use core\plugininfo\base;
 
 defined('MOODLE_INTERNAL') || die();
 
-
+/**
+ * The mod_game gametool.
+ *
+ * @package    mod_game
+ * @since      Moodle 2.6
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class gametool extends base {
+    /**
+     * returns true to is_uninstall_allowed.
+     *
+     * @return true
+     */
     public function is_uninstall_allowed() {
         return true;
     }

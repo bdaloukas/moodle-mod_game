@@ -13,26 +13,67 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+//
+// Sometimes, changes between versions involve
+// alterations to database structures and other
+// major things that may break installations.
+//
+// The upgrade function in this file will attempt
+// to perform all the necessary actions to upgrade
+// your older installation to the current version.
+//
+// If there's something it cannot do itself, it
+// will tell you what you need to do.
+//
+// The commands in here will all be database-neutral,
+// using the methods of database_manager class
+//
+// Please do not forget to use upgrade_set_timeout()
+// before any action that may take longer time to finish.
 
-/* This file keeps track of upgrades to the game module
- * Sometimes, changes between versions involve
- * alterations to database structures and other
- * major things that may break installations.
+/**
+ * This file keeps track of upgrades to the game module
  *
- * The upgrade function in this file will attempt
- * to perform all the necessary actions to upgrade
- * your older installation to the current version.
- *
- * If there's something it cannot do itself, it
- * will tell you what you need to do.
- *
- * The commands in here will all be database-neutral,
- * using the methods of database_manager class
- *
- * Please do not forget to use upgrade_set_timeout()
- * before any action that may take longer time to finish.
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+defined('MOODLE_INTERNAL') || die();
+
+
+/**
+ * Copies a string field to int field
+ *
+ * @param string $table the name of table
+ * @param string $from the name of source field
+ * @param string $to the name of destination field
+ */
+function mpgame_db_copy_string_to_int( $table, $from, $to) {
+    global $CFG, $DB;
+
+    $sql = "SELECT * FROM {$CFG->prefix}$table";
+    $recs = $DB->get_records_sql( $sql);
+    foreach ($recs as $rec) {
+        $val = intval( $rec->$from);
+        if ($rec->$to == $val) {
+            continue;
+        }
+        if ($val == 0) {
+            continue;
+        }
+        $updrec = new stdClass;
+        $updrec->id = $rec->id;
+        $updrec->$to = $val;
+        $DB->update_record( $table, $updrec);
+    }
+}
+
+/**
+ * Upgrades database
+ *
+ * @param int $oldversion
+ */
 function xmldb_game_upgrade($oldversion) {
 
     global $CFG, $DB;
@@ -870,16 +911,6 @@ function xmldb_game_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2007111843, 'game');
     }
 
-    if ($oldversion < 2007111303) {
-        $table = new xmldb_table('game');
-        $field = new xmldb_field('bottomtext', XMLDB_TYPE_TEXT);
-        if (!$dbman->field_exists($table, $field)) {
-            $dbman->add_field($table, $field);
-        }
-
-        upgrade_mod_savepoint(true, 2007111303, 'game');
-    }
-
     if ($oldversion < 2007111844) {
         $table = new xmldb_table('game_queries');
         $field = new xmldb_field('questiontext', XMLDB_TYPE_TEXT, null, null, null, null, '', 'glossaryentryid');
@@ -1182,7 +1213,7 @@ function xmldb_game_upgrade($oldversion) {
         $table = new xmldb_table('game_sudoku');
         $field = new xmldb_field('level', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0');
 
-        $dbman->cchange_field_precision($table, $field);
+        $dbman->change_field_precision($table, $field);
         upgrade_mod_savepoint(true, 2008101106, 'game');
     }
 
@@ -1544,15 +1575,275 @@ function xmldb_game_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, $ver, 'game');
     }
-    
-    if ($oldversion < ($ver = 2016062603)) {  
-        $table = new xmldb_table('game_cross');
-        $field = new xmldb_field('createscore', XMLDB_TYPE_FLOAT, null, null, XMLDB_NULL, null, '0');
 
-        // Launch change of type for field thisfield
+    if ($oldversion < ($ver = 2016062603)) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('createscore', XMLDB_TYPE_FLOAT, null, null, null, null, '0');
+
+        // Launch change of type for field thisfield.
         $dbman->change_field_type($table, $field);
+
+        upgrade_mod_savepoint(true, $ver, 'game');
     }
-    
-    
+
+    if ($oldversion < ($ver = 2017062801)) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('usedrows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('rows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if ($dbman->field_exists($table, $field)) {
+            mpgame_db_copy_string_to_int( 'game_cross', 'rows', 'usedrows');
+        } else {
+            $dbman->add_field($table, $field);
+        }
+
+    }
+
+    if ($oldversion < ($ver = 2017062801)) {
+        $table = new xmldb_table('game_cross');
+        $field = new xmldb_field('usedcols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('cols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if ($dbman->field_exists($table, $field)) {
+            mpgame_db_copy_string_to_int( 'game_cross', 'cols', 'usedcols');
+        } else {
+            $dbman->add_field($table, $field);
+        }
+    }
+
+    if ($oldversion < ($ver = 2017062801)) {
+        $table = new xmldb_table('game_snakes_database');
+        $field = new xmldb_field('usedrows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('rows', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if ($dbman->field_exists($table, $field)) {
+            mpgame_db_copy_string_to_int( 'game_snakes_database', 'rows', 'usedrows');
+        } else {
+            $dbman->add_field($table, $field);
+        }
+    }
+
+    if ($oldversion < ($ver = 2017062801)) {
+        $table = new xmldb_table('game_snakes_database');
+        $field = new xmldb_field('usedcols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        $field = new xmldb_field('cols', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'id');
+        if ($dbman->field_exists($table, $field)) {
+            mpgame_db_copy_string_to_int( 'game_snakes_database', 'cols', 'usedcols');
+        } else {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017070301)) {
+        $sql = "UPDATE {$CFG->prefix}game SET glossarycategoryid=0 WHERE glossarycategoryid < 0";
+        $DB->execute( $sql);
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017070403)) {
+        $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database";
+        $recs = $DB->get_records_sql( $sql);
+        foreach ($recs as $rec) {
+            if (($rec->usedcols != 0) and ($rec->usedrows != 0)) {
+                continue;
+            }
+
+            $updrec = new stdClass;
+            $updrec->id = $rec->id;
+            if ( $rec->id == 1) {
+                $value = 8;
+            } else if ( $rec->id == 2) {
+                $value = 6;
+            } else {
+                continue;
+            }
+            if ($rec->usedcols == 0) {
+                $updrec->usedcols = $value;
+            }
+            if ($rec->usedrows == 0) {
+                $updrec->usedrows = $value;
+            }
+            $DB->update_record( 'game_snakes_database', $updrec);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017071901)) {
+
+        // Define field completionattemptsexhausted to be added to game.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('completionattemptsexhausted', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
+
+        // Conditionally launch add field completionattemptsexhausted.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2017071902)) {
+        // Define field completionpass to be added to game.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('completionpass', XMLDB_TYPE_INTEGER, '1', null, null, null, 0, 'completionattemptsexhausted');
+
+        // Conditionally launch add field completionpass.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018060401)) {
+        // Define field highscore to be added to game.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('highscore', XMLDB_TYPE_INTEGER, '2', null, null, null, 0);
+
+        // Conditionally launch add field completionpass.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018060402)) {
+        // Change the number of imageset on hangman to 2.
+        $config = get_config('game');
+        if ($config->hangmanimagesets < 2) {
+            set_config( 'hangmanimagesets', 2, 'game');
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018060404)) {
+        // Import 2 new boards.
+
+        require_once( 'importsnakes.php');
+        $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki3.jpg'";
+        $rec = $DB->get_record_sql( $sql);
+        if ($rec === false) {
+            game_importsnakes3();
+        }
+        $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database WHERE fileboard='fidaki4.jpg'";
+        $rec = $DB->get_record_sql( $sql);
+        if ($rec === false) {
+            game_importsnakes4();
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018100800)) {
+        // Import 2 new boards.
+
+        require_once( 'importsnakes.php');
+        $sql = "UPDATE {$CFG->prefix}game_cross SET createscore=0 WHERE createscore IS NULL";
+        $DB->execute( $sql);
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112004)) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('lastip');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112005)) {
+        $table = new xmldb_table('game_attempts');
+        $field = new xmldb_field('lastremotehost');
+
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->drop_field($table, $field);
+        }
+
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112102)) {
+        $table = new xmldb_table('game_course');
+
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112103)) {
+        $table = new xmldb_table('game_course_inputs');
+
+        if ($dbman->table_exists($table)) {
+            $dbman->drop_table($table);
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112108)) {
+        $table = new xmldb_table( 'game_queries');
+        $field = new xmldb_field( 'col', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'mycol');
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2018112109)) {
+        $table = new xmldb_table( 'game_queries');
+        $field = new xmldb_field( 'row', XMLDB_TYPE_INTEGER, 10, null, null, null, '0');
+        if ($dbman->field_exists($table, $field)) {
+            $dbman->rename_field($table, $field, 'myrow');
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2019042411)) {
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('intro', XMLDB_TYPE_TEXT, null, null, false, null, null, 'course');
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        } else {
+            $dbman->change_field_notnull($table, $field);
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
+    if ($oldversion < ($ver = 2019042600)) {
+        // Define field timeclose to be added to game.
+        $table = new xmldb_table('game');
+        $field = new xmldb_field('introformat', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, null, null, '0', 'intro');
+
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        upgrade_mod_savepoint(true, $ver, 'game');
+    }
+
     return true;
 }
+

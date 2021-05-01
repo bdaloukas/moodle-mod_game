@@ -15,20 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This script lists student attempts
+ * This script lists student attempts.
  *
- * @version $Id: report.php,v 1.5 2012/07/25 11:16:07 bdaloukas Exp $
- * @author bdaloukas.
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package game
- *//** */
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+
+defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir.'/tablelib.php');
 
+/**
+ * The class prints a report
+ *
+ * @package    mod_game
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class game_report extends game_default_report {
 
     /**
      * Display the report.
+     *
+     * @param stdClass $game
+     * @param stdClass $cm
+     * @param stdClass $course
      */
     public function display($game, $cm, $course) {
         global $CFG, $SESSION, $DB;
@@ -132,7 +144,7 @@ class game_report extends game_default_report {
                     " WHERE i.gameid = '$game->id' AND q.id = i.questionid".
                     "   AND q.id IN ($questionlist)";
             if (!$questions = get_records_sql($sql)) {
-                print_error('No questions found');
+                throw new moodle_exception('game_error', 'game', 'No questions found');
             }
             $number = 1;
             foreach ($questionids as $key => $id) {

@@ -14,18 +14,28 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
+/**
+ * Creates a sudoku.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require( "../../../config.php");
 require_once("class.Sudoku.php");
 require( '../header.php');
 
 $action = optional_param('action', PARAM_ALPHA);   // The action.
-
+require_login();
 if ($action == 'create') {
     AppendSudokuB();
 } else {
     showform();
 }
 
+/**
+ * Show form
+ */
 function showform() {
     $id = required_param('id', PARAM_NUMBER);   // The action.
 
@@ -38,7 +48,7 @@ function showform() {
     <td>
         <input type="text" name="count" size="6" value="2" /><br>
     </td>
-</tr>	
+</tr>
 <tr><td colspan=2><center><br><input type="submit" value="<?php  print_string('sudoku_create_start', 'game') ?>" /></td></tr>
 </table>
 <input type="hidden" name=action        value="create" >
@@ -47,9 +57,12 @@ function showform() {
 <input type="hidden" name=id        value="<?php  echo $id; ?>" />
 </form>
 
-<?php
+    <?php
 }
 
+/**
+ * Append sudoku
+ */
 function appendsudokub() {
     global $DB;
 
@@ -80,6 +93,14 @@ function appendsudokub() {
     }
 }
 
+/**
+ * Pack sudoku
+ *
+ * @param object $si
+ * @param object $sp
+ *
+ * @return the packed sudoku
+ */
 function packsudoku( $si, $sp) {
     $data = '';
 
@@ -105,6 +126,15 @@ function packsudoku( $si, $sp) {
     return $data;
 }
 
+/**
+ * Creates a sudoku
+ *
+ * @param stdClass $si
+ * @param object $sp
+ * @param int $level
+ *
+ * @return true if created correctly
+ */
 function create( &$si, &$sp, $level=1) {
     for ($i = 1; $i <= 40; $i++) {
         $sp = new sudoku();
@@ -124,6 +154,13 @@ function create( &$si, &$sp, $level=1) {
     return true;
 }
 
+/**
+ * get opened
+ *
+ * @param stdClass $si
+ *
+ * @return count of opened
+ */
 function getopened( $si) {
     $count = 0;
 

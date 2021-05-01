@@ -20,22 +20,26 @@
  * The mod_game instance list viewed event.
  *
  * @package    mod_game
- * @copyright  2014 Vasilis Daloukas
+ * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 namespace mod_game\event;
 defined('MOODLE_INTERNAL') || die();
 
-/*
+/**
  * The mod_game instance list viewed event class.
  *
  * @package    mod_game
- * @since      Moodle 2.7
- * @copyright  2014 Vasilis Daloukas
+ * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class course_module_instance_list_viewed extends \core\event\course_module_instance_list_viewed {
+    /**
+     * Create the event.
+     *
+     * @param stdClass $course
+     */
     public static function create_from_course(\stdClass $course) {
         $params = array(
             'context' => \context_course::instance($course->id)

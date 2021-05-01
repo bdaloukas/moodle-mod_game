@@ -16,12 +16,12 @@
 
 /**
  * This page prints a particular attempt of game
- * 
- * @author  bdaloukas
- * @version $Id: attempt.php,v 1.22 2012/07/25 23:07:43 bdaloukas Exp $
- * @package game
+ *
+ * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
-require_once( "../../config.php");
+require_once(dirname(__FILE__).'/../../config.php');
 require_once( "lib.php");
 require_once( "locallib.php");
 
@@ -36,10 +36,19 @@ require_once( "hiddenpicture/play.php");
 
 $action  = optional_param('action', "", PARAM_ALPHANUM);  // Is the param action.
 
-game_show_header( $id, $game, $course, $context);
-game_do_attempt( $id, $game, $action, $course, $context);
+game_show_header( $id, $game, $course, $context, $cm);
+game_do_attempt( $game, $action, $course, $context, $cm);
 
-function game_show_header( &$id, &$game, &$course, &$context) {
+/**
+ * Do the required checks and print header.
+ *
+ * @param int $id
+ * @param stdClass $game
+ * @param stdClass $course
+ * @param stdClass $context
+ * @param stdClass $cm
+ */
+function game_show_header( &$id, &$game, &$course, &$context, &$cm) {
     global $DB, $USER, $PAGE, $OUTPUT;
 
     $id = optional_param('id', 0, PARAM_INT); // It represents Course Module ID.
@@ -47,23 +56,23 @@ function game_show_header( &$id, &$game, &$course, &$context) {
 
     if ($id) {
         if (! $cm = get_coursemodule_from_id('game', $id)) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'game');
         }
         if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
-            print_error('coursemisconf');
+            throw new moodle_exception('coursemisconf', 'game');
         }
         if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'game');
         }
     } else {
         if (! $game = $DB->get_record('game', array('id' => $q))) {
-            print_error('invalidgameid', 'game');
+            throw new moodle_exception('invalidgameid', 'game');
         }
         if (! $course = $DB->get_record('course', array('id' => $game->course))) {
-            print_error('invalidcourseid');
+            throw new moodle_exception('invalidcourseid', 'game');
         }
         if (! $cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
-            print_error('invalidcoursemodule');
+            throw new moodle_exception('invalidcoursemodule', 'game');
         }
     }
 
@@ -114,7 +123,16 @@ function game_show_header( &$id, &$game, &$course, &$context) {
     echo $OUTPUT->header();
 }
 
-function game_do_attempt( $id, $game, $action, $course, $context) {
+/**
+ * Do one attempt.
+ *
+ * @param stdClass $game
+ * @param string $action
+ * @param stdClass $course
+ * @param stdClass $context
+ * @param stdClass $cm
+ */
+function game_do_attempt( $game, $action, $course, $context, $cm) {
     global $OUTPUT;
 
     $forcenew = optional_param('forcenew', false, PARAM_BOOL); // Teacher has requested new preview.
@@ -133,60 +151,70 @@ function game_do_attempt( $id, $game, $action, $course, $context) {
         case 'crosscheck':
             $attempt = game_getattempt( $game, $detail);
             $g = game_cross_unpackpuzzle( $g);
-            game_cross_continue( $id, $game, $attempt, $detail, $g, $finishattempt, $context);
+            game_cross_continue( $cm, $game, $attempt, $detail, $g, $finishattempt, $context, $course);
             break;
         case 'crossprint':
             $attempt = game_getattempt( $game, $detail);
-            game_cross_play( $id, $game, $attempt, $detail, '', true, false, false, true, $context);
+            game_cross_play( $cm->id, $game, $attempt, $detail, '', true, false, false, true, $context);
             break;
         case 'sudokucheck':     // The student tries to answer a question.
             $attempt = game_getattempt( $game, $detail);
-            game_sudoku_check_questions( $id, $game, $attempt, $detail, $finishattempt, $course, $context);
+            game_sudoku_check_questions( $cm, $game, $attempt, $detail, $finishattempt, $course, $context);
             $continue = true;
             break;
         case 'sudokucheckg':    // The student tries to guess a glossaryenry.
             $attempt = game_getattempt( $game, $detail);
             $endofgame = array_key_exists( 'endofgame', $_GET);
-            $continue = game_sudoku_check_glossaryentries( $id, $game, $attempt, $detail, $endofgame, $course);
+            $continue = game_sudoku_check_glossaryentries( $cm, $game, $attempt, $detail, $endofgame, $course);
             $continue = true;
             break;
         case 'sudokucheckn':    // The user tries to guess a number.
             $attempt = game_getattempt( $game, $detail);
-            game_sudoku_check_number( $id, $game, $attempt, $detail, $pos, $num, $context);
+            game_sudoku_check_number( $cm, $game, $attempt, $detail, $pos, $num, $context, $course);
             $continue = false;
             break;
         case 'cryptexcheck':    // The user tries to guess a question.
             $attempt = game_getattempt( $game, $detail);
-            game_cryptex_check( $id, $game, $attempt, $detail, $q, $answer, $finishattempt, $context);
+            game_cryptex_check( $cm, $game, $attempt, $detail, $q, $answer, $finishattempt, $context, $course);
             break;
         case 'bookquizcheck':   // The student tries to answer a question.
             $attempt = game_getattempt( $game, $detail);
-            game_bookquiz_check_questions( $id, $game, $attempt, $detail, $context);
+            game_bookquiz_check_questions( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'snakescheck':     // The student tries to answer a question.
             $attempt = game_getattempt( $game, $detail);
-            game_snakes_check_questions( $id, $game, $attempt, $detail, $context);
+            game_snakes_check_questions( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'snakescheckg':    // The student tries to answer a question from glossary.
             $attempt = game_getattempt( $game, $detail);
-            game_snakes_check_glossary( $id, $game, $attempt, $detail, $context);
+            game_snakes_check_glossary( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'hiddenpicturecheckg': // The student tries to guess a glossaryentry.
             $attempt = game_getattempt( $game, $detail);
-            game_hiddenpicture_check_mainquestion( $id, $game, $attempt, $detail, $endofgame, $context);
+            game_hiddenpicture_check_mainquestion( $cm, $game, $attempt, $detail, $endofgame, $context, $course);
             break;
         default:
             $continue = true;
             break;
     }
     if ($continue) {
-        game_create( $game, $id, $forcenew, $course, $context);
+        game_create( $game, $forcenew, $course, $context, $finishattempt, $cm);
     }
     // Finish the page.
     echo $OUTPUT->footer();
 }
 
-function game_create( $game, $id, $forcenew, $course, $context) {
+/**
+ * Creates one game.
+ *
+ * @param stdClass $game
+ * @param int $forcenew
+ * @param stdClass $course
+ * @param stdClass $context
+ * @param boolean $finishattempt
+ * @param stdClass $cm
+ */
+function game_create( $game, $forcenew, $course, $context, $finishattempt, $cm) {
     global $USER, $CFG, $DB;
 
     $attempt = game_getattempt( $game, $detail);
@@ -196,35 +224,40 @@ function game_create( $game, $id, $forcenew, $course, $context) {
 
     switch ( $game->gamekind) {
         case 'cross':
-            game_cross_continue( $id, $game, $attempt, $detail, '', $forcenew, $context);
+            game_cross_continue( $cm, $game, $attempt, $detail, '', $forcenew, $context, $course);
             break;
         case 'hangman':
-            game_hangman_continue( $id, $game, $attempt, $detail, $newletter, $action2, $context);
+            game_hangman_continue( $cm, $game, $attempt, $detail, $newletter, $action2, $context, $course);
             break;
         case 'millionaire':
-            game_millionaire_continue( $id, $game, $attempt, $detail, $context);
+            game_millionaire_continue( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'bookquiz':
-            game_bookquiz_continue( $id, $game, $attempt, $detail, $chapterid, $context);
+            game_bookquiz_continue( $cm, $game, $attempt, $detail, $chapterid, $context, $course);
             break;
         case 'sudoku':
-            game_sudoku_continue( $id, $game, $attempt, $detail, '', $context);
+            game_sudoku_continue( $cm, $game, $attempt, $detail, $finishattempt, $context, $course);
             break;
         case 'cryptex':
-            game_cryptex_continue( $id, $game, $attempt, $detail, $forcenew, $context);
+            game_cryptex_continue( $cm, $game, $attempt, $detail, $forcenew, $context, $course);
             break;
         case 'snakes':
-            game_snakes_continue( $id, $game, $attempt, $detail, $context);
+            game_snakes_continue( $cm, $game, $attempt, $detail, $context, $course);
             break;
         case 'hiddenpicture':
-            game_hiddenpicture_continue( $id, $game, $attempt, $detail, $context);
+            game_hiddenpicture_continue( $cm, $game, $attempt, $detail, $context, $course);
             break;
         default:
-            print_error( "Game {$game->gamekind} not found");
+            throw new moodle_exception( 'gamenotfound', 'game', $game->gamekind);
             break;
     }
 }
 
+/**
+ * Unpacks the cross.
+ *
+ * @param string $g
+ */
 function game_cross_unpackpuzzle( $g) {
     $ret = "";
     $len = game_strlen( $g);

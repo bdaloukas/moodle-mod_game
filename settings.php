@@ -15,13 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form for creating and modifying a game 
+ * Form for creating and modifying a game
  *
- * @package   game
- * @author    Vasilis Daloukas
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
@@ -30,7 +29,7 @@ if ($ADMIN->fulltree) {
     // General settings.
 
     $settings->add(new admin_setting_configcheckbox('game/hidebookquiz',
-        get_string('hidebookquiz', 'game'), get_string('confighidebookquiz', 'game'), 0));
+        get_string('hidebookquiz', 'game'), get_string('confighidebookquiz', 'game'), 1));
 
     $settings->add(new admin_setting_configcheckbox('game/hidecross',
         get_string('hidecross', 'game'), get_string('confighidecross', 'game'), 0));
@@ -54,6 +53,6 @@ if ($ADMIN->fulltree) {
         get_string('hidesudoku', 'game'), get_string('confighidesudoku', 'game'), 0));
 
     $settings->add(new admin_setting_configtext('game/hangmanimagesets', get_string('hangmanimagesets', 'game'),
-            get_string('confighangmanimagesets', 'game'), 1, PARAM_INT));
+            get_string('confighangmanimagesets', 'game'), 2, PARAM_INT));
 
 }

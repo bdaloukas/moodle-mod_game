@@ -16,13 +16,15 @@
 
 /**
  * This page prints a particular attempt of game
- * 
- * @author  bdaloukas
- * @version $Id: preview.php,v 1.10 2012/07/25 11:16:04 bdaloukas Exp $
- * @package game
- **/
-
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once("../../config.php");
+
+require_login();
+
 require_once("lib.php");
 require_once("locallib.php");
 
@@ -38,7 +40,7 @@ require_once( "headergame.php");
 $context = game_get_context_module_instance( $cm->id);
 
 if (!has_capability('mod/game:viewreports', $context)) {
-    print_error( get_string( 'only_teachers', 'game'));
+    throw new moodle_exception('only_teachers', 'game');
 }
 
 $action  = required_param('action', PARAM_ALPHANUM);
@@ -53,30 +55,32 @@ $solution = ($action == 'solution');
 
 $PAGE->navbar->add(get_string('preview', 'game'));
 
+$onlyshow = true;
+$endofgame = false;
+$print = false;
+$checkbutton = false;
+$showhtmlsolutions = false;
+$showhtmlprintbutton = true;
+$showstudentguess = true;
+
 switch( $gamekind) {
     case 'cross':
         $g = '';
-        $onlyshow = true;
-        $endofgame = false;
-        $print = false;
-        $checkbutton = false;
-        $showhtmlsolutions = false;
-        $showhtmlprintbutton = true;
-        $showstudentguess = false;
-        game_cross_play( $update, $game, $attempt, $detail, $g, $onlyshow, $solution,
+        game_cross_play( $cm, $game, $attempt, $detail, $g, $onlyshow, $solution,
             $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
-            $showstudentguess, $context);
+            $showstudentguess, $context, $course);
         break;
     case 'sudoku':
-        game_sudoku_play( $update, $game, $attempt, $detail, true, $solution, $context);
+        game_sudoku_play( $cm, $game, $attempt, $detail, $onlyshow, $solution, $context, $course);
         break;
     case 'hangman':
         $preview = ($action == 'preview');
-        game_hangman_play( $update, $game, $attempt, $detail, $preview, $solution, $context);
+        game_hangman_play( $update, $game, $attempt, $detail, $preview, $solution, $context, $course);
         break;
     case 'cryptex':
         $crossm = $DB->get_record( 'game_cross', array('id' => $attemptid));
-        game_cryptex_play( $update, $game, $attempt, $detail, $crossm, false, true, $solution, $context);
+        game_cryptex_play( $cm, $game, $attempt, $detail, $crossm, false, true, $solution, $context,
+            $print, $showhtmlprintbutton, $course);
         break;
 }
 

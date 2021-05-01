@@ -16,28 +16,41 @@
 
 /**
  * This page exports a game to another platform e.g. html, jar
- * 
- * @author  bdaloukas
- * @version $Id: export.php,v 1.22 2012/07/25 11:16:03 bdaloukas Exp $
- * @package game
- **/
-
-require( '../../config.php');
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+require_once(dirname(__FILE__) . '/../../config.php');
 ob_start();
 
-require_once( $CFG->dirroot.'/lib/formslib.php');
-require( 'locallib.php');
-require( 'headergame.php');
+require_once( "headergame.php");
 
+require_login($course->id, false, $cm);
 $context = game_get_context_module_instance( $cm->id);
+require_capability('mod/game:view', $context);
+require_once( $CFG->dirroot.'/lib/formslib.php');
+
+require_login($course->id, false, $cm);
+
 if (!has_capability('mod/game:viewreports', $context)) {
     return;
 }
 
 $target = optional_param('target', "", PARAM_ALPHANUM); // The target is HTML or JavaMe.
 
+/**
+ * The mod_game_exporthtml_form show the export form.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_game_exporthtml_form extends moodleform {
 
+    /**
+     * Definition of form.
+     */
     public function definition() {
         global $CFG, $game;
 
@@ -95,6 +108,14 @@ class mod_game_exporthtml_form extends moodleform {
         $mform->closeHeaderBefore('submitbutton');
     }
 
+    /**
+     * Validation of form.
+     *
+     * @param stdClass $data
+     * @param stdClass $files
+     *
+     * @return errors
+     */
     public function validation($data, $files) {
         global $CFG, $USER, $DB;
         $errors = parent::validation($data, $files);
@@ -102,6 +123,9 @@ class mod_game_exporthtml_form extends moodleform {
         return $errors;
     }
 
+    /**
+     * Do the exporting.
+     */
     public function export() {
         global $game, $DB;
 
@@ -124,19 +148,29 @@ class mod_game_exporthtml_form extends moodleform {
         }
 
         if (!($DB->update_record( 'game_export_html', $html))) {
-            print_error("game_export_html: not updated id=$html->id");
+            throw new moodle_exception( 'game_error', 'game', "game_export_html: not updated id=$html->id");
         }
 
         $cm = get_coursemodule_from_instance('game', $game->id, $game->course);
         $context = game_get_context_module_instance( $cm->id);
 
-        require_once("exporthtml.php");
+        require_once("export/exporthtml.php");
         game_OnExportHTML( $game, $context, $html);
     }
 }
 
+/**
+ * The mod_game_exportjavame_form show the export form.
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class mod_game_exportjavame_form extends moodleform {
 
+    /**
+     * Definition of form.
+     */
     public function definition() {
         global $CFG, $DB, $game;
 
@@ -189,6 +223,14 @@ class mod_game_exportjavame_form extends moodleform {
         $mform->closeHeaderBefore('submitbutton');
     }
 
+    /**
+     * Validation of form.
+     *
+     * @param stdClass $data
+     * @param stdClass $files
+     *
+     * @return errors
+     */
     public function validation($data, $files) {
         global $CFG, $USER, $DB;
         $errors = parent::validation($data, $files);
@@ -196,6 +238,9 @@ class mod_game_exportjavame_form extends moodleform {
         return $errors;
     }
 
+    /**
+     * Do the exporting.
+     */
     public function export() {
         global $game, $DB;
 
@@ -215,10 +260,10 @@ class mod_game_exportjavame_form extends moodleform {
         $javame->maxpictureheight = $mform->getElementValue('maxpictureheight');
 
         if (!($DB->update_record( 'game_export_javame', $javame))) {
-            print_error("game_export_javame: not updated id=$javame->id");
+            throw new moodle_exception( 'game_error', 'game', "game_export_javame: not updated id=$javame->id");
         }
 
-        require_once("exportjavame.php");
+        require_once("export/exportjavame.php");
         game_OnExportJavaME( $game, $javame);
     }
 
@@ -266,8 +311,13 @@ if ($mform->is_cancelled()) {
 
     $mform->display();
 }
-$OUTPUT->footer();
+echo $OUTPUT->footer();
 
+/**
+ * Sends via html a file.
+ *
+ * @param string $file
+ */
 function game_send_stored_file($file) {
     if (file_exists($file)) {
         header('Content-Description: File Transfer');
@@ -283,6 +333,6 @@ function game_send_stored_file($file) {
         readfile($file);
         exit;
     } else {
-        print_error("export.php: File does not exists ".$file);
+        throw new moodle_exception( 'game_error', 'game', "export.php: File does not exists ".$file);
     }
 }

@@ -16,17 +16,19 @@
 
 /**
  * This page shows the answers of the current game
- * 
- * @author  bdaloukas
- * @version $Id: showattempts.php,v 1.6 2012/07/25 11:16:04 bdaloukas Exp $
- * @package game
- **/
-
+ *
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 require_once("../../config.php");
+
+require_login();
+
 require_once( "headergame.php");
 
 if (!has_capability('mod/game:viewreports', $context)) {
-    print_error( get_string( 'only_teachers', 'game'));
+    throw new moodle_exception( 'only_teachers', 'game');
 }
 
 $PAGE->navbar->add(get_string('showattempts', 'game'));
@@ -45,6 +47,11 @@ game_showattempts( $game);
 
 echo $OUTPUT->footer();
 
+/**
+ * Show users
+ *
+ * @param stdClass $game
+ */
 function game_showusers($game) {
     global $CFG, $USER, $DB;
 
@@ -76,7 +83,7 @@ function game_showusers($game) {
                     window.location.href = "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid='+groupid;
                 }
             </script>
-<?php
+    <?php
 
     $attributes = 'onchange="javascript:onselectuser();"';
     $name = 'user';
@@ -112,6 +119,11 @@ function game_showusers($game) {
     echo $output . '</select>' . "\n";
 }
 
+/**
+ * Show groups
+ *
+ * @param stdClass $game
+ */
 function game_showgroups($game) {
     global $CFG, $USER, $DB;
 
@@ -129,7 +141,7 @@ function game_showgroups($game) {
                     window.location.href = "<?php echo $href;?>" + document.getElementById('menugroup').value;
                 }
             </script>
-        <?php
+    <?php
 
     $attributes = 'onchange="javascript:onselectgroup();"';
     $name = 'group';
@@ -165,10 +177,15 @@ function game_showgroups($game) {
     echo $output . '</select>' . "\n";
 }
 
+/**
+ * Show attempts
+ *
+ * @param stdClass $game
+ */
 function game_showattempts($game) {
-    global $CFG, $DB, $OUTPUT;
+    global $CFG, $DB, $OUTPUT, $context;
 
-    $allowdelete = optional_param('allowdelete', 0, PARAM_INT);
+    $allowdelete = has_capability('mod/game:manage', $context);
 
     $userid = optional_param('userid', 0, PARAM_INT);
     $limitfrom = optional_param('limitfrom',  0, PARAM_INT);
@@ -179,7 +196,7 @@ function game_showattempts($game) {
     $table = "{game_attempts} as ga, {user} u, {game} as g";
     $select = "ga.userid=u.id AND ga.gameid={$game->id} AND g.id={$game->id}";
     $fields = "ga.id, u.lastname, u.firstname, ga.attempts,".
-        "timestart, timefinish, timelastattempt, score, ga.lastip, ga.lastremotehost";
+        "timestart, timefinish, timelastattempt, score";
     if ($userid != 0) {
         $select .= ' AND u.id='.$userid;
     }
@@ -206,7 +223,6 @@ function game_showattempts($game) {
     if (($recs = $DB->get_records_sql( $sql, null, $recslimitfrom, $recslimitnum)) != false) {
         echo '<table border="1">';
         echo '<tr><td><b>'.get_string( 'delete').'</td><td><b>'.get_string('user').'</td>';
-        echo '<td><b>'.get_string('lastip', 'game').'</b></td>';
         echo '<td><b>'.get_string('timestart', 'game').'</b></td>';
         echo '<td><b>'.get_string('timelastattempt', 'game').'</b></td>';
         echo '<td><b>'.get_string('timefinish', 'game').'</b></td>';
@@ -226,11 +242,10 @@ function game_showattempts($game) {
                     echo '&allowdelete=1';
                 }
                 echo '">';
-                echo '<img src="'.$OUTPUT->pix_url('t/delete').'" alt="'.get_string( 'delete').'" /></a>';
+                echo '<img src="'.game_pix_url('t/delete').'" alt="'.get_string( 'delete').'" /></a>';
             }
             echo '</center></td>';
             echo '<td><center>'.$rec->firstname. ' '.$rec->lastname.'</center></td>';
-            echo '<td><center>'.(strlen( $rec->lastremotehost) > 0 ? $rec->lastremotehost : $rec->lastip).'</center></td>';
             echo '<td><center>'.( $rec->timestart != 0 ? userdate($rec->timestart) : '')."</center></td>\r\n";
             echo '<td><center>'.( $rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '').'</center></td>';
             echo '<td><center>'.( $rec->timefinish != 0 ? userdate($rec->timefinish) : '').'</center></td>';
@@ -243,7 +258,7 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update='.$update."&amp;q={$game->id}\">";
-                echo '<img src="'.$OUTPUT->pix_url('t/preview').'" alt="'.get_string( 'preview', 'game').'" /></a>';
+                echo '<img src="'.game_pix_url('t/preview').'" alt="'.get_string( 'preview', 'game').'" /></a>';
             }
             echo '</center></td>';
 
@@ -253,7 +268,7 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=solution&amp;".
                     "attemptid={$rec->id}&amp;gamekind={$gamekind}&amp;update=$update&amp;&amp;".
                     "q={$game->id}\">";
-                echo '<img src="'.$OUTPUT->pix_url('t/preview').'" alt="'.get_string( 'showsolution', 'game').'" /></a>';
+                echo '<img src="'.game_pix_url('t/preview').'" alt="'.get_string( 'showsolution', 'game').'" /></a>';
             }
             echo '</center></td>';
             echo "</tr>\r\n";
@@ -262,6 +277,11 @@ function game_showattempts($game) {
     }
 }
 
+/**
+ * One delete attempt
+ *
+ * @param stdClass $game
+ */
 function game_ondeleteattempt( $game) {
     global $CFG, $DB;
 
