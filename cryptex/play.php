@@ -365,7 +365,18 @@ width: 240pt;
                 continue;
             }
         }
-
+        if( substr( $q->questiontext, 0, 3) == '<p ') {
+            $pos = strpos( $q->questiontext, '>');
+            if( $pos != false) {
+                $q->questiontext = substr( $q->questiontext, $pos + 1);
+            }
+        }
+        while( substr( $q->questiontext, -4) == '</p>') {
+            $q->questiontext = substr( $q->questiontext, 0, strlen( $q->questiontext) - 4);
+        }
+        while( substr( $q->questiontext, -4) == '<br>') {
+            $q->questiontext = substr( $q->questiontext, 0, strlen( $q->questiontext) - 4);
+        }
         $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
         if ($q->questionid) {
             $question2 = str_replace( array("\'", '\"'), array("'", '"'), $question);
@@ -377,7 +388,7 @@ width: 240pt;
             $question2 = str_replace( '\"', '"', $question);
             $question2 = game_filterglossary($question2, $q->glossaryentryid, $contextglossary->id, $game->course);
         }
-
+        
         echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
         if (($onlyshow == false) and ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
