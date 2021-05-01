@@ -763,20 +763,20 @@ class r extends rcs {
      * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
-        return $thestate = $this->coupling($thecolumn);
+        return $thestate = $this->coupling1($thecolumn);
     }
 
     /**
      * Heavy lifting for row/column coupling calculations.
      *
-     * RCS::coupling
+     * RCS::coupling1
      * @param integer $theindex the index of the cell within the row or column.
      *
      * @return integer the "coupling coefficient" for the cell.  The sum of the
      *          sizes of the intersection between this and all other
      *          cells in the row or column.
      */
-    protected function coupling($theindex) {
+    protected function coupling1($theindex) {
         $thecommonstate =& $this->getCell($theindex);
         $thecommonstate =& $thecommonstate->getstate();
 
@@ -820,7 +820,7 @@ class c extends r {
      * @param int $thecolumn
      */
     public function coupling($therow, $thecolumn) {
-        return $thestate = $this->coupling($therow);
+        return $thestate = $this->coupling1($therow);
     }
 }
 

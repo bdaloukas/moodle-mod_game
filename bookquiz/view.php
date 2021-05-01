@@ -78,7 +78,7 @@ unset($chapterid);
 
 // Chapter is hidden for students.
 if (!$allowedit && $chapter->hidden) {
-    throw new moodle_exception( 'bookquiz_error', 'game', ('Error reading book chapters.');
+    throw new moodle_exception( 'bookquiz_error', 'game', 'Error reading book chapters.');
 }
 
 // Chapter not part of this book!

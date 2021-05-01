@@ -817,13 +817,13 @@ class Cross
             }
 
             $s = game_filtertext( $rec->questiontext, 0);
-            while( substr( $s, -4) == '<br>') {
+            while (substr( $s, -4) == '<br>') {
                 $s = substr( $s, 0, strlen( $s) - 4);
             }
-            if( substr( $s, 0, 2) == '<p') {
+            if (substr( $s, 0, 2) == '<p') {
                 $pos = strpos( $s, '>');
-                if( $pos != false) {
-                    $s = substr( $s, $pos +1);
+                if ($pos != false) {
+                    $s = substr( $s, $pos + 1);
                 }
             }
             $rec->questiontext = $s;
