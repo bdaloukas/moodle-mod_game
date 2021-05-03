@@ -484,7 +484,7 @@ function game_grade_item_update($game, $grades=null) {
         }
     }
 
-    if (array_key_exists('cmidnumber', $game)) { // Tt may not be always present.
+    if (isset($game->cmidnumber)) { // Tt may not be always present.
         $params = array('itemname' => $game->name, 'idnumber' => $game->cmidnumber);
     } else {
         $params = array('itemname' => $game->name);
