@@ -422,7 +422,7 @@ function game_hiddenpicture_check_mainquestion( $cm, $game, &$attempt, &$hiddenp
     game_updateattempts( $game, $attempt, $score, $correct, $cm, $course);
 
     if ($correct == false) {
-        game_hiddenpicture_play( $id, $game, $attempt, $hiddenpicture, false, $context);
+        game_hiddenpicture_play( $cm, $game, $attempt, $hiddenpicture, false, $context, $course);
         return true;
     }
 
