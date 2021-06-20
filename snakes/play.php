@@ -141,7 +141,7 @@ function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
     }
 
     if ($showboard and $game->param8 != 0) {
-        game_snakes_showquestion( $id, $game, $snakes, $query, $context);
+        game_snakes_showquestion( $cm->id, $game, $snakes, $query, $context);
     }
 }
 

@@ -1400,6 +1400,27 @@ function game_sudoku_getquestions( $questionlist) {
         throw new moodle_exception( 'game_error', 'game', 'Could not load question options');
     }
 
+    $sql = "SELECT value FROM {$CFG->prefix}config_plugins WHERE plugin = ? AND name = ?";
+    $rec = $DB->get_record_select( 'config_plugins', 'plugin = ? AND name = ?', array( 'qtype_multichoice', 'shuffleanswers'));
+    if ($rec != false) {
+        if ($rec->value == 1) {
+            foreach ($questions as $question) {
+                if (isset( $question->options)) {
+                    if (isset( $question->options->answers)) {
+                        $list = $question->options->answers;
+                        $keys = array_keys( $list);
+                        shuffle( $keys);
+                        $random = array();
+                        foreach ($keys as $key) {
+                            $random[ $key] = $list[ $key];
+                        }
+                        $question->options->answers = $random;
+                    }
+                }
+            }
+        }
+    }
+
     return $questions;
 }
 
@@ -1894,6 +1915,11 @@ function game_print_question_multichoice( $game, $question, $context) {
                 $a->answer = substr( $a->answer, 0, -3);
             }
         }
+
+        if (substr( $a->answer, 0, 3) == '<p ' && substr( $a->answer, -4) == '</p>') {
+                $a->answer = '<span '.substr( $a->answer, 3, strlen( $a->answer) - 7).'</span>';
+        }
+
         $a->answer = game_filterquestion_answer(str_replace( '\"', '"', $a->answer), $a->id, $context->id, $game->course);
         $answer->control = "<input  id=\"resp{$question->id}_{$a->id}\" name=\"resp{$question->id}_\"  ".
             " type=\"radio\" value=\"{$a->id}\" /> ".$a->answer;
