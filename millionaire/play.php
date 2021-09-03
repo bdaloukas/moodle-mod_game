@@ -412,7 +412,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     if ($game->shuffle or $game->quizid == 0) {
         $questionid = game_question_selectrandom( $game, $table, $select, 'q.id as id', true);
     } else {
-        $questionid = game_millionaire_select_serial_question( $game, $table, $select, 'q.id as id', $millionaire->level, $order);
+        $questionid = game_millionaire_select_serial_question($game, $table, $select, $millionaire->level, $order, 'q.id as id');
     }
 
     if ($questionid == 0) {
@@ -482,11 +482,11 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
  * @param stdClass $game
  * @param string $table
  * @param string $select
- * @param string $idfields
  * @param int $level
  * @param string $order
+ * @param string $idfields
  */
-function game_millionaire_select_serial_question( $game, $table, $select, $idfields = "id", $level, $order) {
+function game_millionaire_select_serial_question($game, $table, $select, $level, $order, $idfields = "id") {
     global $DB, $USER;
 
     $sql  = "SELECT $idfields,$idfields FROM ".$table." WHERE $select ";
