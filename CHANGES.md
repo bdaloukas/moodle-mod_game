@@ -1,3 +1,6 @@
+Changes in version 2021-11-02
+* Fix: Completion problem
+
 Changes in version 2021-06-20
 * Fix Snakes: Shuffles answer in multichoice questions
 

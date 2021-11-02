@@ -55,7 +55,7 @@ class mod_game_mod_form extends moodleform_mod {
                 throw new moodle_exception('game_error', 'game', 'incorrect game');
             }
         } else {
-            $gamekind = required_param('type', PARAM_ALPHA);
+            $gamekind = optional_param('type', '', PARAM_ALPHA);
         }
 
         // Hidden elements.
@@ -77,7 +77,7 @@ class mod_game_mod_form extends moodleform_mod {
         } else {
             $mform->setType('name', PARAM_CLEAN);
         }
-        if (!isset( $g)) {
+        if (!isset( $g) && $gamekind != '') {
             $mform->setDefault('name', get_string( 'game_'.$gamekind, 'game'));
         }
         $mform->addRule('name', null, 'required', null, 'client');
