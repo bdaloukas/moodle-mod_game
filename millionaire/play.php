@@ -266,7 +266,6 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         }
     }
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
-
     $bfirst = true;
     $letters = get_string( 'millionaire_lettersall', 'game');
     if (($letters == '') or ($letters == '-')) {
@@ -282,7 +281,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         if ((strpos( $aanswer[ $i - 1], 'color:') != false) or (strpos( $aanswer[ $i - 1], 'background:') != false)) {
             $style = '';
         }
-        if ($state == 15 and $i + 1 == $query->correct) {
+        if ($state == 15 and $i == $query->correct) {
             $style = $stylequestionselected;
         }
 

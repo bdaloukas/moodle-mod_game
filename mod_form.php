@@ -674,15 +674,15 @@ class mod_game_mod_form extends moodleform_mod {
         $items = array();
 
         $group = array();
-        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'quiz'),
+        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'game'),
                 array('group' => 'cpass'));
         $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
         $group[] = $mform->createElement('advcheckbox', 'completionattemptsexhausted', null,
                 get_string('completionattemptsexhausted', 'quiz'),
                 array('group' => 'cattempts'));
         $mform->disabledIf('completionattemptsexhausted', 'completionpass', 'notchecked');
-        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'quiz'), ' &nbsp; ', false);
-        $mform->addHelpButton('completionpassgroup', 'completionpass', 'quiz');
+        $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'game'), ' &nbsp; ', false);
+        $mform->addHelpButton('completionpassgroup', 'completionpass', 'game');
         $items[] = 'completionpassgroup';
         return $items;
     }

@@ -411,6 +411,8 @@ $string[ 'userdefined'] = 'User defined';
 $string[ 'different_glossary_category'] = "The selected category doesn't corespond to selected glossary";
 $string[ 'highscore'] = 'Show high score (number of students)';
 $string[ 'missingbook'] = 'Missing book';
+$string['completionpass'] = 'Require passing grade';
+$string['completionpass_help'] = 'If enabled, this activity is considered complete when the student receives a pass grade (as specified in the Grade section of the quiz settings) or higher.';
 
 // File preview.php.
 $string[ 'only_teachers'] = 'Only teacher can see this page';
