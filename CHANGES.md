@@ -1,3 +1,6 @@
+Changes in version 2021-12-23-03
+* Fix: Warning in test cases.
+
 Changes in version 2021-12-23-02
 * Fix: Rename tests/generator_test.php to tests/generator_testcase.php
 

@@ -40,6 +40,9 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
  */
 class mod_game_generator_testcase extends advanced_testcase {
 
+    /**
+     * Test for create instance.
+     */
     public function test_create_instance() {
         global $DB;
         $this->resetAfterTest();
@@ -61,6 +64,9 @@ class mod_game_generator_testcase extends advanced_testcase {
         $this->assertEquals('Another game', $records[$game->id]->name);
     }
 
+    /**
+     * Test for creating a crossword.
+     */
     public function test_createcross_instance() {
         global $CFG, $DB;
 
