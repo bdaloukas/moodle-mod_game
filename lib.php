@@ -871,7 +871,7 @@ function game_extend_settings_navigation($settings, $gamenode) {
             $glossary = $DB->get_record_sql( "SELECT id,name FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
             $cmd = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
             $url = new moodle_url('/mod/glossary/view.php', array('id' => $cmd->id));
-            $gamenode->add(get_string('viewglossary', 'game', $glossary->name), $url, navigation_node::TYPE_SETTING,
+            $gamenode->add(get_string('viewglossary', 'game', '&nbsp;'.$glossary->name), $url, navigation_node::TYPE_SETTING,
                 null, null, new pix_icon('t/edit', ''));
         }
         if (($game->sourcemodule == 'quiz') && ($game->quizid != 0)) {

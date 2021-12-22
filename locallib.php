@@ -178,7 +178,7 @@ function game_question_shortanswer_glossary( $game, $allowspaces, $userepetition
         throw new moodle_exception( 'must_select_glossary', 'game');
     }
 
-    $select = "glossaryid={$game->glossaryid}";
+    $select = "(glossaryid={$game->glossaryid} OR sourceglossaryid={$game->glossaryid})";
     $table = '{glossary_entries} ge';
     if ($game->glossarycategoryid) {
         $table .= ',{glossary_entries_categories} gec';
@@ -463,7 +463,7 @@ function game_questions_selectrandom( $game, $count=1) {
                 throw new moodle_exception( 'must_select_glossary', 'game');
             }
             $table = '{glossary_entries} ge';
-            $select = "glossaryid='$game->glossaryid' ";
+            $select = "(glossaryid='{$game->glossaryid}' OR sourceglossaryid='{$game->glossaryid}')";
             if ($game->glossarycategoryid) {
                 $table .= ',{glossary_entries_categories} gec';
                 $select .= " AND gec.entryid = ge.id ".
@@ -692,7 +692,7 @@ function game_questions_shortanswer( $game) {
 function game_questions_shortanswer_glossary( $game) {
     global $DB;
 
-    $select = "glossaryid={$game->glossaryid}";
+    $select = "(glossaryid={$game->glossaryid} OR sourceglossaryid={$game->glossaryid})";
     $table = '{glossary_entries} ge';
     if ($game->glossarycategoryid) {
         $table .= ',{glossary_entries_categories} gec';
