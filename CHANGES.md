@@ -1,3 +1,6 @@
+Changes in version 2021-12-23-04
+* Fix: At backup new field of table game
+
 Changes in version 2021-12-23-03
 * Fix: Warning in test cases.
 

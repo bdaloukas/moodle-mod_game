@@ -57,7 +57,8 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
             'shuffle', 'timemodified', 'toptext', 'bottomtext',
             'grademethod', 'grade', 'decimalpoints', 'popup',
             'review', 'attempts', 'glossaryid2', 'glossarycategoryid2',
-            'language', 'subcategories', 'maxattempts', 'userlanguage', 'disablesummarize', 'glossaryonlyapproved'
+            'language', 'subcategories', 'maxattempts', 'userlanguage', 'disablesummarize', 'glossaryonlyapproved',
+            'completionattemptsexhausted', 'completionpass', 'highscore'
             ));
 
         $exporthtmls = new backup_nested_element('game_export_htmls');
