@@ -1,3 +1,6 @@
+Changes in version 2021-12-23-02
+* Fix: Rename tests/generator_test.php to tests/generator_testcase.php
+
 Changes in version 2021-12-23-01
 * Fix: Problem when using secondary glossaries as source of questions.
 
