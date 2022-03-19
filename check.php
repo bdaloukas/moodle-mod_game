@@ -212,17 +212,30 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
         return;
     }
 
-    $select = 'category='.$game->questioncategoryid;
-    if ($game->subcategories) {
-        $cats = question_categorylist( $game->questioncategoryid);
-        if (count( $cats) > 0) {
-            $s = implode( ',', $cats);
-            $select = 'category in ('.$s.')';
-        }
-    }
-    $select .= " AND qtype='shortanswer'";
+	if( game_get_moodle_version() >= '04.00') {
+		$table2 = ",{$CFG->prefix}question_bank_entries qbe ";
+		$select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+		if ($game->subcategories) {
+			$cats = question_categorylist( $game->questioncategoryid);
+			if (count( $cats) > 0) {
+				$s = implode( ',', $cats);
+				$select = 'qbe.questioncategoryid in ('.$s.')';
+			}
+		}
+	} else {
+		$table2 = '';
+		$select = 'category='.$game->questioncategoryid;
+		if ($game->subcategories) {
+			$cats = question_categorylist( $game->questioncategoryid);
+			if (count( $cats) > 0) {
+				$s = implode( ',', $cats);
+				$select = 'qbe.id=q.id AND qbe.questioncategoryid IN ('.$s.')';
+			}
+		}
+	}
+    $select .= " AND q.qtype='shortanswer'";
 
-    $sql = "SELECT id FROM {$CFG->prefix}question WHERE $select";
+    $sql = "SELECT q.id FROM {$CFG->prefix}question q $table2 WHERE $select";
     if (($recs = $DB->get_records_sql( $sql)) === false) {
         return;
     }

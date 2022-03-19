@@ -352,7 +352,7 @@ function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, 
  * @param stdClass $course
  */
 function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
-    global $DB, $USER;
+    global $CFG, $DB, $USER;
 
     if (($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
         throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game',
@@ -390,24 +390,42 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             throw new moodle_exception( 'must_select_questioncategory', 'game');
         }
 
-        // Include subcategories.
-        $select = 'category='.$game->questioncategoryid;
-        if ($game->subcategories) {
-            $cats = question_categorylist( $game->questioncategoryid);
-            if (count( $cats)) {
-                $select = 'q.category in ('.implode(',', $cats).')';
-            }
-        }
-
         if (game_get_moodle_version() < '02.06') {
-            $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
+            $select = " qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
             $table = '{question} q, {question_multichoice} qmo';
         } else {
-            $select .= " AND qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
+            $select = " qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
             $table = '{question} q, {qtype_multichoice_options} qmo';
         }
+		
+        // Include subcategories.
+		$select2 = '';
+		if( game_get_moodle_version() >= '04.00') {
+			$table .= ",{$CFG->prefix}question_bank_entries qbe ";
+			$select2 = ' qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+			if ($game->subcategories) {
+				$cats = question_categorylist( $game->questioncategoryid);
+				if (count( $cats) > 0) {
+					$s = implode( ',', $cats);
+					$select2 = ' qbe.questioncategoryid in ('.$s.')';
+				}
+			}
+		} else {
+			$select2 = 'category='.$game->questioncategoryid;
+			if ($game->subcategories) {
+				$cats = question_categorylist( $game->questioncategoryid);
+				if (count( $cats)) {
+					$select2 = 'q.category in ('.implode(',', $cats).')';
+				}
+			}
+		}
+		if( $select2 != '') {
+			$select .= ' AND '.$select2;
+		}
     }
-    $select .= ' AND hidden=0';
+	if (game_get_moodle_version() < '04.00') {
+		$select .= ' AND hidden=0';
+	}
     if ($game->shuffle or $game->quizid == 0) {
         $questionid = game_question_selectrandom( $game, $table, $select, 'q.id as id', true);
     } else {

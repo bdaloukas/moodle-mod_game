@@ -489,7 +489,12 @@ class mod_game_mod_form extends moodleform_mod {
             // Single answer questions.
             $select = " AND q.qtype='shortanswer'";
         }
-        $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
+		if( game_get_moodle_version() >= '04.00') {
+			$sql2 = "SELECT COUNT(*) FROM $table,{$CFG->prefix}question_bank_entries qbe ".
+				" WHERE qbe.questioncategoryid = qc.id AND qbe.id=q.id $select";
+		} else {
+			$sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
+		}
         $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
         if ($recs = $DB->get_records_sql( $sql)) {
             foreach ($recs as $rec) {

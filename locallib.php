@@ -49,7 +49,7 @@ define( "CONST_GAME_TRIES_REPETITION", "5");
 /**
  * Returns the version of Moodle.
  *
- * @return string version
+ * @return string version e.g. 03.10
  */
 function game_get_moodle_version() {
     global $DB;
@@ -268,23 +268,35 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
  * @return the short answer record
  */
 function game_question_shortanswer_question( $game, $allowspaces, $userepetitions) {
-    global $DB;
+    global $CFG, $DB;
 
     if ($game->questioncategoryid == 0) {
         throw new moodle_exception( 'must_select_questioncategory', 'game');
     }
 
-    $select = 'category='.$game->questioncategoryid;
-    if ($game->subcategories) {
-        $cats = question_categorylist( $game->questioncategoryid);
-        if (count( $cats) > 0) {
-            $s = implode( ',', $cats);
-            $select = 'category in ('.$s.')';
-        }
-    }
-    $select .= " AND qtype='shortanswer'";
-
     $table = '{question} q';
+	if( game_get_moodle_version() >= '04.00') {
+		$table .= ",{$CFG->prefix}question_bank_entries qbe ";
+		$select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+		if ($game->subcategories) {
+			$cats = question_categorylist( $game->questioncategoryid);
+			if (count( $cats) > 0) {
+				$s = implode( ',', $cats);
+				$select = 'qbe.questioncategoryid in ('.$s.')';
+			}
+		}
+	} else {
+		$select = 'category='.$game->questioncategoryid;
+		if ($game->subcategories) {
+			$cats = question_categorylist( $game->questioncategoryid);
+			if (count( $cats) > 0) {
+				$s = implode( ',', $cats);
+				$select = 'category in ('.$s.')';
+			}
+		}
+	}
+    $select .= " AND q.qtype='shortanswer'";
+
     $fields = 'q.id';
 
     if (($id = game_question_selectrandom( $game, $table, $select, $fields, $userepetitions)) == false) {
@@ -292,7 +304,11 @@ function game_question_shortanswer_question( $game, $allowspaces, $userepetition
     }
 
     $select = "q.id=$id AND qa.question=$id".
-        " AND q.hidden=0 AND qtype='shortanswer'";
+        " AND qtype='shortanswer'";
+	if( game_get_moodle_version() < '04.00') {
+		$select .= ' AND q.hidden=0';
+	}
+
     $table = "{question} q,{question_answers} qa";
     $fields = "qa.id as answerid, q.id, q.questiontext as questiontext, ".
         "qa.answer as answertext, q.id as questionid, ".
@@ -432,7 +448,7 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
  * @return stdClass the random record(s)
  */
 function game_questions_selectrandom( $game, $count=1) {
-    global $DB;
+    global $CFG, $DB;
 
     switch( $game->sourcemodule)
     {
@@ -444,15 +460,16 @@ function game_questions_selectrandom( $game, $count=1) {
                 $table = '{question} q, {quiz_question_instances} qqi';
                 $select = " qqi.quiz=$game->quizid".
                     " AND qqi.question=q.id ".
-                    " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')".
-                    " AND q.hidden=0";
+                    " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
             } else {
                 $table = '{question} q, {quiz_slots} qs';
                 $select = " qs.quizid=$game->quizid".
                     " AND qs.questionid=q.id ".
-                    " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')".
-                    " AND q.hidden=0";
+                    " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
             }
+            if (game_get_moodle_version() < '04.00') {
+				$select .= " AND q.hidden=0";
+			}
             // Todo 'match'.
             $field = "q.id as id";
             $table2 = 'question';
@@ -479,18 +496,32 @@ function game_questions_selectrandom( $game, $count=1) {
             }
             $table = '{question} q';
 
-            // Inlcude subcategories.
-            $select = 'category='.$game->questioncategoryid;
-            if ($game->subcategories) {
-                $cats = question_categorylist( $game->questioncategoryid);
-                if (count( $cats)) {
-                    $select = 'category in ('.implode( ',', $cats).')';
-                }
-            }
+            // Include subcategories.
+			if( game_get_moodle_version() >= '04.00') {
+				$table .= ",{$CFG->prefix}question_bank_entries qbe ";
+				$select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+				if ($game->subcategories) {
+					$cats = question_categorylist( $game->questioncategoryid);
+					if (count( $cats) > 0) {
+						$select = 'qbe.questioncategoryid in ('.implode( ',', $cats).')';
+					}
+				}
+			} else {
+				$select = 'category='.$game->questioncategoryid;
+				if ($game->subcategories) {
+					$cats = question_categorylist( $game->questioncategoryid);
+					if (count( $cats)) {
+						$select = 'category in ('.implode( ',', $cats).')';
+					}
+				}
+			}
 
-            $select .= " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice') AND q.hidden=0";
+            $select .= " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
+            if (game_get_moodle_version() < '04.00') {
+				$select .= " AND q.hidden=0";
+			}
             // Todo 'match'.
-            $field = "id";
+            $field = "q.id";
 
             $table2 = 'question';
             $fields2 = 'id as questionid,0 as glossaryentryid';
@@ -752,23 +783,34 @@ function game_questions_shortanswer_quiz( $game) {
  * @return a question
  */
 function game_questions_shortanswer_question( $game) {
+	global $CFG;
+
     if ($game->questioncategoryid == 0) {
         throw new moodle_exception( 'must_select_questioncategory', 'game');
     }
 
     // Include subcategories.
-    $select = 'q.category='.$game->questioncategoryid;
-    if ($game->subcategories) {
-        $cats = question_categorylist( $game->questioncategoryid);
-        if (count( $cats)) {
-            $select = 'q.category in ('.implode(',', $cats).')';
-        }
-    }
-
-    $select .= " AND qtype='shortanswer' ".
-        " AND qa.question=q.id".
-        " AND q.hidden=0";
     $table = "{question} q,{question_answers} qa";
+	if( game_get_moodle_version() >= '04.00') {
+		$table .= ",{$CFG->prefix}question_bank_entries qbe ";
+		$select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+		if ($game->subcategories) {
+			$cats = question_categorylist( $game->questioncategoryid);
+			if (count( $cats) > 0) {
+				$select = 'qbe.questioncategoryid in ('.implode( ',', $cats).')';
+			}
+		}		
+	} else {
+		$select = "q.category={$game->questioncategoryid} AND q.hidden=0";
+		if ($game->subcategories) {
+			$cats = question_categorylist( $game->questioncategoryid);
+			if (count( $cats)) {
+				$select = 'q.category in ('.implode(',', $cats).')';
+			}
+		}
+	}
+
+    $select .= " AND qtype='shortanswer' AND qa.question=q.id";
     $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
         "qa.answer as answertext, q.id as questionid";
 

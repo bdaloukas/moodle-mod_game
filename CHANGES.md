@@ -1,3 +1,6 @@
+Changes in versionm 2022-03-19
+* Fix: Moodle 4.0 compatibility.
+
 Changes in version 2021-12-23-04
 * Fix: At backup new field of table game
 
