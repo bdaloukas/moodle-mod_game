@@ -102,7 +102,7 @@ class mod_game_generator_testcase extends advanced_testcase {
         $cross->computedata( $crossm, $crossd, $letters, $minwords = 0, $maxwords = 0, $mtimelimit = 3);
         $this->assertEquals(38, $cross->mbestscore);
 
-        $_GET[ 'q'] = $game->id;
+        $_GET['q'] = $game->id;
         ob_start();
         require_once($CFG->dirroot . '/mod/game/attempt.php');
         ob_end_clean();

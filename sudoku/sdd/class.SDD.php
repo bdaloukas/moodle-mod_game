@@ -26,8 +26,6 @@
  * @package mod_game
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * This is a class wrapper for a couple of utility routines that I use all the time.
  *
