@@ -178,9 +178,9 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
 
         $inputs = explode( '/', substr( $array, $pos1 + $len, $pos2 - $pos1 - $len));
 
-        $filearea = $inputs[ 0];
-        $id = $inputs[ 1];
-        $fileimage = urldecode( $inputs[ 2]);
+        $filearea = $inputs[0];
+        $id = $inputs[1];
+        $fileimage = urldecode( $inputs[2]);
         $component = 'question';
 
         $params = array( 'component' => $component, 'filearea' => $filearea,
@@ -216,7 +216,7 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
 
     $linesbefore[] = $array;
     foreach ($linesafter as $line) {
-        $linesbefore [] = $line;
+        $linesbefore[] = $line;
     }
     file_put_contents( $destdir.'/'.$filename, $linesbefore);
 

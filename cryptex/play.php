@@ -78,13 +78,13 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
         }
 
         $rec->answertext = game_upper( $rec->answertext);
-        $answers[ $rec->answertext] = game_repairquestion( $rec->questiontext);
-        $infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid);
+        $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
+        $infos[$rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid);
 
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
             'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
-            $reps[ $rec->answertext] = $rec2->r;
+            $reps[$rec->answertext] = $rec2->r;
         }
     }
 
@@ -102,12 +102,12 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
         $newcrossd = array();
         foreach ($crossd as $rec) {
             if (array_key_exists( $rec->answertext, $infos)) {
-                $info = $infos[ $rec->answertext];
+                $info = $infos[$rec->answertext];
 
                 $rec->id = 0;
-                $rec->sourcemodule = $info[ 0];
-                $rec->questionid = $info[ 1];
-                $rec->glossaryentryid = $info[ 2];
+                $rec->sourcemodule = $info[0];
+                $rec->questionid = $info[1];
+                $rec->glossaryentryid = $info[2];
             }
             game_update_queries( $game, $attempt, $rec, 0, '');
             $newcrossd[] = $rec;

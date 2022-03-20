@@ -67,7 +67,7 @@ function game_showusers($game) {
     }
     if (($recs = $DB->get_records_sql( $sql))) {
         foreach ($recs as $rec) {
-            $users[ $rec->userid] = $rec->lastname.' '.$rec->firstname;
+            $users[$rec->userid] = $rec->lastname.' '.$rec->firstname;
         }
     }
 
@@ -130,7 +130,7 @@ function game_showgroups($game) {
     $groups = array();
     if (($recs = $DB->get_records_sql( "SELECT id,name FROM {groups} WHERE courseid=$game->course ORDER BY name"))) {
         foreach ($recs as $rec) {
-            $groups[ $rec->id] = $rec->name;
+            $groups[$rec->id] = $rec->name;
         }
     }
     $href = $CFG->wwwroot.'/mod/game/showattempts.php?q='.$game->id.'&groupid=';

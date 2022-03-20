@@ -24,8 +24,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /*
 Crossing Words for
 Codewalkers PHP Coding Contest of July 2002
@@ -41,8 +39,7 @@ Author Àngel Fenoy from Arenys de Mar, Barcelona.
  * @copyright  2014 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class Cross
-{
+class Cross {
     /** @var int Contains the words and the answers. */
     public $minputanswers;
     /** @var The words that will be used. */
@@ -102,7 +99,7 @@ class Cross
     public function setwords( $answers, $maxcols, $reps) {
         $this->mreps = array();
         foreach ($reps as $word => $r) {
-            $this->mreps[ game_upper( $word)] = $r;
+            $this->mreps[game_upper( $word)] = $r;
         }
         $this->maveragereps = 0;
         foreach ($reps as $r) {
@@ -114,7 +111,7 @@ class Cross
 
         $this->minputanswers = array();
         foreach ($answers as $word => $answer) {
-            $this->minputanswers[ game_upper( $word)] = $answer;
+            $this->minputanswers[game_upper( $word)] = $answer;
         }
 
         $this->mwords = array();
@@ -163,7 +160,7 @@ class Cross
         for ($j = 0; $j <= $n / 4; $j++) {
             $i = array_rand( $this->mwords);
 
-            $this->swap( $this->mwords[ $i], $this->mwords[ 0]);
+            $this->swap( $this->mwords[$i], $this->mwords[0]);
         }
     }
 
@@ -250,7 +247,7 @@ class Cross
             }
 
             uasort($a, array( $this, 'cmp_magic'));
-            $magics[ $n] = $a;
+            $magics[$n] = $a;
         }
 
         uasort($this->mwords,  array( $this, 'cmp'));
@@ -354,7 +351,7 @@ class Cross
             $word = game_substr( $word, 1, -1);
 
             if (array_key_exists( $word, $this->mreps)) {
-                $sumrep += $this->mreps[ $word] - $this->maveragereps;
+                $sumrep += $this->mreps[$word] - $this->maveragereps;
             }
         }
 
@@ -388,15 +385,15 @@ class Cross
             echo "<br><br>PuzzleInfo n20=$n20 words=".count( $crossword)."<BR>";
         }
         for ($i = 0; $i < count($crosspos); $i++) {
-            $pos = $crosspos[ $i];
+            $pos = $crosspos[$i];
             $col = $pos % $n22;
             $row = floor( $pos / $n22);
-            $dir = $crossdir[ $i];
+            $dir = $crossdir[$i];
 
-            $len = game_strlen( $crossword[ $i]) - 3;
+            $len = game_strlen( $crossword[$i]) - 3;
 
             if ($bprint) {
-                echo "col=$col row=$row dir=$dir word=".$crossword[ $i]."<br>";
+                echo "col=$col row=$row dir=$dir word=".$crossword[$i]."<br>";
             }
 
             $this->mcletter += $len;
@@ -473,7 +470,7 @@ class Cross
         $crossm->createspaces = $this->mbestspaces;
 
         for ($i = 0; $i < count($this->mbestcrosspos); $i++) {
-            $pos = $this->mbestcrosspos[ $i];
+            $pos = $this->mbestcrosspos[$i];
 
             $col = $pos % $n22;
             $row = floor( ($pos - $col) / $n22);
@@ -481,8 +478,8 @@ class Cross
             $col += -$this->mmincol + 1;
             $row += -$this->mminrow + 1;
 
-            $dir = $this->mbestcrossdir[ $i];
-            $word = $this->mbestcrossword[ $i];
+            $dir = $this->mbestcrossdir[$i];
+            $word = $this->mbestcrossword[$i];
             $word = substr( $word, 1, strlen( $word) - 2);
 
             $rec = new stdClass();
@@ -492,7 +489,7 @@ class Cross
             $rec->horizontal = ($dir == "h" ? 1 : 0);
 
             $rec->answertext = $word;
-            $rec->questiontext = $this->minputanswers[ $word];
+            $rec->questiontext = $this->minputanswers[$word];
 
             if ($rec->horizontal) {
                 $key = sprintf( 'h%10d %10d', $rec->myrow, $rec->mycol);
@@ -500,7 +497,7 @@ class Cross
                 $key = sprintf( 'v%10d %10d', $rec->mycol, $rec->myrow);
             }
 
-            $crossd[ $key] = $rec;
+            $crossd[$key] = $rec;
         }
         if (count( $crossd) > 1) {
             ksort( $crossd);
@@ -850,15 +847,15 @@ class Cross
             $s = $rec->questiontext.$attachment;
             if ($rec->horizontal) {
                 if (array_key_exists( $rec->myrow, $legendh)) {
-                    $legendh[ $rec->myrow][] = $s;
+                    $legendh[$rec->myrow][] = $s;
                 } else {
-                    $legendh[ $rec->myrow] = array( $s);
+                    $legendh[$rec->myrow] = array( $s);
                 }
             } else {
                 if (array_key_exists( $rec->mycol, $legendv)) {
-                    $legendv[ $rec->mycol][] = $s;
+                    $legendv[$rec->mycol][] = $s;
                 } else {
-                    $legendv[ $rec->mycol] = array( $s);
+                    $legendv[$rec->mycol] = array( $s);
                 }
             }
         }
@@ -868,10 +865,10 @@ class Cross
         $this->mlegendh = array();
         foreach ($legendh as $key => $value) {
             if (count( $value) == 1) {
-                $this->mlegendh[ $key] = $value[ 0];
+                $this->mlegendh[$key] = $value[0];
             } else {
                 for ($i = 0; $i < count( $value); $i++) {
-                    $this->mlegendh[ $key.game_substr( $letters, $i, 1)] = $value[ $i];
+                    $this->mlegendh[$key.game_substr( $letters, $i, 1)] = $value[$i];
                 }
             }
         }
@@ -879,10 +876,10 @@ class Cross
         $this->mlegendv = array();
         foreach ($legendv as $key => $value) {
             if (count( $value) == 1) {
-                $this->mlegendv[ $key] = $value[ 0];
+                $this->mlegendv[$key] = $value[0];
             } else {
                 for ($i = 0; $i < count( $value); $i++) {
-                    $this->mlegendv[ $key.game_substr( $letters, $i, 1)] = $value[ $i];
+                    $this->mlegendv[$key.game_substr( $letters, $i, 1)] = $value[$i];
                 }
             }
         }

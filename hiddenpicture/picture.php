@@ -54,13 +54,13 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
     $a = explode( ',', $foundcells);
     $found = array();
     foreach ($a as $s) {
-        $found[ $s] = 1;
+        $found[$s] = 1;
     }
 
     $a = explode( ',', $cells);
     $cells = array();
     foreach ($a as $s) {
-        $cells[ $s] = 1;
+        $cells[$s] = 1;
     }
 
     $file = get_file_storage()->get_file_by_hash( $filehash);
@@ -72,7 +72,7 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
     }
     $imghandle = imagecreatefromstring($file->get_content());
 
-    $mime = $image[ 'mimetype'];
+    $mime = $image['mimetype'];
 
     $imgnumbers = imagecreatefrompng( $filenamenumbers);
     $sizenumbers = getimagesize ($filenamenumbers);
@@ -81,8 +81,8 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
 
     $color = imagecolorallocate( $imghandle, 100, 100, 100);
 
-    $width = $image[ 'width'];
-    $height = $image[ 'height'];
+    $width = $image['width'];
+    $height = $image['height'];
     $pos = 0;
 
     $font = 1;
@@ -134,12 +134,12 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
  */
 function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
-        $widthnumber = $sizenumbers[ 0] / 10;
+        $widthnumber = $sizenumbers[0] / 10;
         $dstx = $x1 + $width / 3;
         $dsty = $y1 + $height / 3;
-        $srcx = $number * $sizenumbers[ 0] / 10;
-        $srcw = $sizenumbers[ 0] / 10;
-        $srch = $sizenumbers[ 1];
+        $srcx = $number * $sizenumbers[0] / 10;
+        $srcw = $sizenumbers[0] / 10;
+        $srch = $sizenumbers[1];
         $dstw = $width / 10;
         $dsth = $dstw * $srch / $srcw;
         imagecopyresized( $imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);

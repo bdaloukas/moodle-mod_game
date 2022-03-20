@@ -61,8 +61,8 @@ class mod_game_exporthtml_form extends moodleform {
 
         if ( $game->gamekind == 'hangman') {
             $options = array();
-            $options[ '0'] = 'Hangman with phrases';
-            $options[ 'hangmanp'] = 'Hangman with pictures';
+            $options['0'] = 'Hangman with phrases';
+            $options['hangmanp'] = 'Hangman with pictures';
             $mform->addElement('select', 'type', get_string('javame_type', 'game'), $options);
             if ( $html->type == 0) {
                 $mform->setDefault('type', '0');
@@ -140,11 +140,11 @@ class mod_game_exporthtml_form extends moodleform {
         $html->maxpictureheight = optional_param('maxpictureheight', 0, PARAM_INT);
         if ( $mform->elementExists( 'checkbutton')) {
             $checkbuttonvalue = $mform->getElementValue('checkbutton');
-            $html->checkbutton = $checkbuttonvalue[ 0];
+            $html->checkbutton = $checkbuttonvalue[0];
         }
         if ( $mform->elementExists( 'printbutton')) {
             $printbuttonvalue = $mform->getElementValue('printbutton');
-            $html->printbutton = $printbuttonvalue[ 0];
+            $html->printbutton = $printbuttonvalue[0];
         }
 
         if (!($DB->update_record( 'game_export_html', $html))) {
@@ -181,8 +181,8 @@ class mod_game_exportjavame_form extends moodleform {
 
         if ( $game->gamekind == 'hangman') {
             $options = array();
-            $options[ '0'] = 'Hangman with phrases';
-            $options[ 'hangmanp'] = 'Hangman with pictures';
+            $options['0'] = 'Hangman with phrases';
+            $options['hangmanp'] = 'Hangman with pictures';
             $mform->addElement('select', 'type', get_string('javame_type', 'game'), $options);
         }
 

@@ -1,3 +1,6 @@
+Changes in versionm 2022-03-20
+* Fix: Warning of tool "Code Checker".
+
 Changes in versionm 2022-03-19
 * Fix: Moodle 4.0 compatibility.
 

@@ -23,8 +23,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Plays the game "Hidden picture"
  *
@@ -95,8 +93,8 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
         $query->userid = $USER->id;
 
         $pos = array_rand( $positions);
-        $query->mycol = $positions[ $pos];
-        unset( $positions[ $pos]);
+        $query->mycol = $positions[$pos];
+        unset( $positions[$pos]);
 
         $query->sourcemodule = $game->sourcemodule;
         $query->questionid = $rec->questionid;
@@ -110,7 +108,6 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
 
     game_hiddenpicture_play( $cm, $game, $attempt, $newrec, false, $context, $course);
 }
-
 
 /**
  * Create the game_hiddenpicture record.
@@ -177,18 +174,18 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     $minnum = 0;
     $attachement = '';
     for ($i = 0; $i < count($ids); $i++) {
-        $pos = $poss[ $i];
-        $tempid = $ids[ $pos];
+        $pos = $poss[$i];
+        $tempid = $ids[$pos];
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid);
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false) {
             if (($rec2->r < $minnum) or ($minnum == 0)) {
                 $minnum = $rec2->r;
                 $glossaryentryid = $tempid;
-                $attachement = $keys[ $pos];
+                $attachement = $keys[$pos];
             }
         } else {
             $glossaryentryid = $tempid;
-            $attachement = $keys[ $pos];
+            $attachement = $keys[$pos];
             break;
         }
     }
@@ -246,7 +243,7 @@ function game_hiddenpicture_play( $cm, $game, $attempt, $hiddenpicture, $showsol
 
     // Show picture.
     $offsetquestions = game_sudoku_compute_offsetquestions( $game->sourcemodule, $attempt, $numbers, $correctquestions);
-    unset( $offsetquestions[ 0]);
+    unset( $offsetquestions[0]);
 
     game_hiddenpicture_showhiddenpicture( $cm->id, $game, $attempt, $hiddenpicture, $showsolution,
         $offsetquestions, $correctquestions);
@@ -472,13 +469,13 @@ function game_showpicture( $id, $game, $attempt, $query, $cells, $foundcells, $u
     $image = $file->get_imageinfo();
     if ($game->param4 > 10) {
         $width = $game->param4;
-        $height = $image[ 'height'] * $width / $image[ 'width'];
+        $height = $image['height'] * $width / $image['width'];
     } else if ( $game->param5 > 10) {
         $height = $game->param5;
-        $width = $image[ 'width'] * $height / $image[ 'height'];
+        $width = $image['width'] * $height / $image['height'];
     } else {
-        $width = $image[ 'width'];
-        $height = $image[ 'height'];
+        $width = $image['width'];
+        $height = $image['height'];
     }
 
     echo "<IMG SRC=\"$imagesrc\" width=$width ";

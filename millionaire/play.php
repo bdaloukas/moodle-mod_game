@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Plays the millionaire
  *
@@ -260,7 +258,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         } else {
             echo "<td style='$style'></td>";
         }
-        echo "<td style='$style' align=right>".sprintf( "%10d", $aval[ $i - 1])."</td>\r\n";
+        echo "<td style='$style' align=right>".sprintf( "%10d", $aval[$i - 1])."</td>\r\n";
         if ($btr) {
             echo "</tr>\r\n";
         }
@@ -278,7 +276,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $disabled = ( $state == 15 ? "disabled=1" : "");
 
         $style = $stylequestion;
-        if ((strpos( $aanswer[ $i - 1], 'color:') != false) or (strpos( $aanswer[ $i - 1], 'background:') != false)) {
+        if ((strpos( $aanswer[$i - 1], 'color:') != false) or (strpos( $aanswer[$i - 1], 'background:') != false)) {
             $style = '';
         }
         if ($state == 15 and $i == $query->correct) {
@@ -288,12 +286,12 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $button = '<input style="'.$style.'" '.$disabled.'type="submit" name="'.$name.'" value="'.$s.'" id="'.$name."1\"".
             " onmouseover=\"this.style.backgroundColor = '$color2';$name.style.backgroundColor = '$color2';\" ".
             " onmouseout=\"this.style.backgroundColor = '$colorback';$name.style.backgroundColor = '$colorback';\" >";
-        $text = game_filtertext($aanswer[ $i - 1], $game->course);
+        $text = game_filtertext($aanswer[$i - 1], $game->course);
         $answer = "<span id=$name style=\"$style\" ".
             " onmouseover=\"this.style.backgroundColor = '$color2';{$name}1.style.backgroundColor = '$color2';\" ".
             " onmouseout=\"this.style.backgroundColor = '$colorback';{$name}1.style.backgroundColor = '$colorback';\" >".
             $text.'</span>';
-        if ($aanswer[ $i - 1] != "") {
+        if ($aanswer[$i - 1] != "") {
             echo "<tr>\n";
 
             echo "<td style='$stylequestion'> $button</td>\n";
@@ -397,35 +395,34 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $select = " qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
             $table = '{question} q, {qtype_multichoice_options} qmo';
         }
-		
+
         // Include subcategories.
-		$select2 = '';
-		if( game_get_moodle_version() >= '04.00') {
-			$table .= ",{$CFG->prefix}question_bank_entries qbe ";
-			$select2 = ' qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
-			if ($game->subcategories) {
-				$cats = question_categorylist( $game->questioncategoryid);
-				if (count( $cats) > 0) {
-					$s = implode( ',', $cats);
-					$select2 = ' qbe.questioncategoryid in ('.$s.')';
-				}
-			}
-		} else {
-			$select2 = 'category='.$game->questioncategoryid;
-			if ($game->subcategories) {
-				$cats = question_categorylist( $game->questioncategoryid);
-				if (count( $cats)) {
-					$select2 = 'q.category in ('.implode(',', $cats).')';
-				}
-			}
-		}
-		if( $select2 != '') {
-			$select .= ' AND '.$select2;
-		}
+        $select2 = '';
+        if (game_get_moodle_version() >= '04.00') {
+            $table .= ",{$CFG->prefix}question_bank_entries qbe ";
+            $select2 = ' qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+            if ($game->subcategories) {
+                $cats = question_categorylist( $game->questioncategoryid);
+                if (count( $cats) > 0) {
+                    $select2 = ' qbe.questioncategoryid in ('.implode( ',', $cats).')';
+                }
+            }
+        } else {
+            $select2 = 'category='.$game->questioncategoryid;
+            if ($game->subcategories) {
+                $cats = question_categorylist( $game->questioncategoryid);
+                if (count( $cats)) {
+                    $select2 = 'q.category in ('.implode(',', $cats).')';
+                }
+            }
+        }
+        if ($select2 != '') {
+            $select .= ' AND '.$select2;
+        }
     }
-	if (game_get_moodle_version() < '04.00') {
-		$select .= ' AND hidden=0';
-	}
+    if (game_get_moodle_version() < '04.00') {
+        $select .= ' AND hidden=0';
+    }
     if ($game->shuffle or $game->quizid == 0) {
         $questionid = game_question_selectrandom( $game, $table, $select, 'q.id as id', true);
     } else {
@@ -460,10 +457,10 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
         $sel = mt_rand(0, $count - 1);
 
         $temp = array_splice( $aanswer, $sel, 1);
-        $aanswer[ ] = $temp[ 0];
+        $aanswer[] = $temp[0];
 
         $temp = array_splice( $ids, $sel, 1);
-        $ids[ ] = $temp[ 0];
+        $ids[] = $temp[0];
     }
 
     $query = new StdClass;
@@ -530,7 +527,7 @@ function game_millionaire_select_serial_question($game, $table, $select, $level,
         $to = $from;
     }
     $pos = mt_rand( round( $from), round( $to));
-    return $questions[ $pos];
+    return $questions[$pos];
 }
 
 /**
@@ -605,7 +602,7 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
         }
         for ($i = 1; $i <= $n; $i++) {
             if ($i <> $wrong and $i <> $query->correct) {
-                $aanswer[ $i - 1] = "";
+                $aanswer[$i - 1] = "";
             }
         }
     }
@@ -651,7 +648,7 @@ function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, 
         $response = $wrong;
     }
 
-    $info = get_string( 'millionaire_info_telephone', 'game').'<br><b>'.$aanswer[ $response - 1].'</b>';
+    $info = get_string( 'millionaire_info_telephone', 'game').'<br><b>'.$aanswer[$response - 1].'</b>';
 
     game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context);
 }
@@ -680,26 +677,26 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
     $apercent = array();
     for ($i = 0; $i + 1 < $n; $i++) {
         $percent = mt_rand( 0, 100 - $sum);
-        $apercent[ $i] = $percent;
+        $apercent[$i] = $percent;
         $sum += $percent;
     }
-    $apercent[ $n - 1] = 100 - $sum;
+    $apercent[$n - 1] = 100 - $sum;
     if (mt_rand( 1, 100) <= 80) {
         // With percent 80% sets in the correct answer the biggest percent.
         $maxpos = 0;
         for ($i = 1; $i + 1 < $n; $i++) {
-            if ($apercent[ $i] >= $apercent[ $maxpos]) {
+            if ($apercent[$i] >= $apercent[$maxpos]) {
                 $maxpos = $i;
             }
-            $temp = $apercent[ $maxpos];
-            $apercent[ $maxpos] = $apercent[ $query->correct - 1];
-            $apercent[ $query->correct - 1] = $temp;
+            $temp = $apercent[$maxpos];
+            $apercent[$maxpos] = $apercent[$query->correct - 1];
+            $apercent[$query->correct - 1] = $temp;
         }
     }
 
     $info = '<br>'.get_string( 'millionaire_info_people', 'game').':<br>';
     for ($i = 0; $i < $n; $i++) {
-        $info .= "<br>".  game_substr( get_string( 'lettersall', 'game'), $i, 1) ." : ".$apercent[ $i]. ' %';
+        $info .= "<br>".  game_substr( get_string( 'lettersall', 'game'), $i, 1) ." : ".$apercent[$i]. ' %';
     }
 
     game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, game_substr( $info, 4), $context);
@@ -759,7 +756,7 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
     } else {
         // Wrong answer.
         $info = get_string( 'millionaire_info_wrong_answer', 'game').
-            '<br><br><b><center>'.$aanswer[ $query->correct - 1].'</b>';
+            '<br><br><b><center>'.$aanswer[$query->correct - 1].'</b>';
 
         $millionaire->state = 15;
         game_millionaire_ShowGrid( $game, $millionaire, $cm->id, $query, $aanswer, $info, $context);

@@ -314,7 +314,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
 
         if (($categories = $DB->get_records_select( 'question_categories', $select, null, '', 'id,name'))) {
             foreach ($categories as $rec) {
-                $categorynames[ $rec->id] = $rec->name;
+                $categorynames[$rec->id] = $rec->name;
             }
         }
     }
@@ -340,7 +340,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
         if ($showcategoryname) {
             echo '<td>';
             if (array_key_exists( $question->category, $categorynames)) {
-                echo $categorynames[ $question->category];
+                echo $categorynames[$question->category];
             } else {
                 echo '&nbsp;';
             }
@@ -408,7 +408,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
         // Show repetitions.
         if ($reps) {
             if (array_key_exists( $question->id, $reps)) {
-                $rep = $reps[ $question->id];
+                $rep = $reps[$question->id];
                 echo '<td><center>'.$rep->c.'</td>';
             } else {
                 echo '<td>&nbsp;</td>';
@@ -492,7 +492,7 @@ function game_showanswers_glossary( $game) {
         echo '<td>'.$question->concept.'</td>';
         if ($reps != false) {
             if (array_key_exists( $question->id, $reps)) {
-                $rep = $reps[ $question->id];
+                $rep = $reps[$question->id];
                 echo '<td><center>'.$rep->c.'</td>';
             } else {
                 echo '<td>&nbsp;</td>';

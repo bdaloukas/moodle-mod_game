@@ -21,7 +21,6 @@
  * @copyright 2007 Vasilis Daloukas
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Plays the game bookquiz.
@@ -97,7 +96,7 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
     if (($recs = $DB->get_records( 'game_bookquiz_chapters', array( 'attemptid' => $attempt->id))) != false) {
         foreach ($recs as $rec) {
             // The 1 means correct answer.
-            $okchapters[ $rec->chapterid] = 1;
+            $okchapters[$rec->chapterid] = 1;
         }
     }
 
@@ -358,7 +357,7 @@ function game_bookquiz_selectrandomquestion( $questions) {
     }
     $a = array();
     foreach ($recs as $rec) {
-        $a[ $rec->id] = $rec->id;
+        $a[$rec->id] = $rec->id;
     }
 
     if (count( $a) == 0) {
@@ -400,7 +399,7 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
             // No answered.
             continue;
         }
-        $grade = $grades[ $question->id];
+        $grade = $grades[$question->id];
         if ($grade->grade < 0.99) {
             continue;
         }

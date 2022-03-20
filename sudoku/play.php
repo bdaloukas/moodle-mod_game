@@ -110,7 +110,7 @@ function game_sudoku_continue( $cm, $game, $attempt, $sudoku, $endofgame, $conte
         $query->gamekind = $game->gamekind;
         $query->gameid = $game->id;
         $query->userid = $USER->id;
-        $query->mycol = $closed[ $i++];
+        $query->mycol = $closed[$i++];
         $query->sourcemodule = $game->sourcemodule;
         $query->questionid = $rec->questionid;
         $query->glossaryentryid = $rec->glossaryentryid;
@@ -199,10 +199,10 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
     $numbers = array();
     $correctquestions = array();
     foreach ($recs as $rec) {
-        $offsetquestions[ $rec->mycol] = $rec->id2;
-        $numbers[ $rec->id2] = $rec->mycol;
+        $offsetquestions[$rec->mycol] = $rec->id2;
+        $numbers[$rec->id2] = $rec->mycol;
         if ( $rec->score == 1) {
-            $correctquestions[ $rec->mycol] = 1;
+            $correctquestions[$rec->mycol] = 1;
         }
     }
 
@@ -250,7 +250,7 @@ function game_sudoku_getclosed( $data) {
     for ($i = 1; $i <= $n; $i++) {
         $c = game_substr( $data, $i - 1, 1);
         if ($c >= "1" and $c <= "9") {
-            $a[ $i] = $i;
+            $a[$i] = $i;
         }
     }
 
@@ -446,8 +446,8 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
     // I will sort with the number of each question.
     $questions2 = array();
     foreach ($questions as $q) {
-        $ofs = $numbers[ $q->id];
-        $questions2[ $ofs] = $q;
+        $ofs = $numbers[$q->id];
+        $questions2[$ofs] = $q;
     }
     ksort( $questions2);
 
@@ -459,7 +459,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
     $number = 0;
     $found = false;
     foreach ($questions2 as $question) {
-        $ofs = $numbers[ $question->id];
+        $ofs = $numbers[$question->id];
         if (array_key_exists( $ofs, $correctquestions)) {
             continue;   // I don't show the correct answers.
         }
@@ -527,8 +527,8 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
     // I will sort with the number of each question.
     $entries2 = array();
     foreach ($entries as $q) {
-        $ofs = $numbers[ $q->id];
-        $entries2[ $ofs] = $q;
+        $ofs = $numbers[$q->id];
+        $entries2[$ofs] = $q;
     }
     ksort( $entries2);
 
@@ -563,7 +563,7 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
 
     $number = 0;
     foreach ($entries2 as $entry) {
-        $ofs = $numbers[ $entry->id];
+        $ofs = $numbers[$entry->id];
         if (array_key_exists( $ofs, $correctentries)) {
             continue;   // I don't show the correct answers.
         }

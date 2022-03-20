@@ -23,8 +23,6 @@
  */
 namespace mod_game\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The trait used to provide a backwards compatibility for third-party plugins.
  *

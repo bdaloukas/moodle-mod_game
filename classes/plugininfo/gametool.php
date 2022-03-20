@@ -27,8 +27,6 @@ namespace mod_game\plugininfo;
 
 use core\plugininfo\base;
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The mod_game gametool.
  *

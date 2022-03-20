@@ -179,10 +179,10 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->setType('grade', PARAM_INT);
 
         $gradingtypeoptions = array();
-        $gradingtypeoptions[ GAME_GRADEHIGHEST] = get_string('gradehighest', 'game');
-        $gradingtypeoptions[ GAME_GRADEAVERAGE] = get_string('gradeaverage', 'game');
-        $gradingtypeoptions[ GAME_ATTEMPTFIRST] = get_string('attemptfirst', 'game');
-        $gradingtypeoptions[ GAME_ATTEMPTLAST] = get_string('attemptlast', 'game');
+        $gradingtypeoptions[GAME_GRADEHIGHEST] = get_string('gradehighest', 'game');
+        $gradingtypeoptions[GAME_GRADEAVERAGE] = get_string('gradeaverage', 'game');
+        $gradingtypeoptions[GAME_ATTEMPTFIRST] = get_string('attemptfirst', 'game');
+        $gradingtypeoptions[GAME_ATTEMPTLAST] = get_string('attemptlast', 'game');
         $mform->addElement('select', 'grademethod', get_string('grademethod', 'game'), $gradingtypeoptions);
 
         // Open and close dates.
@@ -224,7 +224,7 @@ class mod_game_mod_form extends moodleform_mod {
             if ($number > 1) {
                 $a = array();
                 for ($i = 1; $i <= $number; $i++) {
-                    $a[ $i] = $i;
+                    $a[$i] = $i;
                 }
                 $mform->addElement('select', 'param3', get_string('hangman_imageset', 'game'), $a);
             }
@@ -235,8 +235,8 @@ class mod_game_mod_form extends moodleform_mod {
 
             $a = array();
             $a = get_string_manager()->get_list_of_translations();
-            $a[ ''] = '----------';
-            $a[ 'user'] = get_string('language_user_defined', 'game');
+            $a[''] = '----------';
+            $a['user'] = get_string('language_user_defined', 'game');
             ksort( $a);
             $mform->addElement('select', 'language', get_string('hangman_language', 'game'), $a);
 
@@ -324,7 +324,7 @@ class mod_game_mod_form extends moodleform_mod {
                     }
                 }
             }
-            $snakesandladdersbackground[ 0] = get_string( 'userdefined', 'game');
+            $snakesandladdersbackground[0] = get_string( 'userdefined', 'game');
             ksort( $snakesandladdersbackground);
             $mform->addElement('select', 'param3', get_string('snakes_background', 'game'), $snakesandladdersbackground);
 
@@ -443,7 +443,7 @@ class mod_game_mod_form extends moodleform_mod {
         $a = array();
 
         // Fills with the count of entries in each glossary.
-        $a[ 0] = '';
+        $a[0] = '';
         // Fills with the count of entries in each category.
         $sql2 = "SELECT COUNT(*) ".
         " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
@@ -489,12 +489,12 @@ class mod_game_mod_form extends moodleform_mod {
             // Single answer questions.
             $select = " AND q.qtype='shortanswer'";
         }
-		if( game_get_moodle_version() >= '04.00') {
-			$sql2 = "SELECT COUNT(*) FROM $table,{$CFG->prefix}question_bank_entries qbe ".
-				" WHERE qbe.questioncategoryid = qc.id AND qbe.id=q.id $select";
-		} else {
-			$sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
-		}
+        if (game_get_moodle_version() >= '04.00') {
+            $sql2 = "SELECT COUNT(*) FROM $table,{$CFG->prefix}question_bank_entries qbe ".
+                " WHERE qbe.questioncategoryid = qc.id AND qbe.id=q.id $select";
+        } else {
+            $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
+        }
         $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
         if ($recs = $DB->get_records_sql( $sql)) {
             foreach ($recs as $rec) {
@@ -544,10 +544,10 @@ class mod_game_mod_form extends moodleform_mod {
         if (array_key_exists( 'glossarycategoryid', $data)) {
             if ($data['glossarycategoryid'] != 0) {
                 $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
-                " WHERE id=".$data[ 'glossarycategoryid'];
+                " WHERE id=".$data['glossarycategoryid'];
                 $rec = $DB->get_record_sql( $sql);
                 if ($rec != false) {
-                    if ($data[ 'glossaryid'] != $rec->glossaryid) {
+                    if ($data['glossaryid'] != $rec->glossaryid) {
                         $s = get_string( 'different_glossary_category', 'game');
                         $errors['glossaryid'] = $s;
                         $errors['glossarycategoryid'] = $s;
@@ -656,13 +656,13 @@ class mod_game_mod_form extends moodleform_mod {
 
         if (isset( $defaultvalues->toptext)) {
             $a = array();
-            $a[ 'text'] = $defaultvalues->toptext;
+            $a['text'] = $defaultvalues->toptext;
             $defaultvalues->toptext = $a;
         }
 
         if (isset( $defaultvalues->bottomtext)) {
             $a = array();
-            $a[ 'text'] = $defaultvalues->bottomtext;
+            $a['text'] = $defaultvalues->bottomtext;
             $defaultvalues->bottomtext = $a;
         }
 

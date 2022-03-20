@@ -384,7 +384,7 @@ class rcs extends ObjectS {
 
         for ($i = 1; $i <= 9; $i++) {
             $j = count($this->theRow[$i]->getState());
-            $thecounts[ $j][] = $i;
+            $thecounts[$j][] = $i;
             $theunsolved++;
         }
 
@@ -1231,8 +1231,7 @@ class sudoku extends ObjectS {
         $j = count($theavailablepositions);
 
         for ($i = 0; $i < $j; $i++) {
-            if ($this->theboard[$theavailablepositions[$i][0]]
-                [$theavailablepositions[$i][1]]->isapplied()) {
+            if ($this->theboard[$theavailablepositions[$i][0]][$theavailablepositions[$i][1]]->isapplied()) {
                 array_splice($theavailablepositions, $i, 1);
                 $i = $i - 1;
                 $j = $j - 1;
@@ -1816,8 +1815,7 @@ class sudoku extends ObjectS {
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class SudokuTemplates extends Sudoku
-{
+class SudokuTemplates extends Sudoku {
     /**
      * Generate puzzle from file
      *

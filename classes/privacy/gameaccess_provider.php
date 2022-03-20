@@ -23,8 +23,6 @@
  */
 namespace mod_game\privacy;
 
-defined('MOODLE_INTERNAL') || die();
-
 use \core_privacy\local\request\contextlist;
 use \core_privacy\local\request\approved_contextlist;
 

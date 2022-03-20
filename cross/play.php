@@ -94,13 +94,13 @@ function game_cross_new( $game, $attemptid, &$crossm) {
         }
 
         $rec->answertext = game_upper( $rec->answertext);
-        $answers[ $rec->answertext] = game_repairquestion( $rec->questiontext);
-        $infos[ $rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
+        $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
+        $infos[$rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
 
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
             'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
-            $reps[ $rec->answertext] = $rec2->r;
+            $reps[$rec->answertext] = $rec2->r;
         }
     }
 
@@ -111,12 +111,12 @@ function game_cross_new( $game, $attemptid, &$crossm) {
     if ($cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2, $game->param8)) {
         $newcrossd = array();
         foreach ($crossd as $rec) {
-            $info = $infos[ $rec->answertext];
+            $info = $infos[$rec->answertext];
             if ($info != false) {
-                $rec->sourcemodule = $info[ 0];
-                $rec->questionid = $info[ 1];
-                $rec->glossaryentryid = $info[ 2];
-                $rec->attachment = $info[ 3];
+                $rec->sourcemodule = $info[0];
+                $rec->questionid = $info[1];
+                $rec->glossaryentryid = $info[2];
+                $rec->attachment = $info[3];
             }
             $newcrossd[] = $rec;
         }

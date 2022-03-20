@@ -25,7 +25,6 @@
  */
 
 namespace mod_game\event;
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * The mod_game chapter viewed event class.

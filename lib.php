@@ -141,11 +141,11 @@ function game_update_instance($game) {
 function game_before_add_or_update(&$game) {
 
     if (isset( $game->toptext)) {
-        $game->toptext = $game->toptext[ 'text'];
+        $game->toptext = $game->toptext['text'];
     }
 
     if (isset( $game->bottomtext)) {
-        $game->bottomtext = $game->bottomtext[ 'text'];
+        $game->bottomtext = $game->bottomtext['text'];
     }
 
     if (isset( $game->questioncategoryid)) {
@@ -174,11 +174,11 @@ function game_before_add_or_update(&$game) {
                 $game->param5 = 1;
             }
 
-            if (isset( $_POST[ 'snakes_cols'])) {
+            if (isset( $_POST['snakes_cols'])) {
                 $fields = array( 'snakes_data', 'snakes_cols', 'snakes_rows', 'snakes_headerx', 'snakes_headery',
                     'snakes_footerx', 'snakes_footery', 'snakes_width', 'snakes_height');
                 foreach ($fields as $f) {
-                    $s .= '#'.$f.':'.$_POST[ $f];
+                    $s .= '#'.$f.':'.$_POST[$f];
                 }
                 $s = substr( $s, 1);
             }
@@ -1211,8 +1211,8 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
     require_course_login($course, true, $cm);
 
     if ($filearea == 'questiontext') {
-        $questionid = $args[ 0];
-        $file = $args[ 1];
+        $questionid = $args[0];
+        $file = $args[1];
         $a = explode( '/', $context->path);
         if (!$contextcourse = game_get_context_course_instance( $course->id)) {
             throw new moodle_exception( 'game_error', 'game', 'nocontext');
@@ -1229,8 +1229,8 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         // Finally send the file.
         send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
     } else if ($filearea == 'answer') {
-        $answerid = $args[ 0];
-        $file = $args[ 1];
+        $answerid = $args[0];
+        $file = $args[1];
 
         if (!$contextcourse = game_get_context_course_instance( $course->id)) {
             throw new moodle_exception( 'game_error', 'game', 'nocontext');
@@ -1247,8 +1247,8 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
     }
 
-    $filearea = $args[ 0];
-    $filename = $args[ 1];
+    $filearea = $args[0];
+    $filename = $args[1];
 
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
@@ -1551,7 +1551,7 @@ function game_delete_user_attempts( $gameid, $user) {
     $sql = "SELECT id FROM {$CFG->prefix}game_attempts WHERE gameid=$gameid AND userid={$user->id}";
     $recs = $DB->get_records_sql( $sql);
     foreach ($recs as $rec) {
-        $params = [ 'id' => $rec->id];
+        $params = ['id' => $rec->id];
         $DB->delete_records('game_bookquiz', $params);
         $DB->delete_records('game_cross', $params);
         $DB->delete_records('game_cryptex', $params);
@@ -1562,10 +1562,10 @@ function game_delete_user_attempts( $gameid, $user) {
         $DB->delete_records('game_sudoku', $params);
     }
 
-    $params = [ 'game' => $gameid, 'userid' => $user->id];
+    $params = ['game' => $gameid, 'userid' => $user->id];
     $DB->delete_records('game_grades', $params);
 
-    $params = [ 'gameid' => $gameid, 'userid' => $user->id];
+    $params = ['gameid' => $gameid, 'userid' => $user->id];
     $DB->delete_records('game_attempts', $params);
     $DB->delete_records('game_repetitions', $params);
     $DB->delete_records('game_queries', $params);

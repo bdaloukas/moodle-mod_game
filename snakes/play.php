@@ -21,7 +21,6 @@
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Plays the game "Snakes and Ladders".
@@ -108,8 +107,8 @@ function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
     var retVal = new Array();
     var elements = document.getElementsByTagName("*");
     for(var i = 0;i < elements.length;i++){
-        if( elements[ i].type == 'text'){
-            elements[ i].focus();
+        if( elements[i].type == 'text'){
+            elements[i].focus();
             break;
         }
     }
@@ -510,7 +509,7 @@ function game_snakes_foundlander( $position, $data) {
     preg_match( "/L$position-([0-9]*)/", $data, $matches);
 
     if (count( $matches)) {
-        return $matches[ 1];
+        return $matches[1];
     }
 
     return 0;
@@ -526,7 +525,7 @@ function game_snakes_foundsnake( $position, $data) {
     preg_match( "/S([0-9]*)-$position,/", $data.',', $matches);
 
     if (count( $matches)) {
-        return $matches[ 1];
+        return $matches[1];
     }
 
     return 0;

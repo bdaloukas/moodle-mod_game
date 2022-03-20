@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Checks for common problems
  *
@@ -212,27 +210,26 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
         return;
     }
 
-	if( game_get_moodle_version() >= '04.00') {
-		$table2 = ",{$CFG->prefix}question_bank_entries qbe ";
-		$select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
-		if ($game->subcategories) {
-			$cats = question_categorylist( $game->questioncategoryid);
-			if (count( $cats) > 0) {
-				$s = implode( ',', $cats);
-				$select = 'qbe.questioncategoryid in ('.$s.')';
-			}
-		}
-	} else {
-		$table2 = '';
-		$select = 'category='.$game->questioncategoryid;
-		if ($game->subcategories) {
-			$cats = question_categorylist( $game->questioncategoryid);
-			if (count( $cats) > 0) {
-				$s = implode( ',', $cats);
-				$select = 'qbe.id=q.id AND qbe.questioncategoryid IN ('.$s.')';
-			}
-		}
-	}
+    if (game_get_moodle_version() >= '04.00') {
+        $table2 = ",{$CFG->prefix}question_bank_entries qbe ";
+        $select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+        if ($game->subcategories) {
+            $cats = question_categorylist( $game->questioncategoryid);
+            if (count( $cats) > 0) {
+                $s = implode( ',', $cats);
+                $select = 'qbe.questioncategoryid in ('.$s.')';
+            }
+        }
+    } else {
+        $table2 = '';
+        $select = 'category='.$game->questioncategoryid;
+        if ($game->subcategories) {
+            $cats = question_categorylist( $game->questioncategoryid);
+            if (count( $cats) > 0) {
+                $select = 'qbe.id=q.id AND qbe.questioncategoryid IN ('.implode( ',', $cats).')';
+            }
+        }
+    }
     $select .= " AND q.qtype='shortanswer'";
 
     $sql = "SELECT q.id FROM {$CFG->prefix}question q $table2 WHERE $select";

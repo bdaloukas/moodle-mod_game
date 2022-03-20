@@ -22,8 +22,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * Create snakes board
  *
@@ -328,12 +326,12 @@ function game_imagecreatefrompng( $file) {
  */
 function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
-        $widthnumber = $sizenumbers[ 0] / 10;
+        $widthnumber = $sizenumbers[0] / 10;
         $dstx = $x1 + $width / 10;
         $dsty = $y1 + $height / 10;
-        $srcx = $number * $sizenumbers[ 0] / 10;
-        $srcw = $sizenumbers[ 0] / 10;
-        $srch = $sizenumbers[ 1];
+        $srcx = $number * $sizenumbers[0] / 10;
+        $srcw = $sizenumbers[0] / 10;
+        $srch = $sizenumbers[1];
         $dstw = $width / 10;
         $dsth = $dstw * $srch / $srcw;
         imagecopyresampled( $imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);
@@ -392,9 +390,9 @@ function game_printladder( $im, $file, $x, $y, $width, $height, $cellx, $celly) 
     $x1 = $x2 - ($x2 - $x1) * $mul;
     $y1 = $y2 - ($y2 - $y1) * $mul;
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, 20);
-    imageline( $im, $x2, $y2, $a[ 'x'], $a[ 'y'], $color);
+    imageline( $im, $x2, $y2, $a['x'], $a['y'], $color);
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, -20);
-    imageline( $im, $x2, $y2, $a[ 'x'], $a[ 'y'], $color);
+    imageline( $im, $x2, $y2, $a['x'], $a['y'], $color);
 }
 
 /**
@@ -422,7 +420,7 @@ function game_printsnake( $im, $file, $x, $y, $width, $height, $cellx, $celly) {
     $x2 = $x1 + ($x2 - $x1) * $mul;
     $y2 = $y1 + ($y2 - $y1) * $mul;
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, 80);
-    imageline( $im, $x1, $y1, $a[ 'x'], $a[ 'y'], $color);
+    imageline( $im, $x1, $y1, $a['x'], $a['y'], $color);
     $a = returnRotatedPoint( $x1, $y1, $x2, $y2, -80);
-    imageline( $im, $x1, $y1, $a[ 'x'], $a[ 'y'], $color);
+    imageline( $im, $x1, $y1, $a['x'], $a['y'], $color);
 }

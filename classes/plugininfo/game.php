@@ -25,9 +25,6 @@ namespace mod_game\plugininfo;
 
 use core\plugininfo\base;
 
-defined('MOODLE_INTERNAL') || die();
-
-
 /**
  * The class game extents base.
  *

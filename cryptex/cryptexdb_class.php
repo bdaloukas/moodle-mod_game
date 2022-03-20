@@ -22,8 +22,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
 /**
  * The class CryptexDB loads/save the cryptex from/to database.
  *
@@ -108,12 +106,12 @@ class CryptexDB extends CrossDB {
             }
 
             for ($i = 0; $i < $len; $i++) {
-                $this->setchar( $letters, $pos,  $a[ $i]);
+                $this->setchar( $letters, $pos,  $a[$i]);
                 $pos += ( $rec->horizontal ? 1 : $cols);
 
-                $freqs1[ ++$count1] = $a[ $i];
+                $freqs1[++$count1] = $a[$i];
                 if ($i + 1 < $len) {
-                    $freqs2[ ++$count2] = $a[ $i].$a[ $i + 1];
+                    $freqs2[++$count2] = $a[$i].$a[$i + 1];
                 }
             }
         }
@@ -132,11 +130,11 @@ class CryptexDB extends CrossDB {
             if ($step == 1) {
                 $step = 2;
                 $i = array_rand( $freqs1);
-                $this->insertchar( $letters, $crossm->usedcols, $crossm->usedrows, $freqs1[ $i], $spaces);
+                $this->insertchar( $letters, $crossm->usedcols, $crossm->usedrows, $freqs1[$i], $spaces);
             } else {
                 $step = 1;
                 $i = array_rand( $freqs2);
-                $this->insertchars( $letters, $crossm->usedcols, $crossm->usedrows, $freqs2[ $i], $spaces);
+                $this->insertchars( $letters, $crossm->usedcols, $crossm->usedrows, $freqs2[$i], $spaces);
             }
         }
 
@@ -273,7 +271,7 @@ class CryptexDB extends CrossDB {
                     $rec->questiontext = ' ';
                 }
                 $key = $this->gethash( $rec->questiontext).'-'.$rec->answertext.'-'.$rec->id;
-                $questions[ $key] = $rec;
+                $questions[$key] = $rec;
 
                 $word = $rec->answertext;
                 $pos = $crossm->usedcols * ($rec->myrow - 1) + ($rec->mycol - 1);
@@ -291,7 +289,7 @@ class CryptexDB extends CrossDB {
                 }
 
                 if ($found) {
-                    $corrects[ $rec->id] = 1;
+                    $corrects[$rec->id] = 1;
                 }
 
                 if ($language == '') {
@@ -433,7 +431,7 @@ class CryptexDB extends CrossDB {
                     continue;
                 }
 
-                $new = $freqs1[ array_rand( $freqs1)];
+                $new = $freqs1[array_rand( $freqs1)];
                 $pos2 = $xx + ($i + $pos) * $dx + ($yy + $i * $dy + $pos * $dy) * $cols;
                 $this->setchar( $letters, $pos2, $new);
                 $found = true;
