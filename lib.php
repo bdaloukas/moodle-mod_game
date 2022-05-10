@@ -1500,7 +1500,19 @@ function game_get_context_course_instance( $courseid) {
 function game_pix_url( $filename, $module='') {
     global $OUTPUT;
 
-    if (game_get_moodle_version() >= '03.03') {
+    if (game_get_moodle_version() >= '04.00') {
+        global $CFG;
+        $ret = $CFG->wwwroot.(substr( $CFG->wwwroot, -1) == '/' ? '' : '/').'mod/game/pix'.'/'.$filename.'.';
+        
+        $file = dirname(__FILE__).DIRECTORY_SEPARATOR.'pix'.DIRECTORY_SEPARATOR.$filename.'.';
+        $exts = array( 'svg', 'png', 'jpg');
+        foreach( $exts as $ext) {
+            if( file_exists( $file.$ext)) {
+                return $ret.$ext;
+            }
+        }
+        return false;
+    } else if (game_get_moodle_version() >= '03.03') {
         return $OUTPUT->image_url($filename, $module);
     } else {
         return $OUTPUT->pix_url($filename, $module);

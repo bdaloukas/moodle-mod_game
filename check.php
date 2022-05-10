@@ -90,21 +90,44 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
         return;
     }
 
-    // Include subcategories.
-    $select = 'category='.$game->questioncategoryid;
+    // Include subcategories.    
+    $table = '{question} q';
+    if (game_get_moodle_version() >= '04.00') {
+        $table .= ",{$CFG->prefix}question_bank_entries qbe ";
+        $select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+        if ($game->subcategories) {
+            $cats = question_categorylist( $game->questioncategoryid);
+            if (count( $cats) > 0) {
+                $s = implode( ',', $cats);
+                $select = 'qbe.questioncategoryid in ('.$s.')';
+            }
+        }
+    } else {
+        $select = 'q.category='.$game->questioncategoryid;
+        if ($game->subcategories) {
+            $cats = question_categorylist( $game->questioncategoryid);
+            if (count( $cats) > 0) {
+                $select = 'q.category in ('.implode( ',', $cats).')';
+            }
+        }
+    }
+
+/*
+    $select = 'q.category='.$game->questioncategoryid;
     if ($game->subcategories) {
         $cats = question_categorylist( $game->questioncategoryid);
         if (count( $cats)) {
             $select = 'q.category in ('.implode(',', $cats).')';
         }
     }
+*/    
     $select0 = $select;
 
     if (game_get_moodle_version() < '02.06') {
-        $table = "{$CFG->prefix}question q, {$CFG->prefix}question_multichoice qmo";
+        $table .= ", {$CFG->prefix}question_multichoice qmo";
         $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.question=q.id";
     } else {
-         $table = "{$CFG->prefix}question q, {$CFG->prefix}qtype_multichoice_options qmo";
+         $table .= ", {$CFG->prefix}qtype_multichoice_options qmo";
         $select .= " AND qtype='multichoice' AND qmo.single <> 1 AND qmo.questionid=q.id";
     }
 

@@ -1,10 +1,13 @@
-Changes in versionm 2022-03-21
+Changes in version 2022-05-10
+* Fix: Problem in millionaire for Moodle 4.0.
+
+Changes in version 2022-03-21
 * Fix: Warning of tool "Code Checker".
 
-Changes in versionm 2022-03-20
+Changes in version 2022-03-20
 * Fix: Warning of tool "Code Checker".
 
-Changes in versionm 2022-03-19
+Changes in version 2022-03-19
 * Fix: Moodle 4.0 compatibility.
 
 Changes in version 2021-12-23-04
