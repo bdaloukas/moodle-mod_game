@@ -90,7 +90,7 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
         return;
     }
 
-    // Include subcategories.    
+    // Include subcategories.
     $table = '{question} q';
     if (game_get_moodle_version() >= '04.00') {
         $table .= ",{$CFG->prefix}question_bank_entries qbe ";
@@ -112,15 +112,6 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
         }
     }
 
-/*
-    $select = 'q.category='.$game->questioncategoryid;
-    if ($game->subcategories) {
-        $cats = question_categorylist( $game->questioncategoryid);
-        if (count( $cats)) {
-            $select = 'q.category in ('.implode(',', $cats).')';
-        }
-    }
-*/    
     $select0 = $select;
 
     if (game_get_moodle_version() < '02.06') {

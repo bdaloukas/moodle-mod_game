@@ -1503,11 +1503,11 @@ function game_pix_url( $filename, $module='') {
     if (game_get_moodle_version() >= '04.00') {
         global $CFG;
         $ret = $CFG->wwwroot.(substr( $CFG->wwwroot, -1) == '/' ? '' : '/').'mod/game/pix'.'/'.$filename.'.';
-        
+
         $file = dirname(__FILE__).DIRECTORY_SEPARATOR.'pix'.DIRECTORY_SEPARATOR.$filename.'.';
         $exts = array( 'svg', 'png', 'jpg');
-        foreach( $exts as $ext) {
-            if( file_exists( $file.$ext)) {
+        foreach ($exts as $ext) {
+            if (file_exists( $file.$ext)) {
                 return $ret.$ext;
             }
         }
