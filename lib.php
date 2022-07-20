@@ -1511,7 +1511,7 @@ function game_pix_url( $filename, $module='') {
                 return $ret.$ext;
             }
         }
-        return false;
+        return $OUTPUT->image_url( $filename);
     } else if (game_get_moodle_version() >= '03.03') {
         return $OUTPUT->image_url($filename, $module);
     } else {
