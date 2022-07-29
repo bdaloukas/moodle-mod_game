@@ -220,7 +220,7 @@ function game_question_shortanswer_glossary( $game, $allowspaces, $userepetition
  * @param boolean $userepetitions
  */
 function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
-    global $DB;
+    global $CFG, $DB;
 
     if ($game->quizid == 0) {
         throw new moodle_exception( 'must_select_quiz', 'game');
@@ -230,6 +230,25 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
         $select = "qtype='shortanswer' AND quiz='$game->quizid' ".
             " AND qqi.question=q.id";
         $table = "{question} q,{quiz_question_instances} qqi";
+    } else if (game_get_moodle_version() >= '04.00') {
+        $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+        $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
+        $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
+        $recs = $DB->get_records_sql( $sql);
+        $ret = array();
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+        foreach( $recs as $rec) {
+            $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+            foreach( $recsq as $recq) {
+                $a[] = $recq->id;
+            }
+        }
+        $table = '{question} q';
+        if( count( $a) == 0) {
+            $select = 'q.id IN (0)';
+        } else {
+            $select = 'q.id IN ('.implode( ',', $a).')';
+        }
     } else {
         $select = "qtype='shortanswer' AND qs.quizid='$game->quizid' ".
             " AND qs.questionid=q.id";
@@ -241,8 +260,10 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
         return false;
     }
 
-    $select = "q.id=$id AND qa.question=$id".
-        " AND q.hidden=0 AND qtype='shortanswer'";
+    $select = "q.id=$id AND qa.question=$id AND qtype='shortanswer'";
+    if (game_get_moodle_version() < '04.00') {
+        $select .= ' AND q.hidden=0 ';
+    }
     $table = "{question} q,{question_answers} qa";
     $fields = "qa.id as answerid, q.id, q.questiontext as questiontext, ".
         "qa.answer as answertext, q.id as questionid, ".
@@ -460,6 +481,26 @@ function game_questions_selectrandom( $game, $count=1) {
                 $select = " qqi.quiz=$game->quizid".
                     " AND qqi.question=q.id ".
                     " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
+            } else if( game_get_moodle_version() >= '04.00') {
+                $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+                $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
+                $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
+                $recs = $DB->get_records_sql( $sql);
+                $ret = array();
+                $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+                    ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC';
+                foreach( $recs as $rec) {
+                    $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+                    foreach( $recsq as $recq) {
+                        $a[] = $recq->id;
+                    }
+                }
+                $table = '{question} q';
+                if( count( $a) == 0) {
+                    $select = 'q.id IN (0)';
+                } else {
+                    $select = 'q.id IN ('.implode( ',', $a).')';
+                }
             } else {
                 $table = '{question} q, {quiz_slots} qs';
                 $select = " qs.quizid=$game->quizid".

@@ -159,9 +159,29 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id".
         " AND qqi.question=q.id";
         $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
+    } else if (game_get_moodle_version() >= '04.00') {
+        $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+        $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
+        $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
+        $recs = $DB->get_records_sql( $sql);
+        $ret = array();
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+        foreach( $recs as $rec) {
+            $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+            foreach( $recsq as $recq) {
+                $a[] = $recq->id;
+            }
+        }
+        $table = "{$CFG->prefix}question q";
+        if( count( $a) == 0) {
+            $select = 'q.id IN (0)';
+        } else {
+            $select = 'q.id IN ('.implode( ',', $a).')';
+        }
+        $select .= " AND qmo.questionid=q.id AND qmo.single <> 1";
+        $table .= ",{$CFG->prefix}qtype_multichoice_options qmo";
     } else {
-        $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id".
-        " AND qs.questionid=q.id";
+        $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id AND qs.questionid=q.id";
         $table = "{quiz_slots} qs,{question} q, {qtype_multichoice_options} qmo";
     }
 
