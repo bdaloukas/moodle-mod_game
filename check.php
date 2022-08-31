@@ -166,14 +166,14 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
-        foreach( $recs as $rec) {
+        foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
-            foreach( $recsq as $recq) {
+            foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
         }
         $table = "{$CFG->prefix}question q";
-        if( count( $a) == 0) {
+        if (count($a) == 0) {
             $select = 'q.id IN (0)';
         } else {
             $select = 'q.id IN ('.implode( ',', $a).')';

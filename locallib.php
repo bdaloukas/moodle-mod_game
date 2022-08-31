@@ -237,14 +237,14 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
-        foreach( $recs as $rec) {
+        foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
-            foreach( $recsq as $recq) {
+            foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
         }
         $table = '{question} q';
-        if( count( $a) == 0) {
+        if (count( $a) == 0) {
             $select = 'q.id IN (0)';
         } else {
             $select = 'q.id IN ('.implode( ',', $a).')';
@@ -481,7 +481,7 @@ function game_questions_selectrandom( $game, $count=1) {
                 $select = " qqi.quiz=$game->quizid".
                     " AND qqi.question=q.id ".
                     " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
-            } else if( game_get_moodle_version() >= '04.00') {
+            } else if (game_get_moodle_version() >= '04.00') {
                 $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
                 $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
                 $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
@@ -489,14 +489,14 @@ function game_questions_selectrandom( $game, $count=1) {
                 $ret = array();
                 $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
                     ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC';
-                foreach( $recs as $rec) {
+                foreach ($recs as $rec) {
                     $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
-                    foreach( $recsq as $recq) {
+                    foreach ($recsq as $recq) {
                         $a[] = $recq->id;
                     }
                 }
                 $table = '{question} q';
-                if( count( $a) == 0) {
+                if (count( $a) == 0) {
                     $select = 'q.id IN (0)';
                 } else {
                     $select = 'q.id IN ('.implode( ',', $a).')';
@@ -808,9 +808,9 @@ function game_questions_shortanswer_quiz( $game) {
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
-        foreach( $recs as $rec) {
+        foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
-            foreach( $recsq as $recq) {
+            foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
         }
@@ -822,7 +822,7 @@ function game_questions_shortanswer_quiz( $game) {
         }
         $fields = 'q.id.q.questiontext';
 */
-        if( count( $a) == 0) {
+        if (count( $a) == 0) {
             $a = array( 0);
         }
         $select = "qtype='shortanswer' AND q.id IN (".implode( ',', $a).')'.
@@ -831,7 +831,7 @@ function game_questions_shortanswer_quiz( $game) {
         $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
             "qa.answer as answertext, q.id as questionid,".
             " 0 as glossaryentryid,'' as attachment";
-        
+
     } else {
         $select = "qtype='shortanswer' AND qs.quizid='$game->quizid' ".
             " AND qs.questionid=q.id".
@@ -2066,7 +2066,7 @@ function game_print_question_multichoice( $game, $question, $context) {
         </tr>
         <?php
     }
-        ?>        
+        ?>
     </table>
 </div>
     <?php
