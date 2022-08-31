@@ -93,8 +93,8 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
     // Include subcategories.
     $table = '{question} q';
     if (game_get_moodle_version() >= '04.00') {
-        $table .= ",{$CFG->prefix}question_bank_entries qbe ";
-        $select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+        $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
+        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
         if ($game->subcategories) {
             $cats = question_categorylist( $game->questioncategoryid);
             if (count( $cats) > 0) {
@@ -245,8 +245,8 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     }
 
     if (game_get_moodle_version() >= '04.00') {
-        $table2 = ",{$CFG->prefix}question_bank_entries qbe ";
-        $select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+        $table2 = ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
+        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
         if ($game->subcategories) {
             $cats = question_categorylist( $game->questioncategoryid);
             if (count( $cats) > 0) {
