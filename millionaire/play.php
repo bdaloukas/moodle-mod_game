@@ -399,8 +399,8 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
         // Include subcategories.
         $select2 = '';
         if (game_get_moodle_version() >= '04.00') {
-            $table .= ",{$CFG->prefix}question_bank_entries qbe ";
-            $select2 = ' qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
+            $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
+            $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
             if ($game->subcategories) {
                 $cats = question_categorylist( $game->questioncategoryid);
                 if (count( $cats) > 0) {

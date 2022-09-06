@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-if (!isset( $plugin)) {
+if (!isset($plugin)) {
     $plugin = new stdClass;
     $useplugin = 0;
 } else if ($plugin == 'mod_game') {
@@ -35,10 +35,10 @@ if (!isset( $plugin)) {
 }
 
 $plugin->component = 'mod_game';  // Full name of the plugin (used for diagnostics).
-$plugin->version   = 2022072900;  // The current module version (Date: YYYYMMDDXX).
+$plugin->version   = 2022083100;  // The current module version (Date: YYYYMMDDXX).
 $plugin->requires  = 2010112400;  // Requires Moodle 2.0.
 $plugin->cron      = 0;           // Period for cron to check this module (secs).
-$plugin->release   = '2022-07-29';
+$plugin->release   = '2022-08-31';
 $plugin->maturity = MATURITY_STABLE;
 
 if ($useplugin != 2) {
