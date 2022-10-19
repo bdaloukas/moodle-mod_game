@@ -1,3 +1,6 @@
+Changes in version 2022-10-19
+* Fix: Problem in Millionaire when using quiz for Moodle 4.0.
+
 Changes in version 2022-07-20
 * Fix: Problem in showanswers.php for Moodle 4.0.
 

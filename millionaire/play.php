@@ -376,9 +376,28 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
                 " AND qqi.question=q.id";
             $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
             $order = '';
+        } else if (game_get_moodle_version() >= '04.00') {
+            $select = "qs.quizid='{$game->quizid}' AND qs.id=qr.id ";
+            $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
+            $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
+            $recs = $DB->get_records_sql( $sql);
+            $ret = array();
+            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+            foreach ($recs as $rec) {
+                $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+                foreach ($recsq as $recq) {
+                    $a[] = $recq->id;
+                }
+            }
+            $table = '{question} q';
+            if (count( $a) == 0) {
+                $select = 'q.id IN (0)';
+            } else {
+                $select = 'q.id IN ('.implode( ',', $a).')';
+            } 
         } else {
             $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id".
-                " AND qs.questionid=q.id";
+            " AND qs.questionid=q.id";
             $table = "{quiz_slots} qs,{question} q, {qtype_multichoice_options} qmo";
             $order = 'qs.page,qs.slot';
         }
