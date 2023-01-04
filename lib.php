@@ -937,8 +937,12 @@ function game_extend_settings_navigation($settings, $gamenode) {
 
 /* Returns an array of game type objects to construct menu list when adding new game  */
 require($CFG->dirroot.'/version.php');
-if ($branch >= '31') {
+if ($branch >= '31' && $branch < '401') {
     define('USE_GET_SHORTCUTS', '1');
+}
+
+if( $branch >= '401') {
+    define('GAME_MOODLE_401', 1);
 }
 
 if (!defined('USE_GET_SHORTCUTS')) {
@@ -1187,6 +1191,71 @@ if (defined('USE_GET_SHORTCUTS')) {
         }
         return $types;
     }
+}
+
+if( defined( 'GAME_MOODLE_401')) {
+/**
+ * Return the preconfigured tools which are configured for inclusion in the activity picker.
+ *
+ * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
+ * @param \stdClass $user the user object, to use for cap checks if desired.
+ * @param stdClass $course the course to scope items to.
+ * @return array the array of content items.
+ */
+    function mod_game_get_course_content_items(\core_course\local\entity\content_item $defaultmodulecontentitem, \stdClass $user,
+        \stdClass $course) {
+
+        $config = get_config('game');
+        $types = array();
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hangman');
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'cryptex');
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'cross');
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hiddenpicture');        
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'millionaire');
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'sudoku');
+
+        return $types;
+    }
+    
+    function mod_game_get_course_content_items_type(\core_course\local\entity\content_item $defaultmodulecontentitem, \stdClass $user,
+        \stdClass $course, &$types, $kind) {
+            global $OUTPUT, $CFG, $DB;
+
+            $name = 'hide'.$type;
+            $hide = ( isset( $config->$name) ? ($config->$name != 0) : false);
+            if ($hide) {
+                return;
+            }
+            $type = new stdClass;
+            $type->archetype = MOD_CLASS_ACTIVITY;
+            $type->type = "game&type=".$kind;
+            $type->name = preg_replace('/.*type=/', '', $type->type);
+            $type->title = get_string('pluginname', 'game').' - '.get_string('game_'.$kind, 'game');
+            $type->link = new moodle_url('/course/modedit.php', array('add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id));
+            $type->help = '';
+            if (empty($type->help) && !empty($type->name) &&
+                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                    $type->help = get_string('help' . $type->name, 'game');
+            }
+                        
+            if (empty($type->icon)) {
+                $type->icon = $OUTPUT->pix_icon('monologo', '', 'game', array('class' => 'icon'));
+            } else {
+                $type->icon = html_writer::empty_tag('img', array('src' => $type->icon, 'alt' => $type->name, 'class' => 'icon'));
+            }
+            
+            $types[] = new \core_course\local\entity\content_item(
+                2,
+                $type->name,
+                new \core_course\local\entity\string_title($type->title),
+                $type->link,
+                $type->icon,
+                $type->help,
+                $defaultmodulecontentitem->get_archetype(),
+                $defaultmodulecontentitem->get_component_name(),
+                $defaultmodulecontentitem->get_purpose()
+            );           
+        }
 }
 
 /**

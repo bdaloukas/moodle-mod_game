@@ -1,3 +1,6 @@
+Changes in version 2022-01-04
+* Fix: Modle 4.1 compatibility.
+
 Changes in version 2022-10-19
 * Fix: Problem in Millionaire when using quiz for Moodle 4.0.
 
