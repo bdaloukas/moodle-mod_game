@@ -1,3 +1,6 @@
+Changes in version 2023-01-08
+* Fix: Modle 4.1 compatibility.
+
 Changes in version 2023-01-04
 * Fix: Modle 4.1 compatibility.
 

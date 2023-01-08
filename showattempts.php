@@ -196,7 +196,7 @@ function game_showattempts($game) {
     $table = "{game_attempts} as ga, {user} u, {game} as g";
     $select = "ga.userid=u.id AND ga.gameid={$game->id} AND g.id={$game->id}";
     $fields = "ga.id, u.lastname, u.firstname, ga.attempts,".
-        "timestart, timefinish, timelastattempt, score";
+        "timestart, timefinish, timelastattempt, ga.score";
     if ($userid != 0) {
         $select .= ' AND u.id='.$userid;
     }
