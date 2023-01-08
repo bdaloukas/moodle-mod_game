@@ -45,7 +45,7 @@ function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbot
     $im = imagecreatefromstring($imageasstring);
 
     // Check if need resize.
-    if ( $setwidth > 0 or $setheight > 0) {
+    if ( $setwidth > 0 || $setheight > 0) {
         $source = $im;
         $width = imagesx($source);
         $height = imagesy($source);
@@ -159,7 +159,7 @@ function makeboardl( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
 
     computexy( $from, $startx, $starty, $colsx, $colsy);
     computexy( $to, $x2, $y2, $colsx, $colsy);
-    if (($x2 < $startx) and ($y2 < $starty)) {
+    if (($x2 < $startx) && ($y2 < $starty)) {
         $temp = $x2; $x2 = $startx; $startx = $temp;
         $temp = $y2; $y2 = $starty; $starty = $temp;
     }
@@ -230,7 +230,7 @@ function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
     computexy( $from, $startx, $starty, $colsx, $colsy);
     computexy( $to, $x2, $y2, $colsx, $colsy);
     $swap = 0;
-    if (($x2 < $startx) and ($y2 < $starty)) {
+    if (($x2 < $startx) && ($y2 < $starty)) {
         $temp = $x2; $x2 = $startx; $startx = $temp;
         $temp = $y2; $y2 = $starty; $starty = $temp;
         $swap = 1;
@@ -243,7 +243,7 @@ function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
      *  b*c
      */
     $stamp = $rotate = 0;
-    if ($movex >= 0 and $movey < 0) {
+    if ($movex >= 0 && $movey < 0) {
         $letter = 'b';
         $file = $dir.'/sa'.$movey.$movex.'.png';
         $source = game_imagecreatefrompng( $file);
@@ -253,7 +253,7 @@ function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
         } else {
             $rotate = 270;
         }
-    } else if ($movex < 0 and $movey < 0) {
+    } else if ($movex < 0 && $movey < 0) {
         $letter = 'c';
         $file = $dir.'/sa'.$movey.$movex.'.png';
         $source = game_imagecreatefrompng( $file);
@@ -264,7 +264,7 @@ function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
         } else {
             $rotate = 180;
         }
-    } else if (($movex < 0) and ($movey >= 0)) {
+    } else if (($movex < 0) && ($movey >= 0)) {
         $letter = 'd';
         $file = $dir.'/sa'.$movey.$movex.'.png';
         $source = game_imagecreatefrompng( $file);
@@ -279,7 +279,7 @@ function makeboards( $im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop)
         $stamp = game_imagecreatefrompng( $file);
     }
 
-    if (($swap != 0) and ($stamp == 0)) {
+    if (($swap != 0) && ($stamp == 0)) {
         $temp = $x2; $x2 = $startx; $startx = $temp;
         $temp = $y2; $y2 = $starty; $starty = $temp;
         $movex = $x2 - $startx;

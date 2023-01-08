@@ -152,7 +152,7 @@ function game_showusers($game) {
  * @param stdClass $context
  */
 function game_showanswers( $game, $existsbook, $context) {
-    if ($game->gamekind == 'bookquiz' and $existsbook) {
+    if ($game->gamekind == 'bookquiz' && $existsbook) {
         game_showanswers_bookquiz( $game, $context);
         return;
     }
@@ -222,7 +222,7 @@ function game_showanswers_question( $game, $context) {
                     $select = 'category in ('.implode( ',', $cats).')';
                 }
             }
-        }       
+        }
     } else {
         $context2 = get_context_instance(50, $COURSE->id);
         $select = " contextid in ($context2->id)";
@@ -232,11 +232,11 @@ function game_showanswers_question( $game, $context) {
                 $select2 .= ','.$rec->id;
             }
         }
-        
+
         if (game_get_moodle_version() >= '04.00') {
             $table .= ",{$CFG->prefix}question_bank_entries qbe ";
             $select = 'qbe.id=q.id AND qbe.questioncategoryid IN ('.substr( $select2, 1).')';
-        } else {       
+        } else {
             $select = ' AND category IN ('.substr( $select2, 1).')';
         }
     }
@@ -257,7 +257,7 @@ function game_showanswers_question( $game, $context) {
             $table .= ',{qtype_multichoice_options} qmo';
             $select .= " AND q.qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
         }
-    } else if ( ($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
+    } else if ( ($gamekind == 'hangman') || ($gamekind == 'cryptex') || ($gamekind == 'cross')) {
         $select .= " AND q.qtype = 'shortanswer'";
     }
     game_showanswers_question_select( $game, $table, $select, 'q.*', $order, $showcategories, $game->course, $context);
@@ -273,7 +273,7 @@ function game_showanswers_quiz( $game, $context) {
     global $CFG, $DB;
 
     $sort = 'category,questiontext';
-    
+
     if (game_get_moodle_version() < '02.07') {
         $select = "quiz='$game->quizid' ".
             ' AND qqi.question=q.id'.
@@ -287,15 +287,16 @@ function game_showanswers_quiz( $game, $context) {
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
-            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect( $game).' ORDER BY version DESC';
-        foreach( $recs as $rec) {
+            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect( $game).
+            ' ORDER BY version DESC';
+        foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
-            foreach( $recsq as $recq) {
+            foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
         }
         $table = '{question} q';
-        if( count( $a) == 0) {
+        if (count( $a) == 0) {
             $select = 'q.id IN (0)';
         } else {
             $select = 'q.id IN ('.implode( ',', $a).')';

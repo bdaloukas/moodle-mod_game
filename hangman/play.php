@@ -37,8 +37,8 @@
 function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $action, $context, $course) {
     global $DB, $USER;
 
-    if ($attempt != false and $hangman != false) {
-        if (($action == 'nextword') and ($hangman->finishedword != 0)) {
+    if ($attempt != false && $hangman != false) {
+        if (($action == 'nextword') && ($hangman->finishedword != 0)) {
             // Finish with one word and continue to another.
             if (!$DB->set_field( 'game_hangman', 'finishedword', 0, array( 'id' => $hangman->id))) {
                 error( "game_hangman_continue: Can't update game_hangman");
@@ -48,7 +48,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
         }
     }
 
-    $updatehangman = (($attempt != false) and ($hangman != false));
+    $updatehangman = (($attempt != false) && ($hangman != false));
 
     // New game.
     srand ((double)microtime() * 1000003);
@@ -105,7 +105,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
         $select2 = 'gameid=? AND userid=? AND questionid=? AND glossaryentryid=?';
         if (($rec2 = $DB->get_record_select( 'game_repetitions', $select2,
             array( $game->id, $USER->id, $rec->questionid, $rec->glossaryentryid), 'id,repetitions AS r')) != false) {
-            if (($rec2->r < $minnum) or ($minnum == 0)) {
+            if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
                 $copy = true;
             }
@@ -384,7 +384,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
 
     if ($game->param5) {
         $s = trim( game_filtertext( $query->questiontext, $game->course));
-        if ($s != '.' and $s <> '') {
+        if ($s != '.' && $s <> '') {
             echo "<br/><b>".$s.'</b>';
         }
         if ($query->attachment != '') {
@@ -440,7 +440,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         if (game_strpos($letters, $char) === false) {
             // User doesn't select this character.
             $params = 'id='.$cm->id.'&amp;newletter='.urlencode( $char);
-            if ($onlyshow or $showsolution) {
+            if ($onlyshow || $showsolution) {
                 $links .= $char;
             } else {
                 $links .= "<font size=\"$fontsize\"><a href=\"attempt.php?$params\">$char</a></font>\r\n";
@@ -455,7 +455,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
             $links .= "\r\n<B><font size=\"$fontsize\">$char </font></B> ";
         }
     }
-    $finishedword = ($done or $wrong >= $max);
+    $finishedword = ($done || $wrong >= $max);
     $finished = false;
 
     $updrec = new stdClass();
@@ -483,7 +483,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
         $query->percent = 0;
     }
 
-    if ($onlyshow or $showsolution) {
+    if ($onlyshow || $showsolution) {
         return;
     }
 
@@ -534,7 +534,7 @@ function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $
         }
     }
 
-    if ($onlyshow or $showsolution) {
+    if ($onlyshow || $showsolution) {
         return;
     }
 
@@ -562,7 +562,7 @@ function hangman_onincorrect( $cm, $wordline, $word, $game, $attempt, $hangman, 
         echo "<br/><font size=\"5\">\n$wordline2</font>\r\n";
     }
 
-    if ( $onlyshow or $showsolution) {
+    if ( $onlyshow || $showsolution) {
         return;
     }
 
@@ -594,7 +594,7 @@ function game_hangman_show_nextword( $cm, $game, $attempt, $hangman, $course) {
     global $CFG, $DB;
 
     echo '<br/>';
-    if (($hangman->try < $hangman->maxtries) or ($hangman->maxtries == 0)) {
+    if (($hangman->try < $hangman->maxtries) || ($hangman->maxtries == 0)) {
         // Continue to next word.
         $params = "id={$cm->id}&action2=nextword\">".get_string( 'nextword', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp;';
         echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?$params";

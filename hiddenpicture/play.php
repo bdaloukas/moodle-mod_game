@@ -36,7 +36,7 @@
 function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $context, $course) {
     global $DB, $USER;
 
-    if ($attempt != false and $hiddenpicture != false) {
+    if ($attempt != false && $hiddenpicture != false) {
         // Continue a previous attempt.
         return game_hiddenpicture_play( $cm, $game, $attempt, $hiddenpicture, false, $context, $course);
     }
@@ -151,7 +151,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
             foreach ($files as $key => $file) {
                 $s = strtoupper( $file->get_filename());
                 $s = substr( $s, -4);
-                if ($s == '.GIF' or $s == '.JPG' or $s == '.PNG') {
+                if ($s == '.GIF' || $s == '.JPG' || $s == '.PNG') {
                     $ids[] = $rec->id;
                     $keys[] = $file->get_pathnamehash();
                 }
@@ -178,7 +178,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
         $tempid = $ids[$pos];
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid);
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false) {
-            if (($rec2->r < $minnum) or ($minnum == 0)) {
+            if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
                 $glossaryentryid = $tempid;
                 $attachement = $keys[$pos];

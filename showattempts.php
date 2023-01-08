@@ -235,7 +235,7 @@ function game_showattempts($game) {
         foreach ($recs as $rec) {
             echo '<tr>';
             echo '<td><center>';
-            if (($rec->timefinish == 0) or $allowdelete) {
+            if (($rec->timefinish == 0) || $allowdelete) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/showattempts.php?attemptid={$rec->id}";
                 echo "&amp;q={$game->id}&amp;action=delete";
                 if ($allowdelete) {
@@ -254,7 +254,7 @@ function game_showattempts($game) {
             echo '<td><center>';
 
             // Preview.
-            if (($gamekind == 'cross') or ($gamekind == 'sudoku') or ($gamekind == 'hangman') or ($gamekind == 'cryptex')) {
+            if (($gamekind == 'cross') || ($gamekind == 'sudoku') || ($gamekind == 'hangman') || ($gamekind == 'cryptex')) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update='.$update."&amp;q={$game->id}\">";
@@ -264,7 +264,7 @@ function game_showattempts($game) {
 
             // Show the solution.
             echo '<td><center>';
-            if (($gamekind == 'cross') or ($gamekind == 'sudoku') or ($gamekind == 'hangman') or ($gamekind == 'cryptex') ) {
+            if (($gamekind == 'cross') || ($gamekind == 'sudoku') || ($gamekind == 'hangman') || ($gamekind == 'cryptex') ) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=solution&amp;".
                     "attemptid={$rec->id}&amp;gamekind={$gamekind}&amp;update=$update&amp;&amp;".
                     "q={$game->id}\">";

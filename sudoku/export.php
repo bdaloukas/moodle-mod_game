@@ -34,7 +34,7 @@ function export() {
     global $CFG;
 
     $file = "import.php";
-    $h = fopen($file, 'w') or die("can't open file");
+    $h = fopen($file, 'w') || die("can't open file");
 
     fwrite( $h, "<?php\r\n");
     fwrite( $h, "require( \"../../../config.php\");\r\n\r\n");

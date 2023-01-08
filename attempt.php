@@ -264,7 +264,7 @@ function game_cross_unpackpuzzle( $g) {
     while ($len) {
         for ($i = 0; $i < $len; $i++) {
             $c = game_substr( $g, $i, 1);
-            if ( $c >= '1' and $c <= '9') {
+            if ( $c >= '1' && $c <= '9') {
                 if ( $i > 0) {
                     // Found escape character.
                     if (game_substr( $g, $i - 1, 1) == '/') {
@@ -282,7 +282,7 @@ function game_cross_unpackpuzzle( $g) {
             // Found the start of a number.
             for ($j = $i + 1; $j < $len; $j++) {
                 $c = game_substr( $g, $j, 1);
-                if ($c < '0' or $c > '9') {
+                if ($c < '0' || $c > '9') {
                     break;
                 }
             }

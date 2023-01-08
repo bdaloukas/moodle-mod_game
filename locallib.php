@@ -236,7 +236,8 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
-        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+            " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
             foreach ($recsq as $recq) {
@@ -400,7 +401,7 @@ function game_question_selectrandom( $game, $table, $select, $idfields='id', $us
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => $questionid,
             'glossaryentryid' => $glossaryentryid);
         if (($rec = $DB->get_record( 'game_repetitions', $a, 'id,repetitions AS r')) != false) {
-            if (($rec->r < $minnum) or ($minnum == 0)) {
+            if (($rec->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec->r;
                 $minid = $id;
             }
@@ -539,7 +540,8 @@ function game_questions_selectrandom( $game, $count=1) {
             // Include subcategories.
             if (game_get_moodle_version() >= '04.00') {
                 $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
-                $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
+                $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid '.
+                    ' AND qbe.questioncategoryid='.$game->questioncategoryid;
                 if ($game->subcategories) {
                     $cats = question_categorylist( $game->questioncategoryid);
                     if (count( $cats) > 0) {
@@ -807,21 +809,15 @@ function game_questions_shortanswer_quiz( $game) {
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
-        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+            " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
             foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
         }
-/*        $table = '{question} q';
-        if( count( $a) == 0) {
-            $select = 'q.id IN (0)';
-        } else {
-            $select = 'q.id IN ('.implode( ',', $a).')';
-        }
-        $fields = 'q.id.q.questiontext';
-*/
+
         if (count( $a) == 0) {
             $a = array( 0);
         }
@@ -1277,7 +1273,7 @@ function game_get_reviewoptions($game, $attempt, $context=null) {
     // Provide the links to the question review and comment script.
     $options->questionreviewlink = '/mod/game/reviewquestion.php';
 
-    if ($context and !$attempt->preview) {
+    if ($context && !$attempt->preview) {
         // The teacher should be shown everything except during preview when the teachers wants to see just what the students see.
         $options->responses = true;
         $options->scores = true;
@@ -1294,7 +1290,7 @@ function game_get_reviewoptions($game, $attempt, $context=null) {
     } else {
         if (((time() - $attempt->timefinish) < 120) || $attempt->timefinish == 0) {
             $gamestatemask = GAME_REVIEW_IMMEDIATELY;
-        } else if (!$game->timeclose or time() < $game->timeclose) {
+        } else if (!$game->timeclose || time() < $game->timeclose) {
             $gamestatemask = GAME_REVIEW_OPEN;
         } else {
             $gamestatemask = GAME_REVIEW_CLOSED;
@@ -1750,7 +1746,7 @@ function game_repairquestion( $s) {
     if (substr( $s, 0, 6) == '<br />') {
         $s = substr( $s, 6);
     }
-    if (substr( $s, 0, 5) == '<div ' and substr( $s, -6) == '</div>') {
+    if (substr( $s, 0, 5) == '<div ' && substr( $s, -6) == '</div>') {
         $pos = strpos( $s, '>');
         if ($pos != false) {
             $s = substr( $s, $pos + 1);
@@ -2021,10 +2017,10 @@ function game_print_question_multichoice( $game, $question, $context) {
     $anss = array();
     foreach ($question->options->answers as $a) {
         $answer = new stdClass();
-        if (substr( $a->answer, 0, 3) == '<p>' or substr( $a->answer, 0, 3) == '<P>') {
+        if (substr( $a->answer, 0, 3) == '<p>' || substr( $a->answer, 0, 3) == '<P>') {
             $a->answer = substr( $a->answer, 3);
             $s = rtrim( $a->answer);
-            if (substr( $s, 0, -3) == '<p>' or substr( $s, 0, -3) == '<P>') {
+            if (substr( $s, 0, -3) == '<p>' || substr( $s, 0, -3) == '<P>') {
                 $a->answer = substr( $a->answer, 0, -3);
             }
         }
@@ -2089,10 +2085,10 @@ function game_print_question_multianswer( $game, $question, $context) {
     $anss = array();
     foreach ($question->options->answers as $a) {
         $answer = new stdClass();
-        if (substr( $a->answer, 0, 3) == '<p>' or substr( $a->answer, 0, 3) == '<P>') {
+        if (substr( $a->answer, 0, 3) == '<p>' || substr( $a->answer, 0, 3) == '<P>') {
             $a->answer = substr( $a->answer, 3);
             $s = rtrim( $a->answer);
-            if (substr( $s, 0, -3) == '<p>' or substr( $s, 0, -3) == '<P>') {
+            if (substr( $s, 0, -3) == '<p>' || substr( $s, 0, -3) == '<P>') {
                 $a->answer = substr( $a->answer, 0, -3);
             }
         }
@@ -2477,7 +2473,7 @@ function game_export_split_files( $courseid, $context, $filearea, $id, $line, $d
             'itemid' => $id, 'filename' => $file, 'contextid' => $contextcourse->id);
         $rec = $DB->get_record( 'files', $params);
 
-        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {
             continue;
         }
         $file->copy_content_to( $destdir.'/images/'.$newfile);

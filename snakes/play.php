@@ -33,7 +33,7 @@
  * @param stdClass $course
  */
 function game_snakes_continue( $cm, $game, $attempt, $snakes, $context, $course) {
-    if ($attempt != false and $snakes != false) {
+    if ($attempt != false && $snakes != false) {
         return game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course);
     }
 
@@ -98,7 +98,7 @@ function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
         $showboard = true;
     }
 
-    if ($showboard and $game->param8 == 0) {
+    if ($showboard && $game->param8 == 0) {
         game_snakes_showquestion( $cm->id, $game, $snakes, $query, $context);
     }
 ?>
@@ -226,7 +226,7 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query) {
         $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
                 'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
-            if (($rec2->r < $minnum) or ($minnum == 0)) {
+            if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
                 $query->glossaryentryid = $rec->glossaryentryid;
                 $query->questionid = $rec->questionid;
@@ -238,7 +238,7 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query) {
         }
     }
 
-    if (($query->glossaryentryid == 0) and ($query->questionid == 0)) {
+    if (($query->glossaryentryid == 0) && ($query->questionid == 0)) {
         return false;
     }
     $query->gamekind = $game->gamekind;

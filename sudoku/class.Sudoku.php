@@ -388,7 +388,7 @@ class rcs extends ObjectS {
             $theunsolved++;
         }
 
-        if (array_key_exists( 2, $thecounts) and array_key_exists( 3, $thecounts)) {
+        if (array_key_exists( 2, $thecounts) && array_key_exists( 3, $thecounts)) {
             if ((count($thecounts[2]) < 2) || (count($thecounts[3]) < 1)) {
                 return false;
             }

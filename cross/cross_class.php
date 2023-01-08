@@ -131,7 +131,7 @@ class Cross {
 
         $this->mn20min = round( $n20 - $n20 / 4);
         $this->mn20max = round( $n20 + $n20 / 4);
-        if ( $this->mn20max > $maxcols and $maxcols > 0) {
+        if ( $this->mn20max > $maxcols && $maxcols > 0) {
             $this->mn20max = $maxcols;
         }
         if ($this->mn20min > $this->mn20max) {
@@ -335,7 +335,7 @@ class Cross {
             if ($puzzle00[$n]) {
                 $used ++;
 
-                if (($puzzle00[$n - 1] or $puzzle00[$n + 1]) and ($puzzle00[$n - $n22] or $puzzle00[$n + $n22])) {
+                if (($puzzle00[$n - 1] || $puzzle00[$n + 1]) && ($puzzle00[$n - $n22] || $puzzle00[$n + $n22])) {
                     $nconnectors++;
                 } else {
                     $nfilleds++;
@@ -535,15 +535,15 @@ class Cross {
         for ($n = 0;; $n ++) {
             $c = game_substr( $puzzle, $n, 1);
 
-            if (($m = $n % $n22) == 0 or $m == $n21 or $n < $n22 or $n > $n2200) {
+            if (($m = $n % $n22) == 0 || $m == $n21 || $n < $n22 || $n > $n2200) {
                 $ret .= "<td class=marc>  </td>";
             } else if ( $c == '0') {
                 $ret .= "<td class=limit> </td>";
             } else if ($c == '.') {
                 $ret .= "<td class=blanc> </td>";
             } else {
-                if ((game_substr( $puzzle, $n - 1, 1) > '0' or
-                    game_substr( $puzzle, $n + 1, 1) > '0') and
+                if ((game_substr( $puzzle, $n - 1, 1) > '0' ||
+                    game_substr( $puzzle, $n + 1, 1) > '0') &&
                     (game_substr( $puzzle, $n - $n22, 1) > '0'
                     or game_substr( $puzzle, $n + $n22, 1) > '0')) {
                     $ret .= "<td align=center class=connector>$c</td>";
@@ -603,7 +603,7 @@ class Cross {
         }
 
         $regex  = game_substr( $puzzle, $pos, 1);
-        if ( ($regex == '0' or $regex == '.') and (!$valblanc)) {
+        if ( ($regex == '0' || $regex == '.') && (!$valblanc)) {
             return false;
         }
 
@@ -617,7 +617,7 @@ class Cross {
 
         $left = $right = 0;
         for ($limita = $pos - $inc; ($w = game_substr( $puzzle, $limita, 1)) !== '0'; $limita -= $inc) {
-            if ($w == '.' and ((game_substr( $puzzle, $limita - $oinc, 1) > '0') or
+            if ($w == '.' && ((game_substr( $puzzle, $limita - $oinc, 1) > '0') ||
                 (game_substr( $puzzle, $limita + $oinc, 1) > '0'))) {
                 break;
             }
@@ -631,8 +631,8 @@ class Cross {
         }
 
         for ($limitb = $pos + $inc; ($w = game_substr( $puzzle, $limitb, 1)) !== '0'; $limitb += $inc) {
-            if ($w == '.' and ((game_substr( $puzzle, $limitb - $oinc, 1) > '0')
-                or (game_substr( $puzzle, $limitb + $oinc, 1) > '0'))) {
+            if ($w == '.' && ((game_substr( $puzzle, $limitb - $oinc, 1) > '0')
+                || (game_substr( $puzzle, $limitb + $oinc, 1) > '0'))) {
                 break;
             }
 
@@ -795,7 +795,7 @@ class Cross {
             $contextglossary = game_get_context_module_instance( $cmglossary->id);
         }
         foreach ($crossd as $rec) {
-            if ($rec->horizontal == false and $lasthorizontalword == -1) {
+            if ($rec->horizontal == false && $lasthorizontalword == -1) {
                 $lasthorizontalword = $i;
             }
 

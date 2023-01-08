@@ -45,7 +45,7 @@ function game_sudoku_continue( $cm, $game, $attempt, $sudoku, $endofgame, $conte
         $endofgame = false;
     }
 
-    if ($attempt != false and $sudoku != false) {
+    if ($attempt != false && $sudoku != false) {
         return game_sudoku_play( $cm, $game, $attempt, $sudoku, false, false, $context, $course);
     }
 
@@ -249,7 +249,7 @@ function game_sudoku_getclosed( $data) {
     $n = game_strlen( $data);
     for ($i = 1; $i <= $n; $i++) {
         $c = game_substr( $data, $i - 1, 1);
-        if ($c >= "1" and $c <= "9") {
+        if ($c >= "1" && $c <= "9") {
             $a[$i] = $i;
         }
     }
@@ -293,7 +293,7 @@ function game_sudoku_showsudoku( $data, $guess, $bshowlegend, $bshowsolution, $o
                     if ($g != 0) {
                         $s = $g;
                     }
-                    if ($s >= "1" and $s <= "9") {
+                    if ($s >= "1" && $s <= "9") {
                         // Closed number.
                         if ($bshowlegend) {
                             // Show legend.
@@ -469,7 +469,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
             // Start the form.
             echo "<form id=\"responseform\" method=\"post\" ".
                 "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
-            if (($onlyshow === false) and ($showsolution === false)) {
+            if (($onlyshow === false) && ($showsolution === false)) {
                 echo "<br><center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\">";
 
                 echo " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" name=\"finishattempt\" value=\"".
@@ -497,7 +497,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
 
         // Finish the form.
         echo '</div>';
-        if (($onlyshow === false) and ($showsolution === false)) {
+        if (($onlyshow === false) && ($showsolution === false)) {
             echo "<center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
         }
 

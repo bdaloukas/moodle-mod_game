@@ -95,7 +95,7 @@ foreach ($games as $game) {
         $link = "<a href=\"view.php?id=$game->coursemodule\">$game->name</a>";
     }
 
-    if ($course->format == "weeks" or $course->format == "topics") {
+    if ($course->format == "weeks" || $course->format == "topics") {
         $table->data[] = array ($game->section, $link);
     } else {
         $table->data[] = array ($link);

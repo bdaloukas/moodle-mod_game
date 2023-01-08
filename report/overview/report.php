@@ -543,7 +543,7 @@ class game_report extends game_default_report {
                     }
                     if (!$download) {
                         $table->add_data($row);
-                    } else if ($download == 'Excel' or $download == 'ODS') {
+                    } else if ($download == 'Excel' || $download == 'ODS') {
                         $colnum = 0;
                         foreach ($row as $item) {
                             $myxls->write($rownum, $colnum, $item, $format);
@@ -619,7 +619,7 @@ class game_report extends game_default_report {
                     echo "</td>\n";
                     echo '</tr></table>';
                 }
-            } else if ($download == 'Excel' or $download == 'ODS') {
+            } else if ($download == 'Excel' || $download == 'ODS') {
                 $workbook->close();
                 exit;
             } else if ($download == 'CSV') {

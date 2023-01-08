@@ -150,7 +150,7 @@ class CrossDB extends Cross {
                     $wrongletters, $restletters, $game, $attempt, $crossrec, $loadfromdb);
                 $b[] = $rec;
 
-                if (($rec->mycol != 0) and ($rec->myrow != 0)) {
+                if (($rec->mycol != 0) && ($rec->myrow != 0)) {
                     $load = true;
                 }
                 if ($language == '') {
@@ -201,7 +201,7 @@ class CrossDB extends Cross {
                 ( $wrongletters > 1 ? get_string( 'cross_errors', 'game') : get_string( 'cross_error', 'game')).'</b>';
         }
 
-        if ($correctletters > 1 or $wrongletters > 1) {
+        if ($correctletters > 1 || $wrongletters > 1) {
             $ret = get_string( 'cross_found_many', 'game');
         } else if ( count( $a)) {
             $ret = get_string( 'cross_found_one', 'game');
@@ -225,7 +225,7 @@ class CrossDB extends Cross {
         $done = ( $restletters == 0 ? true : false);
 
         if ($finishattempt == false) {
-            if ($onlyshow or $showsolution) {
+            if ($onlyshow || $showsolution) {
                 return $ret;
             }
         } else {
@@ -284,7 +284,7 @@ class CrossDB extends Cross {
             }
             $letterword = game_substr( $word, $i, 1);
             if ($letterword != $letterguess) {
-                if (($letterguess != ' ' and $letterguess != '_')) {
+                if (($letterguess != ' ' && $letterguess != '_')) {
                     $wrongletters++;
                 }
                 game_setchar( $guess, $i, '_');

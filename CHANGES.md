@@ -1,3 +1,6 @@
+Changes in version 2023-01-08-01
+* Fixing coding style.
+
 Changes in version 2023-01-08
 * Fix: Modle 4.1 compatibility.
 
@@ -22,40 +25,17 @@ Changes in version 2022-03-20
 Changes in version 2022-03-19
 * Fix: Moodle 4.0 compatibility.
 
-Changes in version 2021-12-23-04
+Changes for year 2021
 * Fix: At backup new field of table game
-
-Changes in version 2021-12-23-03
 * Fix: Warning in test cases.
-
-Changes in version 2021-12-23-02
 * Fix: Rename tests/generator_test.php to tests/generator_testcase.php
-
-Changes in version 2021-12-23-01
 * Fix: Problem when using secondary glossaries as source of questions.
-
-Changes in version 2021-12-23
 * Fix: Millionaire: On errors does not select the correct answer
-
-Changes in version 2021-11-02
 * Fix: Completion problem
-
-Changes in version 2021-06-20
 * Fix Snakes: Shuffles answer in multichoice questions
-
-Changes in version 2021-05-31
 * Fix hiddenpicture: Problem when user gives wrong answer
-
-Changes in version 2021-05-08
 * Fix: Compatibility problems for Moodle 3.11
-
-Changes in version 2021-05-03
 * Crossword: Makes better legend
-
-Changes in version 2021-05-02
-* Fix: Compatibility problems for Moodle 3.11
-
-Changes in version 2021-05-01
 * Fix: Updated high score query for postgresql compatibility
 
 Change for year 2020

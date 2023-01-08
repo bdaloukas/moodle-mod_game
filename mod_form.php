@@ -109,7 +109,7 @@ class mod_game_mod_form extends moodleform_mod {
             "WHERE course={$COURSE->id} OR globalglossary=1 ORDER BY globalglossary DESC,name";
             if ($recs = $DB->get_records_sql($sql)) {
                 foreach ($recs as $rec) {
-                    if (($rec->globalglossary != 0) and ($rec->course != $COURSE->id)) {
+                    if (($rec->globalglossary != 0) && ($rec->course != $COURSE->id)) {
                         $rec->name = '*'.$rec->name;
                     }
                     $a[$rec->id] = $rec->name;
@@ -485,7 +485,7 @@ class mod_game_mod_form extends moodleform_mod {
                 $table = "{$CFG->prefix}question q, {$CFG->prefix}qtype_multichoice_options qmo";
                 $select = " AND q.qtype='multichoice' AND qmo.single = 1 AND qmo.questionid=q.id";
             }
-        } else if (($gamekind == 'hangman') or ($gamekind == 'cryptex') or ($gamekind == 'cross')) {
+        } else if (($gamekind == 'hangman') || ($gamekind == 'cryptex') || ($gamekind == 'cross')) {
             // Single answer questions.
             $select = " AND q.qtype='shortanswer'";
         }

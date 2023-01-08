@@ -47,7 +47,7 @@ function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $con
         }
     }
 
-    if ($attempt != false and $cross != false) {
+    if ($attempt != false && $cross != false) {
         return game_cross_play( $cm, $game, $attempt, $cross, $g, false, false, $endofgame,
             false, false, false, false, true, $context, $course);
     }
@@ -182,7 +182,7 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
         }
     }
 
-    if ($done or $endofgame) {
+    if ($done || $endofgame) {
         if ($endofgame == false) {
             echo '<B>'.get_string( 'win', 'game').'</B><BR>';
         }
@@ -920,7 +920,7 @@ function CheckHtmlClick() {
         ' type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
         get_string( 'cross_endofgamebutton', 'game');
         echo '</button>';
-        if ($game->param5 == 1 or $game->param5 == null) {
+        if ($game->param5 == 1 || $game->param5 == null) {
             echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" '.
             ' onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
             echo '</button>';
@@ -929,7 +929,7 @@ function CheckHtmlClick() {
         echo "</div>\r\n";
     }
 
-    if ($showhtmlsolutions or $showhtmlprintbutton) {
+    if ($showhtmlsolutions || $showhtmlprintbutton) {
         echo '<br>';
     }
 
@@ -959,7 +959,7 @@ function CheckHtmlClick() {
     }
 
     if ($attempt != false) {
-        if ($attempt->timefinish == 0 and $endofgame == 0) {
+        if ($attempt->timefinish == 0 && $endofgame == 0) {
     ?>
         <script language="JavaScript" type="text/javascript"><!--
         if (Initialized) {

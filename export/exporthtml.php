@@ -190,7 +190,7 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
             break;
         }
 
-        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {
             continue;
         }
 
@@ -406,7 +406,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
 
     $board = game_snakes_get_board( $game);
 
-    if ( ($game->sourcemodule == 'quiz') or ($game->sourcemodule == 'question')) {
+    if ( ($game->sourcemodule == 'quiz') || ($game->sourcemodule == 'question')) {
         $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions,
             $countofquestionsm, $retfeedback, $destdir, $files);
     } else {
@@ -481,7 +481,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
 function game_copyfiles( $src, $destdir) {
     $handle = opendir( $src);
     while (($item = readdir($handle)) !== false) {
-        if ( $item == '.' or $item == '..') {
+        if ( $item == '.' || $item == '..') {
             continue;
         }
 

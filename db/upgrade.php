@@ -1657,7 +1657,7 @@ function xmldb_game_upgrade($oldversion) {
         $sql = "SELECT * FROM {$CFG->prefix}game_snakes_database";
         $recs = $DB->get_records_sql( $sql);
         foreach ($recs as $rec) {
-            if (($rec->usedcols != 0) and ($rec->usedrows != 0)) {
+            if (($rec->usedcols != 0) && ($rec->usedrows != 0)) {
                 continue;
             }
 

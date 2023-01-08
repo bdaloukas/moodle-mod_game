@@ -41,7 +41,7 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
 
     $files = array();
 
-    if ( ($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
+    if ( ($game->sourcemodule != 'quiz') && ($game->sourcemodule != 'question')) {
         throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz').
             ' '.get_string( 'modulename', $game->sourcemodule));
     }

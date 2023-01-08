@@ -66,7 +66,7 @@ if ( !($currenttab == 'info' && count($row) == 1)) {
     $tabs[] = $row;
 }
 
-if ($currenttab == 'reports' and isset($mode)) {
+if ($currenttab == 'reports' && isset($mode)) {
     $inactive[] = 'reports';
     $activated[] = 'reports';
 

@@ -34,7 +34,7 @@
  * @param stdClass $course
  */
 function game_bookquiz_continue( $cm, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
-    if ($attempt != false and $bookquiz != false) {
+    if ($attempt != false && $bookquiz != false) {
         return game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $context, $course);
     }
 
@@ -301,7 +301,7 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
     // Start the form.
     echo "<form id=\"responseform\" method=\"post\" action=\"{$CFG->wwwroot}/mod/game/attempt.php\" ".
          " onclick=\"this.autocomplete='off'\">\n";
-    if (($onlyshow === false) and ($showsolution === false)) {
+    if (($onlyshow === false) && ($showsolution === false)) {
         echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
     }
 
@@ -326,7 +326,7 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
 
     // Finish the form.
     echo '</div>';
-    if (($onlyshow === false) and ($showsolution === false)) {
+    if (($onlyshow === false) && ($showsolution === false)) {
         echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
     }
 

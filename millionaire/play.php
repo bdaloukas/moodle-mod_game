@@ -34,7 +34,7 @@
  */
 function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {
     // User must select quiz or question as a source module.
-    if (($game->quizid == 0) and ($game->questioncategoryid == 0)) {
+    if (($game->quizid == 0) && ($game->questioncategoryid == 0)) {
         if ($game->sourcemodule == 'quiz') {
             throw new moodle_exception( 'millionaire_must_select_quiz', 'game');
         } else {
@@ -42,7 +42,7 @@ function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context
         }
     }
 
-    if ($attempt != false and $millionaire != false) {
+    if ($attempt != false && $millionaire != false) {
         // Continue an existing game.
         return game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course);
     }
@@ -199,7 +199,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     echo "</td>\r\n";
 
     $styletext = "";
-    if (strpos( $question, 'color:') == false and strpos( $question, 'background:') == false) {
+    if (strpos( $question, 'color:') == false && strpos( $question, 'background:') == false) {
         $styletext = "style='$stylequestion'";
     }
 
@@ -253,7 +253,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
 
         if ($i < $level + 1) {
             echo "<td style='$style'>&nbsp;&nbsp;*&nbsp;&nbsp;&nbsp;</td>";
-        } else if ($i == 15 and $level <= 1) {
+        } else if ($i == 15 && $level <= 1) {
             echo "<td style='$style'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
         } else {
             echo "<td style='$style'></td>";
@@ -266,7 +266,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
     $bfirst = true;
     $letters = get_string( 'millionaire_lettersall', 'game');
-    if (($letters == '') or ($letters == '-')) {
+    if (($letters == '') || ($letters == '-')) {
         $letters = get_string( 'lettersall', 'game');
     }
     for ($i = 1; $i <= count( $aanswer); $i++) {
@@ -276,10 +276,10 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $disabled = ( $state == 15 ? "disabled=1" : "");
 
         $style = $stylequestion;
-        if ((strpos( $aanswer[$i - 1], 'color:') != false) or (strpos( $aanswer[$i - 1], 'background:') != false)) {
+        if ((strpos( $aanswer[$i - 1], 'color:') != false) || (strpos( $aanswer[$i - 1], 'background:') != false)) {
             $style = '';
         }
-        if ($state == 15 and $i == $query->correct) {
+        if ($state == 15 && $i == $query->correct) {
             $style = $stylequestionselected;
         }
 
@@ -352,7 +352,7 @@ function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, 
 function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
     global $CFG, $DB, $USER;
 
-    if (($game->sourcemodule != 'quiz') and ($game->sourcemodule != 'question')) {
+    if (($game->sourcemodule != 'quiz') && ($game->sourcemodule != 'question')) {
         throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game',
             get_string( 'modulename', 'quiz').' '.get_string( 'modulename', $attempt->sourcemodule));
     }
@@ -382,7 +382,8 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
             $recs = $DB->get_records_sql( $sql);
             $ret = array();
-            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+                " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
             foreach ($recs as $rec) {
                 $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
                 foreach ($recsq as $recq) {
@@ -394,7 +395,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
                 $select = 'q.id IN (0)';
             } else {
                 $select = 'q.id IN ('.implode( ',', $a).')';
-            } 
+            }
         } else {
             $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id".
             " AND qs.questionid=q.id";
@@ -442,7 +443,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     if (game_get_moodle_version() < '04.00') {
         $select .= ' AND hidden=0';
     }
-    if ($game->shuffle or $game->quizid == 0) {
+    if ($game->shuffle || $game->quizid == 0) {
         $questionid = game_question_selectrandom( $game, $table, $select, 'q.id as id', true);
     } else {
         $questionid = game_millionaire_select_serial_question($game, $table, $select, $millionaire->level, $order, 'q.id as id');
@@ -620,7 +621,7 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
             }
         }
         for ($i = 1; $i <= $n; $i++) {
-            if ($i <> $wrong and $i <> $query->correct) {
+            if ($i <> $wrong && $i <> $query->correct) {
                 $aanswer[$i - 1] = "";
             }
         }

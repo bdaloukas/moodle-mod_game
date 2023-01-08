@@ -165,7 +165,8 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
         $ret = array();
-        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+            " WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
             foreach ($recsq as $recq) {
