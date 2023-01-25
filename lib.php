@@ -1210,7 +1210,7 @@ if (defined( 'GAME_MOODLE_401')) {
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hangman');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'cryptex');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'cross');
-        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hiddenpicture');        
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hiddenpicture');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'millionaire');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'sudoku');
 
@@ -1225,12 +1225,12 @@ if (defined( 'GAME_MOODLE_401')) {
     * @param stdClass $course the course to scope items to.
     * @param types array the array of content items.
     * @param string $kind the kind of each game.
-    */    
+    */
     function mod_game_get_course_content_items_type(\core_course\local\entity\content_item $defaultmodulecontentitem,
          \stdClass $user, \stdClass $course, &$types, $kind) {
         global $OUTPUT, $CFG, $DB;
 
-        $name = 'hide'.$type;
+        $name = 'hide' . $kind;
         $hide = ( isset( $config->$name) ? ($config->$name != 0) : false);
         if ($hide) {
             return;
@@ -1246,13 +1246,13 @@ if (defined( 'GAME_MOODLE_401')) {
             get_string_manager()->string_exists('help' . $type->name, 'game')) {
                 $type->help = get_string('help' . $type->name, 'game');
         }
-                        
+
         if (empty($type->icon)) {
             $type->icon = $OUTPUT->pix_icon('monologo', '', 'game', array('class' => 'icon'));
         } else {
             $type->icon = html_writer::empty_tag('img', array('src' => $type->icon, 'alt' => $type->name, 'class' => 'icon'));
         }
-            
+
         $types[] = new \core_course\local\entity\content_item(
             2,
             $type->name,
@@ -1263,7 +1263,7 @@ if (defined( 'GAME_MOODLE_401')) {
             $defaultmodulecontentitem->get_archetype(),
             $defaultmodulecontentitem->get_component_name(),
             $defaultmodulecontentitem->get_purpose()
-        );           
+        );
     }
 }
 
