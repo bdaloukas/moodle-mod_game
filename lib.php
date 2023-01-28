@@ -702,6 +702,12 @@ function game_reset_gradebook($courseid, $type='') {
  * @return bool True if quiz supports feature
  */
 function game_supports($feature) {
+    global $CFG;
+    if ($CFG->branch >= 400) {
+        if ($feature == FEATURE_MOD_PURPOSE) {
+            return MOD_PURPOSE_ASSESSMENT;
+        }
+    }
     switch($feature) {
         case FEATURE_GRADE_HAS_GRADE:
             return true;
