@@ -1,3 +1,6 @@
+Changes in version 2023-04-18
+* Fix: Problem in Hangman accentuation problem in Portuguese language.
+
 Changes in version 2023-01-08-01
 * Fixing coding style.
 
