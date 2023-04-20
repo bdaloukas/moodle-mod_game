@@ -88,10 +88,10 @@ function game_upper( $str, $lang='') {
             $from = 'ΆΈΉΊΌΎΏ';
             $to = 'ΑΕΗΙΟΥΩ';
             break;
-        case 'pt':
-            $from = 'ÁÊÉÍÓÔ';
-            $to = 'AEEIOO';
-            break;
+        //case 'pt':
+        //    $from = 'ÁÊÉÍÓÔ';
+        //    $to = 'AEEIOO';
+        //    break;
         default:
             return $str;
     }
