@@ -777,6 +777,11 @@ function game_questions_shortanswer_glossary( $game) {
             ' AND gec.categoryid = '.$game->glossarycategoryid;
     }
 
+    if ($game->glossaryonlyapproved) {
+        // Only approved glossary entries will be used.
+        $select .= ' AND (ge.approved=1 OR ge.teacherentry=1)';
+    }
+
     $sql = 'SELECT ge.id, concept as answertext, definition as questiontext, ge.id as glossaryentryid, '.
         ' 0 as questionid, attachment '.
         " FROM $table WHERE $select";

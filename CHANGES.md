@@ -1,3 +1,6 @@
+Changes in version 2023-04-24
+* Fix: Crossword didn't not check if a glossary entry is approved.
+
 Changes in version 2023-04-21
 * Fix: Problem in Hangman accentuation problem in Portuguese language.
 
