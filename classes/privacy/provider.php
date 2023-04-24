@@ -63,54 +63,54 @@ class provider implements
         // The table 'game_attempts' stores a record of each game attempt.
         // It contains a userid which links to the user making the attempt and contains information about that attempt.
         $items->add_database_table('game_attempts', [
-                'attempt'               => 'privacy:metadata:game_attempts:attempt',
-                'preview'               => 'privacy:metadata:game_attempts:preview',
-                'timestart'             => 'privacy:metadata:game_attempts:timestart',
-                'timefinish'            => 'privacy:metadata:game_attempts:timefinish',
-                'timelastattempt'          => 'privacy:metadata:game_attempts:timelastattempt',
-                'score'             => 'privacy:metadata:game_attempts:score',
-                'language'             => 'privacy:metadata:game_attempts:language',
+                'attempt' => 'privacy:metadata:game_attempts:attempt',
+                'preview' => 'privacy:metadata:game_attempts:preview',
+                'timestart' => 'privacy:metadata:game_attempts:timestart',
+                'timefinish' => 'privacy:metadata:game_attempts:timefinish',
+                'timelastattempt' => 'privacy:metadata:game_attempts:timelastattempt',
+                'score' => 'privacy:metadata:game_attempts:score',
+                'language' => 'privacy:metadata:game_attempts:language',
 
-                'cross_usedcols'               => 'privacy:metadata:game_attempts:cross_usedcols',
-                'cross_usedrows'             => 'privacy:metadata:game_attempts:cross_usedrows',
-                'cross_words'            => 'privacy:metadata:game_attempts:cross_words',
-                'cross_wordsall'            => 'privacy:metadata:game_attempts:cross_wordsall',
-                'cross_createscore'            => 'privacy:metadata:game_attempts:cross_createscore',
-                'cross_createtries'            => 'privacy:metadata:game_attempts:cross_createtries',
-                'cross_createlimit'            => 'privacy:metadata:game_attempts:cross_createlimit',
-                'cross_createconnectors'            => 'privacy:metadata:game_attempts:cross_createconnectors',
-                'cross_createfilleds'            => 'privacy:metadata:game_attempts:cross_createfilleds',
-                'cross_createspaces'            => 'privacy:metadata:game_attempts:cross_createspaces',
-                'cross_triesplay'            => 'privacy:metadata:game_attempts:cross_triesplay',
+                'cross_usedcols' => 'privacy:metadata:game_attempts:cross_usedcols',
+                'cross_usedrows' => 'privacy:metadata:game_attempts:cross_usedrows',
+                'cross_words' => 'privacy:metadata:game_attempts:cross_words',
+                'cross_wordsall' => 'privacy:metadata:game_attempts:cross_wordsall',
+                'cross_createscore' => 'privacy:metadata:game_attempts:cross_createscore',
+                'cross_createtries' => 'privacy:metadata:game_attempts:cross_createtries',
+                'cross_createlimit' => 'privacy:metadata:game_attempts:cross_createlimit',
+                'cross_createconnectors' => 'privacy:metadata:game_attempts:cross_createconnectors',
+                'cross_createfilleds' => 'privacy:metadata:game_attempts:cross_createfilleds',
+                'cross_createspaces' => 'privacy:metadata:game_attempts:cross_createspaces',
+                'cross_triesplay' => 'privacy:metadata:game_attempts:cross_triesplay',
 
-                'cryptex_letters'               => 'privacy:metadata:game_attempts:cryptex_letters',
+                'cryptex_letters' => 'privacy:metadata:game_attempts:cryptex_letters',
 
-                'hangman_queryid'               => 'privacy:metadata:game_attempts:hangman_queryid',
-                'hangman_letters'               => 'privacy:metadata:game_attempts:hangman_letters',
-                'hangman_allletters'               => 'privacy:metadata:game_attempts:hangman_allletters',
-                'hangman_try'               => 'privacy:metadata:game_attempts:hangman_try',
-                'hangman_maxtries'               => 'privacy:metadata:game_attempts:hangman_maxtries',
-                'hangman_finishedword'               => 'privacy:metadata:game_attempts:hangman_finishedword',
-                'hangman_corrects'               => 'privacy:metadata:game_attempts:hangman_corrects',
-                'hangman_iscorrect'               => 'privacy:metadata:game_attempts:hangman_iscorrect',
+                'hangman_queryid' => 'privacy:metadata:game_attempts:hangman_queryid',
+                'hangman_letters' => 'privacy:metadata:game_attempts:hangman_letters',
+                'hangman_allletters' => 'privacy:metadata:game_attempts:hangman_allletters',
+                'hangman_try' => 'privacy:metadata:game_attempts:hangman_try',
+                'hangman_maxtries' => 'privacy:metadata:game_attempts:hangman_maxtries',
+                'hangman_finishedword' => 'privacy:metadata:game_attempts:hangman_finishedword',
+                'hangman_corrects' => 'privacy:metadata:game_attempts:hangman_corrects',
+                'hangman_iscorrect' => 'privacy:metadata:game_attempts:hangman_iscorrect',
 
-                'hiddenpicture_correct'               => 'privacy:metadata:game_attempts:hiddenpicture_corect',
-                'hiddenpicture_wrong'               => 'privacy:metadata:game_attempts:hiddenpicture_wrong',
-                'hiddenpicture_found'               => 'privacy:metadata:game_attempts:hiddenpicture_found',
+                'hiddenpicture_correct' => 'privacy:metadata:game_attempts:hiddenpicture_corect',
+                'hiddenpicture_wrong' => 'privacy:metadata:game_attempts:hiddenpicture_wrong',
+                'hiddenpicture_found' => 'privacy:metadata:game_attempts:hiddenpicture_found',
 
-                'millionaire_queryid'               => 'privacy:metadata:game_attempts:millionaire_queryid',
-                'millionaire_state'               => 'privacy:metadata:game_attempts:millionaire_state',
-                'millionaire_level'               => 'privacy:metadata:game_attempts:millionaire_level',
+                'millionaire_queryid' => 'privacy:metadata:game_attempts:millionaire_queryid',
+                'millionaire_state' => 'privacy:metadata:game_attempts:millionaire_state',
+                'millionaire_level' => 'privacy:metadata:game_attempts:millionaire_level',
 
-                'snakes_snakesdatabaseid'               => 'privacy:metadata:game_attempts:snakes_snakesdatabaseid',
-                'snakes_position'               => 'privacy:metadata:game_attempts:snakes_position',
-                'snakes_queryid'               => 'privacy:metadata:game_attempts:snakes_queryid',
-                'snakes_dice'               => 'privacy:metadata:game_attempts:snakes_dice',
+                'snakes_snakesdatabaseid' => 'privacy:metadata:game_attempts:snakes_snakesdatabaseid',
+                'snakes_position' => 'privacy:metadata:game_attempts:snakes_position',
+                'snakes_queryid' => 'privacy:metadata:game_attempts:snakes_queryid',
+                'snakes_dice' => 'privacy:metadata:game_attempts:snakes_dice',
 
-                'sudoku_level'               => 'privacy:metadata:game_attempts:sudoku_level',
-                'sudoku_data'               => 'privacy:metadata:game_attempts:sudoku_data',
-                'sudoku_opened'               => 'privacy:metadata:game_attempts:sudoku_opened',
-                'sudoku_guess'               => 'privacy:metadata:game_attempts:sudoku_guess',
+                'sudoku_level' => 'privacy:metadata:game_attempts:sudoku_level',
+                'sudoku_data' => 'privacy:metadata:game_attempts:sudoku_data',
+                'sudoku_opened' => 'privacy:metadata:game_attempts:sudoku_opened',
+                'sudoku_guess' => 'privacy:metadata:game_attempts:sudoku_guess',
 
             ], 'privacy:metadata:game_attempts');
 
@@ -128,42 +128,42 @@ class provider implements
 
         // The table 'game_grades' contains the current grade for each game/user combination.
         $items->add_database_table('game_grades', [
-                'game'                  => 'privacy:metadata:game_grades:game',
-                'userid'                => 'privacy:metadata:game_grades:userid',
-                'score'                 => 'privacy:metadata:game_grades:score',
-                'timemodified'          => 'privacy:metadata:game_grades:timemodified',
+                'game' => 'privacy:metadata:game_grades:game',
+                'userid' => 'privacy:metadata:game_grades:userid',
+                'score' => 'privacy:metadata:game_grades:score',
+                'timemodified' => 'privacy:metadata:game_grades:timemodified',
             ], 'privacy:metadata:game_grades');
 
         // The table 'game_queries' stores a record of each attempt at cross game.
         // It contains id that linked to game_attempts.
         $items->add_database_table('game_queries', [
-                'id'               => 'privacy:metadata:game_queries:id',
-                'attemptid'               => 'privacy:metadata:game_queries:attemptid',
-                'questionid'               => 'privacy:metadata:game_queries:questionid',
-                'glossaryentryid'               => 'privacy:metadata:game_queries:glossaryentryid',
-                'questiontext'               => 'privacy:metadata:game_queries:questiontext',
-                'score'               => 'privacy:metadata:game_queries:score',
-                'timelastattempt'               => 'privacy:metadata:game_queries:timelastattempt',
-                'studentanswer'               => 'privacy:metadata:game_queries:studentanswer',
-                'mycol'               => 'privacy:metadata:game_queries:mycol',
-                'myrow'               => 'privacy:metadata:game_queries:myrow',
-                'horizontal'               => 'privacy:metadata:game_queries:horizontal',
-                'answertext'               => 'privacy:metadata:game_queries:answertext',
-                'correct'               => 'privacy:metadata:game_queries:correct',
-                'attachment'               => 'privacy:metadata:game_queries:attachment',
-                'answerid'               => 'privacy:metadata:game_queries:answerid',
-                'tries'               => 'privacy:metadata:game_queries:tries',
+                'id' => 'privacy:metadata:game_queries:id',
+                'attemptid' => 'privacy:metadata:game_queries:attemptid',
+                'questionid' => 'privacy:metadata:game_queries:questionid',
+                'glossaryentryid' => 'privacy:metadata:game_queries:glossaryentryid',
+                'questiontext' => 'privacy:metadata:game_queries:questiontext',
+                'score' => 'privacy:metadata:game_queries:score',
+                'timelastattempt' => 'privacy:metadata:game_queries:timelastattempt',
+                'studentanswer' => 'privacy:metadata:game_queries:studentanswer',
+                'mycol' => 'privacy:metadata:game_queries:mycol',
+                'myrow' => 'privacy:metadata:game_queries:myrow',
+                'horizontal' => 'privacy:metadata:game_queries:horizontal',
+                'answertext' => 'privacy:metadata:game_queries:answertext',
+                'correct' => 'privacy:metadata:game_queries:correct',
+                'attachment' => 'privacy:metadata:game_queries:attachment',
+                'answerid' => 'privacy:metadata:game_queries:answerid',
+                'tries' => 'privacy:metadata:game_queries:tries',
             ], 'privacy:metadata:game_queries');
 
         // The table 'game_repetitions' stores a record of each attempt at cross game.
         // It contains id that linked to game_attempts.
         $items->add_database_table('game_repetitions', [
-                'id'               => 'privacy:metadata:game_repetitions:id',
-                'gameid'               => 'privacy:metadata:game_repetitions:gameid',
-                'userid'               => 'privacy:metadata:game_repetitions:userid',
-                'questionid'               => 'privacy:metadata:game_repetitions:questionid',
-                'glossaryentryid'               => 'privacy:metadata:game_repetitions:glossaryentryid',
-                'repetitions'               => 'privacy:metadata:game_repetitions:repetitions',
+                'id' => 'privacy:metadata:game_repetitions:id',
+                'gameid' => 'privacy:metadata:game_repetitions:gameid',
+                'userid' => 'privacy:metadata:game_repetitions:userid',
+                'questionid' => 'privacy:metadata:game_repetitions:questionid',
+                'glossaryentryid' => 'privacy:metadata:game_repetitions:glossaryentryid',
+                'repetitions' => 'privacy:metadata:game_repetitions:repetitions',
             ], 'privacy:metadata:game_repetitions');
 
         // The table 'game_snakes_database' contains data about the structure of a game.
@@ -197,9 +197,9 @@ class provider implements
             WHERE ga.userid = :userid";
 
         $params = array(
-                    'contextlevel'      => CONTEXT_MODULE,
-                    'modname'           => 'game',
-                    'userid'          => $userid
+                    'contextlevel' => CONTEXT_MODULE,
+                    'modname' => 'game',
+                    'userid' => $userid
             );
 
         $resultset = new contextlist();
@@ -239,9 +239,9 @@ class provider implements
                  WHERE c.id {$contextsql}";
 
         $params = [
-            'contextlevel'      => CONTEXT_MODULE,
-            'modname'           => 'game',
-            'userid'          => $userid,
+            'contextlevel' => CONTEXT_MODULE,
+            'modname' => 'game',
+            'userid' => $userid,
         ];
         $params += $contextparams;
 
@@ -341,8 +341,8 @@ class provider implements
             WHERE ga.userid = :userid";
 
         $params = array(
-                    'contextlevel'      => CONTEXT_MODULE,
-                    'userid'          => $userid
+                    'contextlevel' => CONTEXT_MODULE,
+                    'userid' => $userid
             );
 
         $attempts = $DB->get_recordset_sql($sql, $params);

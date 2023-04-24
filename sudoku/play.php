@@ -65,7 +65,7 @@ function game_sudoku_continue( $cm, $game, $attempt, $sudoku, $endofgame, $conte
     $newrec->id = $attempt->id;
     $newrec->guess = '';
     $newrec->data = $recsudoku->data;
-    $newrec->opened  = $recsudoku->opened;
+    $newrec->opened = $recsudoku->opened;
 
     $need = 81 - $recsudoku->opened;
     $closed = game_sudoku_getclosed( $newrec->data);

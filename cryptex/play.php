@@ -45,7 +45,7 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
         $endofgame = false;
     }
 
-    if ($attempt != false and $cryptexrec != false) {
+    if ($attempt != false && $cryptexrec != false) {
         $crossm = $DB->get_record( 'game_cross', array( 'id' => $attempt->id));
         return game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
     }
@@ -259,7 +259,7 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
         game_updateattempts( $game, $attempt, $gradeattempt, $finished, $cm, $course);
     }
 
-    if (($onlyshow == false) and ($showsolution == false)) {
+    if (($onlyshow == false) && ($showsolution == false)) {
         if ($finished) {
             game_cryptex_onfinished( $cm, $game, $attempt, $cryptexrec, $course);
         }
@@ -390,7 +390,7 @@ width: 240pt;
         }
 
         echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
-        if (($onlyshow == false) and ($showsolution == false)) {
+        if (($onlyshow == false) && ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
                 $question .= ' &nbsp;<input type="submit" value="'.
                 get_string( 'answer').'" onclick="OnCheck( '.$q->id.",msg{$q->id});\" />";

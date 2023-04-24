@@ -64,7 +64,7 @@ class mod_game_generator extends testing_module_generator {
      *
      * @return the glossary_entries
      */
-    public function create_glossary_content($glossary, $record = array(), $concept, $definition) {
+    public function create_glossary_content($glossary, $record, $concept, $definition) {
         global $DB, $USER, $CFG;
 
         $now = time();

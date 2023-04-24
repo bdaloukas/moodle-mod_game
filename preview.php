@@ -43,9 +43,9 @@ if (!has_capability('mod/game:viewreports', $context)) {
     throw new moodle_exception('only_teachers', 'game');
 }
 
-$action  = required_param('action', PARAM_ALPHANUM);
-$gamekind  = required_param('gamekind', PARAM_ALPHANUM);
-$update  = required_param('update', PARAM_INT);
+$action = required_param('action', PARAM_ALPHANUM);
+$gamekind = required_param('gamekind', PARAM_ALPHANUM);
+$update = required_param('update', PARAM_INT);
 
 $attemptid = required_param('attemptid', PARAM_INT);
 $attempt = $DB->get_record( 'game_attempts', array('id' => $attemptid));

@@ -33,7 +33,7 @@ if (!has_capability('mod/game:viewreports', $context)) {
 
 $PAGE->navbar->add(get_string('showattempts', 'game'));
 
-$action  = optional_param('action', "", PARAM_ALPHANUM);  // Action.
+$action = optional_param('action', "", PARAM_ALPHANUM);  // Action.
 if ($action == 'delete') {
     game_ondeleteattempt( $game);
 }
@@ -285,7 +285,7 @@ function game_showattempts($game) {
 function game_ondeleteattempt( $game) {
     global $CFG, $DB;
 
-    $attemptid  = required_param('attemptid', PARAM_INT);
+    $attemptid = required_param('attemptid', PARAM_INT);
 
     $attempt = $DB->get_record( 'game_attempts', array( 'id' => $attemptid));
 

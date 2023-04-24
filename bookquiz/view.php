@@ -93,7 +93,7 @@ add_to_log($course->id, 'book', 'view', 'view.php?id='.$cm->id.'&amp;chapterid='
 
 // Read standard strings.
 $strbooks = get_string('modulenameplural', 'book');
-$strbook  = get_string('modulename', 'book');
+$strbook = get_string('modulename', 'book');
 
 // Prepare header.
 if ($course->category) {

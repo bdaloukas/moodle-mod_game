@@ -69,20 +69,20 @@ if (! $games = get_all_instances_in_course("game", $course)) {
 // Print the list of instances (your module will probably extend this).
 
 $timenow = time();
-$strname  = get_string("name");
-$strweek  = get_string("week");
-$strtopic  = get_string("topic");
+$strname = get_string("name");
+$strweek = get_string("week");
+$strtopic = get_string("topic");
 
 $table = new html_table();
 
 if ($course->format == "weeks") {
-    $table->head  = array ($strweek, $strname);
+    $table->head = array ($strweek, $strname);
     $table->align = array ("center", "left");
 } else if ($course->format == "topics") {
-    $table->head  = array ($strtopic, $strname);
+    $table->head = array ($strtopic, $strname);
     $table->align = array ("center", "left", "left", "left");
 } else {
-    $table->head  = array ($strname);
+    $table->head = array ($strname);
     $table->align = array ("left", "left", "left");
 }
 

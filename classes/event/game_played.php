@@ -23,84 +23,155 @@
  * @copyright  2014 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 namespace mod_game\event;
 
-/**
- * The mod_game chapter viewed event class.
- *
- * @package    mod_game
- * @since      Moodle 2.6
- * @copyright  2014 Vasilis Daloukas
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class game_played extends \core\event\base {
+defined('MOODLE_INTERNAL') || die();
 
+require(dirname(__FILE__).'/../../../../version.php');
+
+if ($branch >= '402') {
+    define('GAME_MOODLE_402', 1);
+}
+
+if (defined( 'GAME_MOODLE_402')) {
     /**
-     * Returns description of what happened.
+     * The mod_game chapter viewed event class.
      *
-     * @return string
+     * @package    mod_game
+     * @since      Moodle 2.6
+     * @copyright  2014 Vasilis Daloukas
+     * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
-    public function get_description() {
-        return "The user with id '$this->userid' played the game with id '$this->objectid' for the game with the " .
-            "course module id '$this->contextinstanceid'.";
+    class game_played extends \core\event\base {
+
+        /**
+         * Returns description of what happened.
+         *
+         * @return string
+         */
+        public function get_description() {
+            return "The user with id '$this->userid' played the game with id '$this->objectid' for the game with the " .
+                "course module id '$this->contextinstanceid'.";
+        }
+
+        /**
+         * Create instance of event.
+         *
+         * @since Moodle 2.7
+         *
+         * @param \stdClass $game
+         * @param \context_module $context
+         * @return event
+         */
+        public static function played(\stdClass $game, \context_module $context) {
+            $data = array(
+                'context' => $context,
+                'objectid' => $game->id
+            );
+            $event = self::create($data);
+            $event->add_record_snapshot('game', $game);
+            return $event;
+        }
+
+
+        /**
+         * Return localised event name.
+         *
+         * @return string
+         */
+        public static function get_name() {
+            return get_string('eventgameviewed', 'mod_game');
+        }
+
+        /**
+         * Get URL related to the action.
+         *
+         * @return \moodle_url
+         */
+        public function get_url() {
+            return new \moodle_url('/mod/game/view.php', array('id' => $this->contextinstanceid));
+        }
+
+        /**
+         * Init method.
+         *
+         * @return void
+         */
+        protected function init() {
+            $this->data['crud'] = 'r';
+            $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+            $this->data['objecttable'] = 'game';
+        }
     }
+} else {
+    class game_played extends \core\event\base {
 
-    /**
-     * Create instance of event.
-     *
-     * @since Moodle 2.7
-     *
-     * @param \stdClass $game
-     * @param \context_module $context
-     * @return event
-     */
-    public static function played(\stdClass $game, \context_module $context) {
-        $data = array(
-            'context' => $context,
-            'objectid' => $game->id
-        );
-        $event = self::create($data);
-        $event->add_record_snapshot('game', $game);
-        return $event;
-    }
+        /**
+         * Returns description of what happened.
+         *
+         * @return string
+         */
+        public function get_description() {
+            return "The user with id '$this->userid' played the game with id '$this->objectid' for the game with the " .
+                "course module id '$this->contextinstanceid'.";
+        }
 
-    /**
-     * Return the legacy event log data.
-     *
-     * @return array|null
-     */
-    protected function get_legacy_logdata() {
-        return array($this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid,
-            $this->objectid, $this->contextinstanceid);
-    }
+        /**
+         * Create instance of event.
+         *
+         * @since Moodle 2.7
+         *
+         * @param \stdClass $game
+         * @param \context_module $context
+         * @return event
+         */
+        public static function played(\stdClass $game, \context_module $context) {
+            $data = array(
+                'context' => $context,
+                'objectid' => $game->id
+            );
+            $event = self::create($data);
+            $event->add_record_snapshot('game', $game);
+            return $event;
+        }
 
-    /**
-     * Return localised event name.
-     *
-     * @return string
-     */
-    public static function get_name() {
-        return get_string('eventgameviewed', 'mod_game');
-    }
+        /**
+         * Return the legacy event log data.
+         *
+         * @return array|null
+         */
+        protected function get_legacy_logdata() {
+            return array($this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid,
+                $this->objectid, $this->contextinstanceid);
+        }
 
-    /**
-     * Get URL related to the action.
-     *
-     * @return \moodle_url
-     */
-    public function get_url() {
-        return new \moodle_url('/mod/game/view.php', array('id' => $this->contextinstanceid));
-    }
+        /**
+         * Return localised event name.
+         *
+         * @return string
+         */
+        public static function get_name() {
+            return get_string('eventgameviewed', 'mod_game');
+        }
 
-    /**
-     * Init method.
-     *
-     * @return void
-     */
-    protected function init() {
-        $this->data['crud'] = 'r';
-        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-        $this->data['objecttable'] = 'game';
+        /**
+         * Get URL related to the action.
+         *
+         * @return \moodle_url
+         */
+        public function get_url() {
+            return new \moodle_url('/mod/game/view.php', array('id' => $this->contextinstanceid));
+        }
+
+        /**
+         * Init method.
+         *
+         * @return void
+         */
+        protected function init() {
+            $this->data['crud'] = 'r';
+            $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+            $this->data['objecttable'] = 'game';
+        }
     }
 }

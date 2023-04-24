@@ -157,11 +157,11 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
             $cm->id.'&chapterid='.$nextid.'"><img src="'.
             game_pix_url('bookquiz/nav_next', 'mod_game').'" class="bigicon" alt="'.get_string('navnext', 'book').'" ></a>';
             $nextbutton = '<center>';
-            $nextbutton  .= '<form name="form" method="get" action="attempt.php">';
-            $nextbutton  .= '<input type="hidden" name="id" value="'.$cm->id.'" >'."\r\n";
-            $nextbutton  .= '<input type="hidden" name="chapterid" value="'.$nextid.'" >'."\r\n";
-            $nextbutton  .= '<input type="submit" value="'.get_string( 'continue').'">';
-            $nextbutton  .= '</center>';
+            $nextbutton .= '<form name="form" method="get" action="attempt.php">';
+            $nextbutton .= '<input type="hidden" name="id" value="'.$cm->id.'" >'."\r\n";
+            $nextbutton .= '<input type="hidden" name="chapterid" value="'.$nextid.'" >'."\r\n";
+            $nextbutton .= '<input type="submit" value="'.get_string( 'continue').'">';
+            $nextbutton .= '</center>';
             game_updateattempts_maxgrade( $game, $attempt, $scoreattempt, 0, $cm, $course);
         }
     } else {
@@ -290,7 +290,7 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
  * @param stdClass $context
  */
 function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapterid, $scoreattempt, $game, $context) {
-    $onlyshow  = false;
+    $onlyshow = false;
     $showsolution = false;
 
     $questionlist = $questionid;
@@ -349,7 +349,7 @@ function game_bookquiz_selectrandomquestion( $questions) {
     }
 
     foreach ($questions as $rec) {
-        $categorylist  .= ',' . $rec->questioncategoryid;
+        $categorylist .= ',' . $rec->questioncategoryid;
     }
     $select = 'category in ('.substr( $categorylist, 1). ") AND qtype in ('shortanswer', 'truefalse', 'multichoice')";
     if (($recs = $DB->get_records_select( 'question', $select, null, '', 'id,id')) == false) {

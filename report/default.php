@@ -72,7 +72,7 @@ class game_default_report {
 
         // Define some strings.
         $strgames = get_string("modulenameplural", "game");
-        $strgame  = get_string("modulename", "game");
+        $strgame = get_string("modulename", "game");
 
         // Print the page header.
         if (function_exists( 'build_navigation')) {

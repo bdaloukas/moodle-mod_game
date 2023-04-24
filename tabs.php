@@ -39,7 +39,7 @@ if (!isset($course)) {
 $context = game_get_context_module_instance( $cm->id);
 
 $tabs = array();
-$row  = array();
+$row = array();
 $inactive = array();
 $activated = array();
 
@@ -80,7 +80,7 @@ if ($currenttab == 'reports' && isset($mode)) {
         }
     }
 
-    $row  = array();
+    $row = array();
     $currenttab = '';
     foreach ($reportlist as $report) {
         $row[] = new tabobject($report, "{$CFG->wwwroot}/mod/game/report.php?q=$game->id&amp;mode=$report",
@@ -92,11 +92,11 @@ if ($currenttab == 'reports' && isset($mode)) {
     $tabs[] = $row;
 }
 
-if ($currenttab == 'edit' and isset($mode)) {
+if ($currenttab == 'edit' && isset($mode)) {
     $inactive[] = 'edit';
     $activated[] = 'edit';
 
-    $row  = array();
+    $row = array();
     $currenttab = $mode;
 
     $strgames = get_string('modulenameplural', 'game');

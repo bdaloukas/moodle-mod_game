@@ -440,7 +440,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
 
         } else if ($userid && $nullifnone) {
             $grade = new stdClass;
-            $grade->userid   = $userid;
+            $grade->userid = $userid;
             $grade->rawgrade = null;
             game_grade_item_update( $game, $grade);
 
@@ -492,8 +492,8 @@ function game_grade_item_update($game, $grades=null) {
 
     if ($game->grade > 0) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
-        $params['grademax']  = $game->grade;
-        $params['grademin']  = 0;
+        $params['grademax'] = $game->grade;
+        $params['grademin'] = 0;
 
     } else {
         $params['gradetype'] = GRADE_TYPE_NONE;
@@ -558,10 +558,10 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
 
     if ($groupid) {
         $groupselect = "AND gm.groupid = $groupid";
-        $groupjoin   = "JOIN {groups_members} gm ON  gm.userid=u.id";
+        $groupjoin = "JOIN {groups_members} gm ON  gm.userid=u.id";
     } else {
         $groupselect = "";
-        $groupjoin   = "";
+        $groupjoin = "";
     }
 
     $sql = "SELECT qa.*, qa.gameid, q.grade, u.lastname,u.firstname,u.picture ".
@@ -572,11 +572,11 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
          return;
     }
 
-    $cmcontext      = game_get_context_module_instance( $cm->id);
-    $grader          = has_capability('moodle/grade:viewall', $cmcontext);
+    $cmcontext = game_get_context_module_instance( $cm->id);
+    $grader = has_capability('moodle/grade:viewall', $cmcontext);
     $accessallgroups = has_capability('moodle/site:accessallgroups', $cmcontext);
-    $viewfullnames   = has_capability('moodle/site:viewfullnames', $cmcontext);
-    $groupmode       = groups_get_activity_groupmode($cm, $course);
+    $viewfullnames = has_capability('moodle/site:viewfullnames', $cmcontext);
+    $groupmode = groups_get_activity_groupmode($cm, $course);
 
     if (is_null($modinfo->groups)) {
         $modinfo->groups = groups_get_user_groups($course->id); // Load all my groups and cache it in modinfo.
@@ -605,27 +605,27 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
 
         $tmpactivity = new stdClass;
 
-        $tmpactivity->type      = 'game';
-        $tmpactivity->gameid    = $attempt->gameid;
-        $tmpactivity->cmid      = $cm->id;
-        $tmpactivity->name      = $aname;
+        $tmpactivity->type = 'game';
+        $tmpactivity->gameid = $attempt->gameid;
+        $tmpactivity->cmid = $cm->id;
+        $tmpactivity->name = $aname;
         $tmpactivity->sectionnum = $cm->sectionnum;
         $tmpactivity->timestamp = $attempt->timefinish;
 
         $tmpactivity->content = new stdClass;
         $tmpactivity->content->attemptid = $attempt->id;
         $tmpactivity->content->sumgrades = $attempt->score * $attempt->grade;
-        $tmpactivity->content->maxgrade  = $attempt->grade;
-        $tmpactivity->content->attempt   = $attempt->attempt;
+        $tmpactivity->content->maxgrade = $attempt->grade;
+        $tmpactivity->content->attempt = $attempt->attempt;
 
         $tmpactivity->user = new stdClass;
-        $tmpactivity->user->userid   = $tmpactivity->user->id = $attempt->userid;
+        $tmpactivity->user->userid = $tmpactivity->user->id = $attempt->userid;
         $tmpactivity->user->fullname = fullname($attempt, $viewfullnames);
         $tmpactivity->user->firstname = $attempt->firstname;
         $tmpactivity->user->lastname = $attempt->lastname;
-        $tmpactivity->user->picture  = $attempt->picture;
-        $tmpactivity->user->imagealt  = $attempt->imagealt;
-        $tmpactivity->user->email  = $attempt->email;
+        $tmpactivity->user->picture = $attempt->picture;
+        $tmpactivity->user->imagealt = $attempt->imagealt;
+        $tmpactivity->user->email = $attempt->email;
 
         $activities[$index++] = $tmpactivity;
     }
@@ -822,7 +822,7 @@ function game_get_grading_options() {
             GAME_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
             GAME_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
             GAME_ATTEMPTFIRST => get_string('attemptfirst', 'quiz'),
-            GAME_ATTEMPTLAST  => get_string('attemptlast', 'quiz'));
+            GAME_ATTEMPTLAST => get_string('attemptlast', 'quiz'));
 }
 
 /**
@@ -1195,13 +1195,13 @@ if (defined('USE_GET_SHORTCUTS')) {
 
 if (defined( 'GAME_MOODLE_401')) {
     /**
-    * Return the preconfigured tools which are configured for inclusion in the activity picker.
-    *
-    * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
-    * @param \stdClass $user the user object, to use for cap checks if desired.
-    * @param stdClass $course the course to scope items to.
-    * @return array the array of content items.
-    */
+     * Return the preconfigured tools which are configured for inclusion in the activity picker.
+     *
+     * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
+     * @param \stdClass $user the user object, to use for cap checks if desired.
+     * @param stdClass $course the course to scope items to.
+     * @return array the array of content items.
+     */
     function mod_game_get_course_content_items(\core_course\local\entity\content_item $defaultmodulecontentitem, \stdClass $user,
         \stdClass $course) {
 
@@ -1210,22 +1210,22 @@ if (defined( 'GAME_MOODLE_401')) {
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hangman');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'cryptex');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'cross');
-        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hiddenpicture');        
+        mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hiddenpicture');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'millionaire');
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'sudoku');
 
         return $types;
     }
     /**
-    * Helper function for mod_game_get_course_content_items.
-    * It is called for every game of module Game.
-    *
-    * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
-    * @param \stdClass $user the user object, to use for cap checks if desired.
-    * @param stdClass $course the course to scope items to.
-    * @param types array the array of content items.
-    * @param string $kind the kind of each game.
-    */    
+     * Helper function for mod_game_get_course_content_items.
+     * It is called for every game of module Game.
+     *
+     * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
+     * @param \stdClass $user the user object, to use for cap checks if desired.
+     * @param stdClass $course the course to scope items to.
+     * @param types array the array of content items.
+     * @param string $kind the kind of each game.
+     */
     function mod_game_get_course_content_items_type(\core_course\local\entity\content_item $defaultmodulecontentitem,
          \stdClass $user, \stdClass $course, &$types, $kind) {
         global $OUTPUT, $CFG, $DB;
@@ -1240,19 +1240,20 @@ if (defined( 'GAME_MOODLE_401')) {
         $type->type = "game&type=".$kind;
         $type->name = preg_replace('/.*type=/', '', $type->type);
         $type->title = get_string('pluginname', 'game').' - '.get_string('game_'.$kind, 'game');
-        $type->link = new moodle_url('/course/modedit.php', array('add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id));
+        $type->link = new moodle_url('/course/modedit.php',
+            array('add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id));
         $type->help = '';
         if (empty($type->help) && !empty($type->name) &&
             get_string_manager()->string_exists('help' . $type->name, 'game')) {
                 $type->help = get_string('help' . $type->name, 'game');
         }
-                        
+
         if (empty($type->icon)) {
             $type->icon = $OUTPUT->pix_icon('monologo', '', 'game', array('class' => 'icon'));
         } else {
             $type->icon = html_writer::empty_tag('img', array('src' => $type->icon, 'alt' => $type->name, 'class' => 'icon'));
         }
-            
+
         $types[] = new \core_course\local\entity\content_item(
             2,
             $type->name,
@@ -1263,7 +1264,7 @@ if (defined( 'GAME_MOODLE_401')) {
             $defaultmodulecontentitem->get_archetype(),
             $defaultmodulecontentitem->get_component_name(),
             $defaultmodulecontentitem->get_purpose()
-        );           
+        );
     }
 }
 

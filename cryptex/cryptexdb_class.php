@@ -167,7 +167,7 @@ class CryptexDB extends CrossDB {
                 $c = game_substr( $letters, $pos, 1);
                 $m = game_substr( $mask, $pos, 1);
 
-                if ($showsolution and $m > '0') {
+                if ($showsolution && $m > '0') {
                     echo "<td><b><font color=red>".$c."</font></td>";
                 } else if ( $m == '1') {
                     echo "<td><b><font color=red>".$c."</font></td>";
@@ -212,13 +212,13 @@ class CryptexDB extends CrossDB {
     public function insertchars( &$letters, $cols, $rows, $char, &$spaces) {
         $len = game_strlen( $letters);
         for ($i = 0; $i < $len; $i++) {
-            if (game_substr( $letters, $i, 1) == '.'  and game_substr( $letters, $i + 1, 1) == '.' ) {
+            if (game_substr( $letters, $i, 1) == '.'  && game_substr( $letters, $i + 1, 1) == '.' ) {
                 $this->setchar( $letters, $i, game_substr( $char, 0, 1));
                 $this->setchar( $letters, $i + 1, game_substr( $char, 1, 1));
                 $spaces -= 2;
                 return true;
             }
-            if (game_substr( $letters, $i, 1) == '.' and game_substr( $letters, $i + $cols + 1, 1) == '.' ) {
+            if (game_substr( $letters, $i, 1) == '.' && game_substr( $letters, $i + $cols + 1, 1) == '.' ) {
                 $this->setchar( $letters, $i, game_substr( $char, 0, 1));
                 $this->setchar( $letters, $i + $cols + 1, game_substr( $char, 1, 1));
                 $spaces -= 2;

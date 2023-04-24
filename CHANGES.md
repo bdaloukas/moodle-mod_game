@@ -1,3 +1,6 @@
+Changes in version 2023-01-25
+* Fix: Modle 4.2 compatibility.
+
 Changes in version 2023-04-24
 * Fix: Crossword didn't not check if a glossary entry is approved.
 

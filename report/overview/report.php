@@ -46,7 +46,7 @@ class game_report extends game_default_report {
         global $CFG, $SESSION, $DB;
 
         // Define some strings.
-        $strreallydel  = addslashes(get_string('deleteattemptcheck', 'game'));
+        $strreallydel = addslashes(get_string('deleteattemptcheck', 'game'));
         $strtimeformat = get_string('strftimedatetime');
         $strreviewquestion = get_string('reviewresponse', 'quiz');
 
@@ -338,7 +338,7 @@ class game_report extends game_default_report {
             if (!empty($currentgroup) && empty($noattempts)) {
                 // We want a particular group and we only want to see students WITH attempts.
                 // So join on groups_members and do an inner join on attempts.
-                $from  = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
+                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
                     groups_members_join_sql().
                     'JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = '.$game->id;
                 $where = ' WHERE ra.contextid ' . $contextlists .
@@ -346,7 +346,7 @@ class game_report extends game_default_report {
             } else if (!empty($currentgroup) && !empty($noattempts)) {
                 // We want a particular group and we want to do something funky with attempts.
                 // So join on groups_members and left join on attempts...
-                $from  = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
+                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
                     groups_members_join_sql().
                     'LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = '.$game->id;
                 $where = ' WHERE ra.contextid ' .$contextlists . ' AND '.groups_members_where_sql($currentgroup);
@@ -361,7 +361,7 @@ class game_report extends game_default_report {
             } else if (empty($currentgroup)) {
                 // We don't care about group, and we to do something funky with attempts.
                 // So do a left join on attempts.
-                $from  = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
+                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
                     ' LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = '.$game->id;
                 $where = " WHERE ra.contextid $contextlists";
                 if (empty($noattempts)) {
@@ -374,14 +374,14 @@ class game_report extends game_default_report {
                     $where .= ' AND qa.userid IS NULL';
                 } else if ($noattempts == 3) {
                     // We want all attempts.
-                    $from  = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
+                    $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
                     $where = ' WHERE qa.gameid = '.$game->id.' AND qa.preview = 0';
                 } // The noattempts = 2 means we want all students, with or without attempts.
             }
             $countsql = 'SELECT COUNT(DISTINCT('.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) '.$from.$where;
         } else {
             if (empty($noattempts)) {
-                $from   = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
+                $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
                 $where = ' WHERE qa.gameid = '.$game->id.' AND qa.preview = 0';
                 $countsql = 'SELECT COUNT(DISTINCT('.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) '.$from.$where;
             }
@@ -398,24 +398,24 @@ class game_report extends game_default_report {
                 if ($table->get_sql_where()) {
                     $countsql .= ' AND '.$table->get_sql_where();
                 }
-                $total  = count_records_sql($countsql);
+                $total = count_records_sql($countsql);
             }
 
             // Add extra limits due to sorting by question grade.
             if ($sort = $table->get_sql_sort()) {
-                $sortparts    = explode(',', $sort);
-                $newsort      = array();
+                $sortparts = explode(',', $sort);
+                $newsort = array();
                 $questionsort = false;
                 foreach ($sortparts as $sortpart) {
                     $sortpart = trim($sortpart);
                     if (substr($sortpart, 0, 1) == '$') {
                         if (!$questionsort) {
-                            $qid          = intval(substr($sortpart, 1));
+                            $qid = intval(substr($sortpart, 1));
                             $select .= ', grade ';
-                            $from        .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id '.
+                            $from .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id '.
                                                 'LEFT JOIN {question_states} qs ON qs.id = qns.newgraded ';
-                            $where       .= ' AND ('.sql_isnull('qns.questionid').' OR qns.questionid = '.$qid.')';
-                            $newsort[]    = 'grade '.(strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
+                            $where .= ' AND ('.sql_isnull('qns.questionid').' OR qns.questionid = '.$qid.')';
+                            $newsort[] = 'grade '.(strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
                             $questionsort = true;
                         }
                     } else {
