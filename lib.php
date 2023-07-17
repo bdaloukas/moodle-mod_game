@@ -1238,7 +1238,7 @@ if (defined( 'GAME_MOODLE_401')) {
             return;
         }
         $type = new stdClass;
-        $type->name = preg_replace('/.*type=/', '', $type->type);
+        $type->name = $kind;
         $type->title = get_string('pluginname', 'game').' - '.get_string('game_'.$kind, 'game');
         $type->link = new moodle_url('/course/modedit.php',
             array('add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id));
