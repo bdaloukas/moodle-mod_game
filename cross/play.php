@@ -911,18 +911,19 @@ function CheckHtmlClick() {
         echo '<div style="margin-top: 1em;">';
 
         if (!$done) {
-            echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: none;">'.
+            echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: inline;">'.
             get_string( 'cross_checkbutton', 'game');
+            echo '</button>';
+
+            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
+                ' type="button" onclick="CheckServerClick( 1);" style="display: inline;">'.
+            get_string( 'cross_endofgamebutton', 'game');
             echo '</button>';
         }
 
-        echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
-        ' type="button" onclick="CheckServerClick( 1);" style="display: none;">'.
-        get_string( 'cross_endofgamebutton', 'game');
-        echo '</button>';
         if ($game->param5 == 1 || $game->param5 == null) {
             echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" '.
-            ' onclick="OnPrint( 0);" style="display: none;">'.get_string( 'print', 'game');
+            ' onclick="OnPrint( 0);" style="display: inline;">'.get_string( 'print', 'game');
             echo '</button>';
         }
 

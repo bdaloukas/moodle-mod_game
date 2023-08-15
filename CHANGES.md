@@ -1,3 +1,6 @@
+Changes in version 2023-08-16
+* Fix: Problem in showing button in crossword.
+
 Changes in version 2023-01-25
 * Fix: Modle 4.2 compatibility.
 
