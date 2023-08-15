@@ -523,7 +523,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
 function game_millionaire_select_serial_question($game, $table, $select, $level, $order, $idfields = "id") {
     global $DB, $USER;
 
-    $sql  = "SELECT $idfields,$idfields FROM ".$table." WHERE $select ";
+    $sql = "SELECT $idfields,$idfields FROM ".$table." WHERE $select ";
     if ($order != '') {
         $sql .= " ORDER BY $order";
     }

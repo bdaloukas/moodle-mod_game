@@ -139,7 +139,7 @@ function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
         echo '<br>'.$game->bottomtext;
     }
 
-    if ($showboard and $game->param8 != 0) {
+    if ($showboard && $game->param8 != 0) {
         game_snakes_showquestion( $cm->id, $game, $snakes, $query, $context);
     }
 }
@@ -469,13 +469,13 @@ function game_snakes_position( $cm, $game, $attempt, $snakes, $correct, $query, 
 
     if ($correct) {
         if (($next = game_snakes_foundlander( $snakes->position + $snakes->dice, $data))) {
-            $snakes->position  = $next;
+            $snakes->position = $next;
         } else {
-            $snakes->position  = $snakes->position + $snakes->dice;
+            $snakes->position = $snakes->position + $snakes->dice;
         }
     } else {
         if (($next = game_snakes_foundsnake( $snakes->position, $data))) {
-            $snakes->position  = $next;
+            $snakes->position = $next;
         }
     }
 

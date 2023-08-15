@@ -35,10 +35,10 @@ if (!isset($plugin)) {
 }
 
 $plugin->component = 'mod_game';  // Full name of the plugin (used for diagnostics).
-$plugin->version   = 2023010801;  // The current module version (Date: YYYYMMDDXX).
-$plugin->requires  = 2010112400;  // Requires Moodle 2.0.
-$plugin->cron      = 0;           // Period for cron to check this module (secs).
-$plugin->release   = '2023-01-08-01';
+$plugin->version = 2023042500;  // The current module version (Date: YYYYMMDDXX).
+$plugin->requires = 2010112400;  // Requires Moodle 2.0.
+$plugin->cron = 0;           // Period for cron to check this module (secs).
+$plugin->release = '2023-04-25';
 $plugin->maturity = MATURITY_STABLE;
 
 if ($useplugin != 2) {

@@ -141,7 +141,7 @@ function game_bookquiz_save( $gameid, $bookid, $ids, $form) {
         array( 'gameid' => $gameid), '', 'id,chapterid,questioncategoryid')) != false) {
         foreach ($recs as $rec) {
             $questions[$rec->chapterid] = $rec->questioncategoryid;
-            $recids[$rec->chapterid]  = $rec->id;
+            $recids[$rec->chapterid] = $rec->id;
         }
     }
 

@@ -34,7 +34,7 @@ require_once( "bookquiz/play.php");
 require_once( "snakes/play.php");
 require_once( "hiddenpicture/play.php");
 
-$action  = optional_param('action', "", PARAM_ALPHANUM);  // Is the param action.
+$action = optional_param('action', "", PARAM_ALPHANUM);  // Is the param action.
 
 game_show_header( $id, $game, $course, $context, $cm);
 game_do_attempt( $game, $action, $course, $context, $cm);

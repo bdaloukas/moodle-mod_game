@@ -42,7 +42,7 @@ define( "GAME_GRADEMETHOD_LAST",    "4");
 $gamegrademethod = array ( GAME_GRADEMETHOD_HIGHEST => get_string("gradehighest", "game"),
                              GAME_GRADEMETHOD_AVERAGE => get_string("gradeaverage", "game"),
                              GAME_GRADEMETHOD_FIRST => get_string("attemptfirst", "game"),
-                             GAME_GRADEMETHOD_LAST  => get_string("attemptlast", "game"));
+                             GAME_GRADEMETHOD_LAST => get_string("attemptlast", "game"));
 
 define( "CONST_GAME_TRIES_REPETITION", "5");
 
@@ -83,11 +83,15 @@ function game_upper( $str, $lang='') {
 
     $str = game_strtoupper( $str);
 
-    switch ($lang) {
+    switch ( substr( $lang, 0, 2)) {
         case 'el':
             $from = 'ΆΈΉΊΌΎΏ';
             $to = 'ΑΕΗΙΟΥΩ';
             break;
+        //case 'pt':
+        //    $from = 'ÁÊÉÍÓÔ';
+        //    $to = 'AEEIOO';
+        //    break;
         default:
             return $str;
     }
@@ -370,7 +374,7 @@ function game_question_selectrandom( $game, $table, $select, $idfields='id', $us
     for ($i = 1; $i <= CONST_GAME_TRIES_REPETITION; $i++) {
         $sel = mt_rand(0, $count - 1);
 
-        $sql  = "SELECT $idfields, $idfields FROM ".$table." WHERE $select";
+        $sql = "SELECT $idfields, $idfields FROM ".$table." WHERE $select";
         if (($recs = $DB->get_records_sql( $sql, null, $sel, 1)) == false) {
             return false;
         }
@@ -771,6 +775,11 @@ function game_questions_shortanswer_glossary( $game) {
         $table .= ',{glossary_entries_categories} gec';
         $select .= ' AND gec.entryid = ge.id '.
             ' AND gec.categoryid = '.$game->glossarycategoryid;
+    }
+
+    if ($game->glossaryonlyapproved) {
+        // Only approved glossary entries will be used.
+        $select .= ' AND (ge.approved=1 OR ge.teacherentry=1)';
     }
 
     $sql = 'SELECT ge.id, concept as answertext, definition as questiontext, ge.id as glossaryentryid, '.

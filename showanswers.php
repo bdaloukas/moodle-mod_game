@@ -34,7 +34,7 @@ if (!has_capability('mod/game:viewreports', $context)) {
 
 $PAGE->navbar->add(get_string('showanswers', 'game'));
 
-$action  = optional_param('action', "", PARAM_ALPHANUM);  // Action.
+$action = optional_param('action', "", PARAM_ALPHANUM);  // Action.
 if ($action == 'delstats') {
     $DB->delete_records('game_repetitions', array('gameid' => $game->id, 'userid' => $USER->id));
 }

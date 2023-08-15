@@ -545,7 +545,7 @@ class Cross {
                 if ((game_substr( $puzzle, $n - 1, 1) > '0' ||
                     game_substr( $puzzle, $n + 1, 1) > '0') &&
                     (game_substr( $puzzle, $n - $n22, 1) > '0'
-                    or game_substr( $puzzle, $n + $n22, 1) > '0')) {
+                    || game_substr( $puzzle, $n + $n22, 1) > '0')) {
                     $ret .= "<td align=center class=connector>$c</td>";
                 } else {
                     $ret .= "<td align=center class=filled>$c</td>";
@@ -602,7 +602,7 @@ class Cross {
             $newdir = 'h';
         }
 
-        $regex  = game_substr( $puzzle, $pos, 1);
+        $regex = game_substr( $puzzle, $pos, 1);
         if ( ($regex == '0' || $regex == '.') && (!$valblanc)) {
             return false;
         }

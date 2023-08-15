@@ -275,7 +275,7 @@ function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolu
             $game->param3 = 1;
         }
         echo "\r\n<br/><img src=\"".game_pix_url('hangman/'.$game->param3.'/hangman_'.$wrong, 'mod_game')."\"";
-        $message  = sprintf( get_string( 'hangman_wrongnum', 'game'), $wrong, $max);
+        $message = sprintf( get_string( 'hangman_wrongnum', 'game'), $wrong, $max);
         echo ' ALIGN="MIDDLE" BORDER="0" HEIGHT="100" alt="'.$message.'"/>';
 
         if ($wrong >= $max) {
@@ -353,7 +353,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
 
     $word = $query->answertext;
 
-    $newletter  = optional_param('newletter', "", PARAM_TEXT);
+    $newletter = optional_param('newletter', "", PARAM_TEXT);
     $userplayed = $newletter != '';
     if ( $newletter == '_') {
         $newletter = ' ';
