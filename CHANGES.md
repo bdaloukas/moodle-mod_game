@@ -1,5 +1,8 @@
+Changes in version 2023-08-16-01
+* Fix: Show the correct number of questions in mod_form.php (Ignores old versions of questions).
+
 Changes in version 2023-08-16
-* Fix: Problem in showing button in crossword.
+* Fix: Problem in showing buttons in crossword.
 
 Changes in version 2023-01-25
 * Fix: Modle 4.2 compatibility.
