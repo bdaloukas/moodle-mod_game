@@ -1308,7 +1308,8 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         $rec = $DB->get_record( 'files', $a);
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {
+        $file = $fs->get_file_by_hash($rec->pathnamehash);
+        if (!$file || $file->is_directory()) {
             return false;
         }
 

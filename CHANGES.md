@@ -1,3 +1,6 @@
+Changes in version 2023-08-16-04
+* Fix: Showing images on questions.
+
 Changes in version 2023-08-16-03
 * Fix: In Cryptex uses last version of questions.
 
