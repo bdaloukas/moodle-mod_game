@@ -1,3 +1,6 @@
+Changes in version 2023-08-16-02
+* Fix: In showanswers.php uses last version of question.
+
 Changes in version 2023-08-16-01
 * Fix: Show the correct number of questions in mod_form.php (Ignores old versions of questions).
 

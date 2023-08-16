@@ -205,14 +205,24 @@ function game_showanswers_question( $game, $context) {
 
     if ($game->gamekind != 'bookquiz') {
         if (game_get_moodle_version() >= '04.00') {
-            $table .= ",{$CFG->prefix}question_bank_entries qbe ";
-            $select = 'qbe.id=q.id AND qbe.questioncategoryid='.$game->questioncategoryid;
-            if ($game->subcategories) {
-                $cats = question_categorylist( $game->questioncategoryid);
-                if (count( $cats) > 0) {
-                    $s = implode( ',', $cats);
-                    $select = 'qbe.questioncategoryid in ('.$s.')';
+            $sql = "SELECT qbe.id FROM $table,{$CFG->prefix}question_bank_entries qbe ".
+                " WHERE qbe.id=q.id AND qbe.questioncategoryid=?";
+            $recs = $DB->get_records_sql( $sql, array( $game->questioncategoryid));
+            $ret = array();
+            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+                ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect( $game).
+                ' ORDER BY version DESC';
+            foreach ($recs as $rec) {
+                $recsq = $DB->get_records_sql( $sql, array( $rec->id), 0, 1);
+                foreach ($recsq as $recq) {
+                    $a[] = $recq->id;
                 }
+            }
+            $table = '{question} q';
+            if (count( $a) == 0) {
+                $select = 'q.id IN (0)';
+            } else {
+                $select = 'q.id IN ('.implode( ',', $a).')';
             }
         } else {
             $select = 'category='.$game->questioncategoryid;
