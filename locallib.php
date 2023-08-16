@@ -836,7 +836,6 @@ function game_questions_shortanswer_quiz( $game) {
         $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
             "qa.answer as answertext, q.id as questionid,".
             " 0 as glossaryentryid,'' as attachment";
-
     } else {
         $select = "qtype='shortanswer' AND qs.quizid='$game->quizid' ".
             " AND qs.questionid=q.id".
@@ -890,6 +889,10 @@ function game_questions_shortanswer_question( $game) {
     $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, ".
         "qa.answer as answertext, q.id as questionid";
 
+    if (game_get_moodle_version() >= '04.00') {
+        $fields .= ',qv.questionbankentryid, qv.version';
+    }
+
     return game_questions_shortanswer_question_fraction( $table, $fields, $select);
 }
 
@@ -905,7 +908,10 @@ function game_questions_shortanswer_question( $game) {
 function game_questions_shortanswer_question_fraction( $table, $fields, $select) {
     global $DB;
 
-    $sql = "SELECT $fields FROM $table WHERE $select ORDER BY fraction DESC";
+    $versions = game_get_moodle_version() >= '04.00';
+
+    $order = ($versions ? 'version DESC,' : '').'fraction';
+    $sql = "SELECT $fields FROM $table WHERE $select ORDER BY $order DESC";
 
     $recs = $DB->get_records_sql( $sql);
     if ($recs == false) {
@@ -913,11 +919,22 @@ function game_questions_shortanswer_question_fraction( $table, $fields, $select)
     }
 
     $recs2 = array();
-    $map = array();
+    $map = $map2 = array();
     foreach ($recs as $rec) {
         if (array_key_exists( $rec->questionid, $map)) {
             continue;
         }
+        
+        if( $versions) {
+            if( isset( $rec->questionbankentryid)) {
+                if (array_key_exists( $rec->questionbankentryid, $map2)) {
+                    continue;
+                } else {
+                    $map2[ $rec->questionbankentryid] = 1;
+                }
+            }
+        }
+
         $rec2 = new stdClass();
         $rec2->id = $rec->id;
         $rec2->questiontext = $rec->questiontext;

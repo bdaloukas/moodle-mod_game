@@ -1,5 +1,8 @@
+Changes in version 2023-08-16-03
+* Fix: In Cryptex uses last version of questions.
+
 Changes in version 2023-08-16-02
-* Fix: In showanswers.php uses last version of question.
+* Fix: In showanswers.php uses last version of questions.
 
 Changes in version 2023-08-16-01
 * Fix: Show the correct number of questions in mod_form.php (Ignores old versions of questions).
