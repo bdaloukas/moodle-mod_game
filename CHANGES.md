@@ -1,3 +1,6 @@
+Changes in version 2023-08-16-05
+* Fix: Showing equation in crossword.
+
 Changes in version 2023-08-16-04
 * Fix: Showing images on questions.
 
