@@ -1,3 +1,6 @@
+Changes in version 2023-08-16-06
+* Fix: In Snakes and Ladders uses last version of questions.
+
 Changes in version 2023-08-16-05
 * Fix: Showing equation in crossword.
 

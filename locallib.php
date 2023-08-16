@@ -613,15 +613,27 @@ function game_questions_selectrandom( $game, $count=1) {
 function game_questions_selectrandom_detail( $table, $select, $idfield="id", $count=1) {
     global $DB;
 
-    $sql = "SELECT $idfield FROM $table WHERE $select";
+    $versions = game_get_moodle_version() >= '04.00';
+    $fields = $versions ? ',qv.questionbankentryid,qv.version' : '';
+    $order = $versions ? ' ORDER BY qv.questionbankentryid,qv.version DESC' : '';
+
+    $sql = "SELECT $idfield{$fields} FROM $table WHERE $select $order";
     if (($recs = $DB->get_records_sql( $sql)) == false) {
         return false;
     }
 
     // The array contains the ids of all questions.
+    $map = array();
     $a = array();
     foreach ($recs as $rec) {
-        $a[$rec->id] = $rec->id;
+        if( $versions) {
+            if( array_key_exists( $rec->questionbankentryid, $map)) {
+                continue;
+            } else {
+                $map[ $rec->questionbankentryid] = 1;
+            }
+        }
+        $a[ $rec->id] = $rec->id;
     }
 
     if ($count >= count( $a)) {
