@@ -262,7 +262,7 @@ function game_user_outline($course, $user, $mod, $game) {
 
         $result = new stdClass;
         if ((float)$grade->score) {
-            $result->info = get_string('grade').':&nbsp;'.round($grade->score * $game->grade, $game->decimalpoints).' '.
+            $result->info = get_string('gradenoun').':&nbsp;'.round($grade->score * $game->grade, $game->decimalpoints).' '.
                             get_string('percent', 'game').':&nbsp;'.round(100 * $grade->score, $game->decimalpoints).' %';
         }
         $result->time = $grade->timemodified;
@@ -285,7 +285,7 @@ function game_user_complete($course, $user, $mod, $game) {
 
     if ($attempts = $DB->get_records_select('game_attempts', "userid='$user->id' AND gameid='$game->id'", null, 'attempt ASC')) {
         if ($game->grade && $grade = $DB->get_record('game_grades', array( 'userid' => $user->id, 'gameid' => $game->id))) {
-            echo get_string('grade').': '.game_format_score( $game, $grade->score).'/'.$game->grade.'<br />';
+            echo get_string('gradenoun').': '.game_format_score( $game, $grade->score).'/'.$game->grade.'<br />';
         }
         foreach ($attempts as $attempt) {
             echo get_string('attempt', 'game').' '.$attempt->attempt.': ';
