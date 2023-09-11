@@ -839,7 +839,7 @@ function game_questions_shortanswer_quiz( $game) {
             }
         }
 
-        if (count( $a) == 0) {
+        if ($a == null || count( $a) == 0) {
             $a = array( 0);
         }
         $select = "qtype='shortanswer' AND q.id IN (".implode( ',', $a).')'.
