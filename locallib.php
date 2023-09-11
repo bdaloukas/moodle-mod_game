@@ -1271,7 +1271,7 @@ function game_get_best_grade($game, $userid) {
     $score = game_get_best_score( $game, $userid);
 
     if (is_numeric( $score)) {
-        return round( $score * $game->grade, $game->decimalpoints);
+        return round( $score * $game->grade, $game->decimalpoints === null ? 2 : $game->decimalpoints);
     } else {
         return null;
     }
@@ -1287,7 +1287,7 @@ function game_get_best_grade($game, $userid) {
  */
 function game_score_to_grade($score, $game) {
     if ($score) {
-        return round($score * $game->grade, $game->decimalpoints);
+        return round($score * $game->grade, $game->decimalpoints === null ? 2 : $game->decimalpoints);
     } else {
         return 0;
     }
@@ -2640,22 +2640,23 @@ function game_substr() {
     $num = func_num_args();
     $a = func_get_args();
 
+    $pos = $a[ 1] === null ? 0 : $a[ 1];
     if ($num == 3) {
         if (game_get_moodle_version() >= '02.08') {
-            return core_text::substr( $a[0], $a[1], $a[2]);
+            return core_text::substr( $a[0], $pos, $a[2]);
         } else if (game_get_moodle_version() >= '02.04') {
-            return textlib::substr( $a[0], $a[1], $a[2]);
+            return textlib::substr( $a[0], $pos, $a[2]);
         } else {
-            return textlib_get_instance()->substr( $a[0], $a[1], $a[2]);
+            return textlib_get_instance()->substr( $a[0], $pos, $a[2]);
         }
     } else if ($num == 2) {
         if (game_get_moodle_version() >= '02.08') {
-            return core_text::substr( $a[0], $a[1]);
+            return core_text::substr( $a[0], $pos);
         }
         if (game_get_moodle_version() >= '02.04') {
-            return textlib::substr( $a[0], $a[1]);
+            return textlib::substr( $a[0], $pos);
         } else {
-            return textlib_get_instance()->substr( $a[0], $a[1]);
+            return textlib_get_instance()->substr( $a[0], $pos);
         }
     } else {
         die( 'Substr requires 2 or 3 parameters');

@@ -51,8 +51,6 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
     $updatehangman = (($attempt != false) && ($hangman != false));
 
     // New game.
-    srand ((double)microtime() * 1000003);
-
     // I try 10 times to find a new question.
     $found = false;
     $minnum = 0;

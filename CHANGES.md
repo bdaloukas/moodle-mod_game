@@ -1,3 +1,6 @@
+Changes in version 2023-09-11-01
+* Fix: Warnings in PHP 8.
+
 Changes in version 2023-09-11
 * Fix: Exception count(*) in locallib(842)
 

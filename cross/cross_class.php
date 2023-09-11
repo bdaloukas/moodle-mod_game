@@ -86,6 +86,11 @@ class Cross {
     public $mreps;
     /** @var Average of repetitions. */
     public $maveragereps;
+    
+    public $mn20min;
+    public $mn20max;
+    public $mlegendh;
+    public $mlegendv;
 
     /**
      * Set words for computing.

@@ -815,7 +815,7 @@ function game_format_score($game, $score) {
  * @return foat score
  */
 function game_format_grade($game, $grade) {
-    return format_float($grade, $game->decimalpoints);
+    return format_float($grade, $game->decimalpoints == null ? 2 : $game->decimalpoints);
 }
 
 /**
