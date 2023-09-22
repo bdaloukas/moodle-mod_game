@@ -1248,7 +1248,7 @@ if (defined( 'GAME_MOODLE_401')) {
         $type->name = preg_replace('/.*type=/', '', $type->type);
         $type->title = get_string('pluginname', 'game').' - '.get_string('game_'.$kind, 'game');
         $type->link = new moodle_url('/course/modedit.php',
-            array('add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id));
+            array('add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id, 'id' => $course->id));
         $type->help = '';
         if (empty($type->help) && !empty($type->name) &&
             get_string_manager()->string_exists('help' . $type->name, 'game')) {
