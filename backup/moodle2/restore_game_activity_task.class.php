@@ -67,7 +67,9 @@ class restore_game_activity_task extends restore_activity_task {
      * to the activity to be executed by the link decoder
      */
     public static function define_decode_rules() {
-        $rules = array();
+        $rules = [];
+        $rules[] = new restore_decode_rule('GAMEINDEX', '/mod/game/index.php?id=$1', 'course');
+        $rules[] = new restore_decode_rule('GAMEVIEWBYID', '/mod/game/view.php?id=$1', 'course_module');
 
         return $rules;
     }
