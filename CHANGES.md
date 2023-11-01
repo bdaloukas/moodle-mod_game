@@ -1,3 +1,6 @@
+Changes in version 2023-11-01-3
+* Fix: Millionaire performance bug in Moodle 4 when there are subcategories.
+
 Changes in version 2023-11-01-2
 * Fix: Crossword shows message wrong character instead of there are no words.
 

@@ -424,7 +424,8 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             if ($game->subcategories) {
                 $cats = question_categorylist( $game->questioncategoryid);
                 if (count( $cats) > 0) {
-                    $select2 = ' qbe.questioncategoryid in ('.implode( ',', $cats).')';
+                    $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND '.
+                        ' qbe.questioncategoryid in ('.implode( ',', $cats).')';
                 }
             }
         } else {
