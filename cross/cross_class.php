@@ -213,7 +213,10 @@ class Cross {
                 break;
             }
         }
-        $this->computepuzzleinfo( $this->mbestn20, $this->mbestcrosspos, $this->mbestcrossdir, $this->mbestcrossword, false);
+        
+        if( !$this->computepuzzleinfo( $this->mbestn20, $this->mbestcrosspos, $this->mbestcrossdir, $this->mbestcrossword, false)) {
+            return false;
+        }
 
         return $this->savepuzzle( $crossm, $crossd, $ctries, time() - $t1);
     }
@@ -284,12 +287,11 @@ class Cross {
         $nwords = count( $crossword);
         if ($minwords) {
             if ($nwords < $minwords) {
-                return true;
+                return false;
             }
         }
 
         $score = $this->computescore( $puzzle, $n20, $n22, $n2222, $nwords, $nconnectors, $nfilleds, $cspaces, $crossword);
-
         if ($score > $this->mbestscore) {
             $this->mbestcrosspos = $crosspos;
             $this->mbestcrossdir = $crossdir;
@@ -382,8 +384,8 @@ class Cross {
         $this->mmaxrow = 0;
         $this->mcletter = 0;
 
-        if (count( $crossword) == 0) {
-            return;
+        if ($crossword == null || count( $crossword) == 0) {
+            return false;
         }
 
         if ($bprint) {
@@ -435,6 +437,8 @@ class Cross {
         if ($this->mminrow > $this->mmaxrow) {
             $this->mminrow = $this->mmaxrow;
         }
+        
+        return true;
     }
 
     /**

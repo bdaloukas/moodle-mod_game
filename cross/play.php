@@ -123,8 +123,9 @@ function game_cross_new( $game, $attemptid, &$crossm) {
         $cross->savecross( $game, $crossm, $newcrossd, $attemptid);
     }
 
-    if (count( $crossd) == 0) {
-        throw new moodle_exception( 'cross_error', 'game', 'game_cross_continue: '.get_string( 'no_words', 'game').$game->id);
+    if ($crossd == null || count( $crossd) == 0) {
+        $s = 'game_cross_continue: '.get_string( 'no_words', 'game');
+        throw new moodle_exception( 'cross_error', 'game', '', $s);
     }
 }
 

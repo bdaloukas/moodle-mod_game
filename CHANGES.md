@@ -1,3 +1,6 @@
+Changes in version 2023-11-01-2
+* Fix: Crossword shows message wrong character instead of there are no words.
+
 Changes in version 2023-11-01
 * Fix: Problem in Snakes and Ladders & Cryptex with Moodle 4
 

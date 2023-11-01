@@ -135,13 +135,12 @@ $string['privacy:metadata:game_repetitions:repetitions'] = 'repetitions';
 
 // File cross/cross_class.php.
 $string['lettersall'] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-$string['cross_error'] = 'Crossword error: %s';
+$string['cross_error'] = 'Crossword error: {$a}';
 
 // File cross/crossdb_class.php.
 $string['and'] = 'and';
 $string['cross_correct'] = 'correct character';
 $string['cross_corrects'] = 'correct characters';
-$string['cross_error'] = 'wrong character';
 $string['cross_errors'] = 'wrong characters';
 $string['cross_found_many'] = 'Found';
 $string['cross_found_one'] = 'Found';
