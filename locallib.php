@@ -475,6 +475,8 @@ function game_update_repetitions( $gameid, $userid, $questionid, $glossaryentryi
 function game_questions_selectrandom( $game, $count=1) {
     global $CFG, $DB;
 
+    $useversion = false;
+
     switch( $game->sourcemodule)
     {
         case 'quiz':
@@ -543,6 +545,7 @@ function game_questions_selectrandom( $game, $count=1) {
 
             // Include subcategories.
             if (game_get_moodle_version() >= '04.00') {
+                $useversion = true;
                 $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
                 $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid '.
                     ' AND qbe.questioncategoryid='.$game->questioncategoryid;
@@ -577,7 +580,7 @@ function game_questions_selectrandom( $game, $count=1) {
             break;
     }
 
-    $ids = game_questions_selectrandom_detail( $table, $select, $field, $count);
+    $ids = game_questions_selectrandom_detail( $table, $select, $field, $count, $useversion);
     if ($ids === false) {
         throw new moodle_exception( 'no_questions', 'game');
     }
@@ -607,13 +610,14 @@ function game_questions_selectrandom( $game, $count=1) {
  * @param string $select
  * @param int $idfield
  * @param int $count
+ * @param boolean $useversion
  *
  * @return stdClass the random record(s)
  */
-function game_questions_selectrandom_detail( $table, $select, $idfield="id", $count=1) {
+function game_questions_selectrandom_detail( $table, $select, $idfield="id", $count=1, $useversion = true) {
     global $DB;
 
-    $versions = game_get_moodle_version() >= '04.00';
+    $versions = $useversion ? game_get_moodle_version() >= '04.00' : false;
     $fields = $versions ? ',qv.questionbankentryid,qv.version' : '';
     $order = $versions ? ' ORDER BY qv.questionbankentryid,qv.version DESC' : '';
 
@@ -859,7 +863,7 @@ function game_questions_shortanswer_quiz( $game) {
             " 0 as glossaryentryid,'' as attachment";
     }
 
-    return game_questions_shortanswer_question_fraction( $table, $fields, $select);
+    return game_questions_shortanswer_question_fraction( $table, $fields, $select, false);
 }
 
 /**
@@ -914,13 +918,14 @@ function game_questions_shortanswer_question( $game) {
  * @param string $table
  * @param string $fields
  * @param string $select
+ * @param boolean $useversion
  *
  * @return the record
  */
-function game_questions_shortanswer_question_fraction( $table, $fields, $select) {
+function game_questions_shortanswer_question_fraction( $table, $fields, $select, $useversion = true) {
     global $DB;
 
-    $versions = game_get_moodle_version() >= '04.00';
+    $versions = $useversion ? game_get_moodle_version() >= '04.00' : false;
 
     $order = ($versions ? 'version DESC,' : '').'fraction';
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY $order DESC";

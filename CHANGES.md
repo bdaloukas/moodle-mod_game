@@ -1,3 +1,6 @@
+Changes in version 2023-11-01
+* Fix: Problem in Snakes and Ladders & Cryptex with Moodle 4
+
 Changes in version 2023-09-11-01
 * Fix: Warnings in PHP 8.
 
