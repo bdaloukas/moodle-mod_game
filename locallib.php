@@ -235,7 +235,7 @@ function game_question_shortanswer_quiz( $game, $allowspaces, $userepetitions) {
             " AND qqi.question=q.id";
         $table = "{question} q,{quiz_question_instances} qqi";
     } else if (game_get_moodle_version() >= '04.00') {
-        $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+        $select = "qs.quizid='$game->quizid' AND qs.id=qr.itemid ";
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
@@ -489,7 +489,7 @@ function game_questions_selectrandom( $game, $count=1) {
                     " AND qqi.question=q.id ".
                     " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
             } else if (game_get_moodle_version() >= '04.00') {
-                $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+                $select = "qs.quizid='$game->quizid' AND qs.id=qr.itemid ";
                 $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
                 $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
                 $recs = $DB->get_records_sql( $sql);
@@ -829,7 +829,7 @@ function game_questions_shortanswer_quiz( $game) {
             "qa.answer as answertext, q.id as questionid,".
             " 0 as glossaryentryid,'' as attachment";
     } else if (game_get_moodle_version() >= '04.00') {
-        $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+        $select = "qs.quizid='$game->quizid' AND qs.id=qr.itemid ";
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);

@@ -1,3 +1,6 @@
+Changes in version 2023-11-02
+* Fix:  Wrong questions is shown in Moodle 4.0+ for quizzes.
+
 Changes in version 2023-11-01-3
 * Fix: Millionaire performance bug in Moodle 4 when there are subcategories.
 

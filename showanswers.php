@@ -291,7 +291,7 @@ function game_showanswers_quiz( $game, $context) {
             game_showanswers_appendselect( $game);
         $table = '{question} q,{quiz_question_instances} qqi';
     } else if (game_get_moodle_version() >= '04.00') {
-        $select = "qs.quizid='$game->quizid' AND qs.id=qr.id ";
+        $select = "qs.quizid='$game->quizid' AND qs.id=qr.itemid ";
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
