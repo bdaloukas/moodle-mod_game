@@ -52,9 +52,7 @@ class helper {
      * @return  \array                      The calculated subcontext.
      */
     public static function get_game_attempt_subcontext(\stdClass $attempt, \stdClass $user) {
-        $subcontext = [
-            get_string('attempts', 'mod_game'),
-        ];
+        $subcontext = [ get_string('attempts', 'mod_game')];
         if ($attempt->userid != $user->id) {
             $subcontext[] = fullname($user);
         }

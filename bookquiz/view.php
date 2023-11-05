@@ -37,11 +37,11 @@ if (!$cm = get_coursemodule_from_id('book', $id)) {
     throw new moodle_exception( 'bookquiz_error', 'game', 'Course Module ID was incorrect');
 }
 
-if (!$course = $DB->get_record('course', array( 'id' => $cm->course))) {
+if (!$course = $DB->get_record('course', [ 'id' => $cm->course])) {
     throw new moodle_exception( 'bookquiz_error', 'game', 'Course is misconfigured');
 }
 
-if (!$book = $DB->get_record('book', array( 'id' => $cm->instance))) {
+if (!$book = $DB->get_record('book', [ 'id' => $cm->instance])) {
     throw new moodle_exception( 'bookquiz_error', 'game', 'Course module is incorrect');
 }
 
@@ -68,7 +68,7 @@ if ($chapterid == '0') {
     }
 }
 
-if (!$chapter = $DB->get_record('book_chapters', array('id' => $chapterid))) {
+if (!$chapter = $DB->get_record('book_chapters', [ 'id' => $chapterid])) {
     throw new moodle_exception( 'bookquiz_error', 'game', 'Error reading book chapters.');
 }
 
@@ -142,7 +142,7 @@ if ($nextid) {
         '" class="bigicon" alt="'.get_string('navnext', 'book').'" /></a>';
 } else {
     $sec = '';
-    if ($section = $DB->get_record('course_sections', array( 'id' => $cm->section))) {
+    if ($section = $DB->get_record('course_sections', [ 'id' => $cm->section])) {
         $sec = $section->section;
     }
     $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="../../course/view.php?id='.

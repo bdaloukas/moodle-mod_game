@@ -45,10 +45,7 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @return course_module_viewed
      */
     public static function viewed(\stdClass $game, \context_module $context) {
-        $data = array(
-            'context' => $context,
-            'objectid' => $game->id
-        );
+        $data = [ 'context' => $context, 'objectid' => $game->id];
         $event = self::create($data);
         $event->add_record_snapshot('game', $game);
         return $event;
@@ -63,10 +60,7 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @return event
      */
     public static function played(\stdClass $game, \context_module $context) {
-        $data = array(
-            'context' => $context,
-            'objectid' => $game->id
-        );
+        $data = [ 'context' => $context, 'objectid' => $game->id];
         $event = self::create($data);
         $event->add_record_snapshot('game', $game);
         return $event;

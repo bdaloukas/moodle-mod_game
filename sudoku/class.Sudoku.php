@@ -137,7 +137,7 @@ class cell extends objects {
     protected $c;
 
     /** @var $state */
-    protected $state = array();
+    protected $state = [];
     /** @var $applied */
     protected $applied = false;
 
@@ -229,7 +229,7 @@ class cell extends objects {
      * @param integer $value The value for the solved position.
      */
     public function flagsolvedposition($value) {
-        $this->state = array($value => $value);
+        $this->state = [$value => $value];
     }
 
     /**
@@ -328,7 +328,7 @@ class rcs extends ObjectS {
     protected $theindex;
 
     /** @var therow */
-    protected $therow = array();
+    protected $therow = [];
 
     /** @var theheader */
     protected $theheader = "";
@@ -378,8 +378,8 @@ class rcs extends ObjectS {
      * @return boolean True if a 23 solution exists and has been applied.
      */
     public function a23solution() {
-        $thecounts = array();
-        $thetuples = array();
+        $thecounts = [];
+        $thetuples = [];
         $theunsolved = 0;
 
         for ($i = 1; $i <= 9; $i++) {
@@ -507,7 +507,7 @@ class rcs extends ObjectS {
      * @return array of tuples that appear the same number of times as the size of the contents
      */
     public function findtuples(&$thearray) {
-        $thereturn = array();
+        $thereturn = [];
         for ($i = 0; $i < count($thearray); $i++) {
             $thecount = 1;
 
@@ -564,8 +564,8 @@ class rcs extends ObjectS {
      * @return boolean True if something changed.
      */
     protected function pairsolution() {
-        $thecounts = array();
-        $thetuples = array();
+        $thecounts = [];
+        $thetuples = [];
 
         for ($i = 1; $i <= 9; $i++) {
             $c = &$this->therow[$i];
@@ -647,7 +647,7 @@ class rcs extends ObjectS {
      * @return boolean True if one or more values in the RCS has changed state.
      */
     protected function uniquesolution() {
-        $theset = array();
+        $theset = [];
 
         for ($i = 1; $i <= 9; $i++) {
             $c = &$this->therow[$i];
@@ -701,7 +701,7 @@ class rcs extends ObjectS {
      *          solution, false otherwise.
      */
     public function validatesolution() {
-        $thenewset = array();
+        $thenewset = [];
 
         foreach ($this->therow as $thecell) {
             if ($thecell->solvedstate() == 0) {
@@ -724,7 +724,7 @@ class rcs extends ObjectS {
      * @return True if the input parameter contains a valid solution, false otherwise.
      */
     public function validatetrialsolution() {
-        $thenewset = array();
+        $thenewset = [];
 
         foreach ($this->therow as $thecell) {
             if ($thecell->solvedstate() == 0) {
@@ -839,15 +839,15 @@ class s extends rcs {
      *
      * @var array
      */
-    protected $thecouplingorder = array( 1 => array(5, 6, 8, 9),
-        2 => array(4, 6, 7, 9),
-        3 => array(4, 5, 7, 8),
-        4 => array(2, 3, 8, 9),
-        5 => array(1, 3, 7, 9),
-        6 => array(1, 2, 7, 8),
-        7 => array(2, 3, 5, 6),
-        8 => array(1, 3, 4, 6),
-        9 => array(1, 2, 4, 5));
+    protected $thecouplingorder = [ 1 => array[5, 6, 8, 9],
+        2 => [4, 6, 7, 9],
+        3 => [4, 5, 7, 8],
+        4 => [2, 3, 8, 9],
+        5 => [1, 3, 7, 9],
+        6 => [1, 2, 7, 8],
+        7 => [2, 3, 5, 6],
+        8 => [1, 3, 4, 6],
+        9 => [1, 2, 4, 5]];
 
     /**
      * Constructor
@@ -915,19 +915,19 @@ class s extends rcs {
  */
 class sudoku extends ObjectS {
     /** @var array of ObjectSs of type Cell. */
-    protected $theboard = array();
+    protected $theboard = [];
 
     /** @var boolean True if debugging output is to be provided during a run. */
     protected $thedebug = false;
 
     /** @var ObjectS of type R An array of RCS ObjectSs, one ObjectS for each row. */
-    protected $therows = array();
+    protected $therows = [];
 
     /** @var ObjectS of type C An array of RCS ObjectSs, one ObjectS for each Column. */
-    private $thecolumns = array();
+    private $thecolumns = [];
 
     /** @var ObjectS of type S An array of RCS ObjectSs, one ObjectS for each square. */
-    protected $thesquares = array();
+    protected $thesquares = [];
 
     /** @var integer. Used during puzzle generation for debugging output.  There may
      * eventually be some use of theLevel to figure out where to stop
@@ -1136,13 +1136,13 @@ class sudoku extends ObjectS {
         $this->thegenerationiterations = 0;
 
         for ($thetrys = 0; $thetrys < $this->thetrys; $thetrys++) {
-            $theavailablepositions = array();
-            $thecluespositions = array();
-            $theclues = array();
+            $theavailablepositions = [];
+            $thecluespositions = [];
+            $theclues = [];
 
             for ($i = 1; $i <= 9; $i++) {
                 for ($j = 1; $j <= 9; $j++) {
-                    $theavailablepositions[] = array($i, $j);
+                    $theavailablepositions[] = [$i, $j];
                 }
             }
 
@@ -1150,7 +1150,7 @@ class sudoku extends ObjectS {
 
             if ($theinitialstate) {
                 if ($thedifficultylevel != 10) {
-                    $xxx = array();
+                    $xxx = [];
 
                     foreach ($theinitialstate as $yyy) {
                         $xxx[] = (($yyy[0] - 1) * 9) + ($yyy[1] - 1);
@@ -1175,7 +1175,7 @@ class sudoku extends ObjectS {
                         $xxx = mt_rand(0, count($theavailablepositions) - 1);
                         $row = $theavailablepositions[$xxx][0];
                         $col = $theavailablepositions[$xxx][1];
-                        $theinitialstate[] = array($row, $col, $this->theboard[$row][$col]);
+                        $theinitialstate[] = [$row, $col, $this->theboard[$row][$col]];
                         array_splice($theavailablepositions, $xxx, 1);
                     }
                 }
@@ -1193,7 +1193,7 @@ class sudoku extends ObjectS {
          * No solution possible, we guess wrong too many times.
          */
 
-        return array();
+        return [];
     }
 
     /**
@@ -1266,7 +1266,7 @@ class sudoku extends ObjectS {
          * of the work is likely to be associated with finding better algorithms to solve
          * Sudoku (which would have the effect of generating harder ones).
          */
-        $thecouplings = array();
+        $thecouplings = [];
 
         foreach ($theavailablepositions as $xxx) {
             $therowcoupling = $this->therows[$xxx[0]]->coupling($xxx[0], $xxx[1]);
@@ -1303,7 +1303,7 @@ class sudoku extends ObjectS {
         while (count($thepossibleclues) != 0) {
             if ($this->thegenerationiterations > $this->themaxiterations) {
                 $this->thelevel = $this->thelevel - 1;
-                return array();
+                return [];
             }
 
             $thecluechoice = mt_rand(0, count($thepossibleclues) - 1);
@@ -1357,7 +1357,7 @@ class sudoku extends ObjectS {
         * position and couldn't get a solution.  Back out and try something else.
         */
 
-        return array();
+        return [];
     }
 
     /**
@@ -1428,7 +1428,7 @@ class sudoku extends ObjectS {
             }
         }
 
-        $yyy = array();
+        $yyy = [];
 
         if ($thehandle) {
             while (!feof($thehandle)) {
@@ -1437,7 +1437,7 @@ class sudoku extends ObjectS {
                     (!preg_match('/^\s*#/', $thestring))) {
                     $xxx = preg_split('/\s+/', $thestring);
                     if (!feof($thehandle)) {
-                        $yyy[] = array((int)$xxx[0], (int)$xxx[1], (int)$xxx[2]);
+                        $yyy[] = [(int)$xxx[0], (int)$xxx[1], (int)$xxx[2]];
                     }
                 }
             }
@@ -1463,7 +1463,7 @@ class sudoku extends ObjectS {
 
         for ($i = 0; $i < 81; $i++) {
             if ($thestring[$i] != " ") {
-                $thearray[] = array((int)($i / 9) + 1, ($i % 9) + 1, (int)$thestring[$i]);
+                $thearray[] = [(int)($i / 9) + 1, ($i % 9) + 1, (int)$thestring[$i]];
             }
         }
 
@@ -1545,9 +1545,9 @@ class sudoku extends ObjectS {
             }
         }
 
-        $thecolors = array("green", "blue", "red");
-        $thefontsize = array("1em", "1em", ".8em");
-        $thefontweight = array("bold", "bold", "lighter");
+        $thecolors = ["green", "blue", "red"];
+        $thefontsize = ["1em", "1em", ".8em"];
+        $thefontweight = ["bold", "bold", "lighter"];
 
         printf("<br /><table border=\"1\" style=\"border-collapse: separate; border-spacing: 0px;\">\n");
 
@@ -1721,14 +1721,14 @@ class sudoku extends ObjectS {
                         $thetrialsolutionflag = $this->validatetrialsolution();
 
                         if ($thetrialsolutionflag && $thesolutionflag) {
-                            return array(array($i, $j, $thevalue));
+                            return [[$i, $j, $thevalue]];
                         }
 
                         if ($thetrialsolutionflag) {
                             $thenewguesses = $this->solvebruteForce($i, $j + 1);
 
                             if ($thenewguesses) {
-                                $thenewguesses[] = array($i, $j, $thevalue);
+                                $thenewguesses[] = [$i, $j, $thevalue];
 
                                 return $thenewguesses;
                             }
@@ -1742,7 +1742,7 @@ class sudoku extends ObjectS {
                         $this->buildrcs();
                     }
 
-                    return array();
+                    return [];
                 }
             }
         }
@@ -1771,7 +1771,7 @@ class sudoku extends ObjectS {
      *               error details.
      */
     public function validatesolution() {
-        $thereturn = array();
+        $thereturn = [];
 
         for ($i = 1; $i <= 9; $i++) {
             if (!$this->therows[$i]->validatesolution()) {
@@ -1823,14 +1823,14 @@ class SudokuTemplates extends Sudoku {
      * @param int $thedifficultylevel
      */
     public function generatepuzzlefromfile($thehandle = STDIN, $thedifficultylevel = 10) {
-        $yyy = array();
+        $yyy = [];
 
         if ($thehandle) {
             while (!feof($thehandle)) {
                 $thestring = trim(fgets($thehandle));
                 $xxx = preg_split("/\s+/", $thestring);
                 if (!feof($thehandle)) {
-                    $yyy[] = array((int)$xxx[0], (int)$xxx[1]);
+                    $yyy[] = [(int)$xxx[0], (int)$xxx[1]];
                 }
             }
         }
@@ -1845,7 +1845,7 @@ class SudokuTemplates extends Sudoku {
      * @param int $thedifficultylevel
      */
     public function generatepuzzlefromarray($thearray, $thedifficultylevel = 10) {
-        $this->generatepuzzle($thearray, array(), array());
+        $this->generatepuzzle($thearray, [], []);
 
         /*
         ** Because the generation process may infer values for some of the
@@ -1853,7 +1853,7 @@ class SudokuTemplates extends Sudoku {
         ** input array before continuing to generate the puzzle.
         */
         foreach ($thearray as $thekey => $theposition) {
-            $thetemplateclues[] = array($theposition[0], $theposition[1], $this->theboard[$theposition[0]][$theposition[1]]);
+            $thetemplateclues[] = [$theposition[0], $theposition[1], $this->theboard[$theposition[0]][$theposition[1]]];
         }
 
         $theotherclues = $this->generatepuzzle($thedifficultylevel);

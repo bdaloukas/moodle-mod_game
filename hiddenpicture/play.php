@@ -66,7 +66,7 @@ function game_hiddenpicture_continue( $cm, $game, $attempt, $hiddenpicture, $con
         throw new moodle_exception( 'no_questions', 'game');
     }
 
-    $positions = array();
+    $positions = [];
     $pos = 1;
     for ($col = 0; $col < $cols; $col++) {
         for ($row = 0; $row < $rows; $row++) {
@@ -136,12 +136,11 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
 
     $sql = "SELECT ge.id,attachment FROM $table WHERE $select";
     if (($recs = $DB->get_records_sql( $sql)) == false) {
-        $a->name = "'".$DB->get_field('glossary', 'name', array( 'id' => $game->glossaryid2))."'";
+        $a->name = "'".$DB->get_field('glossary', 'name', [ 'id' => $game->glossaryid2])."'";
         throw new moodle_exception( 'hiddenpicture_nomainquestion', 'game', $a);
         return false;
     }
-    $ids = array();
-    $keys = array();
+    $ids = $keys = [];
     $fs = get_file_storage();
     $cmg = get_coursemodule_from_instance('glossary', $game->glossaryid2, $game->course);
     $context = game_get_context_module_instance( $cmg->id);
@@ -160,13 +159,13 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     }
     if (count( $ids) == 0) {
         $a = new stdClass();
-        $a->name = "'".$DB->get_field( 'glossary', 'name', array( 'id' => $game->glossaryid2))."'";
+        $a->name = "'".$DB->get_field( 'glossary', 'name', [ 'id' => $game->glossaryid2])."'";
         throw new moodle_exception( 'hiddenpicture_nomainquestion', 'game', $a);
         return false;
     }
 
     // Have to select randomly one glossaryentry.
-    $poss = array();
+    $poss = [];
     for ($i = 0; $i < count($ids); $i++) {
         $poss[] = $i;
     }
@@ -176,7 +175,7 @@ function game_hiddenpicture_selectglossaryentry( $game, $attempt) {
     for ($i = 0; $i < count($ids); $i++) {
         $pos = $poss[$i];
         $tempid = $ids[$pos];
-        $a = array( 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid);
+        $a = [ 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid];
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false) {
             if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
@@ -340,7 +339,7 @@ function game_hiddenpicture_showhiddenpicture( $id, $game, $attempt, $hiddenpict
 function game_hiddenpicture_showquestion_glossary( $game, $id, $query) {
     global $CFG, $DB;
 
-    $entry = $DB->get_record( 'glossary_entries', array( 'id' => $query->glossaryentryid));
+    $entry = $DB->get_record( 'glossary_entries', [ 'id' => $query->glossaryentryid]);
 
     // Start the form.
     echo '<br>';
@@ -388,7 +387,7 @@ function game_hiddenpicture_check_mainquestion( $cm, $game, &$attempt, &$hiddenp
     $queryid = $responses->queryid;
 
     // Load the glossary entry.
-    if (!($entry = $DB->get_record( 'glossary_entries', array( 'id' => $glossaryentryid)))) {
+    if (!($entry = $DB->get_record( 'glossary_entries', [ 'id' => $glossaryentryid]))) {
         throw new moodle_exception( 'noglossaryentriesfound', 'game');
     }
     $answer = $responses->answer;
@@ -400,7 +399,7 @@ function game_hiddenpicture_check_mainquestion( $cm, $game, &$attempt, &$hiddenp
     }
 
     // Load the query.
-    if (!($query = $DB->get_record( 'game_queries', array( 'id' => $queryid)))) {
+    if (!($query = $DB->get_record( 'game_queries', [ 'id' => $queryid]))) {
         throw new moodle_exception( 'hiddenpicture_error', 'game',  "The query $queryid not found");
     }
 

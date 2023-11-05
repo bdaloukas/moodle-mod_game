@@ -225,8 +225,8 @@ function xmldb_game_upgrade($oldversion) {
             XMLDB_NOTNULL, null, '0');
         $table->add_field('chapterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('gameinstanceidchapterid', XMLDB_KEY_NOTUNIQUE, array('gameinstanceid', 'chapterid'));
+        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('gameinstanceidchapterid', XMLDB_KEY_NOTUNIQUE, ['gameinstanceid', 'chapterid']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -249,7 +249,7 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('footerx', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $table->add_field('footery', XMLDB_TYPE_INTEGER, '5', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, [ 'id']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -264,7 +264,7 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('snakesdatabaseid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $table->add_field('position', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, [ 'id']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -383,9 +383,9 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('score', XMLDB_TYPE_FLOAT, null, null, XMLDB_NOTNULL, null, '0');
         $table->add_field('timemodified', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('userid', XMLDB_KEY_NOTUNIQUE, array('userid'));
-        $table->add_key('gameid', XMLDB_KEY_NOTUNIQUE, array('gameid'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, [ 'id']);
+        $table->add_key('userid', XMLDB_KEY_NOTUNIQUE, ['userid']);
+        $table->add_key('gameid', XMLDB_KEY_NOTUNIQUE, ['gameid']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -795,7 +795,7 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('sourcemodule', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null,  '');
         $table->add_field('ids', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, '');
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, [ 'id']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -1090,7 +1090,7 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('wrong', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $table->add_field('found', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -1131,8 +1131,8 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('description', XMLDB_TYPE_CHAR, '100');
         $table->add_field('version', XMLDB_TYPE_CHAR, '10');
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('gameid', XMLDB_KEY_UNIQUE, array('gameid'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('gameid', XMLDB_KEY_UNIQUE, ['gameid']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -1258,8 +1258,8 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('checkbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
         $table->add_field('printbutton', XMLDB_TYPE_INTEGER, '2', XMLDB_UNSIGNED, XMLDB_NOTNULL);
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('gameid', XMLDB_INDEX_UNIQUE, array('gameid'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
+        $table->add_key('gameid', XMLDB_INDEX_UNIQUE, ['gameid']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
@@ -1307,8 +1307,8 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('glossaryentryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $table->add_field('repetitions', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
-        $table->add_key('main', XMLDB_KEY_UNIQUE, array('gameid,userid,questionid,glossaryentryid'));
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id'];
+        $table->add_key('main', XMLDB_KEY_UNIQUE, ['gameid,userid,questionid,glossaryentryid']);
 
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);

@@ -119,13 +119,13 @@ echo 'var countofquestionsS='.count($questionss).";\r\n";
 
 $questionsm = '';
 foreach ($questionss as $line) {
-    $s = $line->question.'#'.str_replace( array( '"', '#'), array( "'", ' '), $line->answer);
+    $s = $line->question.'#'.str_replace( [ '"', '#'], [ "'", ' '], $line->answer);
     if ($questionsm != '') {
         $questionsm .= ",\r";
     }
     $questionsm .= '"'.base64_encode( game_upper( $s)).'"';
 
-    $s = '#'.str_replace( array( '"', '#'), array( "'", ' '), $line->feedback);
+    $s = '#'.str_replace( [ '"', '#'], [ "'", ' '], $line->feedback);
     if ($retfeedback != '') {
         $retfeedback .= ",\r";
     }

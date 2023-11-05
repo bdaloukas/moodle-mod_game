@@ -60,7 +60,7 @@ class mod_game_exporthtml_form extends moodleform {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         if ( $game->gamekind == 'hangman') {
-            $options = array();
+            $options = [];
             $options['0'] = 'Hangman with phrases';
             $options['hangmanp'] = 'Hangman with pictures';
             $mform->addElement('select', 'type', get_string('javame_type', 'game'), $options);
@@ -72,21 +72,21 @@ class mod_game_exporthtml_form extends moodleform {
         }
 
         // Input the filename.
-        $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), array('size' => '30'));
+        $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), ['size' => '30']);
         $mform->setDefault('filename', $html->filename);
         $mform->setType('filename', PARAM_TEXT);
 
         // Input the html title.
-        $mform->addElement('text', 'title', get_string('html_title', 'game'), array('size' => '80'));
+        $mform->addElement('text', 'title', get_string('html_title', 'game'), ['size' => '80']);
         $mform->setDefault('title', $html->title);
         $mform->setType('title', PARAM_TEXT);
 
         // Inputs special fields for hangman.
         if ($game->gamekind == 'hangman') {
-            $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), array('size' => '5'));
+            $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), ['size' => '5']);
             $mform->setDefault('maxpicturewidth', $html->maxpicturewidth);
             $mform->setType('maxpicturewidth', PARAM_INT);
-            $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), array('size' => '5'));
+            $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), ['size' => '5']);
             $mform->setDefault('maxpictureheight', $html->maxpictureheight);
             $mform->setType('maxpictureheight', PARAM_INT);
         }
@@ -180,13 +180,13 @@ class mod_game_exportjavame_form extends moodleform {
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
         if ( $game->gamekind == 'hangman') {
-            $options = array();
+            $options = [];
             $options['0'] = 'Hangman with phrases';
             $options['hangmanp'] = 'Hangman with pictures';
             $mform->addElement('select', 'type', get_string('javame_type', 'game'), $options);
         }
 
-        $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), array('size' => '30'));
+        $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), [ 'size' => '30']);
         $mform->setDefault('filename', $javame->filename);
         $mform->setType('filename', PARAM_TEXT);
         $mform->addElement('text', 'icon', get_string('javame_icon', 'game'));
@@ -198,19 +198,19 @@ class mod_game_exportjavame_form extends moodleform {
         $mform->addElement('text', 'vendor', get_string('javame_vendor', 'game'));
         $mform->setDefault('vendor', $javame->vendor);
         $mform->setType('vendor', PARAM_TEXT);
-        $mform->addElement('text', 'name', get_string('javame_name', 'game'), array('size' => '80'));
+        $mform->addElement('text', 'name', get_string('javame_name', 'game'), [ 'size' => '80']);
         $mform->setDefault('name', $javame->name);
         $mform->setType('name', PARAM_TEXT);
-        $mform->addElement('text', 'description', get_string('javame_description', 'game'), array('size' => '80'));
+        $mform->addElement('text', 'description', get_string('javame_description', 'game'), [ 'size' => '80']);
         $mform->setDefault('description', $javame->description);
         $mform->setType('description', PARAM_TEXT);
-        $mform->addElement('text', 'version', get_string('javame_version', 'game'), array('size' => '10'));
+        $mform->addElement('text', 'version', get_string('javame_version', 'game'), [ 'size' => '10']);
         $mform->setDefault('version', $javame->version);
         $mform->setType('version', PARAM_TEXT);
-        $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), array('size' => '5'));
+        $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), ['size' => '5']);
         $mform->setDefault('maxpicturewidth', $javame->maxpicturewidth);
         $mform->setType('maxpicturewidth', PARAM_INT);
-        $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), array('size' => '5'));
+        $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), ['size' => '5']);
         $mform->setDefault('maxpictureheight', $javame->maxpictureheight);
         $mform->setType('maxpictureheight', PARAM_INT);
 
@@ -271,27 +271,27 @@ class mod_game_exportjavame_form extends moodleform {
 
 // Creates form and set initial data.
 if ($target == 'html') {
-    $html = $DB->get_record( 'game_export_html', array( 'id' => $game->id));
+    $html = $DB->get_record( 'game_export_html', [ 'id' => $game->id]);
     if ($html == false) {
         $html = new stdClass();
         $html->id = $game->id;
         $html->checkbutton = 1;
         $html->printbutton = 1;
         game_insert_record( 'game_export_html', $html);
-        $html = $DB->get_record( 'game_export_html', array( 'id' => $game->id));
+        $html = $DB->get_record( 'game_export_html', [ 'id' => $game->id]);
     }
     $html->type = 0;
-    $mform = new mod_game_exporthtml_form(null, array('id' => $id, 'html' => $html));
+    $mform = new mod_game_exporthtml_form(null, ['id' => $id, 'html' => $html]);
 } else {
-    $javame = $DB->get_record( 'game_export_javame', array( 'id' => $game->id));
+    $javame = $DB->get_record( 'game_export_javame', [ 'id' => $game->id]);
     if ($javame == false) {
         $javame = new stdClass();
         $javame->id = $game->id;
         $javame->filename = $game->gamekind;
         game_insert_record( 'game_export_javame', $javame);
-        $javame = $DB->get_record( 'game_export_javame', array( 'id' => $game->id));
+        $javame = $DB->get_record( 'game_export_javame', [ 'id' => $game->id]);
     }
-    $mform = new mod_game_exportjavame_form(null, array('id' => $id, 'javame' => $javame));
+    $mform = new mod_game_exportjavame_form(null, ['id' => $id, 'javame' => $javame]);
 }
 
 if ($mform->is_cancelled()) {

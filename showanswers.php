@@ -36,7 +36,7 @@ $PAGE->navbar->add(get_string('showanswers', 'game'));
 
 $action = optional_param('action', "", PARAM_ALPHANUM);  // Action.
 if ($action == 'delstats') {
-    $DB->delete_records('game_repetitions', array('gameid' => $game->id, 'userid' => $USER->id));
+    $DB->delete_records('game_repetitions', ['gameid' => $game->id, 'userid' => $USER->id]);
 }
 if ($action == 'computestats') {
     game_compute_repetitions($game);
@@ -51,7 +51,7 @@ echo " &nbsp;&nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&actio
     get_string('computerepetitions', 'game').'</a>';
 echo '<br><br>';
 
-$existsbook = ($DB->get_record( 'modules', array( 'name' => 'book'), 'id,id'));
+$existsbook = ($DB->get_record( 'modules', [ 'name' => 'book'], 'id,id'));
 game_showanswers( $game, $existsbook, $context);
 $s = game_check_common_problems( $context, $game);
 if ($s != '') {
@@ -68,7 +68,7 @@ echo $OUTPUT->footer();
 function game_compute_repetitions($game) {
     global $DB, $USER;
 
-    $DB->delete_records('game_repetitions', array('gameid' => $game->id, 'userid' => $USER->id));
+    $DB->delete_records('game_repetitions', ['gameid' => $game->id, 'userid' => $USER->id]);
 
     $sql = "INSERT INTO {game_repetitions}( gameid,userid,questionid,glossaryentryid,repetitions) ".
            "SELECT $game->id,$USER->id,questionid,glossaryentryid,COUNT(*) ".
@@ -87,7 +87,7 @@ function game_compute_repetitions($game) {
 function game_showusers($game) {
     global $CFG, $USER;
 
-    $users = array();
+    $users = [];
 
     $context = game_get_context_course_instance( $game->course);
 
@@ -207,13 +207,13 @@ function game_showanswers_question( $game, $context) {
         if (game_get_moodle_version() >= '04.00') {
             $sql = "SELECT qbe.id FROM $table,{$CFG->prefix}question_bank_entries qbe ".
                 " WHERE qbe.id=q.id AND qbe.questioncategoryid=?";
-            $recs = $DB->get_records_sql( $sql, array( $game->questioncategoryid));
-            $ret = array();
+            $recs = $DB->get_records_sql( $sql, [ $game->questioncategoryid]);
+            $ret = [];
             $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
                 ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect( $game).
                 ' ORDER BY version DESC';
             foreach ($recs as $rec) {
-                $recsq = $DB->get_records_sql( $sql, array( $rec->id), 0, 1);
+                $recsq = $DB->get_records_sql( $sql, [ $rec->id], 0, 1);
                 foreach ($recsq as $recq) {
                     $a[] = $recq->id;
                 }
@@ -295,12 +295,12 @@ function game_showanswers_quiz( $game, $context) {
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
-        $ret = array();
+        $ret = [];
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
             ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect( $game).
             ' ORDER BY version DESC';
         foreach ($recs as $rec) {
-            $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+            $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
             foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
@@ -350,7 +350,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
     $sql = "SELECT q.id as id,SUM(repetitions) as c FROM {$table} WHERE $select GROUP BY q.id";
     $reps = $DB->get_records_sql( $sql);
 
-    $categorynames = array();
+    $categorynames = [];
     if ($showcategoryname) {
         $select = '';
         $recs = $DB->get_records( 'question_categories', null, '', '*', 0, 1);
@@ -409,13 +409,13 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
             "href=\"{$href}\" target=\"_blank\">";
         echo "<img src=\"".game_pix_url('t/edit')."\" alt=\"Edit\" /></a> ";
 
-        echo game_filterquestion(str_replace( array( "\'", '\"'), array( "'", '"'),
+        echo game_filterquestion(str_replace( [ "\'", '\"'], [ "'", '"'],
             $question->questiontext), $question->id, $context->id, $game->course);
 
         switch ($question->qtype) {
             case 'shortanswer':
                 $recs = $DB->get_records( 'question_answers',
-                    array( 'question' => $question->id), 'fraction DESC', 'id,answer,feedback');
+                    [ 'question' => $question->id], 'fraction DESC', 'id,answer,feedback');
                 if ($recs == false) {
                     $rec = false;
                 } else {
@@ -431,7 +431,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
                 break;
             case 'multichoice':
             case 'truefalse':
-                $recs = $DB->get_records( 'question_answers', array( 'question' => $question->id));
+                $recs = $DB->get_records( 'question_answers', [ 'question' => $question->id]);
                 $feedback = '';
                 echo '<td>';
                 $i = 0;

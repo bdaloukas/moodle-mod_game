@@ -93,14 +93,14 @@ class CryptexDB extends CrossDB {
         $letters = str_repeat('.', $crossm->usedcols).'#';
         $letters = str_repeat($letters, $crossm->usedrows);
 
-        $freqs1 = array();  // If one letter appears three times there is three times in the array.
+        $freqs1 = [];  // If one letter appears three times there is three times in the array.
         $count1 = $count2 = 0;
         foreach ($crossd as $rec) {
             $pos = $rec->mycol - 1 + ($rec->myrow - 1) * $cols;
             $s = $rec->answertext;
             $len = game_strlen( $s);
 
-            $a = array();
+            $a = [];
             for ($i = 0; $i < $len; $i++) {
                 $a[] = game_substr( $s, $i, 1);
             }
@@ -260,12 +260,11 @@ class CryptexDB extends CrossDB {
     public function loadcryptex( $crossm, &$mask, &$corrects, &$language) {
         global $DB;
 
-        $questions = array();
-        $corrects = array();
+        $questions = $corrects = [];
 
         $mask = str_repeat( '0', $crossm->usedcols * $crossm->usedrows);
 
-        if ($recs = $DB->get_records( 'game_queries', array( 'attemptid' => $crossm->id))) {
+        if ($recs = $DB->get_records( 'game_queries', [ 'attemptid' => $crossm->id])) {
             foreach ($recs as $rec) {
                 if ($rec->questiontext == '') {
                     $rec->questiontext = ' ';

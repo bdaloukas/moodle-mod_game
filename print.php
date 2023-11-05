@@ -28,14 +28,14 @@ require_once("locallib.php");
 $id = required_param('id', PARAM_INT); // Course Module ID.
 $gameid = required_param('gameid', PARAM_INT);
 
-$game = $DB->get_record( 'game', array( 'id' => $gameid));
+$game = $DB->get_record( 'game', [ 'id' => $gameid]);
 
 require_login( $game->course);
 
 $context = game_get_context_module_instance( $id);
 require_capability('mod/game:view', $context);
 
-if (!$course = $DB->get_record('course', array('id' => $game->course))) {
+if (!$course = $DB->get_record('course', ['id' => $game->course])) {
     throw new moodle_exception('game_error', 'game', 'invalidcourseid');
 }
 

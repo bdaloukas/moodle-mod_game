@@ -24,95 +24,95 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$capabilities = array(
+$capabilities = [
 
 // Ability to see that the game exists, and the basic information about it, for example the start date and time limit.
-    'mod/game:view' => array(
+    'mod/game:view' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'guest' => CAP_ALLOW,
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
     // Ability to do the game as a 'student'.
-    'mod/game:attempt' => array(
+    'mod/game:attempt' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'student' => CAP_ALLOW,
             'guest' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
     // Ability for a 'Student' to review their previous attempts. Review by 'Teachers' is controlled by mod/game:viewreports.
-    'mod/game:reviewmyattempts' => array(
+    'mod/game:reviewmyattempts' => [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'student' => CAP_ALLOW
-        ),
+        ],
         'clonepermissionsfrom' => 'moodle/game:attempt'
-    ),
+    ],
 
     // Edit the game settings, add and remove questions.
-    'mod/game:manage' => array(
+    'mod/game:manage' => [
         'riskbitmask' => RISK_SPAM,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
     // Edit the game overrides.
-    'mod/game:manageoverrides' => array(
+    'mod/game:manageoverrides' => [
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
     // View the game reports.
-    'mod/game:viewreports' => array(
+    'mod/game:viewreports' => [
         'riskbitmask' => RISK_PERSONAL,
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
     // Delete attempts using the overview report.
-    'mod/game:deleteattempts' => array(
+    'mod/game:deleteattempts' => [
         'riskbitmask' => RISK_DATALOSS,
         'captype' => 'write',
         'contextlevel' => CONTEXT_MODULE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        )
-    ),
+        ]
+    ],
 
-    'mod/game:addinstance' => array(
+    'mod/game:addinstance' => [
         'riskbitmask' => RISK_XSS,
 
         'captype' => 'write',
         'contextlevel' => CONTEXT_COURSE,
-        'archetypes' => array(
+        'archetypes' => [
             'editingteacher' => CAP_ALLOW,
             'manager' => CAP_ALLOW
-        ),
+        ],
         'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    )
-);
+    ]
+];

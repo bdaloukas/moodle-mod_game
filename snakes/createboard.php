@@ -362,7 +362,7 @@ function returnrotatedpoint($x, $y, $cx, $cy, $a) {
     $nx = $r * cos(deg2rad($a + $ia));
     $ny = $r * sin(deg2rad($a + $ia));
 
-    return array("x" => $cx + $nx, "y" => $cy + $ny);
+    return ["x" => $cx + $nx, "y" => $cy + $ny];
 }
 
 

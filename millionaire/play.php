@@ -84,7 +84,7 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
     $quitx = optional_param('Quit_x', 0, PARAM_INT);
 
     if ($millionaire->queryid) {
-        $query = $DB->get_record( 'game_queries', array( 'id' => $millionaire->queryid));
+        $query = $DB->get_record( 'game_queries', [ 'id' => $millionaire->queryid]);
     } else {
         $query = new StdClass;
     }
@@ -128,7 +128,7 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
 function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context) {
     global $CFG, $OUTPUT;
 
-    $question = str_replace( array("\'", '\"'), array("'", '"'), $query->questiontext);
+    $question = str_replace( ["\'", '\"'], ["'", '"'], $query->questiontext);
 
     if ($game->param8 == '') {
         $color = 408080;
@@ -203,7 +203,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $styletext = "style='$stylequestion'";
     }
 
-    $aval = array( 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 10000, 20000, 40000, 80000, 150000);
+    $aval = [ 100, 200, 300, 400, 500, 1000, 1500, 2000, 4000, 5000, 10000, 20000, 40000, 80000, 150000];
     for ($i = 15; $i >= 1; $i--) {
         $btr = false;
 
@@ -381,11 +381,11 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
             $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
             $recs = $DB->get_records_sql( $sql);
-            $ret = array();
+            $ret = [];
             $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
                 " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
             foreach ($recs as $rec) {
-                $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+                $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
                 foreach ($recsq as $recq) {
                     $a[] = $recq->id;
                 }
@@ -454,16 +454,16 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
         throw new moodle_exception( 'no_questions', 'game');
     }
 
-    $q = $DB->get_record( 'question', array( 'id' => $questionid), 'id,questiontext');
+    $q = $DB->get_record( 'question', [ 'id' => $questionid], 'id,questiontext');
 
-    $recs = $DB->get_records( 'question_answers', array( 'question' => $questionid));
+    $recs = $DB->get_records( 'question_answers', [ 'question' => $questionid]);
 
     if ($recs === false) {
         throw new moodle_exception( 'no_questions', 'game');
     }
 
     $correct = 0;
-    $ids = array();
+    $ids = [];
     foreach ($recs as $rec) {
         $aanswer[] = game_filterquestion_answer(str_replace( '\"', '"', $rec->answer), $rec->id, $context->id, $game->course);
 
@@ -532,7 +532,7 @@ function game_millionaire_select_serial_question($game, $table, $select, $level,
     if (($recs = $DB->get_records_sql( $sql)) == false) {
         return false;
     }
-    $questions = array();
+    $questions = [];
     foreach ($recs as $rec) {
         $questions[] = $rec->id;
     }
@@ -563,13 +563,13 @@ function game_millionaire_select_serial_question($game, $table, $select, $level,
 function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer, $context) {
     global $DB;
 
-    $query = $DB->get_record( 'game_queries', array( 'id' => $millionaire->queryid),
+    $query = $DB->get_record( 'game_queries', [ 'id' => $millionaire->queryid],
         'id,questiontext,answertext,correct,questionid');
 
     $aids = explode( ',', $query->answertext);
-    $aanswer = array();
+    $aanswer = [];
     foreach ($aids as $id) {
-        $rec = $DB->get_record( 'question_answers', array( 'id' => $id), 'id,answer');
+        $rec = $DB->get_record( 'question_answers', [ 'id' => $id], 'id,answer');
 
         $aanswer[] = game_filterquestion_answer(str_replace( '\"', '"', $rec->answer), $id, $context->id, $game->course);
     }
@@ -695,7 +695,7 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
 
     $n = count( $aanswer);
     $sum = 0;
-    $apercent = array();
+    $apercent = [];
     for ($i = 0; $i + 1 < $n; $i++) {
         $percent = mt_rand( 0, 100 - $sum);
         $apercent[$i] = $percent;

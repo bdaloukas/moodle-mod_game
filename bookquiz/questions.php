@@ -41,7 +41,7 @@ if ($form = data_submitted()) {   // Filename.
 $OUTPUT->heading( $course->fullname);
 
 $select = "gameid={$game->id}";
-$categories = array();
+$categories = [];
 if (($recs = $DB->get_records_select( 'game_bookquiz_questions', $select, null, '', 'chapterid,questioncategoryid')) != false) {
     foreach ($recs as $rec) {
         $categories[$rec->chapterid] = $rec->questioncategoryid;
@@ -51,11 +51,11 @@ if (($recs = $DB->get_records_select( 'game_bookquiz_questions', $select, null, 
 $context = game_get_context_course_instance( $COURSE->id);
 $select = " contextid in ($context->id)";
 
-$a = array();
+$a = [];
 if ($recs = $DB->get_records_select( 'question_categories', $select, null, 'id,name')) {
     foreach ($recs as $rec) {
         $s = $rec->name;
-        if (($count = $DB->count_records( 'question', array( 'category' => $rec->id))) != 0) {
+        if (($count = $DB->count_records( 'question', [ 'category' => $rec->id])) != 0) {
             $s .= " ($count)";
         }
         $a[$rec->id] = $s;
@@ -67,7 +67,7 @@ $sql = "SELECT chapterid, COUNT(*) as c ".
     "WHERE gbq.questioncategoryid=q.category ".
     "AND gameid=$game->id ".
     "GROUP BY chapterid";
-$numbers = array();
+$numbers = [];
 if (($recs = $DB->get_records_sql( $sql)) != false) {
     foreach ($recs as $rec) {
         $numbers[$rec->chapterid] = $rec->c;
@@ -82,7 +82,7 @@ echo '<td><center>'.get_string( 'bookquiz_categories', 'game').'</td>';
 echo '<td><center>'.get_string( 'bookquiz_numquestions', 'game').'</td>';
 echo "</tr>\r\n";
 $ids = '';
-if (($recs = $DB->get_records( 'book_chapters', array('bookid' => $game->bookid), 'pagenum', 'id,title')) != false) {
+if (($recs = $DB->get_records( 'book_chapters', [ 'bookid' => $game->bookid], 'pagenum', 'id,title')) != false) {
     foreach ($recs as $rec) {
         echo '<tr>';
         echo '<td>'.$rec->title.'</td>';
@@ -135,10 +135,9 @@ echo $OUTPUT->footer($course);
 function game_bookquiz_save( $gameid, $bookid, $ids, $form) {
     global $DB;
 
-    $questions = array();
-    $recids = array();
+    $questions = $recids = [];
     if (($recs = $DB->get_records( 'game_bookquiz_questions',
-        array( 'gameid' => $gameid), '', 'id,chapterid,questioncategoryid')) != false) {
+        [ 'gameid' => $gameid), '', 'id,chapterid,questioncategoryid']) != false) {
         foreach ($recs as $rec) {
             $questions[$rec->chapterid] = $rec->questioncategoryid;
             $recids[$rec->chapterid] = $rec->id;

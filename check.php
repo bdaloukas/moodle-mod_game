@@ -33,7 +33,7 @@ function game_check_common_problems($context, $game) {
         return '';
     }
 
-    $warnings = array();
+    $warnings = [];
 
     switch( $game->gamekind) {
         case 'millionaire':
@@ -164,11 +164,11 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql( $sql);
-        $ret = array();
+        $ret = [];
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
             " WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         foreach ($recs as $rec) {
-            $recsq = $DB->get_records_sql( $sql, array( $rec->questionbankentryid), 0, 1);
+            $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
             foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
@@ -219,7 +219,7 @@ function game_check_common_problems_shortanswer_glossary($game, &$warnings) {
 
     $sql = "SELECT id,concept FROM {$CFG->prefix}glossary_entries WHERE glossaryid={$game->glossaryid}";
     $recs = $DB->get_records_sql( $sql);
-    $a = array();
+    $a = [];
     foreach ($recs as $rec) {
         $a[] = $rec->concept;
     }
@@ -271,7 +271,7 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     if (($recs = $DB->get_records_sql( $sql)) === false) {
         return;
     }
-    $a = array();
+    $a = [];
     foreach ($recs as $rec) {
         // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
         $sql = "SELECT DISTINCT answer, fraction ".
@@ -301,7 +301,7 @@ function game_check_common_problems_shortanswer_allowspaces( $game, &$warnings, 
         return;
     }
 
-    $ret = array();
+    $ret = [];
     foreach ($a as $word) {
         if (strpos( $word, ' ') === false) {
             continue;
@@ -322,7 +322,7 @@ function game_check_common_problems_shortanswer_allowspaces( $game, &$warnings, 
  * @param array $a the words contained
  */
 function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) {
-    $ret = array();
+    $ret = [];
     foreach ($a as $word) {
 
         $word = game_upper( str_replace( ' ', '', $word), $game->language);

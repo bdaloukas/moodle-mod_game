@@ -32,7 +32,7 @@ function game_onexportjavame( $game, $javame) {
     global $CFG, $DB;
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', array( 'id' => $courseid));
+    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
 
     $destdir = game_export_createtempdir();
 
@@ -199,8 +199,7 @@ function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, 
  * @param array $files
  */
 function game_exmportjavame_getanswers( $game, $context, $exportattachment, $dest, &$files) {
-    $map = array();
-    $files = array();
+    $map = $files = [];
 
     switch ($game->sourcemodule) {
         case 'question':
@@ -271,19 +270,19 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
     }
 
     $line = 0;
-    $map = array();
+    $map = [];
     foreach ($questions as $question) {
         unset( $ret);
         $ret = new stdClass();
         $ret->qtype = $question->qtype;
         $ret->question = $question->questiontext;
-        $ret->question = str_replace( array( '"', '#'), array( "'", ' '),
+        $ret->question = str_replace( [ '"', '#'], [ "'", ' '],
             game_export_split_files( $game->course, $context, 'questiontext',
             $question->id, $ret->question, $destdir, $files));
 
         switch ($question->qtype) {
             case 'shortanswer':
-                $rec = $DB->get_record( 'question_answers', array( 'question' => $question->id),
+                $rec = $DB->get_record( 'question_answers', [ 'question' => $question->id],
                     'id,answer,feedback');
                 $ret->answer = $rec->answer;
                 $ret->feedback = $rec->feedback;
@@ -331,7 +330,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
     }
 
     $fs = get_file_storage();
-    $map = array();
+    $map = [];
     $cmglossary = false;
 
     foreach ($questions as $question) {

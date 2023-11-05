@@ -79,21 +79,21 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
     if ($chapterid == 0) {
         $chapterid = $bookquiz->lastchapterid;
     } else {
-        if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $chapterid, array( 'id' => $bookquiz->id))) == false) {
+        if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $chapterid, [ 'id' => $bookquiz->id])) == false) {
             throw new moodle_exception( 'bookquiz_cant_update_lastchaperid', 'game', $chapterid);
         }
     }
 
     // Loads the last chapter.
-    $book = $DB->get_record( 'book', array('id' => $game->bookid));
-    if (!$chapter = $DB->get_record( 'book_chapters', array('id' => $chapterid))) {
+    $book = $DB->get_record( 'book', ['id' => $game->bookid]);
+    if (!$chapter = $DB->get_record( 'book_chapters', ['id' => $chapterid])) {
         throw new moodle_exception( 'bookquiz_error', 'game', 'Error reading book chapters.');
     }
     $select = "bookid = $game->bookid AND hidden = 0";
     $chapters = $DB->get_records_select('book_chapters', $select, null, 'pagenum', 'id, pagenum, subchapter, title, hidden');
 
-    $okchapters = array();
-    if (($recs = $DB->get_records( 'game_bookquiz_chapters', array( 'attemptid' => $attempt->id))) != false) {
+    $okchapters = [];
+    if (($recs = $DB->get_records( 'game_bookquiz_chapters', [ 'attemptid' => $attempt->id])) != false) {
         foreach ($recs as $rec) {
             // The 1 means correct answer.
             $okchapters[$rec->chapterid] = 1;
@@ -106,7 +106,7 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
         $questionid = 0;
     } else {
         // Student didn't answer correct the questions, so have to ask him again.
-        $questions = $DB->get_records( 'game_bookquiz_questions', array( 'gameid' => $game->id, 'chapterid' => $chapterid));
+        $questions = $DB->get_records( 'game_bookquiz_questions', [ 'gameid' => $game->id, 'chapterid' => $chapterid]);
         if ($questions === false) {
             $questionid = 0;
         } else {
@@ -262,15 +262,15 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
         throw new moodle_exception( 'bookquiz_error', 'game', 'Not defined a book on this game');
     }
 
-    $pagenum = $DB->get_field( 'book_chapters', 'min(pagenum) as p', array('bookid' => $game->bookid));
+    $pagenum = $DB->get_field( 'book_chapters', 'min(pagenum) as p', [ 'bookid' => $game->bookid]);
 
     if ($pagenum) {
-        $bookquiz->lastchapterid = $DB->get_field( 'book_chapters', 'id', array('bookid' => $game->bookid, 'pagenum' => $pagenum));
+        $bookquiz->lastchapterid = $DB->get_field( 'book_chapters', 'id', ['bookid' => $game->bookid, 'pagenum' => $pagenum]);
 
         if ($bookquiz->lastchapterid) {
             // Update the data in table game_bookquiz.
             if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid,
-                array('id' => $bookquiz->id))) == false) {
+                ['id' => $bookquiz->id])) == false) {
                 throw new moodle_exception( 'bookquiz_error', 'game',
                     "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
             }
@@ -355,7 +355,7 @@ function game_bookquiz_selectrandomquestion( $questions) {
     if (($recs = $DB->get_records_select( 'question', $select, null, '', 'id,id')) == false) {
         return 0;
     }
-    $a = array();
+    $a = [];
     foreach ($recs as $rec) {
         $a[$rec->id] = $rec->id;
     }
@@ -405,7 +405,7 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
         }
 
         // Found one correct answer.
-        if (!$DB->get_field( 'game_bookquiz_chapters', 'id', array( 'attemptid' => $attempt->id, 'chapterid' => $chapterid))) {
+        if (!$DB->get_field( 'game_bookquiz_chapters', 'id', [ 'attemptid' => $attempt->id, 'chapterid' => $chapterid])) {
             $newrec = new stdClass();
             $newrec->attemptid = $attempt->id;
             $newrec->chapterid = $chapterid;

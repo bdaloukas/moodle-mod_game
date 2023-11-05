@@ -46,7 +46,7 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
     }
 
     if ($attempt != false && $cryptexrec != false) {
-        $crossm = $DB->get_record( 'game_cross', array( 'id' => $attempt->id));
+        $crossm = $DB->get_record( 'game_cross', [ 'id' => $attempt->id]);
         return game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
     }
 
@@ -59,17 +59,13 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
 
     $cryptex = new CryptexDB();
 
-    $questions = array();
-    $infos = array();
+    $questions = $infos = $answers = $reps = [];
 
-    $answers = array();
     $recs = game_questions_shortanswer( $game);
     if ($recs == false) {
         throw new moodle_exception( 'no_words', 'game');
     }
 
-    $infos = array();
-    $reps = array();
     foreach ($recs as $rec) {
         if ($game->param7 == false) {
             if (game_strpos( $rec->answertext, ' ')) {
@@ -79,10 +75,10 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
 
         $rec->answertext = game_upper( $rec->answertext);
         $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
-        $infos[$rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid);
+        $infos[$rec->answertext] = [ $game->sourcemodule, $rec->questionid, $rec->glossaryentryid];
 
-        $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
-            'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        $a = [ 'gameid' => $game->id, 'userid' => $USER->id,
+            'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid];
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
             $reps[$rec->answertext] = $rec2->r;
         }
@@ -92,14 +88,14 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
 
     // The game->param4 is minimum words.
     // The game->param2 is maximum words.
-    $badwords = array( 'NO', 'ASS', 'SEX', 'FUCK', 'WANK', 'BITCH', 'BASTARD', 'TWAT', 'CUNT');
+    $badwords = [ 'NO', 'ASS', 'SEX', 'FUCK', 'WANK', 'BITCH', 'BASTARD', 'TWAT', 'CUNT'];
     $a = $badwords;
     foreach ($a as $word) {
         $badwords[] = strrev( $word);
     }
     $cryptex->setbadwords( $badwords);
     if ($cryptex->computedata( $crossm, $crossd, $letters, $game->param4, $game->param2, $game->param3)) {
-        $newcrossd = array();
+        $newcrossd = [];
         foreach ($crossd as $rec) {
             if (array_key_exists( $rec->answertext, $infos)) {
                 $info = $infos[$rec->answertext];
@@ -206,7 +202,7 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
     $questions = $cryptex->loadcryptex( $crossm, $mask, $corrects, $attempt->language);
 
     if ($language != $attempt->language) {
-        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))) {
+        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
             throw new moodle_exception( 'cryptex_error', 'game', 'game_cross_play: Can\'t set language');
         }
     }
@@ -379,7 +375,7 @@ width: 240pt;
         }
         $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
         if ($q->questionid) {
-            $question2 = str_replace( array("\'", '\"'), array("'", '"'), $question);
+            $question2 = str_replace( ["\'", '\"'], ["'", '"'], $question);
             $question2 = game_filterquestion($question2, $q->questionid, $context->id, $game->course);
         } else {
             $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");

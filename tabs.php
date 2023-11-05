@@ -33,15 +33,15 @@ if (!isset($cm)) {
     $cm = get_coursemodule_from_instance('game', $game->id);
 }
 if (!isset($course)) {
-    $course = $DB->get_record('course', array( 'id' => $game->course));
+    $course = $DB->get_record('course', [ 'id' => $game->course]);
 }
 
 $context = game_get_context_module_instance( $cm->id);
 
-$tabs = array();
-$row = array();
-$inactive = array();
-$activated = array();
+$tabs = [];
+$row = [];
+$inactive = [];
+$activated = []);
 
 global $USER;
 
@@ -72,7 +72,7 @@ if ($currenttab == 'reports' && isset($mode)) {
 
     $allreports = get_list_of_plugins("mod/game/report");
     // Standard reports we want to show first.
-    $reportlist = array ('overview');
+    $reportlist = ['overview'];
 
     foreach ($allreports as $report) {
         if (!in_array($report, $reportlist)) {
@@ -80,7 +80,7 @@ if ($currenttab == 'reports' && isset($mode)) {
         }
     }
 
-    $row = array();
+    $row = [];
     $currenttab = '';
     foreach ($reportlist as $report) {
         $row[] = new tabobject($report, "{$CFG->wwwroot}/mod/game/report.php?q=$game->id&amp;mode=$report",
@@ -96,7 +96,7 @@ if ($currenttab == 'edit' && isset($mode)) {
     $inactive[] = 'edit';
     $activated[] = 'edit';
 
-    $row = array();
+    $row = [];
     $currenttab = $mode;
 
     $strgames = get_string('modulenameplural', 'game');

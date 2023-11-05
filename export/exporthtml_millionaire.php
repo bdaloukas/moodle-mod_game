@@ -39,7 +39,7 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
     $maxanswers = 0;
     $countofquestions = 0;
 
-    $files = array();
+    $files = [];
 
     if ( ($game->sourcemodule != 'quiz') && ($game->sourcemodule != 'question')) {
         throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game', get_string( 'modulename', 'quiz').
@@ -76,16 +76,16 @@ function game_millionaire_html_getquestions( $game, $context, &$maxanswers, &$co
     $ret = '';
     $retfeedback = '';
     foreach ($recs as $rec) {
-        $recs2 = $DB->get_records( 'question_answers', array( 'question' => $rec->id), 'fraction DESC', 'id,answer,feedback');
+        $recs2 = $DB->get_records( 'question_answers', [ 'question' => $rec->id], 'fraction DESC', 'id,answer,feedback');
 
         // Must parse the questiontext and get the name of files.
         $line = $rec->questiontext;
         $line = game_export_split_files( $game->course, $context, 'questiontext', $rec->id, $rec->questiontext, $destdir, $files);
         $linefeedback = '';
         foreach ($recs2 as $rec2) {
-            $line .= '#'.str_replace( array( '"', '#'), array( "'", ' '),
+            $line .= '#'.str_replace( [ '"', '#'], [ "'", ' '],
                 game_export_split_files( $game->course, $context, 'answer', $rec2->id, $rec2->answer, $destdir, $files));
-            $linefeedback .= '#'.str_replace( array( '"', '#'), array( "'", ' '), $rec2->feedback);
+            $linefeedback .= '#'.str_replace( [ '"', '#'], [ "'", ' '], $rec2->feedback);
         }
         if ( $ret != '') {
             $ret .= ",\r";

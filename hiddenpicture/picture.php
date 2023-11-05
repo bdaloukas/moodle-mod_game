@@ -52,13 +52,13 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
     global $CFG;
 
     $a = explode( ',', $foundcells);
-    $found = array();
+    $found = [];
     foreach ($a as $s) {
         $found[$s] = 1;
     }
 
     $a = explode( ',', $cells);
-    $cells = array();
+    $cells = [];
     foreach ($a as $s) {
         $cells[$s] = 1;
     }

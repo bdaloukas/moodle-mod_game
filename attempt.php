@@ -58,17 +58,17 @@ function game_show_header( &$id, &$game, &$course, &$context, &$cm) {
         if (! $cm = get_coursemodule_from_id('game', $id)) {
             throw new moodle_exception('invalidcoursemodule', 'game');
         }
-        if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+        if (! $course = $DB->get_record('course', ['id' => $cm->course])) {
             throw new moodle_exception('coursemisconf', 'game');
         }
-        if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
+        if (! $game = $DB->get_record('game', ['id' => $cm->instance])) {
             throw new moodle_exception('invalidcoursemodule', 'game');
         }
     } else {
-        if (! $game = $DB->get_record('game', array('id' => $q))) {
+        if (! $game = $DB->get_record('game', ['id' => $q])) {
             throw new moodle_exception('invalidgameid', 'game');
         }
-        if (! $course = $DB->get_record('course', array('id' => $game->course))) {
+        if (! $course = $DB->get_record('course', ['id' => $game->course])) {
             throw new moodle_exception('invalidcourseid', 'game');
         }
         if (! $cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
@@ -97,7 +97,7 @@ function game_show_header( &$id, &$game, &$course, &$context, &$cm) {
     }
 
     // Initialize $PAGE, compute blocks.
-    $PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
+    $PAGE->set_url('/mod/game/view.php', ['id' => $cm->id]);
 
     $edit = optional_param('edit', -1, PARAM_BOOL);
     if ($edit != -1 && $PAGE->user_allowed_editing()) {

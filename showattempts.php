@@ -55,7 +55,7 @@ echo $OUTPUT->footer();
 function game_showusers($game) {
     global $CFG, $USER, $DB;
 
-    $users = array();
+    $users = [];
 
     $context = game_get_context_course_instance( $game->course);
 
@@ -127,7 +127,7 @@ function game_showusers($game) {
 function game_showgroups($game) {
     global $CFG, $USER, $DB;
 
-    $groups = array();
+    $groups = [];
     if (($recs = $DB->get_records_sql( "SELECT id,name FROM {groups} WHERE courseid=$game->course ORDER BY name"))) {
         foreach ($recs as $rec) {
             $groups[$rec->id] = $rec->name;
@@ -287,13 +287,13 @@ function game_ondeleteattempt( $game) {
 
     $attemptid = required_param('attemptid', PARAM_INT);
 
-    $attempt = $DB->get_record( 'game_attempts', array( 'id' => $attemptid));
+    $attempt = $DB->get_record( 'game_attempts', [ 'id' => $attemptid]);
 
     switch( $game->gamekind) {
         case 'bookquiz':
-            $DB->delete_records( 'game_bookquiz_chapters', array( 'attemptid' => $attemptid));
+            $DB->delete_records( 'game_bookquiz_chapters', [ 'attemptid' => $attemptid]);
             break;
     }
-    $DB->delete_records( 'game_queries', array( 'attemptid' => $attemptid));
-    $DB->delete_records( 'game_attempts', array( 'id' => $attemptid));
+    $DB->delete_records( 'game_queries', [ 'attemptid' => $attemptid]);
+    $DB->delete_records( 'game_attempts', [ 'id' => $attemptid]);
 }

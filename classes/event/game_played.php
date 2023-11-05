@@ -64,10 +64,7 @@ if (defined( 'GAME_MOODLE_402')) {
          * @return event
          */
         public static function played(\stdClass $game, \context_module $context) {
-            $data = array(
-                'context' => $context,
-                'objectid' => $game->id
-            );
+            $data = [ 'context' => $context, 'objectid' => $game->id];
             $event = self::create($data);
             $event->add_record_snapshot('game', $game);
             return $event;
@@ -89,7 +86,7 @@ if (defined( 'GAME_MOODLE_402')) {
          * @return \moodle_url
          */
         public function get_url() {
-            return new \moodle_url('/mod/game/view.php', array('id' => $this->contextinstanceid));
+            return new \moodle_url('/mod/game/view.php', [ 'id' => $this->contextinstanceid]);
         }
 
         /**
@@ -126,10 +123,7 @@ if (defined( 'GAME_MOODLE_402')) {
          * @return event
          */
         public static function played(\stdClass $game, \context_module $context) {
-            $data = array(
-                'context' => $context,
-                'objectid' => $game->id
-            );
+            $data = [ 'context' => $context, 'objectid' => $game->id];
             $event = self::create($data);
             $event->add_record_snapshot('game', $game);
             return $event;
@@ -141,7 +135,7 @@ if (defined( 'GAME_MOODLE_402')) {
          * @return array|null
          */
         protected function get_legacy_logdata() {
-            return array($this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid,
+            return [ $this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid,
                 $this->objectid, $this->contextinstanceid);
         }
 
@@ -160,7 +154,7 @@ if (defined( 'GAME_MOODLE_402')) {
          * @return \moodle_url
          */
         public function get_url() {
-            return new \moodle_url('/mod/game/view.php', array('id' => $this->contextinstanceid));
+            return new \moodle_url('/mod/game/view.php', [ 'id' => $this->contextinstanceid]);
         }
 
         /**

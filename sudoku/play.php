@@ -174,7 +174,7 @@ function game_sudoku_play( $cm, $game, $attempt, $sudoku, $onlyshow, $showsoluti
 function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers, &$correctquestions) {
     global $CFG, $DB;
 
-    $offsetquestions = array();
+    $offsetquestions = [];
     if ($attempt == null) {
         return $offsetquestions;
     }
@@ -196,8 +196,8 @@ function game_sudoku_compute_offsetquestions( $sourcemodule, $attempt, &$numbers
         throw new moodle_exception( 'sudoku_error', 'game', 'There are no questions '.$attempt->id);
     }
 
-    $numbers = array();
-    $correctquestions = array();
+    $numbers = [];
+    $correctquestions = [];
     foreach ($recs as $rec) {
         $offsetquestions[$rec->mycol] = $rec->id2;
         $numbers[$rec->id2] = $rec->mycol;
@@ -244,7 +244,7 @@ function getrandomsudoku() {
  * @param string $data
  */
 function game_sudoku_getclosed( $data) {
-    $a = array();
+    $a = [];
 
     $n = game_strlen( $data);
     for ($i = 1; $i <= $n; $i++) {
@@ -444,7 +444,7 @@ function game_sudoku_showquestions_quiz( $id, $game, $attempt, $sudoku, $offsetq
     $questions = game_sudoku_getquestions( $questionlist);
 
     // I will sort with the number of each question.
-    $questions2 = array();
+    $questions2 = [];
     foreach ($questions as $q) {
         $ofs = $numbers[$q->id];
         $questions2[$ofs] = $q;
@@ -525,7 +525,7 @@ function game_sudoku_showquestions_glossary( $id, $game, $attempt, $sudoku, $off
     $entries = game_sudoku_getglossaryentries( $game, $offsetentries, $questionlist, $numbers);
 
     // I will sort with the number of each question.
-    $entries2 = array();
+    $entries2 = [];
     foreach ($entries as $q) {
         $ofs = $numbers[$q->id];
         $entries2[$ofs] = $q;

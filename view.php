@@ -31,10 +31,10 @@ $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
 if (! $cm = get_coursemodule_from_id('game', $id)) {
     throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
 }
-if (! $course = $DB->get_record('course', array('id' => $cm->course))) {
+if (! $course = $DB->get_record('course', ['id' => $cm->course])) {
     throw new moodle_exception( 'game_error', 'game', 'coursemisconf');
 }
-if (! $game = $DB->get_record('game', array('id' => $cm->instance))) {
+if (! $game = $DB->get_record('game', ['id' => $cm->instance])) {
     throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
 }
 
@@ -87,7 +87,7 @@ if ($game->disablesummarize) {
 }
 
 // Initialize $PAGE, compute blocks.
-$PAGE->set_url('/mod/game/view.php', array('id' => $cm->id));
+$PAGE->set_url('/mod/game/view.php', ['id' => $cm->id]);
 
 $edit = optional_param('edit', -1, PARAM_BOOL);
 if ($edit != -1 && $PAGE->user_allowed_editing()) {
@@ -178,9 +178,9 @@ if ($attempts) {
     // Prepare table header.
     $table = new html_table();
     $table->attributes['class'] = 'generaltable gameattemptsummary';
-    $table->head = array();
-    $table->align = array();
-    $table->size = array();
+    $table->head = [];
+    $table->align = [];
+    $table->size = [];
     if ($attemptcolumn) {
         $table->head[] = get_string('attempt', 'game');
         $table->align[] = 'center';
@@ -203,7 +203,7 @@ if ($attempts) {
     // One row for each attempt.
     foreach ($attempts as $attempt) {
         $attemptoptions = game_get_reviewoptions($game, $attempt, $context);
-        $row = array();
+        $row = [];
 
         // Add the attempt number, making it a link, if appropriate.
         if ($attemptcolumn) {
@@ -318,7 +318,7 @@ if ($buttontext) {
 
     // Show the start button, in a div that is initially hidden.
     echo '<div id="gamestartbuttondiv">';
-    $url = new moodle_url($CFG->wwwroot.'/mod/game/attempt.php', array('id' => $id));
+    $url = new moodle_url($CFG->wwwroot.'/mod/game/attempt.php', ['id' => $id]);
     $button = new single_button($url, $buttontext);
     echo $OUTPUT->render($button);
     echo "</div>\n";
@@ -379,9 +379,9 @@ function game_highscore( $game) {
     // Prepare table header.
     $table = new html_table();
     $table->attributes['class'] = 'generaltable gameattemptsummary';
-    $table->head = array();
-    $table->align = array();
-    $table->size = array();
+    $table->head = [];
+    $table->align = []);
+    $table->size = [];
 
     $table->head[] = get_string('students');
     $table->align[] = 'left';
@@ -393,7 +393,7 @@ function game_highscore( $game) {
 
     foreach ($recs as $rec) {
         echo "<tr>";
-        $row = array();
+        $row = [];
         $row[] = $rec->firstname.' '.$rec->lastname;
         $row[] = round( $rec->maxscore * 100).' %';
 

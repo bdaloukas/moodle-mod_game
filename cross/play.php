@@ -76,16 +76,13 @@ function game_cross_new( $game, $attemptid, &$crossm) {
 
     $cross = new CrossDB();
 
-    $questions = array();
-    $infos = array();
+    $questions = $infos = $answers = $reps = [];
 
-    $answers = array();
     $recs = game_questions_shortanswer( $game);
     if ($recs == false) {
         throw new moodle_exception( 'cross_error', 'game', 'game_cross_continue: '.get_string( 'no_words', 'game'));
     }
-    $infos = array();
-    $reps = array();
+
     foreach ($recs as $rec) {
         if ($game->param7 == false) {
             if (game_strpos( $rec->answertext, ' ')) {
@@ -95,10 +92,10 @@ function game_cross_new( $game, $attemptid, &$crossm) {
 
         $rec->answertext = game_upper( $rec->answertext);
         $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
-        $infos[$rec->answertext] = array( $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment);
+        $infos[$rec->answertext] = [ $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment];
 
-        $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
-            'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        $a = [ 'gameid' => $game->id, 'userid' => $USER->id,
+            'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid];
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
             $reps[$rec->answertext] = $rec2->r;
         }
@@ -109,7 +106,7 @@ function game_cross_new( $game, $attemptid, &$crossm) {
     // The game->param4 is minimum words in crossword.
     // The game->param2 is maximum words in crossword.
     if ($cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2, $game->param8)) {
-        $newcrossd = array();
+        $newcrossd = [];
         foreach ($crossd as $rec) {
             $info = $infos[$rec->answertext];
             if ($info != false) {
@@ -179,7 +176,7 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
         $showstudentguess, $context, $course, $cm);
 
     if ($language != $attempt->language) {
-        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, array( 'id' => $attempt->id))) {
+        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
             throw new moodle_exception( 'cross_error', 'game', "game_cross_play: Can't set language");
         }
     }

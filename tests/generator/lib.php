@@ -46,10 +46,7 @@ class mod_game_generator extends testing_module_generator {
         require_once($CFG->libdir.'/resourcelib.php');
 
         // Add default values for game.
-        $record = (array)$record + array(
-            'name' => 'Hangman',
-            'gamekind' => 'hangman',
-        );
+        $record = (array)$record + ['name' => 'Hangman', 'gamekind' => 'hangman'];
 
         return parent::create_instance($record, (array)$options);
     }
@@ -68,7 +65,7 @@ class mod_game_generator extends testing_module_generator {
         global $DB, $USER, $CFG;
 
         $now = time();
-        $record = (array)$record + array(
+        $record = (array)$record + [
             'glossaryid' => $glossary->id,
             'timecreated' => $now,
             'timemodified' => $now,
@@ -79,8 +76,7 @@ class mod_game_generator extends testing_module_generator {
             'definitiontrust' => 0,
             'usedynalink' => $CFG->glossary_linkentries,
             'casesensitive' => $CFG->glossary_casesensitive,
-            'fullmatch' => $CFG->glossary_fullmatch
-        );
+            'fullmatch' => $CFG->glossary_fullmatch];
         if (!isset($record['teacherentry']) || !isset($record['approved'])) {
             $context = context_module::instance($glossary->cmid);
             if (!isset($record['teacherentry'])) {
@@ -94,6 +90,6 @@ class mod_game_generator extends testing_module_generator {
 
         $id = $DB->insert_record('glossary_entries', $record);
 
-        return $DB->get_record('glossary_entries', array('id' => $id), '*', MUST_EXIST);
+        return $DB->get_record('glossary_entries', ['id' => $id], '*', MUST_EXIST);
     }
 }

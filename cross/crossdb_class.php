@@ -82,10 +82,10 @@ class CrossDB extends Cross {
     public function delete_records( $id) {
         global $DB;
 
-        if (!$DB->delete_records( 'game_queries', array( 'attemptid' => $id))) {
+        if (!$DB->delete_records( 'game_queries', [ 'attemptid' => $id])) {
             throw new moodle_exception( 'cross_error', 'game',  "Can't delete from game_queries attemptid=$id");
         }
-        if (!$DB->delete_records( 'game_cross', array( 'id' => $id))) {
+        if (!$DB->delete_records( 'game_cross', [ 'id' => $id])) {
             throw new moodle_exception( 'cross_error', 'game', "Can't delete from game_cross id=$id");
         }
     }
@@ -134,8 +134,8 @@ class CrossDB extends Cross {
         $load = false;
 
         $puzzle = str_repeat('.', $this->mmaxrow * $this->mmaxcol);
-        if ($recs = $DB->get_records( 'game_queries', array( 'attemptid' => $crossrec->id))) {
-            $a = array();
+        if ($recs = $DB->get_records( 'game_queries', [ 'attemptid' => $crossrec->id])) {
+            $a = [];
             foreach ($recs as $rec) {
                 if ($rec->horizontal) {
                     $key = sprintf( 'h%10d %10d', $rec->myrow, $rec->mycol);
@@ -146,7 +146,7 @@ class CrossDB extends Cross {
             }
 
             ksort( $a);
-            $b = array();
+            $b = [];
             $correctletters = $wrongletters = $restletters = 0;
 
             foreach ($a as $rec) {
@@ -195,7 +195,7 @@ class CrossDB extends Cross {
 
         $and = get_string( 'and', 'game');
 
-        $a = array();
+        $a = [];
         if ($correctletters) {
             $a[] = $correctletters.' '.
                 ( $correctletters > 1 ? get_string( 'cross_corrects', 'game') : get_string( 'cross_correct', 'game'));

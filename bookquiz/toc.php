@@ -66,7 +66,7 @@ if ($print) {
     } else {
         $toc .= '<p class="book_chapter_title">'.get_string('toc', 'book').'</p>';
     }
-    $titles = array();
+    $titles = [];
     $toc .= '<ul>';
     foreach ($chapters as $ch) {
         $title = trim(strip_tags($ch->title));

@@ -86,7 +86,7 @@ class Cross {
     public $mreps;
     /** @var Average of repetitions. */
     public $maveragereps;
-    
+
     public $mn20min;
     public $mn20max;
     public $mlegendh;
@@ -102,7 +102,7 @@ class Cross {
      * @return moodle_url
      */
     public function setwords( $answers, $maxcols, $reps) {
-        $this->mreps = array();
+        $this->mreps = [];
         foreach ($reps as $word => $r) {
             $this->mreps[game_upper( $word)] = $r;
         }
@@ -114,12 +114,12 @@ class Cross {
             $this->maveragereps /= count( $reps);
         }
 
-        $this->minputanswers = array();
+        $this->minputanswers = [];
         foreach ($answers as $word => $answer) {
             $this->minputanswers[game_upper( $word)] = $answer;
         }
 
-        $this->mwords = array();
+        $this->mwords = [];
 
         $maxlen = 0;
         foreach ($this->minputanswers as $word => $answer) {
@@ -143,7 +143,7 @@ class Cross {
             $this->mn20min = $this->mn20max;
         }
 
-        $this->mwords = array();
+        $this->mwords = [];
         foreach ($this->minputanswers as $word => $answer) {
             $len = game_strlen( $word);
 
@@ -213,8 +213,8 @@ class Cross {
                 break;
             }
         }
-        
-        if( !$this->computepuzzleinfo( $this->mbestn20, $this->mbestcrosspos, $this->mbestcrossdir, $this->mbestcrossword, false)) {
+
+        if (!$this->computepuzzleinfo( $this->mbestn20, $this->mbestcrosspos, $this->mbestcrossdir, $this->mbestcrossword, false)) {
             return false;
         }
 
@@ -243,22 +243,22 @@ class Cross {
         str_repeat('0' . str_repeat('.', $n20) . '0', $n20) .
         str_repeat('0', $n22);
 
-        $crosspos = array();
-        $crossdir = array();
-        $crossword = array();
+        $crosspos = [];
+        $crossdir = [];
+        $crossword = [];
 
-        $magics = array();
+        $magics = [];
         for ($n = 2; $n < $n21; $n++) {
-            $a = array();
+            $a = [];
             for ($r = 2; $r < ($n + 2); $r++) {
                 $a[] = $r;
             }
 
-            uasort($a, array( $this, 'cmp_magic'));
+            uasort($a, [ $this, 'cmp_magic']);
             $magics[$n] = $a;
         }
 
-        uasort($this->mwords,  array( $this, 'cmp'));
+        uasort($this->mwords,  [ $this, 'cmp']);
 
         $words = ';' . implode(';', $this->mwords) . ';';
 
@@ -268,7 +268,7 @@ class Cross {
         $col = mt_rand(3, max( 3, $n20 - 3));
         $pos = $n22 * $row + $col;
 
-        $poss = array();
+        $poss = [];
         $ret = $this->scan_pos($pos, 'h', true, $puzzle, $words, $magics, $poss, $crosspos, $crossdir, $crossword, $n20);
 
         while ($s = count($poss)) {
@@ -298,11 +298,10 @@ class Cross {
             $this->mbestcrossword = $crossword;
             $this->mbestpuzzle = $puzzle;
 
-            $this->mbests = array('Words' => "$nwords * 5 = " . ($nwords * 5),
+            $this->mbests = ['Words' => "$nwords * 5 = " . ($nwords * 5),
                 'Connectors' => "$nconnectors * 3 = " . ($nconnectors * 3),
                 'Filled in spaces' => $nfilleds,
-                "N20" => $n20
-            );
+                "N20" => $n20];
 
             $this->mbestscore = $score;
 
@@ -437,7 +436,7 @@ class Cross {
         if ($this->mminrow > $this->mmaxrow) {
             $this->mminrow = $this->mmaxrow;
         }
-        
+
         return true;
     }
 
@@ -695,7 +694,7 @@ class Cross {
                     }
 
                     $c = game_substr( $puzzle, $pp, 1);
-                    $poss[] = array($pp, $newdir, ord( $c));
+                    $poss[] = [ $pp, $newdir, ord( $c)];
                 }
 
                 $crosspos[] = $posp;
@@ -778,8 +777,8 @@ class Cross {
     public function showhtml_base( $crossm, $crossd, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game) {
         global $CFG, $DB;
 
-        $this->mLegendh = array();
-        $this->mLegendv = array();
+        $this->mLegendh = [];
+        $this->mLegendv = [];
 
         $sret = "CrosswordWidth  = {$crossm->usedcols};\n";
         $sret .= "CrosswordHeight = {$crossm->usedrows};\n";
@@ -794,8 +793,7 @@ class Cross {
         $sclue = "";
         $lasthorizontalword = -1;
         $i = -1;
-        $legendv = array();
-        $legendh = array();
+        $legendv = $legendh = [];
 
         if ($game->glossaryid) {
             $sql = "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}";
@@ -858,20 +856,20 @@ class Cross {
                 if (array_key_exists( $rec->myrow, $legendh)) {
                     $legendh[$rec->myrow][] = $s;
                 } else {
-                    $legendh[$rec->myrow] = array( $s);
+                    $legendh[$rec->myrow] = [ $s];
                 }
             } else {
                 if (array_key_exists( $rec->mycol, $legendv)) {
                     $legendv[$rec->mycol][] = $s;
                 } else {
-                    $legendv[$rec->mycol] = array( $s);
+                    $legendv[$rec->mycol] = [ $s];
                 }
             }
         }
 
         $letters = get_string( 'lettersall', 'game');
 
-        $this->mlegendh = array();
+        $this->mlegendh = [];
         foreach ($legendh as $key => $value) {
             if (count( $value) == 1) {
                 $this->mlegendh[$key] = $value[0];
@@ -882,7 +880,7 @@ class Cross {
             }
         }
 
-        $this->mlegendv = array();
+        $this->mlegendv = [];
         foreach ($legendv as $key => $value) {
             if (count( $value) == 1) {
                 $this->mlegendv[$key] = $value[0];

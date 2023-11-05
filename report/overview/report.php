@@ -60,7 +60,7 @@ class game_report extends game_default_report {
 
         switch ($action) {
             case 'delete': // Some attempts need to be deleted.
-                $attemptids = optional_param('attemptid', array(), PARAM_INT);
+                $attemptids = optional_param('attemptid', [], PARAM_INT);
 
                 foreach ($attemptids as $attemptid) {
                     if ($attemptid && $todelete = get_record('game_attempts', 'id', $attemptid)) {
@@ -124,9 +124,9 @@ class game_report extends game_default_report {
         }
 
         // Define table columns.
-        $tablecolumns = array('checkbox', 'picture', 'fullname', 'timestart', 'timefinish', 'duration');
-        $tableheaders = array(null, '', get_string('fullname'), get_string('startedon', 'game'),
-            get_string('timecompleted', 'game'), get_string('attemptduration', 'game'));
+        $tablecolumns = ['checkbox', 'picture', 'fullname', 'timestart', 'timefinish', 'duration'];
+        $tableheaders = [null, '', get_string('fullname'), get_string('startedon', 'game'),
+            get_string('timecompleted', 'game'), get_string('attemptduration', 'game')];
 
         if ($game->grade) {
             $tablecolumns[] = 'grade';
@@ -225,11 +225,10 @@ class game_report extends game_default_report {
             $formatg->set_align('center');
 
             // Here starts workshhet headers.
-            $headers = array(get_string('fullname'),
+            $headers = [get_string('fullname'),
                     get_string('startedon', 'game'),
                     get_string('timecompleted', 'game'),
-                    get_string('attemptduration', 'game')
-                );
+                    get_string('attemptduration', 'game')];
 
             if ($game->grade) {
                 $headers[] = get_string('grade', 'game').'/'.$game->grade;
@@ -281,8 +280,8 @@ class game_report extends game_default_report {
             $formatg->set_align('center');
 
             // Here starts workshhet headers.
-            $headers = array(get_string('fullname'), get_string('startedon', 'game'),
-                get_string('timecompleted', 'game'), get_string('attemptduration', 'game'));
+            $headers = [get_string('fullname'), get_string('startedon', 'game'),
+                get_string('timecompleted', 'game'), get_string('attemptduration', 'game')];
 
             if ($game->grade) {
                 $headers[] = get_string('grade', 'game').'/'.$game->grade;
@@ -404,7 +403,7 @@ class game_report extends game_default_report {
             // Add extra limits due to sorting by question grade.
             if ($sort = $table->get_sql_sort()) {
                 $sortparts = explode(',', $sort);
-                $newsort = array();
+                $newsort = [];
                 $questionsort = false;
                 foreach ($sortparts as $sortpart) {
                     $sortpart = trim($sortpart);
@@ -452,7 +451,7 @@ class game_report extends game_default_report {
                 $attempts = get_records_sql($select.$from.$where.$sort);
             }
         } else {
-            $attempts = array();
+            $attempts = [];
         }
 
         // Build table rows.
@@ -475,7 +474,7 @@ class game_report extends game_default_report {
                      *}
                      */
                     if (!$download) {
-                        $row = array(
+                        $row = [
                                 '<input type="checkbox" name="attemptid[]" value="'.$attempt->attempt.'" />',
                                 $picture,
                                 $userlink,
@@ -487,16 +486,14 @@ class game_report extends game_default_report {
                                     userdate($attempt->timefinish, $strtimeformat).'</a>',
                                 empty($attempt->attempt) ? '-' : (
                                     empty($attempt->timefinish) ? get_string('unfinished', 'game') : format_time(
-                                    $attempt->duration))
-                        );
+                                    $attempt->duration)];
                     } else {
-                        $row = array(fullname($attempt),
+                        $row = [ fullname($attempt),
                                 empty($attempt->attempt) ? '-' : userdate($attempt->timestart, $strtimeformat),
                                 empty($attempt->timefinish) ? '-' : userdate($attempt->timefinish, $strtimeformat),
                                 empty($attempt->attempt) ? '-' : (
                                     empty($attempt->timefinish) ? get_string(
-                                    'unfinished', 'game') : format_time($attempt->duration))
-                        );
+                                    'unfinished', 'game') : format_time($attempt->duration))];
                     }
 
                     if ($game->grade) {
@@ -578,7 +575,7 @@ class game_report extends game_default_report {
                     echo '<a href="javascript:deselect_all_in(\'DIV\',null,\'tablecontainer\');">'.
                         get_string('selectnone', 'game').'</a> ';
                     echo '&nbsp;&nbsp;';
-                    $options = array('delete' => get_string('delete'));
+                    $options = ['delete' => get_string('delete')];
                     echo choose_from_menu($options, 'action', '', get_string('withselected', 'game'),
                         'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');', '', true);
                     echo '<noscript id="noscriptmenuaction" style="display: inline;"><div>';
@@ -594,7 +591,7 @@ class game_report extends game_default_report {
 
                 if (!empty($attempts)) {
                     echo '<table class="boxaligncenter"><tr>';
-                    $options = array();
+                    $options = [];
                     $options["id"] = "$cm->id";
                     $options["q"] = "$game->id";
                     $options["mode"] = "overview";
@@ -648,7 +645,7 @@ class game_report extends game_default_report {
         echo '</tr>';
         echo '<tr align="left">';
         echo '<td colspan="2">';
-        $options = array(0 => get_string('attemptsonly', 'game', $course->students));
+        $options = [0 => get_string('attemptsonly', 'game', $course->students)];
         if ($course->id != SITEID) {
             $options[1] = get_string('noattemptsonly', 'game', $course->students);
             $options[2] = get_string('allstudents', 'game', $course->students);

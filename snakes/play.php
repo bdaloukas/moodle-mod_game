@@ -90,7 +90,7 @@ function game_snakes_play( $cm, $game, $attempt, $snakes, $context, $course) {
         if ($snakes->queryid == 0) {
             game_snakes_computenextquestion( $game, $snakes, $query);
         } else {
-            $query = $DB->get_record( 'game_queries', array( 'id' => $snakes->queryid));
+            $query = $DB->get_record( 'game_queries', [ 'id' => $snakes->queryid]);
         }
         if ($game->toptext != '') {
             echo $game->toptext.'<br>';
@@ -223,8 +223,8 @@ function game_snakes_computenextquestion( $game, &$snakes, &$query) {
     $minnum = 0;
     $query = new stdClass();
     foreach ($recs as $rec) {
-        $a = array( 'gameid' => $game->id, 'userid' => $USER->id,
-                'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid);
+        $a = [ 'gameid' => $game->id, 'userid' => $USER->id,
+                'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid];
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
             if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
@@ -331,7 +331,7 @@ function game_snakes_showquestion_question( $game, $id, $snakes, $query, $contex
 function game_snakes_showquestion_glossary( $id, $snakes, $query, $game) {
     global $CFG, $DB;
 
-    $entry = $DB->get_record( 'glossary_entries', array('id' => $query->glossaryentryid));
+    $entry = $DB->get_record( 'glossary_entries', ['id' => $query->glossaryentryid]);
 
     // Start the form.
     echo "<form id=\"responseform\" method=\"post\" ".
@@ -382,7 +382,7 @@ function game_snakes_check_questions( $cm, $game, $attempt, $snakes, $context, $
         return;
     }
 
-    $questionlist = $DB->get_field( 'game_queries', 'questionid', array( 'id' => $responses->queryid));
+    $questionlist = $DB->get_field( 'game_queries', 'questionid', [ 'id' => $responses->queryid]);
 
     $questions = game_sudoku_getquestions( $questionlist);
     $correct = false;
@@ -428,9 +428,9 @@ function game_snakes_check_glossary( $cm, $game, $attempt, $snakes, $context, $c
         return;
     }
 
-    $query = $DB->get_record( 'game_queries', array( 'id' => $responses->queryid));
+    $query = $DB->get_record( 'game_queries', [ 'id' => $responses->queryid]);
 
-    $glossaryentry = $DB->get_record( 'glossary_entries', array( 'id' => $query->glossaryentryid));
+    $glossaryentry = $DB->get_record( 'glossary_entries', [ 'id' => $query->glossaryentryid]);
 
     $name = 'resp'.$query->glossaryentryid;
     $useranswer = $responses->answer;
@@ -465,7 +465,7 @@ function game_snakes_check_glossary( $cm, $game, $attempt, $snakes, $context, $c
 function game_snakes_position( $cm, $game, $attempt, $snakes, $correct, $query, $context, $course) {
     global $DB;
 
-    $data = $DB->get_field( 'game_snakes_database', 'data', array( 'id' => $snakes->snakesdatabaseid));
+    $data = $DB->get_field( 'game_snakes_database', 'data', [ 'id' => $snakes->snakesdatabaseid]);
 
     if ($correct) {
         if (($next = game_snakes_foundlander( $snakes->position + $snakes->dice, $data))) {
@@ -551,7 +551,7 @@ function game_snakes_remove_attemptdata ($questionusageid, $questionid) {
     if ($stepdata = $DB->get_records_sql($sql)) {
         foreach ($stepdata as $step) {
             if ($step->id > 0) {
-                $DB->delete_records('question_attempt_step_data', array('attemptstepid' => $step->id));
+                $DB->delete_records('question_attempt_step_data', ['attemptstepid' => $step->id]);
                 $DB->get_records_sql("update {question_attempt_steps} set state='todo' where id = {$step->id}");
             }
         }

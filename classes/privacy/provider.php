@@ -196,11 +196,7 @@ class provider implements
                   JOIN {game_attempts} ga ON ga.gameid = g.id
             WHERE ga.userid = :userid";
 
-        $params = array(
-                    'contextlevel' => CONTEXT_MODULE,
-                    'modname' => 'game',
-                    'userid' => $userid
-            );
+        $params = [ 'contextlevel' => CONTEXT_MODULE, 'modname' => 'game', 'userid' => $userid];
 
         $resultset = new contextlist();
         $resultset->add_from_sql($sql, $params);
@@ -340,10 +336,7 @@ class provider implements
                   JOIN {game_attempts} ga ON ga.gameid = g.id
             WHERE ga.userid = :userid";
 
-        $params = array(
-                    'contextlevel' => CONTEXT_MODULE,
-                    'userid' => $userid
-            );
+        $params = [ 'contextlevel' => CONTEXT_MODULE, 'userid' => $userid];
 
         $attempts = $DB->get_recordset_sql($sql, $params);
         foreach ($attempts as $attempt) {

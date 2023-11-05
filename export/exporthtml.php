@@ -95,7 +95,7 @@ function game_onexporthtml_cross( $game, $context, $html, $destdir) {
     $outputstring = ob_get_contents();
     ob_end_clean();
 
-    $course = $DB->get_record( 'course', array( 'id' => $game->course));
+    $course = $DB->get_record( 'course', [ 'id' => $game->course]);
 
     $filename = $html->filename . '.htm';
 
@@ -120,10 +120,9 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
     $filehandle = fopen( $destdir.'/'.$filename, "rb");
 
     $found = false;
-    $files = array();
+    $files = $linesbefore = $linesafter = [];
     $contextcourse = false;
-    $linesbefore = array();
-    $linesafter = array();
+
     while (!feof($filehandle) ) {
         $line = fgets( $filehandle);
 
@@ -183,8 +182,8 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
         $fileimage = urldecode( $inputs[2]);
         $component = 'question';
 
-        $params = array( 'component' => $component, 'filearea' => $filearea,
-            'itemid' => $id, 'filename' => $fileimage, 'contextid' => $context, 'contextid' => $contextcourse->id);
+        $params = [ 'component' => $component, 'filearea' => $filearea,
+            'itemid' => $id, 'filename' => $fileimage, 'contextid' => $contextcourse->id];
         $rec = $DB->get_record( 'files', $params);
         if ( $rec == false) {
             break;
@@ -294,7 +293,7 @@ function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
     ob_end_clean();
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', array( 'id' => $courseid));
+    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
 
     $filename = $html->filename . '.htm';
     file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
@@ -356,7 +355,7 @@ function game_onexporthtml_millionaire( $game, $context, $html, $destdir) {
     ob_end_clean();
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', array( 'id' => $courseid));
+    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
 
     $filename = $html->filename . '.htm';
 
@@ -410,7 +409,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
         $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions,
             $countofquestionsm, $retfeedback, $destdir, $files);
     } else {
-        $questionsm = array();
+        $questionsm = [];
         $countofquestionsm = 0;
         $retfeedback = '';
     }
@@ -425,7 +424,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
     ob_end_clean();
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', array( 'id' => $courseid));
+    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
 
     $filename = $html->filename . '.htm';
 
@@ -463,7 +462,7 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
         $f->copy_content_to( $destfile);
     }
 
-    $a = array( 'player1.png', 'dice1.png', 'dice2.png', 'dice3.png', 'dice4.png', 'dice5.png', 'dice6.png', 'numbers.png');
+    $a = [ 'player1.png', 'dice1.png', 'dice2.png', 'dice3.png', 'dice4.png', 'dice5.png', 'dice6.png', 'numbers.png'];
     foreach ($a as $file) {
         copy( $CFG->dirroot.'/mod/game/snakes/1/'.$file, $destdir.'/images/'.$file);
     }

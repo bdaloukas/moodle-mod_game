@@ -27,7 +27,7 @@ require_once("locallib.php");
 
 $id = required_param('id', PARAM_INT);   // It stores the courseid.
 
-if (! $course = $DB->get_record( 'course', array( 'id' => $id))) {
+if (! $course = $DB->get_record( 'course', [ 'id' => $id])) {
     throw new moodle_exception( 'game_error', 'game',  'Course ID is incorrect');
 }
 
@@ -39,7 +39,7 @@ $strgames = get_string( 'modulenameplural', 'game');
 $strgame = get_string('modulename', 'game');
 
 // Print the header.
-$PAGE->set_url('/mod/game/index.php', array('id' => $id));
+$PAGE->set_url('/mod/game/index.php', ['id' => $id]);
 $coursecontext = game_get_context_course_instance( $id);
 $PAGE->set_pagelayout('incourse');
 
@@ -76,14 +76,14 @@ $strtopic = get_string("topic");
 $table = new html_table();
 
 if ($course->format == "weeks") {
-    $table->head = array ($strweek, $strname);
-    $table->align = array ("center", "left");
+    $table->head = [$strweek, $strname];
+    $table->align = ["center", "left"];
 } else if ($course->format == "topics") {
-    $table->head = array ($strtopic, $strname);
-    $table->align = array ("center", "left", "left", "left");
+    $table->head = [$strtopic, $strname];
+    $table->align = ["center", "left", "left", "left"];
 } else {
-    $table->head = array ($strname);
-    $table->align = array ("left", "left", "left");
+    $table->head = [$strname];
+    $table->align = ["left", "left", "left"];
 }
 
 foreach ($games as $game) {
@@ -96,9 +96,9 @@ foreach ($games as $game) {
     }
 
     if ($course->format == "weeks" || $course->format == "topics") {
-        $table->data[] = array ($game->section, $link);
+        $table->data[] = [$game->section, $link];
     } else {
-        $table->data[] = array ($link);
+        $table->data[] = [$link];
     }
 }
 

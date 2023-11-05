@@ -40,7 +40,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
     if ($attempt != false && $hangman != false) {
         if (($action == 'nextword') && ($hangman->finishedword != 0)) {
             // Finish with one word and continue to another.
-            if (!$DB->set_field( 'game_hangman', 'finishedword', 0, array( 'id' => $hangman->id))) {
+            if (!$DB->set_field( 'game_hangman', 'finishedword', 0, [ 'id' => $hangman->id])) {
                 error( "game_hangman_continue: Can't update game_hangman");
             }
         } else {
@@ -102,7 +102,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
         $copy = false;
         $select2 = 'gameid=? AND userid=? AND questionid=? AND glossaryentryid=?';
         if (($rec2 = $DB->get_record_select( 'game_repetitions', $select2,
-            array( $game->id, $USER->id, $rec->questionid, $rec->glossaryentryid), 'id,repetitions AS r')) != false) {
+            [ $game->id, $USER->id, $rec->questionid, $rec->glossaryentryid], 'id,repetitions AS r')) != false) {
             if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
                 $copy = true;
@@ -147,7 +147,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
         $attempt = game_addattempt( $game);
     }
 
-    if (!$DB->set_field( 'game_attempts', 'language', $min->language, array( 'id' => $attempt->id))) {
+    if (!$DB->set_field( 'game_attempts', 'language', $min->language, [ 'id' => $attempt->id])) {
         throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_continue: Can\'t set language');
     }
 
@@ -201,7 +201,7 @@ function game_hangman_continue( $cm, $game, $attempt, $hangman, $newletter, $act
         if (!$DB->update_record( 'game_hangman', $newrec)) {
             throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_continue: error updating in game_hangman');
         }
-        $newrec = $DB->get_record( 'game_hangman', array( 'id' => $newrec->id));
+        $newrec = $DB->get_record( 'game_hangman', [ 'id' => $newrec->id]);
     }
 
     game_update_repetitions( $game->id, $USER->id, $query->questionid, $query->glossaryentryid);
@@ -225,7 +225,7 @@ function game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course) {
 
     game_updateattempts( $game, $attempt, $score, true, $cm, $course);
 
-    if (!$DB->set_field( 'game_hangman', 'finishedword', 0, array( 'id' => $hangman->id))) {
+    if (!$DB->set_field( 'game_hangman', 'finishedword', 0, [ 'id' => $hangman->id])) {
         throw new moodle_exception( 'hangman_error', 'game', 'game_hangman_onfinishgame: Can\'t update game_hangman');
     }
 }
@@ -245,7 +245,7 @@ function game_hangman_onfinishgame( $cm, $game, $attempt, $hangman, $course) {
 function game_hangman_play( $cm, $game, $attempt, $hangman, $onlyshow, $showsolution, $context, $course) {
     global $CFG, $DB, $OUTPUT;
 
-    $query = $DB->get_record( 'game_queries', array( 'id' => $hangman->queryid));
+    $query = $DB->get_record( 'game_queries', [ 'id' => $hangman->queryid]);
 
     if ($attempt->language != '') {
         $wordrtl = game_right_to_left( $attempt->language);
@@ -370,7 +370,7 @@ function hangman_showpage(&$done, &$correct, &$wrong, $max, &$wordline, &$wordli
     $wrong = 0;
 
     if ($query->questionid) {
-        $questiontext = str_replace( array("\'", '\"'), array("'", '"'), $query->questiontext);
+        $questiontext = str_replace( ["\'", '\"'], ["'", '"'], $query->questiontext);
         $query->questiontext = game_filterquestion($questiontext, $query->questionid, $context->id, $game->course);
     } else {
         $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
@@ -526,7 +526,7 @@ function hangman_oncorrect( $cm, $wordline, $game, $attempt, $hangman, $query, $
 
     echo '<p><br/><font size="5" color="green">'.get_string( 'win', 'game').'</font><BR/><BR/></p>';
     if ($query->answerid) {
-        $feedback = $DB->get_field( 'question_answers', 'feedback', array( 'id' => $query->answerid));
+        $feedback = $DB->get_field( 'question_answers', 'feedback', [ 'id' => $query->answerid]);
         if ($feedback != '') {
             echo "$feedback<br>";
         }

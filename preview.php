@@ -48,9 +48,9 @@ $gamekind = required_param('gamekind', PARAM_ALPHANUM);
 $update = required_param('update', PARAM_INT);
 
 $attemptid = required_param('attemptid', PARAM_INT);
-$attempt = $DB->get_record( 'game_attempts', array('id' => $attemptid));
-$game = $DB->get_record( 'game', array( 'id' => $attempt->gameid));
-$detail = $DB->get_record( 'game_'.$gamekind, array( 'id' => $attemptid));
+$attempt = $DB->get_record( 'game_attempts', ['id' => $attemptid]);
+$game = $DB->get_record( 'game', [ 'id' => $attempt->gameid]);
+$detail = $DB->get_record( 'game_'.$gamekind, [ 'id' => $attemptid]);
 $solution = ($action == 'solution');
 
 $PAGE->navbar->add(get_string('preview', 'game'));
@@ -78,7 +78,7 @@ switch( $gamekind) {
         game_hangman_play( $update, $game, $attempt, $detail, $preview, $solution, $context, $course);
         break;
     case 'cryptex':
-        $crossm = $DB->get_record( 'game_cross', array('id' => $attemptid));
+        $crossm = $DB->get_record( 'game_cross', ['id' => $attemptid]);
         game_cryptex_play( $cm, $game, $attempt, $detail, $crossm, false, true, $solution, $context,
             $print, $showhtmlprintbutton, $course);
         break;
