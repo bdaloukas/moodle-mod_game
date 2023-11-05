@@ -98,7 +98,7 @@ class sdd {
      * @return string The display form of the array.
      */
     public function darray(&$thearray, $thehtmlflag, $theindent = "") {
-        $theoutput = array();
+        $theoutput = [];
 
         foreach ($thearray as $theindex => $thevalue) {
             if (is_array($thevalue)) {
@@ -180,10 +180,10 @@ class sdd {
 
         $theclasses = array_reverse($theclasses);
 
-        $theoutput = array();
+        $theoutput = [];
 
         foreach ($theclasses as $theclass) {
-            $theoutput[$theclass] = array();
+            $theoutput[$theclass] = [];
 
             foreach ($theclassvars[$theclass] as $thevariable => $value) {
                 if (array_key_exists($thevariable, $theobjectvars)) {
