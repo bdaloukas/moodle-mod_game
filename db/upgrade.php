@@ -1307,7 +1307,7 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('glossaryentryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
         $table->add_field('repetitions', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
-        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id'];
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, ['id']);
         $table->add_key('main', XMLDB_KEY_UNIQUE, ['gameid,userid,questionid,glossaryentryid']);
 
         if (!$dbman->table_exists($table)) {

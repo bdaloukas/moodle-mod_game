@@ -777,7 +777,7 @@ function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup
                 $a->group = $DB->count_records_sql('SELECT count(1) FROM ' .
                         '{game_attempts} qa JOIN ' .
                         '{groups_members} gm ON qa.userid = gm.userid ' .
-                        'WHERE gameid = ? AND preview = 0 AND groupid = ?', [($game->id, $currentgroup]);
+                        'WHERE gameid = ? AND preview = 0 AND groupid = ?', [$game->id, $currentgroup]);
                 return get_string('attemptsnumthisgroup', 'quiz', $a);
             } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) {
                 list($usql, $params) = $DB->get_in_or_equal(array_keys($groups));
@@ -1323,7 +1323,7 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
             throw new moodle_exception( 'game_error', 'game', 'nocontext');
         }
         $rec = $DB->get_record( 'files', [ 'component' => 'question', 'filearea' => 'answer',
-            'itemid' => $answerid, 'filename' => $file, 'contextid' => $contextcourse->id)];
+            'itemid' => $answerid, 'filename' => $file, 'contextid' => $contextcourse->id]);
 
         $fs = get_file_storage();
         if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {

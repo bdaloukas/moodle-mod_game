@@ -1,3 +1,6 @@
+Changes in version 2023-11-06-01
+* Fix warning: Short array syntax must be used to define arrays.
+
 Changes in version 2023-11-06
 * Fix warning: Short array syntax must be used to define arrays.
 

@@ -380,7 +380,7 @@ function game_highscore( $game) {
     $table = new html_table();
     $table->attributes['class'] = 'generaltable gameattemptsummary';
     $table->head = [];
-    $table->align = []);
+    $table->align = [];
     $table->size = [];
 
     $table->head[] = get_string('students');

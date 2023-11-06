@@ -136,7 +136,7 @@ if (defined( 'GAME_MOODLE_402')) {
          */
         protected function get_legacy_logdata() {
             return [ $this->courseid, 'game', 'view', 'view.php?id=' . $this->contextinstanceid,
-                $this->objectid, $this->contextinstanceid);
+                $this->objectid, $this->contextinstanceid];
         }
 
         /**
