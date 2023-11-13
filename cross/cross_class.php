@@ -801,6 +801,7 @@ class Cross {
             $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
             $contextglossary = game_get_context_module_instance( $cmglossary->id);
         }
+        $aids = $idh = $idv = [];
         foreach ($crossd as $rec) {
             if ($rec->horizontal == false && $lasthorizontalword == -1) {
                 $lasthorizontalword = $i;
@@ -855,27 +856,36 @@ class Cross {
             if ($rec->horizontal) {
                 if (array_key_exists( $rec->myrow, $legendh)) {
                     $legendh[$rec->myrow][] = $s;
+                    $idh[$rec->myrow][] = $i;
                 } else {
                     $legendh[$rec->myrow] = [ $s];
+                    $idh[$rec->myrow] = [ $i];
                 }
             } else {
                 if (array_key_exists( $rec->mycol, $legendv)) {
                     $legendv[$rec->mycol][] = $s;
+                    $idv[$rec->mycol][] = $i;
                 } else {
                     $legendv[$rec->mycol] = [ $s];
+                    $idv[$rec->mycol] = [$i];
                 }
             }
         }
 
         $letters = get_string( 'lettersall', 'game');
 
-        $this->mlegendh = [];
+        $this->mlegendh = $aid = [];
         foreach ($legendh as $key => $value) {
             if (count( $value) == 1) {
                 $this->mlegendh[$key] = $value[0];
+                $pos = $idh[ $key][ 0];
+                $aid[ $pos] = '"a'.$key.'"';
             } else {
                 for ($i = 0; $i < count( $value); $i++) {
-                    $this->mlegendh[$key.game_substr( $letters, $i, 1)] = $value[$i];
+                    $key2 = $key.game_substr( $letters, $i, 1);
+                    $this->mlegendh[$key2] = $value[$i];
+                    $pos = $idh[ $key][ $i];
+                    $aid[ $pos] = '"a'.$key2.'"';
                 }
             }
         }
@@ -884,9 +894,14 @@ class Cross {
         foreach ($legendv as $key => $value) {
             if (count( $value) == 1) {
                 $this->mlegendv[$key] = $value[0];
+                $pos = $idv[ $key][ 0];
+                $aid[ $pos] = '"d'.$key.'"';
             } else {
                 for ($i = 0; $i < count( $value); $i++) {
-                    $this->mlegendv[$key.game_substr( $letters, $i, 1)] = $value[$i];
+                    $key2 = $key.game_substr( $letters, $i, 1);
+                    $this->mlegendv[$key2] = $value[$i];
+                    $pos = $idv[ $key][ $i];
+                    $aid[ $pos] = '"d'.$key2.'"';
                 }
             }
         }
@@ -905,6 +920,8 @@ class Cross {
         }
         $sret .= "WordX = new Array( ".game_substr( $swordx, 1).");\n";
         $sret .= "WordY = new Array( ".game_substr( $swordy, 1).");\n";
+        ksort( $aid);
+        $sret .= 'aid = new Array( '.implode( ',', $aid).")\n";
         $sret .= "LastHorizontalWord = $lasthorizontalword;\n";
 
         return $sret;

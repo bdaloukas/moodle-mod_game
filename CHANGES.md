@@ -1,3 +1,6 @@
+Changes in version 2023-11-04
+* Fix Crossword: Problem showing clues where there are two in a line or column.
+
 Changes in version 2023-11-06-01
 * Fix warning: Short array syntax must be used to define arrays.
 
