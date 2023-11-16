@@ -1,3 +1,6 @@
+Changes in version 2023-11-16
+* Fix Crossword: When it can't create a crossword with minimum words select the max it can.
+
 Changes in version 2023-11-04
 * Fix Crossword: Problem showing clues where there are two in a line or column.
 

@@ -192,7 +192,7 @@ class Cross {
 
         $nochange = 0;
         $this->mtimelimit = $mtimelimit;
-        if ($this->mtimelimit == 30) {
+        if ($this->mtimelimit >= 30) {
             $this->mtimelimit = 27;
         }
         for (;;) {
@@ -209,7 +209,7 @@ class Cross {
                 break;
             }
 
-            if ($nochange > 10) {
+            if ($nochange > 15) {
                 break;
             }
         }
@@ -285,14 +285,18 @@ class Cross {
         }
 
         $nwords = count( $crossword);
-        if ($minwords) {
-            if ($nwords < $minwords) {
-                return false;
-            }
-        }
 
         $score = $this->computescore( $puzzle, $n20, $n22, $n2222, $nwords, $nconnectors, $nfilleds, $cspaces, $crossword);
-        if ($score > $this->mbestscore) {
+        $keep = false;
+        if ($nwords < $minwords) {
+            if( $this->mbestcrossword == null || $nwords >= count( $this->mbestcrossword)) {
+                $keep = true;
+            }
+        } else if ( $score > $this->mbestscore) {
+            $keep = true;
+        }
+        
+        if( $keep) {
             $this->mbestcrosspos = $crosspos;
             $this->mbestcrossdir = $crossdir;
             $this->mbestcrossword = $crossword;
