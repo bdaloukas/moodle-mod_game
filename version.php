@@ -39,7 +39,7 @@ $plugin->version = 2023111600;  // The current module version (Date: YYYYMMDDXX)
 $plugin->requires = 2010112400;  // Requires Moodle 2.0.
 $plugin->cron = 0;           // Period for cron to check this module (secs).
 $plugin->release = '2023-11-16';
-$plugin->maturity = MATURITY_ALPHA;
+$plugin->maturity = MATURITY_STABLE;
 
 if ($useplugin != 2) {
     $module = $plugin;
