@@ -162,7 +162,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $data->gameid = $this->get_new_parentid('game');
         $data->userid = $this->get_mappingid('user', $data->userid);
         $data->questionid = $this->get_mappingid('question', $data->questionid);
-        $data->glossaryentrydid = $this->get_mappingid('glossary_entries', $data->questionid);
+        $data->glossaryentrydid = $this->get_mappingid('glossary_entries', $data->glossaryentryid);
 
         $DB->insert_record('game_repetitions', $data);
     }

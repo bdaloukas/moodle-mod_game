@@ -1,3 +1,6 @@
+Changes in version 2024-02-24
+* Fix restore: Problem with field glossaryentryid at table game_repetitions.
+
 Changes in version 2023-11-16
 * Fix Crossword: When it can't create a crossword with minimum words select the max it can.
 
