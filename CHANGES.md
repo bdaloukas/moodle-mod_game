@@ -1,4 +1,7 @@
-Changes in version 2024-02-2
+Changes in version 2024-02-2-01
+* Crossword: New layout without legend (phrases).
+
+Changes in version 2024-02-25
 * Fix restore: Problem with field questioncategoryid at restore of table game.
 
 Changes in version 2024-02-24

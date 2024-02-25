@@ -247,6 +247,13 @@ class mod_game_mod_form extends moodleform_mod {
 
         // Crossword options.
         if ($gamekind == 'cross') {
+            // Param1 = cross_maxcols.
+            // Param2 = cross_maxwords.
+            // Param3 = cross_layout.
+            // Param4 = cross_minwords.
+            // Param6 = cross_disabletransformuppercase.
+            // Param7 = hangman_allowspaces.
+            // Param8 = cross_maxcomputetime.
             $mform->addElement('header', 'cross', get_string( 'cross_options', 'game'));
             $mform->addElement('text', 'param1', get_string('cross_maxcols', 'game'));
             $mform->setType('param1', PARAM_INT);
@@ -258,6 +265,7 @@ class mod_game_mod_form extends moodleform_mod {
             $crosslayoutoptions = [];
             $crosslayoutoptions[0] = get_string('cross_layout0', 'game');
             $crosslayoutoptions[1] = get_string('cross_layout1', 'game');
+            $crosslayoutoptions[2] = get_string('cross_layout2', 'game');
             $mform->addElement('select', 'param3', get_string('cross_layout', 'game'), $crosslayoutoptions);
             $mform->setType('param5', PARAM_INT);
             $mform->addElement('selectyesno', 'param6', get_string('cross_disabletransformuppercase', 'game'));

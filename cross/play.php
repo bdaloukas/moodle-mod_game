@@ -902,7 +902,7 @@ function CheckHtmlClick() {
     <?php
     if ($game->param3 == 1) {
         echo '<td>&nbsp &nbsp &nbsp</td><td>';
-        game_cross_show_legends( $cross);
+        game_cross_show_legends( $game, $cross);
         echo '</td>';
     } else {
         game_cross_show_welcome( $game);
@@ -957,7 +957,7 @@ function CheckHtmlClick() {
         echo '<td>&nbsp &nbsp &nbsp</td>';
         game_cross_show_welcome( $game);
     } else {
-        game_cross_show_legends( $cross);
+        game_cross_show_legends( $game, $cross);
     }
 
     if ($game->bottomtext != '') {
@@ -1100,7 +1100,13 @@ function game_cross_show_welcome1() {
  *
  * @param stdClass $cross
  */
-function game_cross_show_legends( $cross) {
+function game_cross_show_legends( $game, $cross) {
+    if( $game->param3 == 2) {
+        echo '<div hidden>';
+    }
     ShowLegend( 'a', $cross->mlegendh,  get_string( 'cross_across', 'game'));
     ShowLegend( 'd', $cross->mlegendv, get_string( 'cross_down', 'game'));
+    if( $game->param3 == 2) {
+        echo '</div>';
+    }
 }
