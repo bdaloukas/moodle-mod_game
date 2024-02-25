@@ -143,7 +143,7 @@ class restore_game_activity_task extends restore_activity_task {
             $rec->glossarycategoryid = $ret->newitemid;
         }
 
-        $ret = restore_dbops::get_backup_ids_record($restoreid, 'question_categories', $rec->questioncategoryid);
+        $ret = restore_dbops::get_backup_ids_record($restoreid, 'question_category', $rec->questioncategoryid);
         if ($ret != false) {
             $rec->questioncategoryid = $ret->newitemid;
         }

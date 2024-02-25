@@ -1,3 +1,6 @@
+Changes in version 2024-02-2
+* Fix restore: Problem with field questioncategoryid at restore of table game.
+
 Changes in version 2024-02-24
 * Fix restore: Problem with field glossaryentryid at table game_repetitions.
 
