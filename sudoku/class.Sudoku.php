@@ -839,7 +839,7 @@ class s extends rcs {
      *
      * @var array
      */
-    protected $thecouplingorder = [ 1 => array[5, 6, 8, 9],
+    protected $thecouplingorder = array ( 1 => [5, 6, 8, 9],
         2 => [4, 6, 7, 9],
         3 => [4, 5, 7, 8],
         4 => [2, 3, 8, 9],
@@ -847,7 +847,7 @@ class s extends rcs {
         6 => [1, 2, 7, 8],
         7 => [2, 3, 5, 6],
         8 => [1, 3, 4, 6],
-        9 => [1, 2, 4, 5]];
+        9 => [1, 2, 4, 5]);
 
     /**
      * Constructor

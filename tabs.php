@@ -41,7 +41,7 @@ $context = game_get_context_module_instance( $cm->id);
 $tabs = [];
 $row = [];
 $inactive = [];
-$activated = []);
+$activated = [];
 
 global $USER;
 

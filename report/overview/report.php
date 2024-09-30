@@ -486,7 +486,7 @@ class game_report extends game_default_report {
                                     userdate($attempt->timefinish, $strtimeformat).'</a>',
                                 empty($attempt->attempt) ? '-' : (
                                     empty($attempt->timefinish) ? get_string('unfinished', 'game') : format_time(
-                                    $attempt->duration)];
+                                    $attempt->duration))];
                     } else {
                         $row = [ fullname($attempt),
                                 empty($attempt->attempt) ? '-' : userdate($attempt->timestart, $strtimeformat),
