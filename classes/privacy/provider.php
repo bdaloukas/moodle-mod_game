@@ -27,6 +27,8 @@ namespace mod_game\privacy;
 use \core_privacy\local\request\writer;
 use \core_privacy\local\request\transform;
 use \core_privacy\local\request\contextlist;
+use \core_privacy\local\request\approved_userlist;
+use \core_privacy\local\request\userlist;
 use \core_privacy\local\request\approved_contextlist;
 use \core_privacy\local\request\deletion_criteria;
 use \core_privacy\local\metadata\collection;
@@ -46,6 +48,7 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
 class provider implements
     // This plugin has data.
     \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\core_userlist_provider,
 
     // This plugin currently implements the original plugin_provider interface.
     \core_privacy\local\request\plugin\provider {
@@ -555,4 +558,108 @@ class provider implements
         $data->sudoku_opened = $sudoku->opened;
         $data->sudoku_guess = $sudoku->guess;
     }
+
+
+    /**
+     * Get the list of users who have data within a context.
+     *
+     * @param   userlist    $userlist   The userlist containing the list of users who have data in this context/plugin combination.
+     */
+    public static function get_users_in_context(userlist $userlist) {
+        $context = $userlist->get_context();
+
+        if (!$context instanceof \context_module) {
+            return;
+        }
+
+        $params = [
+            'contextid' => $context->id,
+            'contextlevel' => CONTEXT_MODULE,
+            'modname' => 'game'
+        ];
+
+        // Find users with game attempt entries.
+        $sql = "SELECT ga.userid
+                    FROM {context} c
+                    JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+                    JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+                    JOIN {game} game ON game.id = cm.instance
+                    JOIN {game_attempts} ga ON ga.gameid = game.id
+                WHERE c.id = :contextid";
+
+        $userlist->add_from_sql('userid', $sql, $params);
+
+        // Find users with game grades entries.
+        $sql = "SELECT gg.userid
+                    FROM {context} c
+                    JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+                    JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+                    JOIN {game} game ON game.id = cm.instance
+                    JOIN {game_grades} gg ON gg.gameid = game.id
+                WHERE c.id = :contextid";
+
+        $userlist->add_from_sql('userid', $sql, $params);
+
+        // Find users with game queries entries.
+        $sql = "SELECT gq.userid
+                    FROM {context} c
+                    JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+                    JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+                    JOIN {game} game ON game.id = cm.instance
+                    JOIN {game_queries} gq ON gq.gameid = game.id
+                WHERE c.id = :contextid";
+
+        $userlist->add_from_sql('userid', $sql, $params);
+
+        // Find users with game repetitions entries.
+        $sql = "SELECT gp.userid
+                    FROM {context} c
+                    JOIN {course_modules} cm ON cm.id = c.instanceid AND c.contextlevel = :contextlevel
+                    JOIN {modules} m ON m.id = cm.module AND m.name = :modname
+                    JOIN {game} game ON game.id = cm.instance
+                    JOIN {game_repetitions} gp ON gp.gameid = game.id
+                WHERE c.id = :contextid";
+
+        $userlist->add_from_sql('userid', $sql, $params);
+
+        // Find users with game attempts.
+        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_attempts',
+                $context->id);
+
+        // Find users with game grades.
+        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_grades',
+                $context->id);
+
+        // Find users with game queries.
+        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_queries',
+                $context->id);
+
+        // Find users with game queries.
+        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_repetitions',
+                $context->id);
+    }
+
+
+    /**
+     * Delete multiple users within a single context.
+     *
+     * @param   approved_userlist    $userlist The approved context and user information to delete information for.
+     */
+    public static function delete_data_for_users(approved_userlist $userlist) {
+        global $DB;
+
+        $context = $userlist->get_context();
+        $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
+        $game = $DB->get_record('game', ['id' => $cm->instance]);
+
+        list($userinsql, $userinparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
+        $params = array_merge(['gameid' => $game->id], $userinparams);
+        $sql = "gameid = :gameid AND userid {$userinsql}";
+
+        $DB->delete_records_select('game_attempts', $sql, $params);
+        $DB->delete_records_select('game_grades', $sql, $params);
+        $DB->delete_records_select('game_queries', $sql, $params);
+        $DB->delete_records_select('game_repetitions', $sql, $params);
+    }
+
 }
