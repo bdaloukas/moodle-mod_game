@@ -1,3 +1,6 @@
+Changes in version 2024-10-04
+* Fix mod_game: Check if selected a glossary, questioncategory or quiz when creating a game.
+
 Changes in version 2024-02-2-01
 * Crossword: New layout without legend (phrases).
 
@@ -7,76 +10,29 @@ Changes in version 2024-02-25
 Changes in version 2024-02-24
 * Fix restore: Problem with field glossaryentryid at table game_repetitions.
 
-Changes in version 2023-11-16
+Changes for year 2023
 * Fix Crossword: When it can't create a crossword with minimum words select the max it can.
-
-Changes in version 2023-11-04
 * Fix Crossword: Problem showing clues where there are two in a line or column.
-
-Changes in version 2023-11-06-01
 * Fix warning: Short array syntax must be used to define arrays.
-
-Changes in version 2023-11-06
 * Fix warning: Short array syntax must be used to define arrays.
-
-Changes in version 2023-11-02
 * Fix:  Wrong questions is shown in Moodle 4.0+ for quizzes.
-
-Changes in version 2023-11-01-3
 * Fix: Millionaire performance bug in Moodle 4 when there are subcategories.
-
-Changes in version 2023-11-01-2
 * Fix: Crossword shows message wrong character instead of there are no words.
-
-Changes in version 2023-11-01
 * Fix: Problem in Snakes and Ladders & Cryptex with Moodle 4
-
-Changes in version 2023-09-11-01
 * Fix: Warnings in PHP 8.
-
-Changes in version 2023-09-11
 * Fix: Exception count(*) in locallib(842)
-
-Changes in version 2023-08-16-06
 * Fix: In Snakes and Ladders uses last version of questions.
-
-Changes in version 2023-08-16-05
-* Fix: Showing equation in crossword.
-
-Changes in version 2023-08-16-04
 * Fix: Showing images on questions.
-
-Changes in version 2023-08-16-03
 * Fix: In Cryptex uses last version of questions.
-
-Changes in version 2023-08-16-02
 * Fix: In showanswers.php uses last version of questions.
-
-Changes in version 2023-08-16-01
 * Fix: Show the correct number of questions in mod_form.php (Ignores old versions of questions).
-
-Changes in version 2023-08-16
 * Fix: Problem in showing buttons in crossword.
-
-Changes in version 2023-01-25
 * Fix: Modle 4.2 compatibility.
-
-Changes in version 2023-04-24
 * Fix: Crossword didn't not check if a glossary entry is approved.
-
-Changes in version 2023-04-21
 * Fix: Problem in Hangman accentuation problem in Portuguese language.
-
-Changes in version 2023-04-18
 * Fix: Problem in Hangman accentuation problem in Portuguese language.
-
-Changes in version 2023-01-08-01
 * Fixing coding style.
-
-Changes in version 2023-01-08
 * Fix: Modle 4.1 compatibility.
-
-Changes in version 2023-01-04
 * Fix: Modle 4.1 compatibility.
 
 Changes for year 2022

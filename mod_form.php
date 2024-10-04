@@ -543,6 +543,20 @@ class mod_game_mod_form extends moodleform_mod {
         global $CFG, $DB;
 
         $errors = parent::validation($data, $files);
+        
+        if( $data[ 'sourcemodule'] == 'glossary') {
+            if( !array_key_exists( 'glossaryid', $data) || $data[ 'glossaryid'] == 0) {
+                $errors[ 'glossaryid'] = get_string( 'sourcemodule_glossary', 'game');
+            }
+        } else if( $data[ 'sourcemodule'] == 'question') {
+            if( !array_key_exists( 'questioncategoryid', $data) || $data[ 'questioncategoryid'] == 0) {
+                $errors[ 'questioncategoryid'] = get_string( 'sourcemodule_questioncategory', 'game');
+            }
+        } else if( $data[ 'sourcemodule'] == 'quiz') {
+            if( !array_key_exists( 'quizid', $data) || $data[ 'quizid'] == 0) {
+                $errors[ 'quizid'] = get_string( 'sourcemodule_quiz', 'game');
+            }
+        }
 
         // Check open and close times are consistent.
         if ($data['timeopen'] != 0 && $data['timeclose'] != 0 &&
