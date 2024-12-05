@@ -1,3 +1,6 @@
+Changes in version 2024-12-05
+* Fix mod_game: Problem with privacy when a users ask for deletion.
+
 Changes in version 2024-10-04
 * Fix mod_game: Check if selected a glossary, questioncategory or quiz when creating a game.
 

@@ -1662,7 +1662,7 @@ function game_delete_user_attempts( $gameid, $user) {
         $DB->delete_records('game_sudoku', $params);
     }
 
-    $params = ['game' => $gameid, 'userid' => $user->id];
+    $params = ['gameid' => $gameid, 'userid' => $user->id];
     $DB->delete_records('game_grades', $params);
 
     $params = ['gameid' => $gameid, 'userid' => $user->id];
