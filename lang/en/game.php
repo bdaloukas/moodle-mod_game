@@ -208,15 +208,15 @@ $string['millionaire_error'] = 'Game Millionaire error: %s';
 
 // File report/overview/report.php.
 $string['allattempts'] = 'Show all tries';
-$string['allstudents'] = 'Show all $a';
+$string['allstudents'] = 'Show all {$a}';
 $string['attemptduration'] = 'Attempt duration';
 $string['attemptsonly'] = 'Show only students with attempts';
 $string['deleteattemptcheck'] = 'Are you absolutely sure you want to completely delete these attempts?';
 $string['displayoptions'] = 'Display options';
 $string['downloadods'] = 'Download in ODS format';
 $string['feedback'] = 'Feedback';
-$string['noattemptsonly'] = 'Show $a with no attempts only';
-$string['numattempts'] = '$a->studentnum $a->studentstring have made $a->attemptnum attempts';
+$string['noattemptsonly'] = 'Show {$a} with no attempts only';
+$string['numattempts'] = '{$a->studentnum} {$a->studentstring} have made {$a->attemptnum} attempts';
 $string['pagesize'] = 'Questions per page:';
 $string['reportoverview'] = 'Overview';
 $string['selectall'] = 'Select all';
@@ -228,8 +228,8 @@ $string['unfinished'] = 'open';
 $string['withselected'] = 'With selected';
 
 // File snakes/play.php.
-$string['snakes_dice'] = 'Dice, $a spots.';
-$string['snakes_player'] = 'Player, position: $a.';
+$string['snakes_dice'] = 'Dice, {$a} spots.';
+$string['snakes_player'] = 'Player, position: {$a}.';
 $string['snakes_error'] = 'Snakes error: %s';
 
 // File sudoku/create.php.
