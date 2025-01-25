@@ -25,8 +25,9 @@
 /**
  * Checks for common problems
  *
- * @param stdClass $context
+ * @param context $context
  * @param stdClass $game
+ * @return string
  */
 function game_check_common_problems($context, $game) {
     if (!has_capability('mod/game:viewreports', $context)) {
@@ -65,7 +66,7 @@ function game_check_common_problems($context, $game) {
  * Checks for common problems on multichoice answers
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_multichoice($game, &$warnings) {
 
@@ -80,7 +81,7 @@ function game_check_common_problems_multichoice($game, &$warnings) {
  * Checks for common problems on multichoice answers (questions)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_multichoice_question($game, &$warnings) {
     global $CFG, $DB;
@@ -99,7 +100,7 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
             $cats = question_categorylist( $game->questioncategoryid);
             if (count( $cats) > 0) {
                 $s = implode( ',', $cats);
-                $select = 'qbe.questioncategoryid in ('.$s.')';
+                $select = 'qbe.questioncategoryid in ('.$s.') AND qbe.id=qv.questionbankentryid AND q.id=qv.questionid';
             }
         }
     } else {
@@ -146,7 +147,7 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
  * Checks for common problems on multichoice answers (quiz)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_multichoice_quiz($game, &$warnings) {
     global $CFG, $DB;
@@ -167,6 +168,7 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         $ret = [];
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
             " WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+        $a = [];
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
             foreach ($recsq as $recq) {
@@ -197,7 +199,7 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
  * Checks for common problems on short answers
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_shortanswer($game, &$warnings) {
     if ($game->sourcemodule == 'question') {
@@ -211,13 +213,13 @@ function game_check_common_problems_shortanswer($game, &$warnings) {
  * Checks for common problems on short answers (glossaries)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_shortanswer_glossary($game, &$warnings) {
 
     global $CFG, $DB;
 
-    $sql = "SELECT id,concept FROM {$CFG->prefix}glossary_entries WHERE glossaryid={$game->glossaryid}";
+    $sql = "SELECT id,concept FROM {$CFG->prefix}glossary_entries WHERE glossaryid=$game->glossaryid";
     $recs = $DB->get_records_sql( $sql);
     $a = [];
     foreach ($recs as $rec) {
@@ -234,7 +236,7 @@ function game_check_common_problems_shortanswer_glossary($game, &$warnings) {
  * Checks for common problems on short answers (questions)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_shortanswer_question($game, &$warnings) {
 
@@ -268,14 +270,14 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     $select .= " AND q.qtype='shortanswer'";
 
     $sql = "SELECT q.id FROM {$CFG->prefix}question q $table2 WHERE $select";
-    if (($recs = $DB->get_records_sql( $sql)) === false) {
+    if (!($recs = $DB->get_records_sql($sql))) {
         return;
     }
     $a = [];
     foreach ($recs as $rec) {
         // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
         $sql = "SELECT DISTINCT answer, fraction ".
-        "FROM {$CFG->prefix}question_answers WHERE question={$rec->id} ORDER BY fraction DESC";
+        "FROM {$CFG->prefix}question_answers WHERE question=$rec->id ORDER BY fraction DESC";
         $recs2 = $DB->get_records_sql( $sql);
         foreach ($recs2 as $rec2) {
             $a[] = $rec2->answer;
@@ -292,7 +294,7 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
  * Checks for common problems (check if are answers with spaces and the game doesn't allow spaces)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  * @param array $a the words contained
  */
 function game_check_common_problems_shortanswer_allowspaces( $game, &$warnings, $a) {
@@ -318,7 +320,7 @@ function game_check_common_problems_shortanswer_allowspaces( $game, &$warnings, 
  * Checks for common problems (check if are answers with spaces and the game doesn't allow spaces)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  * @param array $a the words contained
  */
 function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) {
@@ -348,11 +350,9 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
  * Checks for common problems (check crossword/cryptex parameters)
  *
  * @param stdClass $game
- * @param string $warnings
+ * @param array $warnings
  */
 function game_check_common_problems_crossword_cryptex($game, &$warnings) {
-
-    global $CFG, $DB;
 
     if (($game->param1 < 10) && ($game->param1 > 0)) {
         $warnings[] = get_string( 'common_problems_crossword_param1', 'game').' (='.$game->param1.')';
