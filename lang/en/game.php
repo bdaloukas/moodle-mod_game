@@ -245,7 +245,7 @@ $string['sudoku_noentriesfound'] = 'No words found in glossary';
 
 // File attept.php.
 $string['gamenotfound'] = 'Game %s not found';
-$string['game_error'] = 'Game error: %s';
+$string['game_error'] = 'Game error: {$a}';
 
 // File export.php.
 $string['export'] = 'Export';

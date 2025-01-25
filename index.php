@@ -28,7 +28,7 @@ require_once("locallib.php");
 $id = required_param('id', PARAM_INT);   // It stores the courseid.
 
 if (! $course = $DB->get_record( 'course', [ 'id' => $id])) {
-    throw new moodle_exception( 'game_error', 'game',  'Course ID is incorrect');
+    throw new moodle_exception( 'game_error', 'game',  '', 'Course ID is incorrect');
 }
 
 require_login($course->id);
@@ -53,7 +53,6 @@ if (game_use_events()) {
 // Print the header.
 $strgames = get_string("modulenameplural", "game");
 $streditquestions = '';
-$editqcontexts = new question_edit_contexts($coursecontext);
 $PAGE->navbar->add($strgames);
 $PAGE->set_title($strgames);
 $PAGE->set_heading($course->fullname);
