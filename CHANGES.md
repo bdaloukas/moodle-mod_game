@@ -1,3 +1,6 @@
+Changes in version 2025-04-22
+* New: qbank compatibility with Moodle 5.
+
 Changes in version 2024-12-05
 * Fix mod_game: Problem with privacy when a users ask for deletion.
 
