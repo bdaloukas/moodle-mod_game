@@ -480,8 +480,20 @@ class mod_game_mod_form extends moodleform_mod {
     public function get_array_question_categories( $courseid, $gamekind) {
         global $CFG, $DB;
 
-        $context = game_get_context_course_instance( $courseid);
-
+		if (game_get_moodle_version() >= '05.00') {
+			$sql = "SELECT ctx.id AS contextid
+				FROM {context} ctx
+				JOIN {course_modules} cm ON cm.id = ctx.instanceid
+				JOIN {modules} m ON m.id = cm.module
+				WHERE ctx.contextlevel = 70 AND cm.course = ? AND m.name = ?";
+			$recs = $DB->get_records_sql( $sql, [$courseid, 'qbank']);
+			$contextids = [];
+			foreach( $recs as $rec) {
+				$contextids[] = $rec->contextid;
+			}		
+		} else {
+			$contextids = [game_get_context_course_instance( $courseid)->id];
+		}
         $a = [];
         $table = "{$CFG->prefix}question q";
         $select = '';
@@ -504,8 +516,10 @@ class mod_game_mod_form extends moodleform_mod {
         } else {
             $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
         }
-        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
-        if ($recs = $DB->get_records_sql( $sql)) {
+		[$insql, $params] = $DB->get_in_or_equal($contextids);
+        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid ".$insql;
+
+        if ($recs = $DB->get_records_sql( $sql, $params)) {
             foreach ($recs as $rec) {
                 $a[$rec->id] = $rec->name.' ('.$rec->c.')';
             }
