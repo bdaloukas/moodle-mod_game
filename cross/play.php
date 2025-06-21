@@ -140,7 +140,7 @@ function showlegend( $dir, $legend, $title) {
     echo "<br><b>$title</b><br>\n";
     foreach ($legend as $key => $line) {
         $line = game_repairquestion( $line);
-        echo "$key: <div id={$dir}{$key}>".game_filtertext( "$line<br>", 0)."</div>\n";
+        echo "$key: <span id={$dir}{$key}>".game_filtertext( "$line<br>", 0)."</span\n";
     }
     echo "\n";
 }

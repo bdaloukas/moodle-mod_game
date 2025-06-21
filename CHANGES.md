@@ -1,3 +1,6 @@
+Changes in version 2025-06-21
+* Fix Crossword: Use span instead of div in legend 
+
 Changes in version 2025-04-22
 * New: qbank compatibility with Moodle 5.
 
