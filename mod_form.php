@@ -490,7 +490,10 @@ class mod_game_mod_form extends moodleform_mod {
 			$contextids = [];
 			foreach( $recs as $rec) {
 				$contextids[] = $rec->contextid;
-			}		
+			}
+            if (count( $contextids) === 0) {
+                $contextids = [game_get_context_course_instance( $courseid)->id];
+            }
 		} else {
 			$contextids = [game_get_context_course_instance( $courseid)->id];
 		}
