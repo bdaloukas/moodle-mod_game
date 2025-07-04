@@ -1,5 +1,6 @@
 Changes in version 2025-07-04
 * Fix Millionaire: Select latest version of questions.
+* Fix showanswers.php: Exception - count(): Argument #1 ($value) must be of type Countable|array, null given.
 
 Changes in version 2025-06-21
 * Fix Crossword: Use span instead of div in legend 

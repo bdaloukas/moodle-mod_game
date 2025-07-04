@@ -219,7 +219,7 @@ function game_showanswers_question( $game, $context) {
                 }
             }
             $table = '{question} q';
-            if (count( $a) == 0) {
+            if ($a === null || count( $a) == 0) {
                 $select = 'q.id IN (0)';
             } else {
                 $select = 'q.id IN ('.implode( ',', $a).')';
