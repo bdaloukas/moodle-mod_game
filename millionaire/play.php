@@ -338,152 +338,155 @@ function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, 
 }
 
 /**
- * Updates tables: games_millionaire, game_attempts, game_questions.
+ * Selects a question for the Millionaire game.
  *
- * @param array $aanswer
- * @param stdClass $game
- * @param stdClasss $attempt
- * @param stdClass $millionaire
- * @param stdClass $query
- * @param stdClass $context
- * @param stdClass $cm
- * @param stdClass $course
+ * @param array  &$aanswer     Array to store the possible answers.
+ * @param object $game         The game object.
+ * @param object $attempt      The game attempt object.
+ * @param object $millionaire  The current Millionaire game state.
+ * @param object &$query       The query object to be filled.
+ * @param object $context      The context (for filtering media, etc.).
+ * @param object $cm           The course module.
+ * @param object $course       The course.
+ * 
+ * @throws moodle_exception    If the configuration is invalid or no question is found.
  */
 function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
     global $CFG, $DB, $USER;
 
+    // Allow only quiz or question as source module
     if (($game->sourcemodule != 'quiz') && ($game->sourcemodule != 'question')) {
-        throw new moodle_exception( 'millionaire_sourcemodule_must_quiz_question', 'game',
-            get_string( 'modulename', 'quiz').' '.get_string( 'modulename', $attempt->sourcemodule));
+        throw new moodle_exception('millionaire_sourcemodule_must_quiz_question', 'game',
+            get_string('modulename', 'quiz') . ' ' . get_string('modulename', $attempt->sourcemodule));
     }
 
+    // If query already exists, load it and return
     if ($millionaire->queryid != 0) {
-        game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
+        game_millionaire_loadquestions($game, $millionaire, $query, $aanswer, $context);
         return;
     }
 
+    // Prepare SQL selection logic based on source module
     if ($game->sourcemodule == 'quiz') {
         if ($game->quizid == 0) {
-            throw new moodle_exception( 'must_select_quiz', 'game');
+            throw new moodle_exception('must_select_quiz', 'game');
         }
+
+        // Build SQL depending on Moodle version
         if (game_get_moodle_version() < '02.06') {
-            $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.question=q.id".
-                " AND qqi.question=q.id";
-            $table = "{quiz_question_instances} qqi,{question} q, {question_multichoice} qmo";
+            $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.question=q.id AND qqi.question=q.id";
+            $table = "{quiz_question_instances} qqi,{question} q,{question_multichoice} qmo";
             $order = '';
         } else if (game_get_moodle_version() < '02.07') {
-            $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id".
-                " AND qqi.question=q.id";
-            $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
+            $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id AND qqi.question=q.id";
+            $table = "{quiz_question_instances} qqi,{question} q,{qtype_multichoice_options} qmo";
             $order = '';
         } else if (game_get_moodle_version() >= '04.00') {
-            $select = "qs.quizid='{$game->quizid}' AND qs.id=qr.itemid ";
+            // For Moodle 4.0+, work with question bank entries and versions
+            $select = "qs.quizid='{$game->quizid}' AND qs.id=qr.itemid";
             $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
             $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
-            $recs = $DB->get_records_sql( $sql);
-            $ret = [];
-            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
-                " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
+            $recs = $DB->get_records_sql($sql);
+            $a = [];
+            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q 
+                    WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
             foreach ($recs as $rec) {
-                $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
+                $recsq = $DB->get_records_sql($sql, [$rec->questionbankentryid], 0, 1);
                 foreach ($recsq as $recq) {
                     $a[] = $recq->id;
                 }
             }
             $table = '{question} q';
-            if (count( $a) == 0) {
-                $select = 'q.id IN (0)';
-            } else {
-                $select = 'q.id IN ('.implode( ',', $a).')';
-            }
+            $select = count($a) > 0 ? 'q.id IN (' . implode(',', $a) . ')' : 'q.id IN (0)';
         } else {
-            $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id".
-            " AND qs.questionid=q.id";
-            $table = "{quiz_slots} qs,{question} q, {qtype_multichoice_options} qmo";
+            $select = "qtype='multichoice' AND qs.quizid='$game->quizid' AND qmo.questionid=q.id AND qs.questionid=q.id";
+            $table = "{quiz_slots} qs,{question} q,{qtype_multichoice_options} qmo";
             $order = 'qs.page,qs.slot';
         }
+
     } else {
-        // Source is questions.
+        // Source is a question category
         if ($game->questioncategoryid == 0) {
-            throw new moodle_exception( 'must_select_questioncategory', 'game');
+            throw new moodle_exception('must_select_questioncategory', 'game');
         }
 
+        // Build SQL depending on Moodle version
         if (game_get_moodle_version() < '02.06') {
-            $select = " qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
+            $select = "qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
             $table = '{question} q, {question_multichoice} qmo';
         } else {
-            $select = " qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
+            $select = "qtype='multichoice' AND qmo.single=1 AND qmo.questionid=q.id";
             $table = '{question} q, {qtype_multichoice_options} qmo';
         }
 
-        // Include subcategories.
-        $select2 = '';
+        // Include subcategories if enabled
         if (game_get_moodle_version() >= '04.00') {
-            $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
-            $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
-            if ($game->subcategories) {
-                $cats = question_categorylist( $game->questioncategoryid);
-                if (count( $cats) > 0) {
-                    $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND '.
-                        ' qbe.questioncategoryid in ('.implode( ',', $cats).')';
-                }
+            $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv";
+            $cats = $game->subcategories ? question_categorylist($game->questioncategoryid) : [];
+            if (count($cats)) {
+                $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid IN (' . implode(',', $cats) . ')';
+            } else {
+                $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid=' . $game->questioncategoryid;
             }
+            $select2 .= " AND qv.id = ( SELECT id FROM {question_versions} WHERE questionbankentryid = qv.questionbankentryid ORDER BY version DESC LIMIT 1)";
         } else {
-            $select2 = 'category='.$game->questioncategoryid;
-            if ($game->subcategories) {
-                $cats = question_categorylist( $game->questioncategoryid);
-                if (count( $cats)) {
-                    $select2 = 'q.category in ('.implode(',', $cats).')';
-                }
-            }
+            $cats = $game->subcategories ? question_categorylist($game->questioncategoryid) : [];
+            $select2 = count($cats) ? 'q.category IN (' . implode(',', $cats) . ')' : 'category=' . $game->questioncategoryid;
         }
-        if ($select2 != '') {
-            $select .= ' AND '.$select2;
+
+        if (!empty($select2)) {
+            $select .= ' AND ' . $select2;
         }
     }
+
+    // Exclude hidden questions in versions before 4.0
     if (game_get_moodle_version() < '04.00') {
         $select .= ' AND hidden=0';
     }
+
+    // Choose question randomly or serially depending on settings
     if ($game->shuffle || $game->quizid == 0) {
-        $questionid = game_question_selectrandom( $game, $table, $select, 'q.id as id', true);
+        $questionid = game_question_selectrandom($game, $table, $select, 'q.id as id', true);
     } else {
         $questionid = game_millionaire_select_serial_question($game, $table, $select, $millionaire->level, $order, 'q.id as id');
     }
 
-    if ($questionid == 0) {
-        throw new moodle_exception( 'no_questions', 'game');
+    if (empty($questionid)) {
+        throw new moodle_exception('no_questions', 'game', '', null, "SQL: $select FROM $table");
     }
 
-    $q = $DB->get_record( 'question', [ 'id' => $questionid], 'id,questiontext');
+    // Load selected question
+    $q = $DB->get_record('question', ['id' => $questionid], 'id,questiontext');
 
-    $recs = $DB->get_records( 'question_answers', [ 'question' => $questionid]);
-
+    // Load answers
+    $recs = $DB->get_records('question_answers', ['question' => $questionid]);
     if ($recs === false) {
-        throw new moodle_exception( 'no_questions', 'game');
+        throw new moodle_exception('no_questions', 'game');
     }
 
+    // Process and store answers
     $correct = 0;
     $ids = [];
     foreach ($recs as $rec) {
-        $aanswer[] = game_filterquestion_answer(str_replace( '\"', '"', $rec->answer), $rec->id, $context->id, $game->course);
-
+        $aanswer[] = game_filterquestion_answer(str_replace('\"', '"', $rec->answer), $rec->id, $context->id, $game->course);
         $ids[] = $rec->id;
         if ($rec->fraction == 1) {
             $correct = $rec->id;
         }
     }
 
-    $count = count( $aanswer);
+    // Shuffle answers
+    $count = count($aanswer);
     for ($i = 1; $i <= $count; $i++) {
         $sel = mt_rand(0, $count - 1);
-
-        $temp = array_splice( $aanswer, $sel, 1);
+        $temp = array_splice($aanswer, $sel, 1);
         $aanswer[] = $temp[0];
 
-        $temp = array_splice( $ids, $sel, 1);
+        $temp = array_splice($ids, $sel, 1);
         $ids[] = $temp[0];
     }
 
+    // Prepare and insert query record
     $query = new StdClass;
     $query->attemptid = $attempt->id;
     $query->gamekind = $game->gamekind;
@@ -493,22 +496,25 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
     $query->glossaryentryid = 0;
     $query->questionid = $questionid;
     $query->questiontext = $q->questiontext;
-    $query->answertext = implode( ',', $ids);
-    $query->correct = array_search( $correct, $ids) + 1;
-    if (!$query->id = $DB->insert_record(  'game_queries', $query)) {
-        throw new moodle_exception( 'millionaire_error', 'game', 'error inserting to game_queries');
+    $query->answertext = implode(',', $ids);
+    $query->correct = array_search($correct, $ids) + 1;
+
+    if (!$query->id = $DB->insert_record('game_queries', $query)) {
+        throw new moodle_exception('millionaire_error', 'game', '', null, 'error inserting to game_queries');
     }
 
+    // Update millionaire game state with new queryid
     $updrec = new StdClass;
     $updrec->id = $millionaire->id;
     $updrec->queryid = $query->id;
 
-    if (!$newid = $DB->update_record(  'game_millionaire', $updrec)) {
-        throw new moodle_exception( 'millionaire_error', 'game', 'error updating in game_millionaire');
+    if (!$newid = $DB->update_record('game_millionaire', $updrec)) {
+        throw new moodle_exception('millionaire_error', 'game', '', null, 'error updating in game_millionaire');
     }
 
+    // Calculate and update score (1 point per level out of 15)
     $score = $millionaire->level / 15;
-    game_update_queries( $game, $attempt, $query, $score, '');
+    game_update_queries($game, $attempt, $query, $score, '');
 }
 
 /**

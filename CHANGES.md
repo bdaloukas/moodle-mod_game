@@ -1,3 +1,6 @@
+Changes in version 2025-07-04
+* Fix Millionaire: Select latest version of questions.
+
 Changes in version 2025-06-21
 * Fix Crossword: Use span instead of div in legend 
 
