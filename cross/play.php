@@ -555,7 +555,6 @@ function SelectThisWord(event) {
         id = 'd' + ( 1 + WordX[ CurrentWord]);
     }
     id = aid[ CurrentWord];
-    console.log("aid=",aid,"CurrentWord=",CurrentWord,"id=",id);
     document.getElementById("wordclue").innerHTML = document.getElementById( id).innerHTML;
     document.getElementById("worderror").style.display = "none";
 
