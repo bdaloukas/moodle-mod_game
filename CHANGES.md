@@ -1,5 +1,6 @@
 Changes in version 2025-07-05
 * Fix: Correct url for modifying question.
+* Fix Crossword: Problem on showing legend.
 
 Changes in version 2025-07-04
 * Fix Millionaire: Select latest version of questions.

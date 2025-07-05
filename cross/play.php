@@ -140,7 +140,7 @@ function showlegend( $dir, $legend, $title) {
     echo "<br><b>$title</b><br>\n";
     foreach ($legend as $key => $line) {
         $line = game_repairquestion( $line);
-        echo "$key: <span id={$dir}{$key}>".game_filtertext( "$line<br>", 0)."</span\n";
+        echo "$key: <span id={$dir}{$key}>".game_filtertext( "$line<br>", 0)."</span>\n";
     }
     echo "\n";
 }
@@ -555,6 +555,7 @@ function SelectThisWord(event) {
         id = 'd' + ( 1 + WordX[ CurrentWord]);
     }
     id = aid[ CurrentWord];
+    console.log("aid=",aid,"CurrentWord=",CurrentWord,"id=",id);
     document.getElementById("wordclue").innerHTML = document.getElementById( id).innerHTML;
     document.getElementById("worderror").style.display = "none";
 
