@@ -399,15 +399,16 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
             echo '</td>';
         }
 
+        $cm = get_coursemodule_from_instance('game', $game->id);
         if (game_get_moodle_version() >= '04.00') {
-            $href = "{$CFG->wwwroot}/question/bank/editquestion/question.php?id={$question->id}&courseid={$courseid}";
+            $href = "{$CFG->wwwroot}/question/bank/editquestion/question.php?id={$question->id}&courseid={$courseid}&cmid=$cm->id";
         } else {
-            $href = "{$CFG->wwwroot}/question/question.php?inpopup=1&amp;id=$question->id&courseid=$courseid";
+            $href = "{$CFG->wwwroot}/question/question.php?inpopup=1&amp;id=$question->id&courseid=$courseid&cmid=$cm->id";
         }
         echo '<td>';
         echo "<a title=\"Edit\" ".
             "href=\"{$href}\" target=\"_blank\">";
-        echo "<img src=\"".game_pix_url('t/edit')."\" alt=\"Edit\" /></a> ";
+        echo "<img src=\"".game_pix_url('t/edit')."\" alt=\"Edit\" style=\"width: 1em\"/></a> ";
 
         echo game_filterquestion(str_replace( [ "\'", '\"'], [ "'", '"'],
             $question->questiontext), $question->id, $context->id, $game->course);

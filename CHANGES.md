@@ -1,3 +1,6 @@
+Changes in version 2025-07-05
+* Fix: Correct url for modifying question.
+
 Changes in version 2025-07-04
 * Fix Millionaire: Select latest version of questions.
 * Fix showanswers.php: Exception - count(): Argument #1 ($value) must be of type Countable|array, null given.
