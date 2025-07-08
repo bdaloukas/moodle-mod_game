@@ -495,8 +495,24 @@ class mod_game_mod_form extends moodleform_mod {
         } else {
             $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
         }
-        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
-        if ($recs = $DB->get_records_sql( $sql)) {
+
+        $params = [];
+        // From Moodle 5.0, there are only question categories with course module contextlevel.
+        if (game_get_moodle_version() >= '05.00') {
+            $contexts = $context->get_child_contexts();
+            $contextids = [];
+            foreach ($contexts as $key => $value) {
+                if ($value->contextlevel == CONTEXT_MODULE) {
+                    $contextids[] = $value->id;
+                }
+            }
+            [$insql, $params] = $DB->get_in_or_equal($contextids, SQL_PARAMS_QM, 'param', true, $context->id);
+            $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid $insql";
+
+        } else {
+            $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid = $context->id";
+        }
+        if ($recs = $DB->get_records_sql($sql, $params)) {
             foreach ($recs as $rec) {
                 $a[$rec->id] = $rec->name.' ('.$rec->c.')';
             }
