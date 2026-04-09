@@ -35,11 +35,11 @@ trait legacy_gameaccess_polyfill {
     /**
      * Export all user data for the specified user, for the specified game.
      *
-     * @param   \game           $game The game being exported
+     * @param   \stdClass           $game The game being exported
      * @param   \stdClass       $user The user to export data for
      * @return  \stdClass       The data to be exported for this access rule.
      */
-    public static function export_gameaccess_user_data(\game $game, \stdClass $user) : \stdClass {
+    public static function export_gameaccess_user_data(\stdClass $game, \stdClass $user): \stdClass {
         return static::_export_gameaccess_user_data($game, $user);
     }
 

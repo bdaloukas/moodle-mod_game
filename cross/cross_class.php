@@ -87,9 +87,13 @@ class Cross {
     /** @var Average of repetitions. */
     public $maveragereps;
 
+    /** @var min. */
     public $mn20min;
+    /** @var max. */
     public $mn20max;
+    /** @var length horizontal. */
     public $mlegendh;
+    /** @var length vertical. */
     public $mlegendv;
 
     /**
@@ -295,7 +299,7 @@ class Cross {
         } else if ( $score > $this->mbestscore) {
             $keep = true;
         }
-        
+
         if( $keep) {
             $this->mbestcrosspos = $crosspos;
             $this->mbestcrossdir = $crossdir;

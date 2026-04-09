@@ -21,6 +21,9 @@
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use core_course\local\entity\content_item;
+
 defined('MOODLE_INTERNAL') || die();
 
 // Define CONSTANTS.
@@ -306,19 +309,16 @@ function game_user_complete($course, $user, $mod, $game) {
 /**
  * Given a course and a time, this module should find recent activity that has occurred in game activities and print it out.
  *
- * @uses $CFG
- * @return boolean
- * @todo Finish documenting this function
- *
  * @param stdClass $course
  * @param int $isteacher
- * @param int $timestart
+  * @param int $timestart
+ *
+ * @return boolean
  *
  * @return True if anything was printed, otherwise false.
+ *@uses $CFG
  */
-function game_print_recent_activity($course, $isteacher, $timestart) {
-    global $CFG;
-
+function game_print_recent_activity(stdClass $course, int $isteacher, int $timestart) {
     return false;
 }
 
@@ -327,11 +327,8 @@ function game_print_recent_activity($course, $isteacher, $timestart) {
  *
  * @uses $CFG
  * @return boolean
- * @todo Finish documenting this function
  **/
 function game_cron() {
-    global $CFG;
-
     return true;
 }
 
@@ -346,7 +343,8 @@ function game_cron() {
  *
  * @param int $gameid ID of an instance of this module
  * @return mixed Null or object with an array of grades and with the maximum grade
- **/
+ * @throws dml_exception
+ */
 function game_grades($gameid) {
     // Must return an array of grades, indexed by user, and a max grade.
 
@@ -370,6 +368,7 @@ function game_grades($gameid) {
  * @param stdClass $game
  * @param int $userid optional user id, 0 means all users
  * @return array array of grades, false if none
+ * @throws dml_exception
  */
 function game_get_user_grades($game, $userid=0) {
     global $DB;
@@ -397,7 +396,7 @@ function game_get_user_grades($game, $userid=0) {
  * @param int $gameid ID of an instance of this module
  * @return mixed boolean/array of students
  **/
-function game_get_participants($gameid) {
+function game_get_participants(int $gameid) {
     return false;
 }
 
@@ -406,13 +405,10 @@ function game_get_participants($gameid) {
  *
  * @param int $gameid ID of an instance of this module
  * @param int $scaleid
- * @return mixed
- * @todo Finish documenting this function
+ * @return bool
  **/
-function game_scale_used ($gameid, $scaleid) {
-    $return = false;
-
-    return $return;
+function game_scale_used ($gameid, $scaleid): bool {
+    return false;
 }
 
 /**
@@ -701,7 +697,7 @@ function game_reset_gradebook($courseid, $type='') {
  * @param string $feature
  * @return bool True if quiz supports feature
  */
-function game_supports($feature) {
+function game_supports(string $feature) {
     global $CFG;
     if ($CFG->branch >= 400) {
         if ($feature == FEATURE_MOD_PURPOSE) {
@@ -740,8 +736,9 @@ function game_supports($feature) {
  * get extra capabilities
  *
  * @return array all other caps used in module
+ * @throws dml_exception
  */
-function game_get_extra_capabilities() {
+function game_get_extra_capabilities(): array {
     global $DB, $CFG;
 
     require_once($CFG->libdir.'/questionlib.php');
@@ -753,18 +750,18 @@ function game_get_extra_capabilities() {
     return $caps;
 }
 
-/**
+/*
  * Return a textual summary of the number of attemtps that have been made at a particular game,
  *
- * @param object $game the game object. Only $game->id is used at the moment.
- * @param object $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
- * @param boolean $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
+ * @param stdClass $game the game object. Only $game->id is used at the moment.
+ * @param stcClass $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
+ * @param bool $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
  * @param int $currentgroup if there is a concept of current group where this method is being called
  *         (e.g. a report) pass it in here. Default 0 which means no current group.
  * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)" or
  *          "Attemtps 123 (45 from this group)".
  */
-function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup = 0) {
+function game_num_attempt_summary(stdClass $game, stdClass $cm,bool $returnzero = false, int $currentgroup = 0) {
     global $CFG, $USER, $DB;
 
     $numattempts = $DB->count_records('game_attempts', ['gameid' => $game->id, 'preview' => 0]);
@@ -802,7 +799,7 @@ function game_num_attempt_summary($game, $cm, $returnzero = false, $currentgroup
  *
  * @return float  the score
  */
-function game_format_score($game, $score) {
+function game_format_score(stdClass $game, float $score): float {
     return format_float($game->grade * $score / 100, $game->decimalpoints);
 }
 
@@ -814,16 +811,16 @@ function game_format_score($game, $score) {
  *
  * @return foat score
  */
-function game_format_grade($game, $grade) {
+function game_format_grade(stdClass $game, float $grade): float{
     return format_float($grade, $game->decimalpoints == null ? 2 : $game->decimalpoints);
 }
 
 /**
  * get grading options
  *
- * @return the options for calculating the quiz grade from the individual attempt grades.
+ * @return array: the options for calculating the quiz grade from the individual attempt grades.
  */
-function game_get_grading_options() {
+function game_get_grading_options(): array {
     return [
             GAME_GRADEHIGHEST => get_string('gradehighest', 'quiz'),
             GAME_GRADEAVERAGE => get_string('gradeaverage', 'quiz'),
@@ -841,7 +838,7 @@ function game_get_grading_options() {
  * @param navigation_node $gamenode
  * @return void
  */
-function game_extend_settings_navigation($settings, $gamenode) {
+function game_extend_settings_navigation(settings_navigation $settings, navigation_node $gamenode) {
     global $PAGE, $CFG, $DB;
 
     $context = $PAGE->cm->context;
@@ -1203,13 +1200,13 @@ if (defined( 'GAME_MOODLE_401')) {
     /**
      * Return the preconfigured tools which are configured for inclusion in the activity picker.
      *
-     * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
+     * @param content_item $defaultmodulecontentitem reference to the content item for the LTI module.
      * @param \stdClass $user the user object, to use for cap checks if desired.
      * @param stdClass $course the course to scope items to.
      * @return array the array of content items.
      */
-    function mod_game_get_course_content_items(\core_course\local\entity\content_item $defaultmodulecontentitem, \stdClass $user,
-        \stdClass $course) {
+    function mod_game_get_course_content_items(content_item $defaultmodulecontentitem, \stdClass $user,
+                                               \stdClass    $course) {
 
         $types = [];
         mod_game_get_course_content_items_type( $defaultmodulecontentitem, $user, $course, $types, 'hangman');
@@ -1223,19 +1220,22 @@ if (defined( 'GAME_MOODLE_401')) {
 
         return $types;
     }
-  
+
     /**
      * Helper function for mod_game_get_course_content_items.
      * It is called for every game of module Game.
      *
-     * @param \core_course\local\entity\content_item $defaultmodulecontentitem reference to the content item for the LTI module.
-     * @param \stdClass $user the user object, to use for cap checks if desired.
+     * @param content_item $defaultmodulecontentitem reference to the content item for the LTI module.
+     * @param stdClass $user the user object, to use for cap checks if desired.
      * @param stdClass $course the course to scope items to.
-     * @param types array the array of content items.
+     * @param $types
      * @param string $kind the kind of each game.
+     * @throws \core\exception\moodle_exception
+     * @throws coding_exception
+     * @throws dml_exception
      */
-    function mod_game_get_course_content_items_type(\core_course\local\entity\content_item $defaultmodulecontentitem,
-         \stdClass $user, \stdClass $course, &$types, $kind) {
+    function mod_game_get_course_content_items_type(content_item $defaultmodulecontentitem,
+                                                    \stdClass    $user, \stdClass $course, &$types, $kind) {
         global $OUTPUT;
 
         $name = 'hide' . $kind;
@@ -1262,7 +1262,7 @@ if (defined( 'GAME_MOODLE_401')) {
             $type->icon = html_writer::empty_tag('img', ['src' => $type->icon, 'alt' => $type->name, 'class' => 'icon']);
         }
 
-        $types[] = new \core_course\local\entity\content_item(
+        $types[] = new content_item(
             2,
             $type->name,
             new \core_course\local\entity\string_title($type->title),

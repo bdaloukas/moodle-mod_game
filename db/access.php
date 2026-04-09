@@ -35,8 +35,8 @@ $capabilities = [
             'student' => CAP_ALLOW,
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     // Ability to do the game as a 'student'.
@@ -46,8 +46,8 @@ $capabilities = [
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'student' => CAP_ALLOW,
-            'guest' => CAP_ALLOW
-        ]
+            'guest' => CAP_ALLOW,
+        ],
     ],
 
     // Ability for a 'Student' to review their previous attempts. Review by 'Teachers' is controlled by mod/game:viewreports.
@@ -55,9 +55,9 @@ $capabilities = [
         'captype' => 'read',
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
-            'student' => CAP_ALLOW
+            'student' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/game:attempt'
+        'clonepermissionsfrom' => 'moodle/game:attempt',
     ],
 
     // Edit the game settings, add and remove questions.
@@ -67,8 +67,8 @@ $capabilities = [
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     // Edit the game overrides.
@@ -77,8 +77,8 @@ $capabilities = [
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     // View the game reports.
@@ -89,8 +89,8 @@ $capabilities = [
         'archetypes' => [
             'teacher' => CAP_ALLOW,
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     // Delete attempts using the overview report.
@@ -100,8 +100,8 @@ $capabilities = [
         'contextlevel' => CONTEXT_MODULE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
-        ]
+            'manager' => CAP_ALLOW,
+        ],
     ],
 
     'mod/game:addinstance' => [
@@ -111,8 +111,8 @@ $capabilities = [
         'contextlevel' => CONTEXT_COURSE,
         'archetypes' => [
             'editingteacher' => CAP_ALLOW,
-            'manager' => CAP_ALLOW
+            'manager' => CAP_ALLOW,
         ],
-        'clonepermissionsfrom' => 'moodle/course:manageactivities'
-    ]
+        'clonepermissionsfrom' => 'moodle/course:manageactivities',
+    ],
 ];

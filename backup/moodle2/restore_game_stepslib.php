@@ -120,7 +120,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_export_javame( $data) {
+    protected function process_game_export_javame($data) {
         global $DB;
 
         $data = (object)$data;
@@ -136,7 +136,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_grade( $data) {
+    protected function process_game_grade($data) {
         global $DB;
 
         $data = (object)$data;
@@ -153,7 +153,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_repetition( $data) {
+    protected function process_game_repetition($data) {
         global $DB;
 
         $data = (object)$data;
@@ -172,7 +172,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_attempt( $data) {
+    protected function process_game_attempt($data) {
         global $DB;
 
         $data = (object)$data;
@@ -204,7 +204,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_query( $data) {
+    protected function process_game_query($data) {
         global $DB;
 
         $data = (object)$data;
@@ -228,7 +228,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_bookquiz( $data) {
+    protected function process_game_bookquiz($data) {
         global $DB;
 
         $data = (object)$data;
@@ -244,7 +244,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_bookquiz_chapter( $data) {
+    protected function process_game_bookquiz_chapter($data) {
         global $DB;
 
         $data = (object)$data;
@@ -260,7 +260,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_bookquiz_question( $data) {
+    protected function process_game_bookquiz_question($data) {
         global $DB;
 
         $data = (object)$data;
@@ -277,7 +277,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_cross( $data) {
+    protected function process_game_cross($data) {
         global $DB;
 
         $data = (object)$data;
@@ -292,7 +292,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_cryptex( $data) {
+    protected function process_game_cryptex($data) {
         global $DB;
 
         $data = (object)$data;
@@ -307,7 +307,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_hangman( $data) {
+    protected function process_game_hangman($data) {
         global $DB;
 
         $data = (object)$data;
@@ -323,7 +323,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_hiddenpicture( $data) {
+    protected function process_game_hiddenpicture($data) {
         global $DB;
 
         $data = (object)$data;
@@ -338,7 +338,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_millionaire( $data) {
+    protected function process_game_millionaire($data) {
         global $DB;
 
         $data = (object)$data;
@@ -354,7 +354,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_snake( $data) {
+    protected function process_game_snake($data) {
         global $DB;
 
         $data = (object)$data;
@@ -370,7 +370,7 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
      *
      * @param stdClass $data
      */
-    protected function process_game_sudoku( $data) {
+    protected function process_game_sudoku($data) {
         global $DB;
 
         $data = (object)$data;

@@ -80,7 +80,8 @@ function game_showusers($game) {
                 function onselectuser()
                 {
                     var groupid = document.getElementById('menugroup').value;
-                    window.location.href = "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid='+groupid;
+                    window.location.href =
+                        "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid='+groupid;
                 }
             </script>
     <?php
@@ -268,7 +269,8 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=solution&amp;".
                     "attemptid={$rec->id}&amp;gamekind={$gamekind}&amp;update=$update&amp;&amp;".
                     "q={$game->id}\">";
-                echo '<img src="'.game_pix_url('t/preview').'" alt="'.get_string( 'showsolution', 'game').'" style="width: 1em" /></a>';
+                echo '<img src="'.game_pix_url('t/preview').'" alt="'.
+                        get_string( 'showsolution', 'game').'" style="width: 1em" /></a>';
             }
             echo '</center></td>';
             echo "</tr>\r\n";

@@ -129,10 +129,11 @@ function game_cross_new( $game, $attemptid, &$crossm) {
 /**
  * Shows the legend.
  *
+ * @param string $dir
  * @param array $legend
  * @param string $title
  */
-function showlegend( $dir, $legend, $title) {
+function showlegend( string $dir, array $legend, string $title) {
     if (count( $legend) == 0) {
         return;
     }
@@ -284,7 +285,7 @@ if (document.getElementById("waitmessage") != null)
     for (var x = 0; x < CrosswordWidth; x++)
     TableAcrossWord[x] = new Array(CrosswordHeight);
     TableDownWord = new Array(CrosswordWidth);
-    for (var x = 0; x < CrosswordWidth; x++){ 
+    for (var x = 0; x < CrosswordWidth; x++){
         TableDownWord[x] = new Array(CrosswordHeight);
     }
 
@@ -454,7 +455,7 @@ function ChangeWordStyle(WordNumber, NewStyle) {
     if (WordNumber<= LastHorizontalWord) {
         for (i = 0; i < WordLength[WordNumber]; i++) {
             CellAt(x + i, y).className = NewStyle;
-        }        
+        }
     } else {
         for (i = 0; i < WordLength[WordNumber]; i++) {
             CellAt(x, y + i).className = NewStyle;
@@ -483,7 +484,7 @@ function ChangeCurrentWordSelectedStyle(IsSelected) {
     }
 }
 
-// Selects the new word by parsing the name of the TD element referenced by the 
+// Selects the new word by parsing the name of the TD element referenced by the
 // event object, and then applying styles as necessary.
 function SelectThisWord(event) {
     if (CrosswordFinished) {
@@ -737,7 +738,7 @@ function OnPrint()
             ?> document.getElementById("checkhtmlbutton").style.display = "none"; <?php
         }
         ?>
-        window.print();     
+        window.print();
         <?php
         if ($showhtmlsolutions) {
             ?> document.getElementById("checkhtmlbutton").style.display = "block"; <?php
@@ -759,9 +760,9 @@ function OnPrint()
 *  http://www.webtoolkit.info/
 *
 **/
- 
+
 var Base64 = {
- 
+
     // private property
     _keyStr : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",
 
@@ -798,7 +799,7 @@ var Base64 = {
 
         return output;
 
-    }, 
+    },
 
     // private method for UTF-8 decoding
     _utf8_decode : function (utftext) {
@@ -1017,7 +1018,7 @@ function game_cross_show_welcome0( $game) {
 ?>
 <td valign="top" style="padding-left: 1em;">
 
-<div id="welcomemessage" class="answerboxstyle" style="display:none;">  
+<div id="welcomemessage" class="answerboxstyle" style="display:none;">
     <?php echo get_string( 'cross_welcome', 'game'); ?> </div>
 
 <div id="answerbox2"  style="display:none;"></div>
@@ -1063,7 +1064,7 @@ function game_cross_show_welcome1() {
 ?>
 <td valign="top" style="padding-left: 1em;">
 
-<div id="welcomemessage" class="answerboxstyle" style="display:none;">  
+<div id="welcomemessage" class="answerboxstyle" style="display:none;">
     <?php echo get_string( 'cross_welcome', 'game'); ?> </div>
 
 <div id="answerbox" class="answerboxstyle" style="display:none;">
@@ -1098,9 +1099,11 @@ function game_cross_show_welcome1() {
 /**
  * Show the legend (horizontal and vertical)
  *
+ * @param stdClass $game
  * @param stdClass $cross
+ * @throws coding_exception
  */
-function game_cross_show_legends( $game, $cross) {
+function game_cross_show_legends( stdClass $game, stdClass $cross) {
     if( $game->param3 == 2) {
         echo '<div hidden>';
     }

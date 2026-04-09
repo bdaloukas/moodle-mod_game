@@ -25,6 +25,7 @@ namespace mod_game\privacy;
 
 use \core_privacy\local\request\contextlist;
 use \core_privacy\local\request\approved_contextlist;
+use mod_game\game_settings;
 
 /**
  * The gameaccess_provider interface provides the expected interface for all 'gameaccess' gameaccesss.
@@ -38,11 +39,11 @@ interface gameaccess_provider extends \core_privacy\local\request\plugin\subplug
     /**
      * Export all user data for the specified user, for the specified game.
      *
-     * @param   \game           $game The game being exported
+     * @param   \stdClass        $game The game being exported
      * @param   \stdClass       $user The user to export data for
      * @return  \stdClass       The data to be exported for this access rule.
      */
-    public static function export_gameaccess_user_data(\game $game, \stdClass $user) : \stdClass;
+    public static function export_gameaccess_user_data(\stdClass $game, \stdClass $user) : \stdClass;
 
     /**
      * Delete all data for all users in the specified game.

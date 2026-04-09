@@ -38,10 +38,8 @@ class CryptexDB extends CrossDB {
      * Sets bad words.
      *
      * @param array $badwords
-     *
-     * @return the saved record
      */
-    public function setbadwords( $badwords) {
+    public function setbadwords( $badwords): void {
         $this->badwords = $badwords;
     }
 

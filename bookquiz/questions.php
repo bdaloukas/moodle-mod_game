@@ -132,6 +132,8 @@ echo $OUTPUT->footer($course);
  * @param int $bookid
  * @param array $ids
  * @param stdClass $form
+ * @throws dml_exception
+ * @throws moodle_exception
  */
 function game_bookquiz_save( $gameid, $bookid, $ids, $form) {
     global $DB;

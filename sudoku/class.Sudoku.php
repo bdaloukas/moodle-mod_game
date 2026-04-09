@@ -839,7 +839,7 @@ class s extends rcs {
      *
      * @var array
      */
-    protected $thecouplingorder = array ( 1 => [5, 6, 8, 9],
+    protected $thecouplingorder = [ 1 => [5, 6, 8, 9],
         2 => [4, 6, 7, 9],
         3 => [4, 5, 7, 8],
         4 => [2, 3, 8, 9],
@@ -847,7 +847,7 @@ class s extends rcs {
         6 => [1, 2, 7, 8],
         7 => [2, 3, 5, 6],
         8 => [1, 3, 4, 6],
-        9 => [1, 2, 4, 5]);
+        9 => [1, 2, 4, 5]];
 
     /**
      * Constructor
@@ -917,7 +917,7 @@ class sudoku extends ObjectS {
     /** @var array of ObjectSs of type Cell. */
     protected $theboard = [];
 
-    /** @var boolean True if debugging output is to be provided during a run. */
+    /** @var bool True if debugging output is to be provided during a run. */
     protected $thedebug = false;
 
     /** @var ObjectS of type R An array of RCS ObjectSs, one ObjectS for each row. */
@@ -929,13 +929,13 @@ class sudoku extends ObjectS {
     /** @var ObjectS of type S An array of RCS ObjectSs, one ObjectS for each square. */
     protected $thesquares = [];
 
-    /** @var integer. Used during puzzle generation for debugging output.  There may
+    /** @var int. Used during puzzle generation for debugging output.  There may
      * eventually be some use of theLevel to figure out where to stop
      * the backtrace when puzzle generation fails.
      */
     protected $thelevel = 0;
 
-    /** @var integer. Used during puzzle generation to determine when the generation
+    /** @var int. Used during puzzle generation to determine when the generation
      * will fail.  Failure, in this case, means to take a LONG time.  The
      * backtracing algorithm used in the puzzle generator will always find
      * a solution, it just might take a very long time.  This is a way to
@@ -943,12 +943,12 @@ class sudoku extends ObjectS {
      */
     protected $themaxiterations = 50;
 
-    /** @var integer. Used during puzzle generation to limit the number of trys at
+    /** @var int. Used during puzzle generation to limit the number of trys at
      * generation a puzzle in the event puzzle generation fails
      */
     protected $thetrys = 10;
 
-    /** @var integer. Used during puzzle generation to count the number of iterations
+    /** @var int. Used during puzzle generation to count the number of iterations
      * during puzzle generation.  It the number gets above $theMaxIterations,
      * puzzle generation has failed and another try is made.
      */

@@ -33,7 +33,9 @@
  **/
 class CrossDB extends Cross {
 
+    /** @var int length horizontal. */
     public $mLegendh;
+    /** @var int Length vertical. */
     public $mLegendv;
 
     /**

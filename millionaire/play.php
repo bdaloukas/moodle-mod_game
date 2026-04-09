@@ -340,39 +340,39 @@ function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, 
 /**
  * Selects a question for the Millionaire game.
  *
- * @param array  &$aanswer     Array to store the possible answers.
+ * @param array  $aanswer     Array to store the possible answers.
  * @param object $game         The game object.
  * @param object $attempt      The game attempt object.
  * @param object $millionaire  The current Millionaire game state.
- * @param object &$query       The query object to be filled.
+ * @param object $query       The query object to be filled.
  * @param object $context      The context (for filtering media, etc.).
  * @param object $cm           The course module.
  * @param object $course       The course.
- * 
+ *
  * @throws moodle_exception    If the configuration is invalid or no question is found.
  */
 function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
     global $CFG, $DB, $USER;
 
-    // Allow only quiz or question as source module
+    // Allow only quiz or question as source module.
     if (($game->sourcemodule != 'quiz') && ($game->sourcemodule != 'question')) {
         throw new moodle_exception('millionaire_sourcemodule_must_quiz_question', 'game',
             get_string('modulename', 'quiz') . ' ' . get_string('modulename', $attempt->sourcemodule));
     }
 
-    // If query already exists, load it and return
+    // If query already exists, load it and return.
     if ($millionaire->queryid != 0) {
         game_millionaire_loadquestions($game, $millionaire, $query, $aanswer, $context);
         return;
     }
 
-    // Prepare SQL selection logic based on source module
+    // Prepare SQL selection logic based on source module.
     if ($game->sourcemodule == 'quiz') {
         if ($game->quizid == 0) {
             throw new moodle_exception('must_select_quiz', 'game');
         }
 
-        // Build SQL depending on Moodle version
+        // Build SQL depending on Moodle version.
         if (game_get_moodle_version() < '02.06') {
             $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.question=q.id AND qqi.question=q.id";
             $table = "{quiz_question_instances} qqi,{question} q,{question_multichoice} qmo";
@@ -382,7 +382,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $table = "{quiz_question_instances} qqi,{question} q,{qtype_multichoice_options} qmo";
             $order = '';
         } else if (game_get_moodle_version() >= '04.00') {
-            // For Moodle 4.0+, work with question bank entries and versions
+            // For Moodle 4.0+, work with question bank entries and versions.
             $select = "qs.quizid='{$game->quizid}' AND qs.id=qr.itemid";
             $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
             $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
@@ -405,12 +405,12 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
         }
 
     } else {
-        // Source is a question category
+        // Source is a question category.
         if ($game->questioncategoryid == 0) {
             throw new moodle_exception('must_select_questioncategory', 'game');
         }
 
-        // Build SQL depending on Moodle version
+        // Build SQL depending on Moodle version.
         if (game_get_moodle_version() < '02.06') {
             $select = "qtype='multichoice' AND qmo.single=1 AND qmo.question=q.id";
             $table = '{question} q, {question_multichoice} qmo';
@@ -419,7 +419,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             $table = '{question} q, {qtype_multichoice_options} qmo';
         }
 
-        // Include subcategories if enabled
+        // Include subcategories if enabled.
         if (game_get_moodle_version() >= '04.00') {
             $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv";
             $cats = $game->subcategories ? question_categorylist($game->questioncategoryid) : [];
