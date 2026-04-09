@@ -37,11 +37,11 @@ class mod_game_generator extends testing_module_generator {
      * Creates instance of game record with default values.
      *
      * @param stdClass $record
-     * @param array $options
+     * @param ?array $options
      *
      * @return the game instance
      */
-    public function create_instance($record = null, array $options = null) {
+    public function create_instance($record = null, ?array $options = null) {
         global $CFG;
         require_once($CFG->libdir.'/resourcelib.php');
 
