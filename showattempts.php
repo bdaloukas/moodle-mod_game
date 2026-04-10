@@ -41,7 +41,8 @@ if ($action == 'delete') {
 echo get_string('group') . ': ';
 game_showgroups($game);
 echo ' &nbsp; ' . get_string('user') . ': ';
-game_showusers($game);echo '<br><br>';
+game_showusers($game);
+echo '<br><br>';
 
 game_showattempts($game);
 
@@ -60,21 +61,21 @@ function game_showusers($game) {
     $context = game_get_context_course_instance($game->course);
 
     $groupid = optional_param('groupid', 0, PARAM_INT);
-    $sql = "SELECT DISTINCT ra.userid,u.lastname,u.firstname FROM {role_assignments} ra, {user} u ".
+    $sql = "SELECT DISTINCT ra.userid,u.lastname,u.firstname FROM {role_assignments} ra, {user} u " .
         " WHERE ra.contextid={$context->id} AND ra.userid=u.id";
     if ($groupid != 0) {
         $sql .= " AND ra.userid IN (SELECT gm.userid FROM {groups_members} gm WHERE gm.groupid=$groupid)";
     }
     if (($recs = $DB->get_records_sql($sql))) {
         foreach ($recs as $rec) {
-            $users[$rec->userid] = $rec->lastname.' '.$rec->firstname;
+            $users[$rec->userid] = $rec->lastname . ' ' . $rec->firstname;
         }
     }
 
     if ($guest = guest_user()) {
         $users[$guest->id] = fullname($guest);
     }
-    $href = $CFG->wwwroot.'/mod/game/showattempts.php?q='.$game->id.'&userid=';
+    $href = $CFG->wwwroot . '/mod/game/showattempts.php?q=' . $game->id . '&userid=';
 ?>
             <script type="text/javascript">
                 function onselectuser()
@@ -101,7 +102,7 @@ function game_showusers($game) {
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
     }
-    $output .= '>'. $nothing .'</option>' . "\n";
+    $output .= '>'. $nothing . '</option>' . "\n";
 
     if (!empty($options)) {
         foreach ($options as $value => $label) {
@@ -126,7 +127,7 @@ function game_showusers($game) {
  * @param stdClass $game
  */
 function game_showgroups($game) {
-    global $CFG, $USER, $DB;
+    global $CFG, $DB;
 
     $groups = [];
     if (($recs = $DB->get_records_sql("SELECT id,name FROM {groups} WHERE courseid=$game->course ORDER BY name"))) {
@@ -134,7 +135,7 @@ function game_showgroups($game) {
             $groups[$rec->id] = $rec->name;
         }
     }
-    $href = $CFG->wwwroot.'/mod/game/showattempts.php?q='.$game->id.'&groupid=';
+    $href = $CFG->wwwroot . '/mod/game/showattempts.php?q=' . $game->id . '&groupid=';
 ?>
             <script type="text/javascript">
                 function onselectgroup()
@@ -159,7 +160,7 @@ function game_showgroups($game) {
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
     }
-    $output .= '>'. $nothing .'</option>' . "\n";
+    $output .= '>' . $nothing . '</option>' . "\n";
 
     if (!empty($options)) {
         foreach ($options as $value => $label) {
@@ -250,8 +251,8 @@ function game_showattempts($game) {
             echo '<td><center>' . ($rec->timestart != 0 ? userdate($rec->timestart) : '') . "</center></td>\r\n";
             echo '<td><center>' . ($rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '') . '</center></td>';
             echo '<td><center>' . ($rec->timefinish != 0 ? userdate($rec->timefinish) : '') . '</center></td>';
-            echo '<td><center>' . round($rec->score * 100).'</center></td>';
-            echo '<td><center>' . $rec->attempts.'</center></td>';
+            echo '<td><center>' . round($rec->score * 100) . '</center></td>';
+            echo '<td><center>' . $rec->attempts . '</center></td>';
             echo '<td><center>';
 
             // Preview.
@@ -259,7 +260,7 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update=' . $update . "&amp;q={$game->id}\">";
-                echo '<img src="' . game_pix_url('t/preview') . '" alt="'.get_string('preview', 'game').'" style="width: 1em" /></a>';
+                echo '<img src="' . game_pix_url('t/preview') . '" alt="' . get_string('preview', 'game').'" style="width: 1em" /></a>';
             }
             echo '</center></td>';
 
@@ -289,7 +290,7 @@ function game_ondeleteattempt(stdClass $game) {
 
     $attemptid = required_param('attemptid', PARAM_INT);
 
-    switch($game->gamekind) {
+    switch ($game->gamekind) {
         case 'bookquiz':
             $DB->delete_records('game_bookquiz_chapters', ['attemptid' => $attemptid]);
             break;

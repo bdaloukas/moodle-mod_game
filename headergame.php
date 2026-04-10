@@ -32,7 +32,7 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
-$q = optional_param('q',  0, PARAM_INT);  // Game ID.
+$q = optional_param('q', 0, PARAM_INT);  // Game ID.
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('game', $id)) {
@@ -46,7 +46,7 @@ if ($id) {
     }
 } else {
     if (! $game = $DB->get_record('game', ['id' => $q])) {
-        throw new moodle_exception('game_error', 'game', 'invalidgameid q='.$q, 'game');
+        throw new moodle_exception('game_error', 'game', 'invalidgameid q=' . $q, 'game');
     }
     if (!$course = $DB->get_record('course', ['id' => $game->course])) {
         throw new moodle_exception('game_error', 'game', 'invalidcourseid');
@@ -89,11 +89,11 @@ if ($edit != -1 && $PAGE->user_allowed_editing()) {
 $title = $course->shortname . ': ' . format_string($game->name);
 
 if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
-    $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
-        '<input type="hidden" name="id" value="' . $cm->id . '" />'.
-        '<input type="hidden" name="edit" value="' . ($PAGE->user_is_editing() ? 'off' : 'on').'" />'.
-        '<input type="submit" value="'.
-            get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
+    $buttons = '<table><tr><td><form method="get" action="view.php"><div>' .
+        '<input type="hidden" name="id" value="' . $cm->id . '" />' .
+        '<input type="hidden" name="edit" value="' . ($PAGE->user_is_editing() ? 'off' : 'on') . '" />'.
+        '<input type="submit" value="' .
+            get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton') .
             '" /></div></form></td></tr></table>';
     $PAGE->set_button($buttons);
 }

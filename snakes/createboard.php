@@ -36,8 +36,18 @@
  * @param int $setwidth
  * @param int $setheight
  */
-function game_createsnakesboard($imageasstring, $colsx, $colsy, $ofstop, $ofsbottom,
-        $ofsright, $ofsleft, $board, $setwidth, $setheight) {
+function game_createsnakesboard(
+    $imageasstring,
+    $colsx,
+    $colsy,
+    $ofstop,
+    $ofsbottom,
+    $ofsright,
+    $ofsleft,
+    $board,
+    $setwidth,
+    $setheight
+) {
     global $CFG;
 
     $dir = $CFG->dirroot.'/mod/game/snakes/1';

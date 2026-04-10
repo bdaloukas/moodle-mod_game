@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->libdir.'/tablelib.php');
+require_once($CFG->libdir . '/tablelib.php');
 
 /**
  * The class prints a report
@@ -34,7 +34,6 @@ require_once($CFG->libdir.'/tablelib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class game_report extends game_default_report {
-
     /**
      * Display the report.
      *
@@ -88,15 +87,18 @@ class game_report extends game_default_report {
             if ($attemptnum = count_records('game_attempts', 'gameid', $game->id)) {
                 $a = new stdClass;
                 $a->attemptnum = $attemptnum;
-                $a->studentnum = count_records_select('game_attempts',
-                    "gameid = '$game->id' AND preview = '0'", 'COUNT(DISTINCT userid)');
+                $a->studentnum = count_records_select(
+                    'game_attempts',
+                    "gameid = '$game->id' AND preview = '0'",
+                    'COUNT(DISTINCT userid)'
+                );
                 $a->studentstring = $course->students;
 
                 notify(get_string('numattempts', 'game', $a));
             }
         }
 
-        $context = get_context_instance(CONTEXT_MODULE, $cm->id);
+        $context = game_get_context_module_instance( $cm->id);
         // Find out current groups mode.
         if ($groupmode = groupmode($course, $cm)) { // Groups are being used.
             if (!$download) {
@@ -119,7 +121,7 @@ class game_report extends game_default_report {
 
         // Now check if asked download of data.
         if ($download) {
-            $filename = clean_filename("$course->shortname ".format_string($game->name, true));
+            $filename = clean_filename("$course->shortname " . format_string($game->name, true));
             $sort = '';
         }
 
@@ -174,7 +176,7 @@ class game_report extends game_default_report {
 
             $table->define_columns($tablecolumns);
             $table->define_headers($tableheaders);
-            $table->define_baseurl($CFG->wwwroot.'/mod/game/report.php?mode=overview&amp;id=' .
+            $table->define_baseurl($CFG->wwwroot . '/mod/game/report.php?mode=overview&amp;id=' .
                 $cm->id . '&amp;noattempts=' . $noattempts . '&amp;detailedmarks=' . $detailedmarks .
                 '&amp;pagesize=' . $pagesize);
 
@@ -235,7 +237,7 @@ class game_report extends game_default_report {
             }
             if ($detailedmarks) {
                 foreach ($questionids as $id) {
-                    $headers[] = '#'.$questions[$id]->number;
+                    $headers[] = '#' . $questions[$id]->number;
                 }
             }
             if ($hasfeedback) {
@@ -288,7 +290,7 @@ class game_report extends game_default_report {
             }
             if ($detailedmarks) {
                 foreach ($questionids as $id) {
-                    $headers[] = '#'.$questions[$id]->number;
+                    $headers[] = '#' . $questions[$id]->number;
                 }
             }
             if ($hasfeedback) {
@@ -317,7 +319,7 @@ class game_report extends game_default_report {
             }
             if ($detailedmarks) {
                 foreach ($questionids as $id) {
-                    $headers .= "\t#".$questions[$id]->number;
+                    $headers .= "\t#" . $questions[$id]->number;
                 }
             }
             if ($hasfeedback) {
@@ -329,8 +331,8 @@ class game_report extends game_default_report {
         $contextlists = get_related_contexts_string(game_get_context_course_instance($course->id));
 
         // Construct the SQL.
-        $select = 'SELECT qa.id,'.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).' AS uniqueid, '.
-            'qa.id as attemptuniqueid, qa.id AS attempt, u.id AS userid, u.firstname, u.lastname, u.picture, '.
+        $select = 'SELECT qa.id,' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).' AS uniqueid, ' .
+            'qa.id as attemptuniqueid, qa.id AS attempt, u.id AS userid, u.firstname, u.lastname, u.picture, ' .
             'qa.score, qa.timefinish, qa.timestart, qa.timefinish - qa.timestart AS duration ';
         if ($course->id != SITEID) {
             // This is too complicated, so just do it for each of the four cases.
@@ -374,28 +376,28 @@ class game_report extends game_default_report {
                 } else if ($noattempts == 3) {
                     // We want all attempts.
                     $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
-                    $where = ' WHERE qa.gameid = '.$game->id.' AND qa.preview = 0';
+                    $where = ' WHERE qa.gameid = ' . $game->id . ' AND qa.preview = 0';
                 } // The noattempts = 2 means we want all students, with or without attempts.
             }
-            $countsql = 'SELECT COUNT(DISTINCT('.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) '.$from.$where;
+            $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) '.$from.$where;
         } else {
             if (empty($noattempts)) {
                 $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
-                $where = ' WHERE qa.gameid = '.$game->id.' AND qa.preview = 0';
+                $where = ' WHERE qa.gameid = ' . $game->id.' AND qa.preview = 0';
                 $countsql = 'SELECT COUNT(DISTINCT('.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) '.$from.$where;
             }
         }
         if (!$download) {
             // Add extra limits due to initials bar.
             if ($table->get_sql_where()) {
-                $where .= ' AND '.$table->get_sql_where();
+                $where .= ' AND ' . $table->get_sql_where();
             }
 
             // Count the records NOW, before funky question grade sorting messes up $from.
             if (!empty($countsql)) {
                 $totalinitials = count_records_sql($countsql);
                 if ($table->get_sql_where()) {
-                    $countsql .= ' AND '.$table->get_sql_where();
+                    $countsql .= ' AND ' . $table->get_sql_where();
                 }
                 $total = count_records_sql($countsql);
             }
@@ -414,7 +416,7 @@ class game_report extends game_default_report {
                             $from .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id '.
                                                 'LEFT JOIN {question_states} qs ON qs.id = qns.newgraded ';
                             $where .= ' AND ('.sql_isnull('qns.questionid').' OR qns.questionid = '.$qid.')';
-                            $newsort[] = 'grade '.(strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
+                            $newsort[] = 'grade ' . (strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
                             $questionsort = true;
                         }
                     } else {
@@ -423,7 +425,7 @@ class game_report extends game_default_report {
                 }
 
                 // Reconstruct the sort string.
-                $sort = ' ORDER BY '.implode(', ', $newsort);
+                $sort = ' ORDER BY ' . implode(', ', $newsort);
             }
 
             // Fix some wired sorting.
@@ -445,10 +447,10 @@ class game_report extends game_default_report {
         if (!empty($from)) {
             // If we're in the site course and displaying no attempts, it makes no sense to do the query.
             if (!$download) {
-                $attempts = get_records_sql($select.$from.$where.$sort,
+                $attempts = get_records_sql($select . $from . $where . $sort,
                     $table->get_page_start(), $table->get_page_size());
             } else {
-                $attempts = get_records_sql($select.$from.$where.$sort);
+                $attempts = get_records_sql($select . $from . $where . $sort);
             }
         } else {
             $attempts = [];
@@ -462,17 +464,6 @@ class game_report extends game_default_report {
             if ($attempts) {
                 foreach ($attempts as $attempt) {
                     $picture = print_user_picture($attempt->userid, $course->id, $attempt->picture, false, true);
-                    /* Uncomment the commented lines below if you are choosing to show unenrolled users and
-                     * have uncommented the corresponding lines earlier in this script
-                     * if (in_array($attempt->userid, $unenrolledusers)) {
-                     *    $userlink = '<a class="dimmed" href="'.$CFG->wwwroot.
-                     *       '/user/view.php?id='.$attempt->userid.'&amp;course='.$course->id.'">'.fullname($attempt).'</a>';
-                     *}
-                     *else {
-                     *   $userlink = '<a href="'.$CFG->wwwroot.'/user/view.php?id='.
-                     *      $attempt->userid.'&amp;course='.$course->id.'">'.fullname($attempt).'</a>';
-                     *}
-                     */
                     if (!$download) {
                         $row = [
                                 '<input type="checkbox" name="attemptid[]" value="'.$attempt->attempt.'" />',
@@ -499,7 +490,7 @@ class game_report extends game_default_report {
                     if ($game->grade) {
                         if (!$download) {
                             $row[] = $attempt->score === null ? '-' : '<a href="review.php?q='.
-                                $game->id.'&amp;attempt='.$attempt->attempt.'">'.
+                                $game->id.'&amp;attempt=' . $attempt->attempt.'">'.
                                 round($attempt->score * $game->grade, $game->decimalpoints).'</a>';
                         } else {
                             $row[] = $attempt->score === null ? '-' : round($attempt->score * $game->grade, $game->decimalpoints);
@@ -521,8 +512,8 @@ class game_report extends game_default_report {
                                 }
                                 if (!$download) {
                                     $row[] = link_to_popup_window (
-                                        '/mod/game/reviewquestion.php?state='.
-                                        $gradedstateid.'&amp;number='.
+                                        '/mod/game/reviewquestion.php?state=' .
+                                        $gradedstateid.'&amp;number=' .
                                         $questions[$questionid]->number, 'reviewquestion', $grade,
                                         450, 650, $strreviewquestion, 'none', true);
                                 } else {
@@ -560,7 +551,7 @@ class game_report extends game_default_report {
                     'onsubmit="var menu = document.getElementById(\'menuaction\'); '.
                     'return (menu.options[menu.selectedIndex].value == \'delete\' ? confirm(\''.$strreallydel.'\') : true);">';
                 echo '<div>';
-                echo '<input type="hidden" name="id" value="'.$cm->id.'" />';
+                echo '<input type="hidden" name="id" value="' . $cm->id . '" />';
                 echo '<input type="hidden" name="mode" value="overview" />';
 
                 // Print table.
@@ -579,10 +570,10 @@ class game_report extends game_default_report {
                     echo choose_from_menu($options, 'action', '', get_string('withselected', 'game'),
                         'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');', '', true);
                     echo '<noscript id="noscriptmenuaction" style="display: inline;"><div>';
-                    echo '<input type="submit" value="'.get_string('go').'" /></div></noscript>';
-                    echo '<script type="text/javascript">'."\n<!--\n".
+                    echo '<input type="submit" value="' . get_string('go') . '" /></div></noscript>';
+                    echo '<script type="text/javascript">' . "\n<!--\n".
                         'document.getElementById("noscriptmenuaction").style.display = "none";'
-                        ."\n-->\n".'</script>';
+                        ."\n-->\n" . '</script>';
                     echo '</td></tr></table>';
                 }
                 // Close form.
@@ -632,15 +623,15 @@ class game_report extends game_default_report {
         echo '<div class="controls">';
         echo '<form id="options" action="report.php" method="get">';
         echo '<div>';
-        echo '<p>'.get_string('displayoptions', 'game').': </p>';
-        echo '<input type="hidden" name="id" value="'.$cm->id.'" />';
-        echo '<input type="hidden" name="q" value="'.$game->id.'" />';
+        echo '<p>'.get_string('displayoptions', 'game') . ': </p>';
+        echo '<input type="hidden" name="id" value="' . $cm->id.'" />';
+        echo '<input type="hidden" name="q" value="' . $game->id.'" />';
         echo '<input type="hidden" name="mode" value="overview" />';
         echo '<input type="hidden" name="noattempts" value="0" />';
         echo '<input type="hidden" name="detailedmarks" value="0" />';
         echo '<table id="overview-options" class="boxaligncenter">';
         echo '<tr align="left">';
-        echo '<td><label for="pagesize">'.get_string('pagesize', 'game').'</label></td>';
+        echo '<td><label for="pagesize">' . get_string('pagesize', 'game').'</label></td>';
         echo '<td><input type="text" id="pagesize" name="pagesize" size="3" value="'.$pagesize.'" /></td>';
         echo '</tr>';
         echo '<tr align="left">';
@@ -660,7 +651,7 @@ class game_report extends game_default_report {
             get_string('showdetailedmarks', 'game').'</label> ';
         echo '</td></tr>';
         echo '<tr><td colspan="2" align="center">';
-        echo '<input type="submit" value="'.get_string('go').'" />';
+        echo '<input type="submit" value="' . get_string('go') . '" />';
         echo '</td></tr></table>';
         echo '</div>';
         echo '</form>';

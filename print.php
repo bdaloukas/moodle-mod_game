@@ -145,7 +145,8 @@ function game_print_cryptex($cm, $game, $context, $course) {
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php
-    game_cryptex_play($cm,
+    game_cryptex_play(
+        $cm,
         $game,
         $attempt,
         $crossrec,

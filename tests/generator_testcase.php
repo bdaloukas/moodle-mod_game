@@ -50,8 +50,10 @@ class mod_game_generator_testcase extends advanced_testcase {
         $course = $this->getDataGenerator()->create_course();
 
         $this->assertFalse($DB->record_exists('game', ['course' => $course->id]));
-        $game = $this->getDataGenerator()->create_module('game',
-            ['course' => $course, 'kind' => 'hangman', 'name' => 'hangman']);
+        $game = $this->getDataGenerator()->create_module(
+            'game',
+            ['course' => $course, 'kind' => 'hangman', 'name' => 'hangman'])
+        ;
         $records = $DB->get_records('game', ['course' => $course->id], 'id');
         $this->assertEquals(1, count($records));
         $this->assertTrue(array_key_exists($game->id, $records));

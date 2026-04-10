@@ -193,7 +193,7 @@ function game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm,
     global $CFG, $DB;
 
     if ($game->toptext != '') {
-        echo $game->toptext.'<br>';
+        echo $game->toptext . '<br>';
     }
 
     echo '<br>';
@@ -215,7 +215,7 @@ function game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm,
     }
     $reverseprint = ($wordrtl != right_to_left());
     if ($reverseprint) {
-        $textdir = 'dir="'.($wordrtl ? 'rtl' : 'ltr').'"';
+        $textdir = 'dir="' . ($wordrtl ? 'rtl' : 'ltr').'"';
     } else {
         $textdir = '';
     }
@@ -315,7 +315,7 @@ width: 240pt;
     if ($showhtmlprintbutton && !$finished) {
         echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >' . get_string('finish', 'game');
         echo '</button>';
-        echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string('print', 'game');
+        echo '<button id="printbutton" type="button" onclick="OnPrint();" >' . get_string('print', 'game');
         echo '</button><br>';
     }
 
@@ -343,7 +343,7 @@ width: 240pt;
         <?php
         global $CFG;
 
-        $params = 'id='.$cm->id.'&action=cryptexcheck&g=&finishattempt=1';
+        $params = 'id=' . $cm->id . '&action=cryptexcheck&g=&finishattempt=1';
         echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\";\r\n";
         ?>
     }
@@ -374,7 +374,7 @@ width: 240pt;
         while (substr($q->questiontext, -4) == '<br>') {
             $q->questiontext = substr($q->questiontext, 0, strlen($q->questiontext) - 4);
         }
-        $question = game_show_query($game, $q, "$i. ".$q->questiontext, $context);
+        $question = game_show_query($game, $q, "$i. " . $q->questiontext, $context);
         if ($q->questionid) {
             $question2 = str_replace(["\'", '\"'], ["'", '"'], $question);
             $question2 = game_filterquestion($question2, $q->questionid, $context->id, $game->course);
@@ -445,8 +445,8 @@ function game_cryptex_onfinished($cm, $game, $attempt, $cryptexrec, $course) {
 
     echo '<B>' . get_string('win', 'game') . '</B><br>';
     echo '<br>';
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">".
-        get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id={$cm->course}\">" . get_string('finish', 'game').'</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">" .
+        get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id={$cm->course}\">" . get_string('finish', 'game') . '</a> ';
     echo "<br><br>\r\n";
 }

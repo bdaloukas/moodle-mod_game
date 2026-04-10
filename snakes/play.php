@@ -76,11 +76,11 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
     if ($snakes->position > $board->usedcols * $board->usedrows && $snakes->queryid <> 0) {
         $finish = true;
 
-        echo '<B>'.get_string('win', 'game').'</B><BR>';
+        echo '<B>' . get_string('win', 'game') . '</B><BR>';
         echo '<br>';
-        echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}\">".
+        echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}\">" .
             get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-        echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string('finish', 'game').'</a> ';
+        echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
 
         $gradeattempt = 1;
         $finish = 1;
@@ -93,7 +93,7 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
             $query = $DB->get_record('game_queries', [ 'id' => $snakes->queryid]);
         }
         if ($game->toptext != '') {
-            echo $game->toptext.'<br>';
+            echo $game->toptext . '<br>';
         }
         $showboard = true;
     }
@@ -118,10 +118,9 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
     <table>
     <tr>
         <td>
-
 <div id="board" STYLE="position:relative; left:0px;top:0px;
     width:<?php p($board->width); ?>px; height:<?php p($board->height); ?>px;">
-<img src="<?php echo $board->imagesrc; ?>"></img>
+<img src="<?php echo $board->imagesrc; ?>">
 </div>
 
     <?php
@@ -136,7 +135,7 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
 
     <?php
     if ($game->bottomtext != '') {
-        echo '<br>'.$game->bottomtext;
+        echo '<br>' . $game->bottomtext;
     }
 
     if ($showboard && $game->param8 != 0) {
