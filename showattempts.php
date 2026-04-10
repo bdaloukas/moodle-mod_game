@@ -25,25 +25,25 @@ require_once("../../config.php");
 
 require_login();
 
-require_once( "headergame.php");
+require_once("headergame.php");
 
 if (!has_capability('mod/game:viewreports', $context)) {
-    throw new moodle_exception( 'only_teachers', 'game');
+    throw new moodle_exception('only_teachers', 'game');
 }
 
 $PAGE->navbar->add(get_string('showattempts', 'game'));
 
 $action = optional_param('action', "", PARAM_ALPHANUM);  // Action.
 if ($action == 'delete') {
-    game_ondeleteattempt( $game);
+    game_ondeleteattempt($game);
 }
 
-echo get_string( 'group').': ';
-game_showgroups( $game);
+echo get_string('group').': ';
+game_showgroups($game);
 echo ' &nbsp; '.get_string('user').': ';
-game_showusers( $game);echo '<br><br>';
+game_showusers($game);echo '<br><br>';
 
-game_showattempts( $game);
+game_showattempts($game);
 
 echo $OUTPUT->footer();
 
@@ -57,7 +57,7 @@ function game_showusers($game) {
 
     $users = [];
 
-    $context = game_get_context_course_instance( $game->course);
+    $context = game_get_context_course_instance($game->course);
 
     $groupid = optional_param('groupid', 0, PARAM_INT);
     $sql = "SELECT DISTINCT ra.userid,u.lastname,u.firstname FROM {role_assignments} ra, {user} u ".
@@ -65,7 +65,7 @@ function game_showusers($game) {
     if ($groupid != 0) {
         $sql .= " AND ra.userid IN (SELECT gm.userid FROM {groups_members} gm WHERE gm.groupid=$groupid)";
     }
-    if (($recs = $DB->get_records_sql( $sql))) {
+    if (($recs = $DB->get_records_sql($sql))) {
         foreach ($recs as $rec) {
             $users[$rec->userid] = $rec->lastname.' '.$rec->firstname;
         }
@@ -129,7 +129,7 @@ function game_showgroups($game) {
     global $CFG, $USER, $DB;
 
     $groups = [];
-    if (($recs = $DB->get_records_sql( "SELECT id,name FROM {groups} WHERE courseid=$game->course ORDER BY name"))) {
+    if (($recs = $DB->get_records_sql("SELECT id,name FROM {groups} WHERE courseid=$game->course ORDER BY name"))) {
         foreach ($recs as $rec) {
             $groups[$rec->id] = $rec->name;
         }
@@ -191,7 +191,7 @@ function game_showattempts($game) {
     $userid = optional_param('userid', 0, PARAM_INT);
     $limitfrom = optional_param('limitfrom',  0, PARAM_INT);
     $gamekind = $game->gamekind;
-    $update = get_coursemodule_from_instance( 'game', $game->id, $game->course)->id;
+    $update = get_coursemodule_from_instance('game', $game->id, $game->course)->id;
 
     // Here are user attempts.
     $table = "{game_attempts} as ga, {user} u, {game} as g";
@@ -202,11 +202,11 @@ function game_showattempts($game) {
         $select .= ' AND u.id='.$userid;
     }
     $sql = "SELECT COUNT(*) AS c FROM $table WHERE $select";
-    $count = $DB->count_records_sql( $sql);
+    $count = $DB->count_records_sql($sql);
     $maxlines = 20;
     $recslimitfrom = $recslimitnum = '';
     if ($count > $maxlines) {
-        $recslimitfrom = ( $limitfrom ? $limitfrom * $maxlines : '');
+        $recslimitfrom = ($limitfrom ? $limitfrom * $maxlines : '');
         $recslimitnum = $maxlines;
 
         for ($i = 0; $i * $maxlines < $count; $i++) {
@@ -221,9 +221,9 @@ function game_showattempts($game) {
     }
 
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY timelastattempt DESC,timestart DESC";
-    if (($recs = $DB->get_records_sql( $sql, null, $recslimitfrom, $recslimitnum)) != false) {
+    if (($recs = $DB->get_records_sql($sql, null, $recslimitfrom, $recslimitnum)) != false) {
         echo '<table border="1">';
-        echo '<tr><td><b>'.get_string( 'delete').'</td><td><b>'.get_string('user').'</td>';
+        echo '<tr><td><b>'.get_string('delete').'</td><td><b>'.get_string('user').'</td>';
         echo '<td><b>'.get_string('timestart', 'game').'</b></td>';
         echo '<td><b>'.get_string('timelastattempt', 'game').'</b></td>';
         echo '<td><b>'.get_string('timefinish', 'game').'</b></td>';
@@ -243,15 +243,15 @@ function game_showattempts($game) {
                     echo '&allowdelete=1';
                 }
                 echo '">';
-                echo '<img src="'.game_pix_url('t/delete').'" alt="'.get_string( 'delete').'" style="width: 1em" /></a>';
+                echo '<img src="'.game_pix_url('t/delete').'" alt="'.get_string('delete').'" style="width: 1em" /></a>';
             }
             echo '</center></td>';
-            echo '<td><center>'.$rec->firstname. ' '.$rec->lastname.'</center></td>';
-            echo '<td><center>'.( $rec->timestart != 0 ? userdate($rec->timestart) : '')."</center></td>\r\n";
-            echo '<td><center>'.( $rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '').'</center></td>';
-            echo '<td><center>'.( $rec->timefinish != 0 ? userdate($rec->timefinish) : '').'</center></td>';
-            echo '<td><center>'.round($rec->score * 100).'</center></td>';
-            echo '<td><center>'.$rec->attempts.'</center></td>';
+            echo '<td><center>' . $rec->firstname. ' '.$rec->lastname.'</center></td>';
+            echo '<td><center>' . ($rec->timestart != 0 ? userdate($rec->timestart) : '')."</center></td>\r\n";
+            echo '<td><center>' . ($rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '').'</center></td>';
+            echo '<td><center>' . ($rec->timefinish != 0 ? userdate($rec->timefinish) : '').'</center></td>';
+            echo '<td><center>' . round($rec->score * 100).'</center></td>';
+            echo '<td><center>' . $rec->attempts.'</center></td>';
             echo '<td><center>';
 
             // Preview.
@@ -259,7 +259,7 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update='.$update."&amp;q={$game->id}\">";
-                echo '<img src="'.game_pix_url('t/preview').'" alt="'.get_string( 'preview', 'game').'" style="width: 1em" /></a>';
+                echo '<img src="' . game_pix_url('t/preview') . '" alt="'.get_string('preview', 'game').'" style="width: 1em" /></a>';
             }
             echo '</center></td>';
 
@@ -270,7 +270,7 @@ function game_showattempts($game) {
                     "attemptid={$rec->id}&amp;gamekind={$gamekind}&amp;update=$update&amp;&amp;".
                     "q={$game->id}\">";
                 echo '<img src="'.game_pix_url('t/preview').'" alt="'.
-                        get_string( 'showsolution', 'game').'" style="width: 1em" /></a>';
+                        get_string('showsolution', 'game').'" style="width: 1em" /></a>';
             }
             echo '</center></td>';
             echo "</tr>\r\n";
@@ -284,18 +284,18 @@ function game_showattempts($game) {
  *
  * @param stdClass $game
  */
-function game_ondeleteattempt( $game) {
+function game_ondeleteattempt($game) {
     global $CFG, $DB;
 
     $attemptid = required_param('attemptid', PARAM_INT);
 
-    $attempt = $DB->get_record( 'game_attempts', [ 'id' => $attemptid]);
+    $attempt = $DB->get_record('game_attempts', [ 'id' => $attemptid]);
 
-    switch( $game->gamekind) {
+    switch($game->gamekind) {
         case 'bookquiz':
-            $DB->delete_records( 'game_bookquiz_chapters', [ 'attemptid' => $attemptid]);
+            $DB->delete_records('game_bookquiz_chapters', [ 'attemptid' => $attemptid]);
             break;
     }
-    $DB->delete_records( 'game_queries', [ 'attemptid' => $attemptid]);
-    $DB->delete_records( 'game_attempts', [ 'id' => $attemptid]);
+    $DB->delete_records('game_queries', [ 'attemptid' => $attemptid]);
+    $DB->delete_records('game_attempts', [ 'id' => $attemptid]);
 }

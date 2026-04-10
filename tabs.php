@@ -24,7 +24,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 if (empty($game)) {
-    throw new moodle_exception( 'game_error', 'game', 'You cannot call this script in that way');
+    throw new moodle_exception('game_error', 'game', 'You cannot call this script in that way');
 }
 if (!isset($currenttab)) {
     $currenttab = '';
@@ -36,7 +36,7 @@ if (!isset($course)) {
     $course = $DB->get_record('course', [ 'id' => $game->course]);
 }
 
-$context = game_get_context_module_instance( $cm->id);
+$context = game_get_context_module_instance($cm->id);
 
 $tabs = [];
 $row = [];
@@ -61,7 +61,7 @@ if (has_capability('mod/game:manage', $context)) {
     $row[] = new tabobject('edit', $url, get_string('edit'));
 }
 
-if ( !($currenttab == 'info' && count($row) == 1)) {
+if (!($currenttab == 'info' && count($row) == 1)) {
     // Don't show only an info tab (e.g. to students).
     $tabs[] = $row;
 }

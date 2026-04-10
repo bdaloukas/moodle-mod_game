@@ -28,11 +28,11 @@ require_once("locallib.php");
 $id = required_param('id', PARAM_INT); // Course Module ID.
 $gameid = required_param('gameid', PARAM_INT);
 
-$game = $DB->get_record( 'game', [ 'id' => $gameid]);
+$game = $DB->get_record('game', [ 'id' => $gameid]);
 
-require_login( $game->course);
+require_login($game->course);
 
-$context = game_get_context_module_instance( $id);
+$context = game_get_context_module_instance($id);
 require_capability('mod/game:view', $context);
 
 if (!$course = $DB->get_record('course', ['id' => $game->course])) {
@@ -43,7 +43,7 @@ if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
     throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
 }
 
-game_print( $cm, $game, $context, $course);
+game_print($cm, $game, $context, $course);
 
 /**
  * Print
@@ -53,11 +53,11 @@ game_print( $cm, $game, $context, $course);
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_print( $cm, $game, $context, $course) {
-    if ( $game->gamekind == 'cross') {
-        game_print_cross( $cm, $game, $context, $course);
+function game_print($cm, $game, $context, $course) {
+    if ($game->gamekind == 'cross') {
+        game_print_cross($cm, $game, $context, $course);
     } else if ($game->gamekind == 'cryptex') {
-        game_print_cryptex( $cm, $game, $context, $course);
+        game_print_cryptex($cm, $game, $context, $course);
     }
 }
 
@@ -69,10 +69,10 @@ function game_print( $cm, $game, $context, $course) {
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_print_cross( $cm, $game, $context, $course) {
-    require( "cross/play.php");
+function game_print_cross($cm, $game, $context, $course) {
+    require("cross/play.php");
 
-    $attempt = game_getattempt( $game, $crossrec);
+    $attempt = game_getattempt($game, $crossrec);
     if ($attempt === false) {
         return;
     }
@@ -93,9 +93,22 @@ function game_print_cross( $cm, $game, $context, $course) {
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php
-    game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
-        $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
-        $showstudentguess, $context, $course);
+    game_cross_play($cm,
+        $game,
+        $attempt,
+        $crossrec,
+        $g,
+        $onlyshow,
+        $showsolution,
+        $endofgame,
+        $print,
+        $checkbutton,
+        $showhtmlsolutions,
+        $showhtmlprintbutton,
+        $showstudentguess,
+        $context,
+        $course
+    );
 }
 
 /**
@@ -106,14 +119,14 @@ function game_print_cross( $cm, $game, $context, $course) {
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_print_cryptex( $cm, $game, $context, $course) {
+function game_print_cryptex($cm, $game, $context, $course) {
     global $DB;
 
-    require( 'cross/cross_class.php');
-    require( 'cross/crossdb_class.php');
-    require( "cryptex/play.php");
+    require('cross/cross_class.php');
+    require('cross/crossdb_class.php');
+    require("cryptex/play.php");
 
-    $attempt = game_getattempt( $game, $crossrec);
+    $attempt = game_getattempt($game, $crossrec);
     if ($attempt === false) {
         return;
     }
@@ -123,7 +136,7 @@ function game_print_cryptex( $cm, $game, $context, $course) {
     $showsolution = false;
     $showhtmlprintbutton = false;
     $print = true;
-    $crossm = $DB->get_record_select( 'game_cross', "id=$attempt->id");
+    $crossm = $DB->get_record_select('game_cross', "id=$attempt->id");
 
     ?>
 <html  dir="ltr" lang="el" xml:lang="el" xmlns="http://www.w3.org/1999/xhtml">
@@ -131,6 +144,17 @@ function game_print_cryptex( $cm, $game, $context, $course) {
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php
-    game_cryptex_play( $cm, $game, $attempt, $crossrec, $crossm, $updateattempt,
-        $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton, $course);
+    game_cryptex_play($cm,
+        $game,
+        $attempt,
+        $crossrec,
+        $crossm,
+        $updateattempt,
+        $onlyshow,
+        $showsolution,
+        $context,
+        $print,
+        $showhtmlprintbutton,
+        $course
+    );
 }

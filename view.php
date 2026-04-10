@@ -29,18 +29,18 @@ require_once($CFG->dirroot.'/mod/game/locallib.php');
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
 
 if (! $cm = get_coursemodule_from_id('game', $id)) {
-    throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
+    throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
 }
 if (! $course = $DB->get_record('course', ['id' => $cm->course])) {
-    throw new moodle_exception( 'game_error', 'game', 'coursemisconf');
+    throw new moodle_exception('game_error', 'game', 'coursemisconf');
 }
 if (! $game = $DB->get_record('game', ['id' => $cm->instance])) {
-    throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
+    throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
 }
 
 // Check login and get context.
 require_login($course->id, false, $cm);
-$context = game_get_context_module_instance( $cm->id);
+$context = game_get_context_module_instance($cm->id);
 require_capability('mod/game:view', $context);
 
 $timenow = time();
@@ -68,7 +68,7 @@ if (has_capability('mod/game:manage', $context)) {
 
 // Log this request.
 if (game_use_events()) {
-    require( 'classes/event/course_module_viewed.php');
+    require('classes/event/course_module_viewed.php');
         \mod_game\event\course_module_viewed::viewed($game, $context)->trigger();
 } else {
     add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
@@ -80,8 +80,8 @@ $completion->set_module_viewed($cm);
 
 // Here have to check if not need summarize.
 if ($game->disablesummarize) {
-    if (game_can_start_new_attempt( $game)) {
-        require_once( 'attempt.php');
+    if (game_can_start_new_attempt($game)) {
+        require_once('attempt.php');
         die;
     }
 }
@@ -125,9 +125,9 @@ echo $OUTPUT->box_end();
 // Show number of attempts summary to those who can view reports.
 if (has_capability('mod/game:viewreports', $context)) {
     if ($strattemptnum = game_get_user_attempts($game->id, $USER->id)) {
-        echo get_string( 'attempts', 'game').': '.count( $strattemptnum);
+        echo get_string('attempts', 'game') . ': ' . count($strattemptnum);
         if ($game->maxattempts) {
-            echo ' ('.get_string( 'max', 'quiz').': '.$game->maxattempts.')';
+            echo ' (' . get_string('max', 'quiz') . ': ' . $game->maxattempts.')';
         }
     }
 }
@@ -191,7 +191,7 @@ if ($attempts) {
     $table->size[] = '';
 
     if ($gradecolumn) {
-        $table->head[] = get_string('grade', 'game') . ' / ' . game_format_grade( $game, $game->grade);
+        $table->head[] = get_string('grade', 'game') . ' / ' . game_format_grade($game, $game->grade);
         $table->align[] = 'center';
         $table->size[] = '';
     }
@@ -293,7 +293,7 @@ if ($unfinished) {
     }
 } else {
     // Game is finished. Check if max number of attempts is reached.
-    if (!game_can_start_new_attempt( $game)) {
+    if (!game_can_start_new_attempt($game)) {
         $canattempt = false;
     }
 
@@ -329,12 +329,12 @@ echo $OUTPUT->box_end();
 
 if ($game->highscore > 0) {
     // Display high score.
-    game_highscore( $game);
+    game_highscore($game);
 }
 
 if (has_capability('mod/game:manage', $context)) {
-    require( 'check.php');
-    $s = game_check_common_problems( $context, $game);
+    require('check.php');
+    $s = game_check_common_problems($context, $game);
     if ($s != '') {
         echo '<br>'.$s;
     }
@@ -347,7 +347,7 @@ echo $OUTPUT->footer();
  *
  * @param stdClass $game
  */
-function game_highscore( $game) {
+function game_highscore($game) {
     global $CFG, $DB, $OUTPUT;
 
     $sql = "SELECT userid, MAX(score) as maxscore".
@@ -356,7 +356,7 @@ function game_highscore( $game) {
     " GROUP BY userid".
     " ORDER BY max(score) DESC";
     $score = 0;
-    $recs = $DB->get_records_sql( $sql);
+    $recs = $DB->get_records_sql($sql);
     foreach ($recs as $rec) {
         $score = $rec->maxscore;
     }
@@ -371,8 +371,8 @@ function game_highscore( $game) {
     " HAVING MAX(ga.score) >= $score".
     " ORDER BY MAX(ga.score) DESC";
 
-    $recs = $DB->get_records_sql( $sql, null, 0, $game->highscore);
-    if (count( $recs) == 0) {
+    $recs = $DB->get_records_sql($sql, null, 0, $game->highscore);
+    if (count($recs) == 0) {
         return false;
     }
 
@@ -395,12 +395,12 @@ function game_highscore( $game) {
         echo "<tr>";
         $row = [];
         $row[] = $rec->firstname.' '.$rec->lastname;
-        $row[] = round( $rec->maxscore * 100).' %';
+        $row[] = round($rec->maxscore * 100).' %';
 
         $table->data[$rec->id] = $row;
     }
 
-    echo '<br>'.$OUTPUT->heading(get_string('col_highscores', 'game'));
+    echo '<br>' . $OUTPUT->heading(get_string('col_highscores', 'game'));
 
     echo html_writer::table($table);
 }
