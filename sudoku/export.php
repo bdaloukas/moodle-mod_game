@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require( "../../../config.php");
+require("../../../config.php");
 require_login();
 
 export();
@@ -36,22 +36,22 @@ function export() {
     $file = "import.php";
     $h = fopen($file, 'w') || die("can't open file");
 
-    fwrite( $h, "<?php\r\n");
-    fwrite( $h, "require( \"../../../config.php\");\r\n\r\n");
+    fwrite($h, "<?php\r\n");
+    fwrite($h, "require(\"../../../config.php\");\r\n\r\n");
 
-    if (($recs = get_records_select( 'game_sudoku_database')) == false) {
+    if (($recs = get_records_select('game_sudoku_database')) == false) {
         throw new moodle_exception('snakes_error', 'game', 'empty');
     }
 
     $i = 0;
     foreach ($recs as $rec) {
-        fwrite( $h, "execute_sql( \"INSERT INTO {game_sudoku_database} ( level, opened, data) ".
+        fwrite($h, "execute_sql(\"INSERT INTO {game_sudoku_database} (level, opened, data) ".
             "VALUES ($rec->level, $rec->opened, '$rec->data')\", false);\r\n");
         if (++$i % 10 == 0) {
-            fwrite( $h, "\r\n");
+            fwrite($h, "\r\n");
         }
     }
-    fwrite( $h, "\r\necho'Finished importing';");
+    fwrite($h, "\r\necho'Finished importing';");
 
     fclose($h);
 }

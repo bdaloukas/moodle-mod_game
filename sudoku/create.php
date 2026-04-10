@@ -21,9 +21,9 @@
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-require( "../../../config.php");
+require("../../../config.php");
 require_once("class.Sudoku.php");
-require( '../header.php');
+require('../header.php');
 
 $action = optional_param('action', PARAM_ALPHA);   // The action.
 require_login();
@@ -44,7 +44,7 @@ function showform() {
 <center>
 <table cellpadding="5">
 <tr valign="top">
-    <td align="right"><b><?php  echo get_string( 'sudoku_create_count', 'game'); ?>:</b></td>
+    <td align="right"><b><?php  echo get_string('sudoku_create_count', 'game'); ?>:</b></td>
     <td>
         <input type="text" name="count" size="6" value="2" /><br>
     </td>
@@ -73,23 +73,25 @@ function appendsudokub() {
     $level = $level1;
 
     for ($i = 1; $i <= $count; $i++) {
-        create( $si, $sp, $level);
+        create($si, $sp, $level);
 
-        $newrec->data = packsudoku( $si, $sp);
-        if (strlen( $newrec->data) != 81) {
+        $newrec = new stdClass();
+
+        $newrec->data = packsudoku($si, $sp);
+        if (strlen($newrec->data) != 81) {
             return 0;
         }
         $newrec->level = $level;
-        $newrec->opened = GetOpened( $si);
+        $newrec->opened = GetOpened($si);
 
-        $DB->insert_record( 'game_sudoku_database', $newrec, true);
+        $DB->insert_record('game_sudoku_database', $newrec, true);
 
         $level++;
         if ($level > $level2) {
             $level = $level1;
         }
 
-        echo get_string( 'sudoku_creating', 'game', $i)."<br>\r\n";
+        echo get_string('sudoku_creating', 'game', $i)."<br>\r\n";
     }
 }
 
@@ -101,14 +103,14 @@ function appendsudokub() {
  *
  * @return the packed sudoku
  */
-function packsudoku( $si, $sp) {
+function packsudoku($si, $sp) {
     $data = '';
 
     for ($i = 1; $i <= 9; $i++) {
         for ($j = 1; $j <= 9; $j++) {
             $c = &$sp->thesquares[$i];
             $c = &$c->getcell($j);
-            $solution = $c->asstring( false);
+            $solution = $c->asstring(false);
 
             $c = &$si->thesquares[$i];
             $c = &$c->getCell($j);
@@ -116,7 +118,7 @@ function packsudoku( $si, $sp) {
 
             if ($thesolvedstate == 1) {
                 // Hint.
-                $solution = substr( 'ABCDEFGHI', $c->asString( false) - 1, 1);
+                $solution = substr('ABCDEFGHI', $c->asString(false) - 1, 1);
             }
 
             $data .= $solution;
@@ -135,11 +137,11 @@ function packsudoku( $si, $sp) {
  *
  * @return true if created correctly
  */
-function create( &$si, &$sp, $level=1) {
+function create(&$si, &$sp, $level=1) {
     for ($i = 1; $i <= 40; $i++) {
         $sp = new sudoku();
-        $theinitialposition = $sp->generatepuzzle( 10, 50, $level);
-        if (count( $theinitialposition)) {
+        $theinitialposition = $sp->generatepuzzle(10, 50, $level);
+        if (count($theinitialposition)) {
             break;
         }
     }
@@ -149,7 +151,7 @@ function create( &$si, &$sp, $level=1) {
 
     $si = new sudoku();
 
-    $si->initializepuzzlefromarray( $theinitialposition);
+    $si->initializepuzzlefromarray($theinitialposition);
 
     return true;
 }
@@ -161,7 +163,7 @@ function create( &$si, &$sp, $level=1) {
  *
  * @return count of opened
  */
-function getopened( $si) {
+function getopened($si) {
     $count = 0;
 
     for ($i = 1; $i <= 9; $i++) {

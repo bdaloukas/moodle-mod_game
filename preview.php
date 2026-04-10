@@ -37,7 +37,7 @@ require_once("bookquiz/play.php");
 
 require_once("headergame.php");
 
-$context = game_get_context_module_instance( $cm->id);
+$context = game_get_context_module_instance($cm->id);
 
 if (!has_capability('mod/game:viewreports', $context)) {
     throw new moodle_exception('only_teachers', 'game');
@@ -63,24 +63,47 @@ $showhtmlsolutions = false;
 $showhtmlprintbutton = true;
 $showstudentguess = true;
 
-switch( $gamekind) {
+switch($gamekind) {
     case 'cross':
         $g = '';
-        game_cross_play( $cm, $game, $attempt, $detail, $g, $onlyshow, $solution,
-            $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton,
-            $showstudentguess, $context, $course);
+        game_cross_play($cm,
+            $game,
+            $attempt,
+            $detail,
+            $g,
+            $onlyshow,
+            $solution,
+            $endofgame,
+            $print,
+            $checkbutton,
+            $showhtmlsolutions,
+            $showhtmlprintbutton,
+            $showstudentguess,
+            $context,
+            $course
+        );
         break;
     case 'sudoku':
-        game_sudoku_play( $cm, $game, $attempt, $detail, $onlyshow, $solution, $context, $course);
+        game_sudoku_play($cm, $game, $attempt, $detail, $onlyshow, $solution, $context, $course);
         break;
     case 'hangman':
         $preview = ($action == 'preview');
-        game_hangman_play( $update, $game, $attempt, $detail, $preview, $solution, $context, $course);
+        game_hangman_play($update, $game, $attempt, $detail, $preview, $solution, $context, $course);
         break;
     case 'cryptex':
-        $crossm = $DB->get_record( 'game_cross', ['id' => $attemptid]);
-        game_cryptex_play( $cm, $game, $attempt, $detail, $crossm, false, true, $solution, $context,
-            $print, $showhtmlprintbutton, $course
+        $crossm = $DB->get_record('game_cross', ['id' => $attemptid]);
+        game_cryptex_play($cm,
+            $game,
+            $attempt,
+            $detail,
+            $crossm,
+            false,
+            true,
+            $solution,
+            $context,
+            $print,
+            $showhtmlprintbutton,
+            $course
         );
         break;
 }
