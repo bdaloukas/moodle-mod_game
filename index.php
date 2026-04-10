@@ -21,31 +21,34 @@
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use mod_game\event\course_module_instance_list_viewed;
+
 require_once("../../config.php");
 require_once("lib.php");
 require_once("locallib.php");
 
 $id = required_param('id', PARAM_INT);   // It stores the courseid.
 
-if (! $course = $DB->get_record( 'course', [ 'id' => $id])) {
-    throw new moodle_exception( 'game_error', 'game',  '', 'Course ID is incorrect');
+if (! $course = $DB->get_record('course', [ 'id' => $id])) {
+    throw new moodle_exception('game_error', 'game',  '', 'Course ID is incorrect');
 }
 
 require_login($course->id);
 
 // Get all required strings game.
 
-$strgames = get_string( 'modulenameplural', 'game');
+$strgames = get_string('modulenameplural', 'game');
 $strgame = get_string('modulename', 'game');
 
 // Print the header.
 $PAGE->set_url('/mod/game/index.php', ['id' => $id]);
-$coursecontext = game_get_context_course_instance( $id);
+$coursecontext = game_get_context_course_instance($id);
 $PAGE->set_pagelayout('incourse');
 
 if (game_use_events()) {
-    require( 'classes/event/course_module_instance_list_viewed.php');
-    \mod_game\event\course_module_instance_list_viewed::create_from_course($course)->trigger();
+    require('classes/event/course_module_instance_list_viewed.php');
+    course_module_instance_list_viewed::create_from_course($course)->trigger();
 } else {
     add_to_log($course->id, "game", "view all", "index.php?id=$course->id", "");
 }

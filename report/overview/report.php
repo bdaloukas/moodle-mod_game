@@ -75,7 +75,7 @@ class game_report extends game_default_report {
                         if (!record_exists('game_attempts', 'userid', $userid, 'gameid', $game->id)) {
                             delete_records('game_grades', 'userid', $userid, 'gameid', $game->id);
                         } else {
-                            game_save_best_score( $game, $userid);
+                            game_save_best_score($game, $userid);
                         }
                     }
                 }
@@ -92,7 +92,7 @@ class game_report extends game_default_report {
                     "gameid = '$game->id' AND preview = '0'", 'COUNT(DISTINCT userid)');
                 $a->studentstring = $course->students;
 
-                notify( get_string('numattempts', 'game', $a));
+                notify(get_string('numattempts', 'game', $a));
             }
         }
 
@@ -136,7 +136,7 @@ class game_report extends game_default_report {
         if ($detailedmarks) {
             // We want to display marks for all questions.
             // Start by getting all questions.
-            $questionlist = game_questions_in_game( $game->questions);
+            $questionlist = game_questions_in_game($game->questions);
             $questionids = explode(',', $questionlist);
             $sql = "SELECT q.*, i.score AS maxgrade, i.id AS instance".
                     "  FROM {question} q,".
@@ -326,7 +326,7 @@ class game_report extends game_default_report {
             echo $headers." \n";
         }
 
-        $contextlists = get_related_contexts_string( get_context_instance( CONTEXT_COURSE, $course->id));
+        $contextlists = get_related_contexts_string(game_get_context_course_instance($course->id));
 
         // Construct the SQL.
         $select = 'SELECT qa.id,'.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).' AS uniqueid, '.

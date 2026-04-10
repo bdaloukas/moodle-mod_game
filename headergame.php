@@ -21,11 +21,14 @@
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+use mod_game\event\course_module_viewed;
+
 defined('MOODLE_INTERNAL') || die();
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->libdir.'/gradelib.php');
-require_once($CFG->dirroot.'/mod/game/locallib.php');
+require_once($CFG->libdir . '/gradelib.php');
+require_once($CFG->dirroot . '/mod/game/locallib.php');
 require_once($CFG->libdir . '/completionlib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
@@ -33,29 +36,29 @@ $q = optional_param('q',  0, PARAM_INT);  // Game ID.
 
 if ($id) {
     if (!$cm = get_coursemodule_from_id('game', $id)) {
-        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
+        throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
     }
     if (! $course = $DB->get_record('course', [ 'id' => $cm->course])) {
-        throw new moodle_exception( 'game_error', 'game', 'coursemisconf');
+        throw new moodle_exception('game_error', 'game', 'coursemisconf');
     }
     if (! $game = $DB->get_record('game', ['id' => $cm->instance])) {
-        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
+        throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
     }
 } else {
     if (! $game = $DB->get_record('game', ['id' => $q])) {
-        throw new moodle_exception( 'game_error', 'game', 'invalidgameid q='.$q, 'game');
+        throw new moodle_exception('game_error', 'game', 'invalidgameid q='.$q, 'game');
     }
     if (!$course = $DB->get_record('course', ['id' => $game->course])) {
-        throw new moodle_exception( 'game_error', 'game', 'invalidcourseid');
+        throw new moodle_exception('game_error', 'game', 'invalidcourseid');
     }
     if (!$cm = get_coursemodule_from_instance('game', $game->id, $course->id)) {
-        throw new moodle_exception( 'game_error', 'game', 'invalidcoursemodule');
+        throw new moodle_exception('game_error', 'game', 'invalidcoursemodule');
     }
 }
 
 // Check login and get context.
 require_login($course->id, false, $cm);
-$context = game_get_context_module_instance( $cm->id);
+$context = game_get_context_module_instance($cm->id);
 require_capability('mod/game:view', $context);
 
 // Cache some other capabilites we use several times.
@@ -67,8 +70,8 @@ $timenow = time();
 
 // Log this request.
 if (game_use_events()) {
-    require( 'classes/event/course_module_viewed.php');
-    \mod_game\event\course_module_viewed::viewed($game, $context)->trigger();
+    require('classes/event/course_module_viewed.php');
+    course_module_viewed::viewed($game, $context)->trigger();
 } else {
     add_to_log($course->id, 'game', 'view', "view.php?id=$cm->id", $game->id, $cm->id);
 }
@@ -87,8 +90,8 @@ $title = $course->shortname . ': ' . format_string($game->name);
 
 if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
     $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
-        '<input type="hidden" name="id" value="'.$cm->id.'" />'.
-        '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on').'" />'.
+        '<input type="hidden" name="id" value="' . $cm->id . '" />'.
+        '<input type="hidden" name="edit" value="' . ($PAGE->user_is_editing() ? 'off' : 'on').'" />'.
         '<input type="submit" value="'.
             get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
             '" /></div></form></td></tr></table>';

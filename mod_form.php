@@ -654,7 +654,7 @@ class mod_game_mod_form extends moodleform_mod {
             }
 
             if ($defaultvalues->gamekind == 'snakes') {
-                if (isset(defaultvalues->param9)) {
+                if (isset($defaultvalues->param9)) {
                     $a = explode('#', $defaultvalues->param9);
                     foreach ($a as $s) {
                         $pos = strpos($s, ':');

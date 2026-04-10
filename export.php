@@ -24,12 +24,12 @@
 require_once(dirname(__FILE__) . '/../../config.php');
 ob_start();
 
-require_once( "headergame.php");
+require_once("headergame.php");
 
 require_login($course->id, false, $cm);
-$context = game_get_context_module_instance( $cm->id);
+$context = game_get_context_module_instance($cm->id);
 require_capability('mod/game:view', $context);
-require_once( $CFG->dirroot.'/lib/formslib.php');
+require_once($CFG->dirroot.'/lib/formslib.php');
 
 require_login($course->id, false, $cm);
 
@@ -59,12 +59,12 @@ class mod_game_exporthtml_form extends moodleform {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        if ( $game->gamekind == 'hangman') {
+        if ($game->gamekind == 'hangman') {
             $options = [];
             $options['0'] = 'Hangman with phrases';
             $options['hangmanp'] = 'Hangman with pictures';
             $mform->addElement('select', 'type', get_string('javame_type', 'game'), $options);
-            if ( $html->type == 0) {
+            if ($html->type == 0) {
                 $mform->setDefault('type', '0');
             } else {
                 $mform->setDefault('type', 'hangmanp');
@@ -92,7 +92,7 @@ class mod_game_exporthtml_form extends moodleform {
         }
 
         // Input special fields for crossword.
-        if ( $game->gamekind == 'cross') {
+        if ($game->gamekind == 'cross') {
             $mform->addElement('selectyesno', 'checkbutton', get_string('html_hascheckbutton', 'game'));
             $mform->setDefault('checkbutton', $html->checkbutton);
             $mform->addElement('selectyesno', 'printbutton', get_string('html_hasprintbutton', 'game'));
@@ -104,7 +104,7 @@ class mod_game_exporthtml_form extends moodleform {
         $mform->addElement('hidden', 'target', 'html');
         $mform->setType('target', PARAM_TEXT);
 
-        $mform->addElement('submit', 'submitbutton', get_string( 'export', 'game'));
+        $mform->addElement('submit', 'submitbutton', get_string('export', 'game'));
         $mform->closeHeaderBefore('submitbutton');
     }
 
@@ -138,24 +138,24 @@ class mod_game_exporthtml_form extends moodleform {
         $html->title = $mform->getElementValue('title');
         $html->maxpicturewidth = optional_param('maxpicturewidth', 0, PARAM_INT);
         $html->maxpictureheight = optional_param('maxpictureheight', 0, PARAM_INT);
-        if ( $mform->elementExists( 'checkbutton')) {
+        if ($mform->elementExists('checkbutton')) {
             $checkbuttonvalue = $mform->getElementValue('checkbutton');
             $html->checkbutton = $checkbuttonvalue[0];
         }
-        if ( $mform->elementExists( 'printbutton')) {
+        if ($mform->elementExists('printbutton')) {
             $printbuttonvalue = $mform->getElementValue('printbutton');
             $html->printbutton = $printbuttonvalue[0];
         }
 
-        if (!($DB->update_record( 'game_export_html', $html))) {
-            throw new moodle_exception( 'game_error', 'game', "game_export_html: not updated id=$html->id");
+        if (!($DB->update_record('game_export_html', $html))) {
+            throw new moodle_exception('game_error', 'game', "game_export_html: not updated id=$html->id");
         }
 
         $cm = get_coursemodule_from_instance('game', $game->id, $game->course);
-        $context = game_get_context_module_instance( $cm->id);
+        $context = game_get_context_module_instance($cm->id);
 
         require_once("export/exporthtml.php");
-        game_OnExportHTML( $game, $context, $html);
+        game_OnExportHTML($game, $context, $html);
     }
 }
 
@@ -179,7 +179,7 @@ class mod_game_exportjavame_form extends moodleform {
 
         $mform->addElement('header', 'general', get_string('general', 'form'));
 
-        if ( $game->gamekind == 'hangman') {
+        if ($game->gamekind == 'hangman') {
             $options = [];
             $options['0'] = 'Hangman with phrases';
             $options['hangmanp'] = 'Hangman with pictures';
@@ -219,7 +219,7 @@ class mod_game_exportjavame_form extends moodleform {
         $mform->addElement('hidden', 'target', 'javame');
         $mform->setType('target', PARAM_TEXT);
 
-        $mform->addElement('submit', 'submitbutton', get_string( 'export', 'game'));
+        $mform->addElement('submit', 'submitbutton', get_string('export', 'game'));
         $mform->closeHeaderBefore('submitbutton');
     }
 
@@ -259,37 +259,37 @@ class mod_game_exportjavame_form extends moodleform {
         $javame->maxpicturewidth = $mform->getElementValue('maxpicturewidth');
         $javame->maxpictureheight = $mform->getElementValue('maxpictureheight');
 
-        if (!($DB->update_record( 'game_export_javame', $javame))) {
-            throw new moodle_exception( 'game_error', 'game', "game_export_javame: not updated id=$javame->id");
+        if (!($DB->update_record('game_export_javame', $javame))) {
+            throw new moodle_exception('game_error', 'game', "game_export_javame: not updated id=$javame->id");
         }
 
         require_once("export/exportjavame.php");
-        game_OnExportJavaME( $game, $javame);
+        game_OnExportJavaME($game, $javame);
     }
 
 }
 
 // Creates form and set initial data.
 if ($target == 'html') {
-    $html = $DB->get_record( 'game_export_html', [ 'id' => $game->id]);
+    $html = $DB->get_record('game_export_html', [ 'id' => $game->id]);
     if ($html == false) {
         $html = new stdClass();
         $html->id = $game->id;
         $html->checkbutton = 1;
         $html->printbutton = 1;
-        game_insert_record( 'game_export_html', $html);
-        $html = $DB->get_record( 'game_export_html', [ 'id' => $game->id]);
+        game_insert_record('game_export_html', $html);
+        $html = $DB->get_record('game_export_html', [ 'id' => $game->id]);
     }
     $html->type = 0;
     $mform = new mod_game_exporthtml_form(null, ['id' => $id, 'html' => $html]);
 } else {
-    $javame = $DB->get_record( 'game_export_javame', [ 'id' => $game->id]);
+    $javame = $DB->get_record('game_export_javame', [ 'id' => $game->id]);
     if ($javame == false) {
         $javame = new stdClass();
         $javame->id = $game->id;
         $javame->filename = $game->gamekind;
-        game_insert_record( 'game_export_javame', $javame);
-        $javame = $DB->get_record( 'game_export_javame', [ 'id' => $game->id]);
+        game_insert_record('game_export_javame', $javame);
+        $javame = $DB->get_record('game_export_javame', [ 'id' => $game->id]);
     }
     $mform = new mod_game_exportjavame_form(null, ['id' => $id, 'javame' => $javame]);
 }
@@ -333,6 +333,6 @@ function game_send_stored_file($file) {
         readfile($file);
         exit;
     } else {
-        throw new moodle_exception( 'game_error', 'game', "export.php: File does not exists ".$file);
+        throw new moodle_exception('game_error', 'game', "export.php: File does not exists ".$file);
     }
 }

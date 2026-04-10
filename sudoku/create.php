@@ -91,7 +91,7 @@ function appendsudokub() {
             $level = $level1;
         }
 
-        echo get_string('sudoku_creating', 'game', $i)."<br>\r\n";
+        echo get_string('sudoku_creating', 'game', $i) . "<br>\r\n";
     }
 }
 
@@ -101,9 +101,9 @@ function appendsudokub() {
  * @param object $si
  * @param object $sp
  *
- * @return the packed sudoku
+ * @return string: the packed sudoku
  */
-function packsudoku($si, $sp) {
+function packsudoku($si, $sp): string {
     $data = '';
 
     for ($i = 1; $i <= 9; $i++) {
@@ -137,7 +137,7 @@ function packsudoku($si, $sp) {
  *
  * @return true if created correctly
  */
-function create(&$si, &$sp, $level=1) {
+function create(&$si, &$sp, $level = 1) {
     for ($i = 1; $i <= 40; $i++) {
         $sp = new sudoku();
         $theinitialposition = $sp->generatepuzzle(10, 50, $level);
@@ -161,7 +161,7 @@ function create(&$si, &$sp, $level=1) {
  *
  * @param stdClass $si
  *
- * @return count of opened
+ * @return int: count of opened
  */
 function getopened($si) {
     $count = 0;

@@ -39,7 +39,6 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_game_generator_testcase extends advanced_testcase {
-
     /**
      * Test for create instance.
      */
@@ -87,19 +86,21 @@ class mod_game_generator_testcase extends advanced_testcase {
         $glossarygenerator->create_glossary_content($glossary, [], 'SIX', 'SIX');
         $glossarygenerator->create_glossary_content($glossary, [], 'SEVEN', 'SEVEN');
 
-        $game = $this->getDataGenerator()->create_module('game',
+        $game = $this->getDataGenerator()->create_module(
+            'game',
             ['course' => $course, 'gamekind' => 'cross', 'name' => 'cross',
-            'sourcemodule' => 'glossary', 'glossaryid' => $glossary->id]);
+            'sourcemodule' => 'glossary', 'glossaryid' => $glossary->id]
+        );
         $records = $DB->get_records('game', ['course' => $course->id], 'id');
         $this->assertEquals(1, count($records));
         $this->assertTrue(array_key_exists($game->id, $records));
         $cm = get_coursemodule_from_instance('game', $game->id, $course->id);
-        $context = game_get_context_module_instance( $cm->id);
+        $context = game_get_context_module_instance($cm->id);
         $cross = new CrossDB();
         $answers = [ 'ONE' => 'ONE', 'TWO' => 'TWO', 'THREE' => 'THREE', 'FOUR' => 'FOUR'];
         $reps = [];
-        $cross->setwords( $answers, 0, $reps);
-        $cross->computedata( $crossm, $crossd, $letters, $minwords = 0, $maxwords = 0, $mtimelimit = 3);
+        $cross->setwords($answers, 0, $reps);
+        $cross->computedata($crossm, $crossd, $letters, $minwords = 0, $maxwords = 0, $mtimelimit = 3);
         $this->assertEquals(38, $cross->mbestscore);
 
         $_GET['q'] = $game->id;

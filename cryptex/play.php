@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once( "cryptexdb_class.php");
+require_once("cryptexdb_class.php");
 
 /**
  * Plays the game cryptex.
@@ -37,44 +37,45 @@ require_once( "cryptexdb_class.php");
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $context, $course) {
-    global $CFG, $DB, $USER;
+function game_cryptex_continue($cm, $game, $attempt, $cryptexrec, $endofgame, $context, $course) {
+    global $DB, $USER;
 
     if ($endofgame) {
-        game_updateattempts( $game, $attempt, -1, true, $cm, $course);
+        game_updateattempts($game, $attempt, -1, true, $cm, $course);
         $endofgame = false;
     }
 
     if ($attempt != false && $cryptexrec != false) {
-        $crossm = $DB->get_record( 'game_cross', [ 'id' => $attempt->id]);
-        return game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
+        $crossm = $DB->get_record('game_cross', [ 'id' => $attempt->id]);
+        game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
+        return;
     }
 
     if ($attempt === false) {
-        if (!game_can_start_new_attempt( $game)) {
+        if (!game_can_start_new_attempt($game)) {
             return;
         }
-        $attempt = game_addattempt( $game);
+        $attempt = game_addattempt($game);
     }
 
     $cryptex = new CryptexDB();
 
     $questions = $infos = $answers = $reps = [];
 
-    $recs = game_questions_shortanswer( $game);
+    $recs = game_questions_shortanswer($game);
     if ($recs == false) {
-        throw new moodle_exception( 'no_words', 'game');
+        throw new moodle_exception('no_words', 'game');
     }
 
     foreach ($recs as $rec) {
         if ($game->param7 == false) {
-            if (game_strpos( $rec->answertext, ' ')) {
+            if (game_strpos($rec->answertext, ' ')) {
                 continue;   // Spaces not allowed.
             }
         }
 
-        $rec->answertext = game_upper( $rec->answertext);
-        $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
+        $rec->answertext = game_upper($rec->answertext);
+        $answers[$rec->answertext] = game_repairquestion($rec->questiontext);
         $infos[$rec->answertext] = [ $game->sourcemodule, $rec->questionid, $rec->glossaryentryid];
 
         $a = [ 'gameid' => $game->id, 'userid' => $USER->id,
@@ -84,20 +85,20 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
         }
     }
 
-    $cryptex->setwords( $answers, $game->param1, $reps);
+    $cryptex->setwords($answers, $game->param1, $reps);
 
     // The game->param4 is minimum words.
     // The game->param2 is maximum words.
     $badwords = [ 'NO', 'ASS', 'SEX', 'FUCK', 'WANK', 'BITCH', 'BASTARD', 'TWAT', 'CUNT'];
     $a = $badwords;
     foreach ($a as $word) {
-        $badwords[] = strrev( $word);
+        $badwords[] = strrev($word);
     }
-    $cryptex->setbadwords( $badwords);
-    if ($cryptex->computedata( $crossm, $crossd, $letters, $game->param4, $game->param2, $game->param3)) {
+    $cryptex->setbadwords($badwords);
+    if ($cryptex->computedata($crossm, $crossd, $letters, $game->param4, $game->param2, $game->param3)) {
         $newcrossd = [];
         foreach ($crossd as $rec) {
-            if (array_key_exists( $rec->answertext, $infos)) {
+            if (array_key_exists($rec->answertext, $infos)) {
                 $info = $infos[$rec->answertext];
 
                 $rec->id = 0;
@@ -105,13 +106,13 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
                 $rec->questionid = $info[1];
                 $rec->glossaryentryid = $info[2];
             }
-            game_update_queries( $game, $attempt, $rec, 0, '');
+            game_update_queries($game, $attempt, $rec, 0, '');
             $newcrossd[] = $rec;
         }
-        $cryptexrec = $cryptex->savecryptex( $game, $crossm, $newcrossd, $attempt->id, $letters);
+        $cryptexrec = $cryptex->savecryptex($game, $crossm, $newcrossd, $attempt->id, $letters);
     }
 
-    return game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
+    return game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm, false, false, false, $context, false, true, $course);
 }
 
 /**
@@ -127,48 +128,48 @@ function game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, $endofgame, $
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_cryptex_check( $cm, $game, $attempt, $cryptexrec, $q, $answer, $finishattempt, $context, $course) {
+function game_cryptex_check($cm, $game, $attempt, $cryptexrec, $q, $answer, $finishattempt, $context, $course) {
     global $DB;
 
     if ($finishattempt) {
-        game_updateattempts( $game, $attempt, -1, true, $cm, $course);
-        game_cryptex_continue( $cm, $game, false, false, true, $context, $course);
+        game_updateattempts($game, $attempt, -1, true, $cm, $course);
+        game_cryptex_continue($cm, $game, false, false, true, $context, $course);
         return;
     }
 
     if ($attempt === false) {
-        game_cryptex_continue( $cm, $game, $attempt, $cryptexrec, false, $context, $course);
+        game_cryptex_continue($cm, $game, $attempt, $cryptexrec, false, $context, $course);
         return;
     }
 
-    $crossm = $DB->get_record_select( 'game_cross', "id=$attempt->id");
-    $query = $DB->get_record_select( 'game_queries', "id=$q");
+    $crossm = $DB->get_record_select('game_cross', "id=$attempt->id");
+    $query = $DB->get_record_select('game_queries', "id=$q");
 
-    $answer1 = trim( game_upper( $query->answertext));
-    $answer2 = trim( game_upper( $answer));
+    $answer1 = trim(game_upper($query->answertext));
+    $answer2 = trim(game_upper($answer));
 
-    $len1 = game_strlen( $answer1);
-    $len2 = game_strlen( $answer2);
-    $equal = ( $len1 == $len2);
+    $len1 = game_strlen($answer1);
+    $len2 = game_strlen($answer2);
+    $equal = ($len1 == $len2);
     if ($equal) {
         for ($i = 0; $i < $len1; $i++) {
-            if (game_substr( $answer1, $i, 1) != game_substr( $answer2, $i, 1)) {
+            if (game_substr($answer1, $i, 1) != game_substr($answer2, $i, 1)) {
                 $equal = true;
                 break;
             }
         }
     }
     if ($equal == false) {
-        game_update_queries( $game, $attempt, $query, 0, $answer2, true);
-        game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, true, false, false, $context, false, false, $course);
+        game_update_queries($game, $attempt, $query, 0, $answer2, true);
+        game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm, true, false, false, $context, false, false, $course);
         return;
     }
 
-    game_update_queries( $game, $attempt, $query, 1, $answer2);
+    game_update_queries($game, $attempt, $query, 1, $answer2);
 
     $onlyshow = false;
     $showsolution = false;
-    game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm, true, $onlyshow, $showsolution, $context, false, true, $course);
+    game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm, true, $onlyshow, $showsolution, $context, false, true, $course);
 }
 
 /**
@@ -187,7 +188,7 @@ function game_cryptex_check( $cm, $game, $attempt, $cryptexrec, $q, $answer, $fi
  * @param boolean $showhtmlprintbutton
  * @param stdClass $course
  */
-function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
+function game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm,
         $updateattempt, $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton, $course) {
     global $CFG, $DB;
 
@@ -199,16 +200,16 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
 
     $cryptex = new CryptexDB();
     $language = $attempt->language;
-    $questions = $cryptex->loadcryptex( $crossm, $mask, $corrects, $attempt->language);
+    $questions = $cryptex->loadcryptex($crossm, $mask, $corrects, $attempt->language);
 
     if ($language != $attempt->language) {
-        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
-            throw new moodle_exception( 'cryptex_error', 'game', 'game_cross_play: Can\'t set language');
+        if (!$DB->set_field('game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
+            throw new moodle_exception('cryptex_error', 'game', 'game_cross_play: Can\'t set language');
         }
     }
 
-    if (  $attempt->language != '') {
-        $wordrtl = game_right_to_left( $attempt->language);
+    if ($attempt->language != '') {
+        $wordrtl = game_right_to_left($attempt->language);
     } else {
         $wordrtl = right_to_left();
     }
@@ -219,13 +220,13 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
         $textdir = '';
     }
 
-    $len = game_strlen( $mask);
+    $len = game_strlen($mask);
 
     // The count1 means there is a guested letter.
     // The count2 means there is a letter that not guessed.
     $count1 = $count2 = 0;
     for ($i = 0; $i < $len; $i++) {
-        $c = game_substr( $mask, $i, 1);
+        $c = game_substr($mask, $i, 1);
         if ($c == '1') {
             $count1++;
         } else if ($c == '2') {
@@ -252,12 +253,12 @@ function game_cryptex_play( $cm, $game, $attempt, $cryptexrec, $crossm,
     }
 
     if ($updateattempt) {
-        game_updateattempts( $game, $attempt, $gradeattempt, $finished, $cm, $course);
+        game_updateattempts($game, $attempt, $gradeattempt, $finished, $cm, $course);
     }
 
     if (($onlyshow == false) && ($showsolution == false)) {
         if ($finished) {
-            game_cryptex_onfinished( $cm, $game, $attempt, $cryptexrec, $course);
+            game_cryptex_onfinished($cm, $game, $attempt, $cryptexrec, $course);
         }
     }
 ?>
@@ -275,14 +276,14 @@ width: 240pt;
 --></style>
     <?php
 
-    $grade = round( 100 * $gradeattempt);
-    echo get_string( 'grade', 'game').' '.$grade.' %';
+    $grade = round(100 * $gradeattempt);
+    echo get_string('grade', 'game') . ' ' . $grade . ' %';
 
     echo '<br>';
 
     echo '<table border=0>';
     echo '<tr><td>';
-    $cryptex->displaycryptex( $crossm->usedcols, $crossm->usedrows, $cryptexrec->letters, $mask, $showsolution, $textdir);
+    $cryptex->displaycryptex($crossm->usedcols, $crossm->usedrows, $cryptexrec->letters, $mask, $showsolution, $textdir);
 ?>
 </td>
 
@@ -312,9 +313,9 @@ width: 240pt;
     <?php
 
     if ($showhtmlprintbutton && !$finished) {
-        echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >'.get_string( 'finish', 'game');
+        echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >' . get_string('finish', 'game');
         echo '</button>';
-        echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string( 'print', 'game');
+        echo '<button id="printbutton" type="button" onclick="OnPrint();" >'.get_string('print', 'game');
         echo '</button><br>';
     }
 
@@ -324,7 +325,7 @@ width: 240pt;
     function PrintHtmlClick() {
         document.getElementById("printbutton").style.display = "none";
 
-        window.print();     
+        window.print();
 
         document.getElementById("printbutton").style.display = "block";
     }
@@ -334,7 +335,7 @@ width: 240pt;
         global $CFG;
 
         $params = "id={$cm->id}&gameid={$game->id}";
-        echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\");";
+        echo "window.open(\"{$CFG->wwwroot}/mod/game/print.php?$params\");";
         ?>
     }
 
@@ -357,39 +358,39 @@ width: 240pt;
         $i++;
         if ($showsolution == false) {
             // When I want to show the solution a want to show the questions to.
-            if (array_key_exists( $q->id, $corrects)) {
+            if (array_key_exists($q->id, $corrects)) {
                 continue;
             }
         }
-        if (substr( $q->questiontext, 0, 3) == '<p ') {
-            $pos = strpos( $q->questiontext, '>');
+        if (substr($q->questiontext, 0, 3) == '<p ') {
+            $pos = strpos($q->questiontext, '>');
             if ($pos != false) {
-                $q->questiontext = substr( $q->questiontext, $pos + 1);
+                $q->questiontext = substr($q->questiontext, $pos + 1);
             }
         }
-        while (substr( $q->questiontext, -4) == '</p>') {
-            $q->questiontext = substr( $q->questiontext, 0, strlen( $q->questiontext) - 4);
+        while (substr($q->questiontext, -4) == '</p>') {
+            $q->questiontext = substr($q->questiontext, 0, strlen($q->questiontext) - 4);
         }
-        while (substr( $q->questiontext, -4) == '<br>') {
-            $q->questiontext = substr( $q->questiontext, 0, strlen( $q->questiontext) - 4);
+        while (substr($q->questiontext, -4) == '<br>') {
+            $q->questiontext = substr($q->questiontext, 0, strlen($q->questiontext) - 4);
         }
-        $question = game_show_query( $game, $q, "$i. ".$q->questiontext, $context);
+        $question = game_show_query($game, $q, "$i. ".$q->questiontext, $context);
         if ($q->questionid) {
-            $question2 = str_replace( ["\'", '\"'], ["'", '"'], $question);
+            $question2 = str_replace(["\'", '\"'], ["'", '"'], $question);
             $question2 = game_filterquestion($question2, $q->questionid, $context->id, $game->course);
         } else {
-            $glossary = $DB->get_record_sql( "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
+            $glossary = $DB->get_record_sql("SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}");
             $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
-            $contextglossary = game_get_context_module_instance( $cmglossary->id);
-            $question2 = str_replace( '\"', '"', $question);
+            $contextglossary = game_get_context_module_instance($cmglossary->id);
+            $question2 = str_replace('\"', '"', $question);
             $question2 = game_filterglossary($question2, $q->glossaryentryid, $contextglossary->id, $game->course);
         }
 
-        echo "<script>var msg{$q->id}=".json_encode( $question2).';</script>';
+        echo "<script>var msg{$q->id}=" . json_encode($question2) . ';</script>';
         if (($onlyshow == false) && ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
                 $question .= ' &nbsp;<input type="submit" value="'.
-                get_string( 'answer').'" onclick="OnCheck( '.$q->id.",msg{$q->id});\" />";
+                get_string('answer').'" onclick="OnCheck(' . $q->id.",msg{$q->id});\" />";
             }
         }
         echo $question;
@@ -401,12 +402,12 @@ width: 240pt;
     }
 
     if ($game->bottomtext != '') {
-        echo '<br><br>'.$game->bottomtext;
+        echo '<br><br>' . $game->bottomtext;
     }
 
     ?>
     <script>
-        function OnCheck( id, question) {
+        function OnCheck(id, question) {
             document.getElementById("q").value = id;
             document.getElementById("wordclue").innerHTML = question;
 
@@ -422,7 +423,7 @@ width: 240pt;
         }
     </script>
     <?php
-    echo '<style>'.file_get_contents( 'cryptex/styles.css').'</style>';
+    echo '<style>'.file_get_contents('cryptex/styles.css').'</style>';
     echo '</head>';
     if ($print) {
         echo '<body onload="window.print()">';
@@ -439,13 +440,13 @@ width: 240pt;
  * @param stdClass $cryptexrec
  * @param stdClass $course
  */
-function game_cryptex_onfinished( $cm, $game, $attempt, $cryptexrec, $course) {
-    global $CFG, $DB;
+function game_cryptex_onfinished($cm, $game, $attempt, $cryptexrec, $course) {
+    global $CFG;
 
-    echo '<B>'.get_string( 'win', 'game').'</B><br>';
+    echo '<B>' . get_string('win', 'game') . '</B><br>';
     echo '<br>';
     echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">".
-        get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id={$cm->course}\">".get_string( 'finish', 'game').'</a> ';
+        get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id={$cm->course}\">" . get_string('finish', 'game').'</a> ';
     echo "<br><br>\r\n";
 }

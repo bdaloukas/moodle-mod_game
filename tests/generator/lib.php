@@ -32,7 +32,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_game_generator extends testing_module_generator {
-
     /**
      * Creates instance of game record with default values.
      *
@@ -43,7 +42,7 @@ class mod_game_generator extends testing_module_generator {
      */
     public function create_instance($record = null, ?array $options = null) {
         global $CFG;
-        require_once($CFG->libdir.'/resourcelib.php');
+        require_once($CFG->libdir . '/resourcelib.php');
 
         // Add default values for game.
         $record = (array)$record + ['name' => 'Hangman', 'gamekind' => 'hangman'];

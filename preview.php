@@ -50,7 +50,7 @@ $update = required_param('update', PARAM_INT);
 $attemptid = required_param('attemptid', PARAM_INT);
 $attempt = $DB->get_record('game_attempts', ['id' => $attemptid]);
 $game = $DB->get_record('game', [ 'id' => $attempt->gameid]);
-$detail = $DB->get_record('game_'.$gamekind, [ 'id' => $attemptid]);
+$detail = $DB->get_record('game_' . $gamekind, [ 'id' => $attemptid]);
 $solution = ($action == 'solution');
 
 $PAGE->navbar->add(get_string('preview', 'game'));
@@ -63,10 +63,11 @@ $showhtmlsolutions = false;
 $showhtmlprintbutton = true;
 $showstudentguess = true;
 
-switch($gamekind) {
+switch ($gamekind) {
     case 'cross':
         $g = '';
-        game_cross_play($cm,
+        game_cross_play(
+            $cm,
             $game,
             $attempt,
             $detail,
@@ -92,7 +93,8 @@ switch($gamekind) {
         break;
     case 'cryptex':
         $crossm = $DB->get_record('game_cross', ['id' => $attemptid]);
-        game_cryptex_play($cm,
+        game_cryptex_play(
+            $cm,
             $game,
             $attempt,
             $detail,

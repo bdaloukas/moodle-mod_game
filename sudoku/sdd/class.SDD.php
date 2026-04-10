@@ -107,8 +107,11 @@ class sdd {
             } else if (is_object($thevalue)) {
                 $theoutput[$theindex] = $this->dobject($thevalue, $thehtmlflag);
             } else {
-                $theoutput[$theindex] = ($thehtmlflag ? preg_replace('|<|s', '&lt;',
-                    var_export($thevalue, true)) : var_export($thevalue, true));
+                $theoutput[$theindex] = ($thehtmlflag ? preg_replace(
+                                                    '|<|s',
+                                                    '&lt;',
+                                                    var_export($thevalue, true)
+                                                            ) : var_export($thevalue, true));
             }
         }
 
@@ -193,8 +196,11 @@ class sdd {
                         $theoutput[$theclass][] = $thevariable . " = ".$this->dobject($theobjectvars[$thevariable], $thehtmlflag);
                     } else {
                         $theotput[$theclass][] = $thevariable . " = " .
-                            ($thehtmlflag ? preg_replace('|<|s', '&lt;', var_export(
-                            $theobjectvars[$thevariable], true)) : var_export($theobjectvars[$thevariable], true));
+                            ($thehtmlflag ? preg_replace(
+                                '|<|s',
+                                '&lt;',
+                                var_export($theobjectvars[$thevariable], true)
+                                    ) : var_export($theobjectvars[$thevariable], true));
                     }
 
                     unset($theobjectvars[$thevariable]);

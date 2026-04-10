@@ -653,8 +653,8 @@ class sudoku extends ObjectS {
 
         for ($i = 1; $i <= 9; $i++) {
             for ($j = 1; $j <= 9; $j++) {
-                $this->theboard[$i][$j] = new cell;
-                $this->theboard[$i][$j].init( $i, $j);
+                $this->theboard[$i][$j] = new cell();
+                $this->theboard[$i][$j].init($i, $j);
             }
         }
 
@@ -723,7 +723,8 @@ class sudoku extends ObjectS {
      */
     protected function buildrcs() {
         for ($i = 1; $i <= 9; $i++) {
-            $this->therows[$i] = new r("Row",
+            $this->therows[$i] = new r(
+                "Row",
                 $i,
                 $this->theboard[$i][1],
                 $this->theboard[$i][2],
@@ -733,8 +734,10 @@ class sudoku extends ObjectS {
                 $this->theboard[$i][6],
                 $this->theboard[$i][7],
                 $this->theboard[$i][8],
-                $this->theboard[$i][9]);
-            $this->thecolumns[$i] = new C("Column",
+                $this->theboard[$i][9]
+            );
+            $this->thecolumns[$i] = new C(
+                "Column",
                 $i,
                 $this->theboard[1][$i],
                 $this->theboard[2][$i],
@@ -744,12 +747,13 @@ class sudoku extends ObjectS {
                 $this->theboard[6][$i],
                 $this->theboard[7][$i],
                 $this->theboard[8][$i],
-                $this->theboard[9][$i]);
-
+                $this->theboard[9][$i]
+            );
             $r = ((int)(($i - 1) / 3)) * 3;
             $c = (($i - 1) % 3) * 3;
 
-            $this->thesquares[$i] = new S("Square",
+            $this->thesquares[$i] = new S(
+                "Square",
                 $i,
                 $this->theboard[$r + 1][$c + 1],
                 $this->theboard[$r + 1][$c + 2],
@@ -759,7 +763,8 @@ class sudoku extends ObjectS {
                 $this->theboard[$r + 2][$c + 3],
                 $this->theboard[$r + 3][$c + 1],
                 $this->theboard[$r + 3][$c + 2],
-                $this->theboard[$r + 3][$c + 3]);
+                $this->theboard[$r + 3][$c + 3]
+            );
         }
     }
 
@@ -929,7 +934,7 @@ class sudoku extends ObjectS {
      */
     protected function printintermediatesolution($theheader = null) {
         if ($this->thedebug) {
-            $this->printsolution( $theheader);
+            $this->printsolution($theheader);
         }
     }
 

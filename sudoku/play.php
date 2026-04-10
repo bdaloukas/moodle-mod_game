@@ -24,7 +24,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once(dirname(__FILE__).'/../../../lib/questionlib.php');
+require_once(dirname(__FILE__) . '/../../../lib/questionlib.php');
 
 /**
  * Plays the game Sudoku
@@ -141,25 +141,54 @@ function game_sudoku_play($cm, $game, $attempt, $sudoku, $onlyshow, $showsolutio
     $offsetquestions = game_sudoku_compute_offsetquestions($game->sourcemodule, $attempt, $numbers, $correctquestions);
 
     if ($game->toptext != '') {
-        echo $game->toptext.'<br>';
+        echo $game->toptext . '<br>';
     }
 
-    game_sudoku_showsudoku($sudoku->data, $sudoku->guess, true, $showsolution, $offsetquestions,
-        $correctquestions, $cm, $attempt, $game, $course);
+    game_sudoku_showsudoku(
+        $sudoku->data,
+        $sudoku->guess,
+        true,
+        $showsolution,
+        $offsetquestions,
+        $correctquestions,
+        $cm,
+        $attempt,
+        $game,
+        $course
+    );
     switch ($game->sourcemodule) {
         case 'quiz':
         case 'question':
-            game_sudoku_showquestions_quiz($cm->id, $game, $attempt, $sudoku, $offsetquestions,
-                $numbers, $correctquestions, $onlyshow, $showsolution, $context);
+            game_sudoku_showquestions_quiz(
+                $cm->id,
+                $game,
+                $attempt,
+                $sudoku,
+                $offsetquestions,
+                $numbers,
+                $correctquestions,
+                $onlyshow,
+                $showsolution,
+                $context
+            );
             break;
         case 'glossary':
-            game_sudoku_showquestions_glossary($cm->id, $game, $attempt, $sudoku, $offsetquestions,
-                $numbers, $correctquestions, $onlyshow, $showsolution);
+            game_sudoku_showquestions_glossary(
+                $cm->id,
+                $game,
+                $attempt,
+                $sudoku,
+                $offsetquestions,
+                $numbers,
+                $correctquestions,
+                $onlyshow,
+                $showsolution
+            );
             break;
     }
 
     if ($game->bottomtext != '') {
-        echo '<br>'.$game->bottomtext;
+        echo '<br>' . $game->bottomtext;
     }
 }
 

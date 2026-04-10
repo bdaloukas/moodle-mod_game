@@ -93,7 +93,8 @@ function game_print_cross($cm, $game, $context, $course) {
     <title>Print</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php
-    game_cross_play($cm,
+    game_cross_play(
+        $cm,
         $game,
         $attempt,
         $crossrec,
@@ -114,7 +115,7 @@ function game_print_cross($cm, $game, $context, $course) {
 /**
  * Prints a cryptex.
  *
-   @param stdClass $cm
+ * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $context
  * @param stdClass $course

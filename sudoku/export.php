@@ -45,7 +45,7 @@ function export() {
 
     $i = 0;
     foreach ($recs as $rec) {
-        fwrite($h, "execute_sql(\"INSERT INTO {game_sudoku_database} (level, opened, data) ".
+        fwrite($h, "execute_sql(\"INSERT INTO {game_sudoku_database} (level, opened, data) " .
             "VALUES ($rec->level, $rec->opened, '$rec->data')\", false);\r\n");
         if (++$i % 10 == 0) {
             fwrite($h, "\r\n");

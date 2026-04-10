@@ -32,23 +32,24 @@
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context, $course) {
+function game_millionaire_continue($cm, $game, $attempt, $millionaire, $context, $course) {
     // User must select quiz or question as a source module.
     if (($game->quizid == 0) && ($game->questioncategoryid == 0)) {
         if ($game->sourcemodule == 'quiz') {
-            throw new moodle_exception( 'millionaire_must_select_quiz', 'game');
+            throw new moodle_exception('millionaire_must_select_quiz', 'game');
         } else {
-            throw new moodle_exception( 'millionaire_must_select_questioncategory', 'game');
+            throw new moodle_exception('millionaire_must_select_questioncategory', 'game');
         }
     }
 
     if ($attempt != false && $millionaire != false) {
         // Continue an existing game.
-        return game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course);
+        game_millionaire_play($cm, $game, $attempt, $millionaire, $context, $course);
+        return;
     }
 
     if ($attempt == false) {
-        $attempt = game_addattempt( $game);
+        $attempt = game_addattempt($game);
     }
 
     $newrec = new stdClass();
@@ -57,11 +58,11 @@ function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context
     $newrec->level = 0;
     $newrec->state = 0;
 
-    if (!game_insert_record(  'game_millionaire', $newrec)) {
-        throw new moodle_exception( 'millionaire_error', 'game', 'error inserting in game_millionaire');
+    if (!game_insert_record('game_millionaire', $newrec)) {
+        throw new moodle_exception('millionaire_error', 'game', 'error inserting in game_millionaire');
     }
 
-    game_millionaire_play( $cm, $game, $attempt, $newrec, $context, $course);
+    game_millionaire_play($cm, $game, $attempt, $newrec, $context, $course);
 }
 
 /**
@@ -74,7 +75,7 @@ function game_millionaire_continue( $cm, $game, $attempt, $millionaire, $context
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $course) {
+function game_millionaire_play($cm, $game, $attempt, $millionaire, $context, $course) {
     global $DB;
 
     $buttons = optional_param('buttons', 0, PARAM_INT);
@@ -84,7 +85,7 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
     $quitx = optional_param('Quit_x', 0, PARAM_INT);
 
     if ($millionaire->queryid) {
-        $query = $DB->get_record( 'game_queries', [ 'id' => $millionaire->queryid]);
+        $query = $DB->get_record('game_queries', [ 'id' => $millionaire->queryid]);
     } else {
         $query = new StdClass;
     }
@@ -94,7 +95,7 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
         $name = 'btAnswer'.$i;
         $answer = optional_param($name, '', PARAM_RAW);
         if (!empty($answer)) {
-            game_millionaire_OnAnswer( $cm, $game, $attempt, $millionaire, $query, $i, $context, $course);
+            game_millionaire_OnAnswer($cm, $game, $attempt, $millionaire, $query, $i, $context, $course);
             $found = 1;
         }
     }
@@ -102,15 +103,15 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
     if ($found == 1) {
         $found = $found; // Nothing.
     } else if (!empty($help5050x)) {
-        game_millionaire_OnHelp5050( $game, $cm->id,  $millionaire, $game, $query, $context);
+        game_millionaire_OnHelp5050($game, $cm->id,$millionaire, $game, $query, $context);
     } else if (!empty($helptelephonex)) {
-        game_millionaire_OnHelpTelephone( $game, $cm->id, $millionaire, $query, $context);
+        game_millionaire_OnHelpTelephone($game, $cm->id,$millionaire, $query, $context);
     } else if (!empty($helppeoplex)) {
-        game_millionaire_OnHelpPeople( $game, $cm->id, $millionaire, $query, $context);
+        game_millionaire_OnHelpPeople($game, $cm->id, $millionaire, $query, $context);
     } else if (!empty($quitx)) {
-        game_millionaire_OnQuit( $cm,  $game, $attempt, $query, $course);
+        game_millionaire_OnQuit($cm,  $game, $attempt, $query, $course);
     } else {
-        game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
+        game_millionaire_ShowNextQuestion($cm, $game, $attempt, $millionaire, $context, $course);
     }
 }
 
@@ -125,15 +126,15 @@ function game_millionaire_play( $cm, $game, $attempt, $millionaire, $context, $c
  * @param stdClass $info
  * @param stdClass $context
  */
-function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context) {
+function game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, $info, $context) {
     global $CFG, $OUTPUT;
 
-    $question = str_replace( ["\'", '\"'], ["'", '"'], $query->questiontext);
+    $question = str_replace(["\'", '\"'], ["'", '"'], $query->questiontext);
 
     if ($game->param8 == '') {
         $color = 408080;
     } else {
-        $color = substr( '000000'.base_convert($game->param8, 10, 16), -6);
+        $color = substr('000000'.base_convert($game->param8, 10, 16), -6);
     }
 
     $color1 = 'black';
@@ -150,9 +151,9 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     echo '<form name="Form1" method="post" action="attempt.php" id="Form1">';
     echo "<table cellpadding=0 cellspacing=0 border=0>\r\n";
     echo "<tr $background>";
-    echo '<td rowspan='.(17 + count( $aanswer)).'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+    echo '<td rowspan='.(17 + count($aanswer)) . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
     echo "<td colspan=6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
-    echo '<td rowspan='.(17 + count( $aanswer)).'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
+    echo '<td rowspan=' . (17 + count($aanswer)) . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
     echo "</tr>\r\n";
 
     echo "<tr height=10%>";
@@ -166,8 +167,8 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $gif = "5050";
         $disabled = "";
     }
-    $src = game_pix_url($dirgif.$gif, 'mod_game');
-    echo '<input type="image" '.$disabled.' name="Help5050" id="Help5050" Title="50 50" src="'.$src.'" alt="" border="0">&nbsp;';
+    $src = game_pix_url($dirgif . $gif, 'mod_game');
+    echo '<input type="image" ' . $disabled . ' name="Help5050" id="Help5050" Title="50 50" src="'.$src.'" alt="" border="0">&nbsp;';
 
     if ($state & 2) {
         $gif = "telephonex";
@@ -178,8 +179,8 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
     }
 
     echo '<input type="image" name="HelpTelephone" '.$disabled.
-        ' id="HelpTelephone" Title="'.get_string( 'millionaire_telephone', 'game').
-        '" src="'.game_pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
+        ' id="HelpTelephone" Title="' . get_string('millionaire_telephone', 'game').
+        '" src="'.game_pix_url($dirgif . $gif, 'mod_game') . '" alt="" border="0">&nbsp;';
 
     if ($state & 4) {
         $gif = "peoplex";
@@ -188,18 +189,18 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         $gif = "people";
         $disabled = "";
     }
-    echo '<input type="image" name="HelpPeople" '.$disabled.' id="HelpPeople" Title="'.
-        get_string( 'millionaire_helppeople', 'game').'" src="'.
-        game_pix_url($dirgif.$gif, 'mod_game').'" alt="" border="0">&nbsp;';
+    echo '<input type="image" name="HelpPeople" ' . $disabled . ' id="HelpPeople" Title="'.
+        get_string('millionaire_helppeople', 'game') . '" src="'.
+        game_pix_url($dirgif . $gif, 'mod_game') . '" alt="" border="0">&nbsp;';
 
     echo '<input type="image" name="Quit" id="Quit" Title="'.
-        get_string( 'millionaire_quit', 'game').'" src="'.
-        game_pix_url($dirgif.'x', 'mod_game').'" alt="" border="0">&nbsp;';
+        get_string('millionaire_quit', 'game') . '" src="'.
+        game_pix_url($dirgif . 'x', 'mod_game') . '" alt="" border="0">&nbsp;';
     echo "\r\n";
     echo "</td>\r\n";
 
     $styletext = "";
-    if (strpos( $question, 'color:') == false && strpos( $question, 'background:') == false) {
+    if (strpos($question, 'color:') == false && strpos($question, 'background:') == false) {
         $styletext = "style='$stylequestion'";
     }
 
@@ -209,7 +210,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
 
         switch ($i) {
             case 15:
-                echo "<td rowspan=".(16 + count( $aanswer)).
+                echo "<td rowspan=" . (16 + count($aanswer)).
                     " $background>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>\r\n";
                 $btr = true;
                 break;
@@ -219,7 +220,7 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
                 $btr = true;
                 break;
             case 12:
-                $question = game_show_query( $game, $query, $question);
+                $question = game_show_query($game, $query, $question);
                 echo "<tr>";
                 echo "<td rowspan=12 colspan=2 valign=top style=\"$styletext\">$question</td>\r\n";
                 $btr = true;
@@ -258,32 +259,32 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
         } else {
             echo "<td style='$style'></td>";
         }
-        echo "<td style='$style' align=right>".sprintf( "%10d", $aval[$i - 1])."</td>\r\n";
+        echo "<td style='$style' align=right>" . sprintf("%10d", $aval[$i - 1]) . "</td>\r\n";
         if ($btr) {
             echo "</tr>\r\n";
         }
     }
     echo "<tr $background><td colspan=10>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
     $bfirst = true;
-    $letters = get_string( 'millionaire_lettersall', 'game');
+    $letters = get_string('millionaire_lettersall', 'game');
     if (($letters == '') || ($letters == '-')) {
-        $letters = get_string( 'lettersall', 'game');
+        $letters = get_string('lettersall', 'game');
     }
-    for ($i = 1; $i <= count( $aanswer); $i++) {
-        $name = "btAnswer".$i;
-        $s = game_substr( $letters, $i - 1, 1);
+    for ($i = 1; $i <= count($aanswer); $i++) {
+        $name = "btAnswer" . $i;
+        $s = game_substr($letters, $i - 1, 1);
 
-        $disabled = ( $state == 15 ? "disabled=1" : "");
+        $disabled = ($state == 15 ? "disabled=1" : "");
 
         $style = $stylequestion;
-        if ((strpos( $aanswer[$i - 1], 'color:') != false) || (strpos( $aanswer[$i - 1], 'background:') != false)) {
+        if ((strpos($aanswer[$i - 1], 'color:') != false) || (strpos($aanswer[$i - 1], 'background:') != false)) {
             $style = '';
         }
         if ($state == 15 && $i == $query->correct) {
             $style = $stylequestionselected;
         }
 
-        $button = '<input style="'.$style.'" '.$disabled.'type="submit" name="'.$name.'" value="'.$s.'" id="'.$name."1\"".
+        $button = '<input style="' . $style . '" ' . $disabled . 'type="submit" name="' . $name . '" value="' . $s . '" id="'.$name . "1\"".
             " onmouseover=\"this.style.backgroundColor = '$color2';$name.style.backgroundColor = '$color2';\" ".
             " onmouseout=\"this.style.backgroundColor = '$colorback';$name.style.backgroundColor = '$colorback';\" >";
         $text = game_filtertext($aanswer[$i - 1], $game->course);
@@ -299,15 +300,15 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
             if ($bfirst) {
                 $bfirst = false;
                 $info = game_filtertext($info, $game->course);
-                echo "<td style=\"$style\" rowspan=".count( $aanswer)." colspan=3>$info</td>";
+                echo "<td style=\"$style\" rowspan=" . count($aanswer) . " colspan=3>$info</td>";
             }
             echo "\r\n</tr>\r\n";
         }
     }
     echo "<tr><td colspan=10 $background>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td></tr>\r\n";
     echo "<input type=hidden name=state value=\"$state\">\r\n";
-    echo '<input type=hidden name=id value="'.$id.'">';
-    echo "<input type=hidden name=buttons value=\"".count( $aanswer)."\">\r\n";
+    echo '<input type=hidden name=id value="' . $id . '">';
+    echo "<input type=hidden name=buttons value=\"" . count($aanswer) . "\">\r\n";
 
     echo "</table>\r\n";
     echo "</form>\r\n";
@@ -323,17 +324,17 @@ function game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, 
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, $context, $course) {
-    game_millionaire_selectquestion( $aanswer, $game, $attempt, $millionaire, $query, $context, $cm, $course);
+function game_millionaire_shownextquestion($cm, $game, $attempt, $millionaire, $context, $course) {
+    game_millionaire_selectquestion($aanswer, $game, $attempt, $millionaire, $query, $context, $cm, $course);
 
     if ($game->toptext != '') {
-        echo $game->toptext.'<br><br>';
+        echo $game->toptext . '<br><br>';
     }
 
-    game_millionaire_showgrid( $game, $millionaire, $cm->id, $query, $aanswer, "", $context, $course);
+    game_millionaire_showgrid($game, $millionaire, $cm->id, $query, $aanswer, "", $context, $course);
 
     if ($game->bottomtext != '') {
-        echo '<br>'.$game->bottomtext;
+        echo '<br>' . $game->bottomtext;
     }
 }
 
@@ -351,7 +352,7 @@ function game_millionaire_shownextquestion( $cm, $game, $attempt, $millionaire, 
  *
  * @throws moodle_exception    If the configuration is invalid or no question is found.
  */
-function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
+function game_millionaire_selectquestion(&$aanswer, $game, $attempt, &$millionaire, &$query, $context, $cm, $course) {
     global $CFG, $DB, $USER;
 
     // Allow only quiz or question as source module.
@@ -428,7 +429,7 @@ function game_millionaire_selectquestion( &$aanswer, $game, $attempt, &$milliona
             } else {
                 $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid=' . $game->questioncategoryid;
             }
-            $select2 .= " AND qv.id = ( SELECT id FROM {question_versions} WHERE questionbankentryid = qv.questionbankentryid ORDER BY version DESC LIMIT 1)";
+            $select2 .= " AND qv.id = (SELECT id FROM {question_versions} WHERE questionbankentryid = qv.questionbankentryid ORDER BY version DESC LIMIT 1)";
         } else {
             $cats = $game->subcategories ? question_categorylist($game->questioncategoryid) : [];
             $select2 = count($cats) ? 'q.category IN (' . implode(',', $cats) . ')' : 'category=' . $game->questioncategoryid;
@@ -535,7 +536,7 @@ function game_millionaire_select_serial_question($game, $table, $select, $level,
         $sql .= " ORDER BY $order";
     }
 
-    if (($recs = $DB->get_records_sql( $sql)) == false) {
+    if (($recs = $DB->get_records_sql($sql)) == false) {
         return false;
     }
     $questions = [];
@@ -543,17 +544,17 @@ function game_millionaire_select_serial_question($game, $table, $select, $level,
         $questions[] = $rec->id;
     }
 
-    $count = count( $questions);
+    $count = count($questions);
     if ($count == 0) {
         return false;
     }
 
     $from = round($level * ($count - 1) / 15);
-    $to = round(max( $from, ($level + 1) * ($count - 1) / 15)) - 1;
+    $to = round(max($from, ($level + 1) * ($count - 1) / 15)) - 1;
     if ($to < $from) {
         $to = $from;
     }
-    $pos = mt_rand( round( $from), round( $to));
+    $pos = mt_rand(round($from), round($to));
     return $questions[$pos];
 }
 
@@ -566,18 +567,18 @@ function game_millionaire_select_serial_question($game, $table, $select, $level,
  * @param array $aanswer
  * @param stdClass $context
  */
-function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer, $context) {
+function game_millionaire_loadquestions($game, $millionaire, &$query, &$aanswer, $context) {
     global $DB;
 
-    $query = $DB->get_record( 'game_queries', [ 'id' => $millionaire->queryid],
+    $query = $DB->get_record('game_queries', [ 'id' => $millionaire->queryid],
         'id,questiontext,answertext,correct,questionid');
 
-    $aids = explode( ',', $query->answertext);
+    $aids = explode(',', $query->answertext);
     $aanswer = [];
     foreach ($aids as $id) {
-        $rec = $DB->get_record( 'question_answers', [ 'id' => $id], 'id,answer');
+        $rec = $DB->get_record('question_answers', [ 'id' => $id], 'id,answer');
 
-        $aanswer[] = game_filterquestion_answer(str_replace( '\"', '"', $rec->answer), $id, $context->id, $game->course);
+        $aanswer[] = game_filterquestion_answer(str_replace('\"', '"', $rec->answer), $id, $context->id, $game->course);
     }
 }
 
@@ -587,7 +588,7 @@ function game_millionaire_loadquestions( $game, $millionaire, &$query, &$aanswer
  * @param stdClass $millionaire
  * @param string $mask
  */
-function game_millionaire_setstate( &$millionaire, $mask) {
+function game_millionaire_setstate(&$millionaire, $mask) {
     global $DB;
 
     $millionaire->state |= $mask;
@@ -595,8 +596,8 @@ function game_millionaire_setstate( &$millionaire, $mask) {
     $updrec = new stdClass();
     $updrec->id = $millionaire->id;
     $updrec->state = $millionaire->state;
-    if (!$DB->update_record(  'game_millionaire', $updrec)) {
-        throw new moodle_exception( 'millionaire_error', 'game', 'error updating in game_millionaire');
+    if (!$DB->update_record('game_millionaire', $updrec)) {
+        throw new moodle_exception('millionaire_error', 'game', 'error updating in game_millionaire');
     }
 }
 
@@ -609,20 +610,20 @@ function game_millionaire_setstate( &$millionaire, $mask) {
  * @param string $query
  * @param stdClass $context
  */
-function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $context) {
-    game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
+function game_millionaire_onhelp5050($game, $id,  &$millionaire, $query, $context) {
+    game_millionaire_loadquestions($game, $millionaire, $query, $aanswer, $context);
 
     if (($millionaire->state & 1) != 0) {
-        game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, '', $context);
+        game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, '', $context);
         return;
     }
 
-    game_millionaire_setstate( $millionaire, 1);
+    game_millionaire_setstate($millionaire, 1);
 
-    $n = count( $aanswer);
+    $n = count($aanswer);
     if ($n > 2) {
         for (;;) {
-            $wrong = mt_rand( 1, $n);
+            $wrong = mt_rand(1, $n);
             if ($wrong != $query->correct) {
                 break;
             }
@@ -634,7 +635,7 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
         }
     }
 
-    game_millionaire_showgrid(  $game, $millionaire, $id, $query, $aanswer, '', $context);
+    game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, '', $context);
 }
 
 /**
@@ -646,22 +647,22 @@ function game_millionaire_onhelp5050( $game, $id,  &$millionaire, $query, $conte
  * @param stdClass $query
  * @param stdClass $context
  */
-function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, $context) {
-    game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
+function game_millionaire_onhelptelephone($game, $id, &$millionaire, $query, $context) {
+    game_millionaire_loadquestions($game, $millionaire, $query, $aanswer, $context);
 
     if (($millionaire->state & 2) != 0) {
-        game_millionaire_ShowGrid( $game, $millionaire, $id, $query, $aanswer, '', $context);
+        game_millionaire_ShowGrid($game, $millionaire, $id, $query, $aanswer, '', $context);
         return;
     }
 
-    game_millionaire_setstate( $millionaire, 2);
+    game_millionaire_setstate($millionaire, 2);
 
-    $n = count( $aanswer);
+    $n = count($aanswer);
     if ($n < 2) {
         $wrong = $query->correct;
     } else {
         for (;;) {
-            $wrong = mt_rand( 1, $n);
+            $wrong = mt_rand(1, $n);
             if ($wrong != $query->correct) {
                 break;
             }
@@ -669,15 +670,15 @@ function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, 
     }
 
     // With 80% gives the correct answer.
-    if (mt_rand( 1, 10) <= 8) {
+    if (mt_rand(1, 10) <= 8) {
         $response = $query->correct;
     } else {
         $response = $wrong;
     }
 
-    $info = get_string( 'millionaire_info_telephone', 'game').'<br><b>'.$aanswer[$response - 1].'</b>';
+    $info = get_string('millionaire_info_telephone', 'game') . '<br><b>'.$aanswer[$response - 1] . '</b>';
 
-    game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, $info, $context);
+    game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, $info, $context);
 }
 
 /**
@@ -689,26 +690,26 @@ function game_millionaire_onhelptelephone(  $game, $id,  &$millionaire, $query, 
  * @param stdClass $query
  * @param stdClass $context
  */
-function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $context) {
-    game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
+function game_millionaire_onhelppeople($game, $id,  &$millionaire, $query, $context) {
+    game_millionaire_loadquestions($game, $millionaire, $query, $aanswer, $context);
 
     if (($millionaire->state & 4) != 0) {
-        game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, '', $context);
+        game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, '', $context);
         return;
     }
 
-    game_millionaire_setstate( $millionaire, 4);
+    game_millionaire_setstate($millionaire, 4);
 
-    $n = count( $aanswer);
+    $n = count($aanswer);
     $sum = 0;
     $apercent = [];
     for ($i = 0; $i + 1 < $n; $i++) {
-        $percent = mt_rand( 0, 100 - $sum);
+        $percent = mt_rand(0, 100 - $sum);
         $apercent[$i] = $percent;
         $sum += $percent;
     }
     $apercent[$n - 1] = 100 - $sum;
-    if (mt_rand( 1, 100) <= 80) {
+    if (mt_rand(1, 100) <= 80) {
         // With percent 80% sets in the correct answer the biggest percent.
         $maxpos = 0;
         for ($i = 1; $i + 1 < $n; $i++) {
@@ -721,12 +722,12 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
         }
     }
 
-    $info = '<br>'.get_string( 'millionaire_info_people', 'game').':<br>';
+    $info = '<br>' . get_string('millionaire_info_people', 'game') . ':<br>';
     for ($i = 0; $i < $n; $i++) {
-        $info .= "<br>".  game_substr( get_string( 'lettersall', 'game'), $i, 1) ." : ".$apercent[$i]. ' %';
+        $info .= "<br>".  game_substr(get_string('lettersall', 'game'), $i, 1) ." : ".$apercent[$i]. ' %';
     }
 
-    game_millionaire_showgrid( $game, $millionaire, $id, $query, $aanswer, game_substr( $info, 4), $context);
+    game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, game_substr($info, 4), $context);
 }
 
 /**
@@ -741,10 +742,10 @@ function game_millionaire_onhelppeople( $game, $id,  &$millionaire, $query, $con
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query, $answer, $context, $course) {
+function game_millionaire_onanswer($cm, $game, $attempt, &$millionaire, $query, $answer, $context, $course) {
     global $DB;
 
-    game_millionaire_loadquestions( $game, $millionaire, $query, $aanswer, $context);
+    game_millionaire_loadquestions($game, $millionaire, $query, $aanswer, $context);
     if ($answer == $query->correct) {
         if ($millionaire->level < 15) {
             $millionaire->level++;
@@ -758,35 +759,35 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
 
     $score = $millionaire->level / 15;
 
-    game_update_queries( $game, $attempt, $query, $scorequestion, $answer);
-    game_updateattempts( $game, $attempt, $score, $finish, $cm, $course);
+    game_update_queries($game, $attempt, $query, $scorequestion, $answer);
+    game_updateattempts($game, $attempt, $score, $finish, $cm, $course);
 
     $updrec = new stdClass();
     $updrec->id = $millionaire->id;
     $updrec->level = $millionaire->level;
     $updrec->queryid = 0;
-    if (!$DB->update_record(  'game_millionaire', $updrec)) {
-        throw new moodle_exception( 'millionaire_error', 'game', 'error updating in game_millionaire');
+    if (!$DB->update_record('game_millionaire', $updrec)) {
+        throw new moodle_exception('millionaire_error', 'game', 'error updating in game_millionaire');
     }
 
     if ($answer == $query->correct) {
         // Correct.
         if ($finish) {
-            echo get_string( 'win', 'game');
-            game_millionaire_OnQuit( $cm, $game, $attempt, $query, $course);
+            echo get_string('win', 'game');
+            game_millionaire_OnQuit($cm, $game, $attempt, $query, $course);
         } else {
             $millionaire->queryid = 0;  // So the next function select a new question.
         }
         if (!$finish) {
-            game_millionaire_ShowNextQuestion( $cm, $game, $attempt, $millionaire, $context, $course);
+            game_millionaire_ShowNextQuestion($cm, $game, $attempt, $millionaire, $context, $course);
         }
     } else {
         // Wrong answer.
-        $info = get_string( 'millionaire_info_wrong_answer', 'game').
+        $info = get_string('millionaire_info_wrong_answer', 'game').
             '<br><br><b><center>'.$aanswer[$query->correct - 1].'</b>';
 
         $millionaire->state = 15;
-        game_millionaire_ShowGrid( $game, $millionaire, $cm->id, $query, $aanswer, $info, $context);
+        game_millionaire_ShowGrid($game, $millionaire, $cm->id, $query, $aanswer, $info, $context);
     }
 }
 
@@ -799,13 +800,13 @@ function game_millionaire_onanswer( $cm, $game, $attempt, &$millionaire, $query,
  * @param stdClass $query
  * @param stdClass $course
  */
-function game_millionaire_onquit( $cm, $game, $attempt, $query, $course) {
+function game_millionaire_onquit($cm, $game, $attempt, $query, $course) {
     global $CFG, $DB;
 
-    game_updateattempts( $game, $attempt, -1, true, $cm, $course);
+    game_updateattempts($game, $attempt, -1, true, $cm, $course);
 
     echo '<br>';
     echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">".
-        get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">".get_string( 'finish', 'game').'</a> ';
+        get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
 }
