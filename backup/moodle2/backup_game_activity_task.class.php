@@ -34,7 +34,6 @@ require_once($CFG->dirroot . '/mod/game/backup/moodle2/backup_game_stepslib.php'
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_game_activity_task extends backup_activity_task {
-
     /**
      * Define (add) particular settings this activity can have
      */
@@ -62,11 +61,11 @@ class backup_game_activity_task extends backup_activity_task {
         $base = preg_quote($CFG->wwwroot, "/");
 
         // Link to the list of games.
-        $search = "/(".$base."\/mod\/game\/index.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/game\/index.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@GAMEINDEX*$2@$', $content);
 
         // Link to game view by moduleid.
-        $search = "/(".$base."\/mod\/game\/view.php\?id\=)([0-9]+)/";
+        $search = "/(" . $base . "\/mod\/game\/view.php\?id\=)([0-9]+)/";
         $content = preg_replace($search, '$@GAMEVIEWBYID*$2@$', $content);
 
         return $content;

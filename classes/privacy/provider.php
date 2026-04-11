@@ -24,15 +24,15 @@
 
 namespace mod_game\privacy;
 
-use \core_privacy\local\request\writer;
-use \core_privacy\local\request\transform;
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\approved_userlist;
-use \core_privacy\local\request\userlist;
-use \core_privacy\local\request\approved_contextlist;
-use \core_privacy\local\request\deletion_criteria;
-use \core_privacy\local\metadata\collection;
-use \core_privacy\manager;
+use core_privacy\local\request\core_userlist_provider;
+use core_privacy\local\request\writer;
+use core_privacy\local\request\transform;
+use core_privacy\local\request\contextlist;
+use core_privacy\local\request\approved_userlist;
+use core_privacy\local\request\userlist;
+use core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\deletion_criteria;
+use core_privacy\local\metadata\collection;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -48,7 +48,7 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
 class provider implements
     // This plugin has data.
     \core_privacy\local\metadata\provider,
-    \core_privacy\local\request\core_userlist_provider,
+    core_userlist_provider,
 
     // This plugin currently implements the original plugin_provider interface.
     \core_privacy\local\request\plugin\provider {

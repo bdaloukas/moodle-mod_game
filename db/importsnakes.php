@@ -33,7 +33,7 @@ game_importsnakes();
 function game_importsnakes() {
     global $DB;
 
-    if ($DB->count_records( 'game_snakes_database') != 0) {
+    if ($DB->count_records('game_snakes_database') != 0) {
         return;
     }
 
@@ -50,7 +50,7 @@ function game_importsnakes() {
     $newrec->width = 487;
     $newrec->height = 487;
     $newrec->data = 'L3-18,S5-19,S8-27,L24-39,L29-53,S32-62,S41-58,L48-63';
-    game_importsnakes_do( $newrec);
+    game_importsnakes_do($newrec);
 
     $newrec = new stdClass();
     $newrec->name = '6x6 - 3 Snakes - 3 Ladders';
@@ -65,7 +65,7 @@ function game_importsnakes() {
     $newrec->width = 502;
     $newrec->height = 436;
     $newrec->data = 'L2-25,S4-23,L8-18,S16-20,L19-29,S27-33';
-    game_importsnakes_do( $newrec);
+    game_importsnakes_do($newrec);
 
     game_importsnakes3();
     game_importsnakes4();
@@ -88,7 +88,7 @@ function game_importsnakes3() {
     $newrec->width = 487;
     $newrec->height = 487;
     $newrec->data = 'L3-18,S5-19,S8-27,L24-39,L29-53,S32-62,S41-58,L48-63';
-    game_importsnakes_do( $newrec);
+    game_importsnakes_do($newrec);
 }
 
 /**
@@ -108,7 +108,7 @@ function game_importsnakes4() {
     $newrec->width = 502;
     $newrec->height = 436;
     $newrec->data = 'L2-25,S4-23,L8-18,S16-20,L19-29,S27-33';
-    game_importsnakes_do( $newrec);
+    game_importsnakes_do($newrec);
 }
 
 /**
@@ -116,10 +116,10 @@ function game_importsnakes4() {
  *
  * @param stdClass $newrec
  */
-function game_importsnakes_do( $newrec) {
+function game_importsnakes_do($newrec) {
     global $DB;
 
-    if (!$DB->insert_record( 'game_snakes_database', $newrec)) {
-        throw new moodle_exception( 'cross_error', 'game', 'Can\'t insert to table game_snakes_database');
+    if (!$DB->insert_record('game_snakes_database', $newrec)) {
+        throw new moodle_exception('cross_error', 'game', 'Can\'t insert to table game_snakes_database');
     }
 }

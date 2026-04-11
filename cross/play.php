@@ -25,8 +25,8 @@
  */
 defined('MOODLE_INTERNAL') || die();
 
-require_once( "cross_class.php");
-require_once( "crossdb_class.php");
+require_once("cross_class.php");
+require_once("crossdb_class.php");
 
 /**
  * Plays the game crossword.
@@ -40,7 +40,7 @@ require_once( "crossdb_class.php");
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $context, $course) {
+function game_cross_continue($cm, $game, $attempt, $cross, $g, $endofgame, $context, $course) {
     if ($endofgame) {
         if ($g == '') {
             $endofgame = false;
@@ -48,20 +48,50 @@ function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $con
     }
 
     if ($attempt != false && $cross != false) {
-        return game_cross_play( $cm, $game, $attempt, $cross, $g, false, false, $endofgame,
-            false, false, false, false, true, $context, $course);
+        return game_cross_play(
+            $cm,
+            $game,
+            $attempt,
+            $cross,
+            $g,
+            false,
+            false,
+            $endofgame,
+            false,
+            false,
+            false,
+            false,
+            true,
+            $context,
+            $course
+        );
     }
 
     if ($attempt == false) {
-        $attempt = game_addattempt( $game);
+        $attempt = game_addattempt($game);
     }
 
-    game_cross_new( $game, $attempt->id, $crossm);
+    game_cross_new($game, $attempt->id, $crossm);
     if ($g != '') {
-        game_updateattempts( $game, $attempt, 0, 0, $cm, $course);
+        game_updateattempts($game, $attempt, 0, 0, $cm, $course);
     }
-    return game_cross_play( $cm, $game, $attempt, $crossm, '', false, false, false,
-        false, false, false, false, true, $context, $course);
+    return game_cross_play(
+        $cm,
+        $game,
+        $attempt,
+        $crossm,
+        '',
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        $context,
+        $course
+    );
 }
 
 /**
@@ -71,27 +101,27 @@ function game_cross_continue( $cm, $game, $attempt, $cross, $g, $endofgame, $con
  * @param int $attemptid
  * @param stdClass $crossm
  */
-function game_cross_new( $game, $attemptid, &$crossm) {
+function game_cross_new($game, $attemptid, &$crossm) {
     global $DB, $USER;
 
     $cross = new CrossDB();
 
     $questions = $infos = $answers = $reps = [];
 
-    $recs = game_questions_shortanswer( $game);
+    $recs = game_questions_shortanswer($game);
     if ($recs == false) {
-        throw new moodle_exception( 'cross_error', 'game', 'game_cross_continue: '.get_string( 'no_words', 'game'));
+        throw new moodle_exception('cross_error', 'game', 'game_cross_continue: '.get_string( 'no_words', 'game'));
     }
 
     foreach ($recs as $rec) {
         if ($game->param7 == false) {
-            if (game_strpos( $rec->answertext, ' ')) {
+            if (game_strpos($rec->answertext, ' ')) {
                 continue;   // Spaces not allowed.
             }
         }
 
-        $rec->answertext = game_upper( $rec->answertext);
-        $answers[$rec->answertext] = game_repairquestion( $rec->questiontext);
+        $rec->answertext = game_upper($rec->answertext);
+        $answers[$rec->answertext] = game_repairquestion($rec->questiontext);
         $infos[$rec->answertext] = [ $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment];
 
         $a = [ 'gameid' => $game->id, 'userid' => $USER->id,
@@ -101,11 +131,11 @@ function game_cross_new( $game, $attemptid, &$crossm) {
         }
     }
 
-    $cross->setwords( $answers, $game->param1, $reps);
+    $cross->setwords($answers, $game->param1, $reps);
 
     // The game->param4 is minimum words in crossword.
     // The game->param2 is maximum words in crossword.
-    if ($cross->computedata( $crossm, $crossd, $lettets, $game->param4, $game->param2, $game->param8)) {
+    if ($cross->computedata($crossm, $crossd, $lettets, $game->param4, $game->param2, $game->param8)) {
         $newcrossd = [];
         foreach ($crossd as $rec) {
             $info = $infos[$rec->answertext];
@@ -117,11 +147,11 @@ function game_cross_new( $game, $attemptid, &$crossm) {
             }
             $newcrossd[] = $rec;
         }
-        $cross->savecross( $game, $crossm, $newcrossd, $attemptid);
+        $cross->savecross($game, $crossm, $newcrossd, $attemptid);
     }
 
-    if ($crossd == null || count( $crossd) == 0) {
-        $s = 'game_cross_continue: '.get_string( 'no_words', 'game');
+    if ($crossd == null || count($crossd) == 0) {
+        $s = 'game_cross_continue: '.get_string('no_words', 'game');
         throw new moodle_exception( 'cross_error', 'game', '', $s);
     }
 }
@@ -133,15 +163,15 @@ function game_cross_new( $game, $attemptid, &$crossm) {
  * @param array $legend
  * @param string $title
  */
-function showlegend( string $dir, array $legend, string $title) {
-    if (count( $legend) == 0) {
+function showlegend(string $dir, array $legend, string $title) {
+    if (count($legend) == 0) {
         return;
     }
 
     echo "<br><b>$title</b><br>\n";
     foreach ($legend as $key => $line) {
-        $line = game_repairquestion( $line);
-        echo "$key: <span id={$dir}{$key}>".game_filtertext( "$line<br>", 0)."</span>\n";
+        $line = game_repairquestion($line);
+        echo "$key: <span id={$dir}{$key}>".game_filtertext("$line<br>", 0)."</span>\n";
     }
     echo "\n";
 }
@@ -165,31 +195,45 @@ function showlegend( string $dir, array $legend, string $title) {
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
+function game_cross_play($cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
     $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton, $showstudentguess, $context, $course) {
     global $CFG, $DB;
 
     $cross = new CrossDB();
 
     $language = $attempt->language;
-    $info = $cross->loadcross( $g, $done, $html, $game, $attempt, $crossrec, $onlyshow,
-        $showsolution, $endofgame, $showhtmlsolutions, $attempt->language,
-        $showstudentguess, $context, $course, $cm);
+    $info = $cross->loadcross(
+        $g,
+        $done,
+        $html,
+        $game,
+        $attempt,
+        $crossrec,
+        $onlyshow,
+        $showsolution,
+        $endofgame,
+        $showhtmlsolutions,
+        $attempt->language,
+        $showstudentguess,
+        $context,
+        $course,
+        $cm
+    );
 
     if ($language != $attempt->language) {
-        if (!$DB->set_field( 'game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
+        if (!$DB->set_field('game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
             throw new moodle_exception( 'cross_error', 'game', "game_cross_play: Can't set language");
         }
     }
 
     if ($done || $endofgame) {
         if ($endofgame == false) {
-            echo '<B>'.get_string( 'win', 'game').'</B><BR>';
+            echo '<B>' . get_string('win', 'game').'</B><BR>';
         }
-        if (game_can_start_new_attempt( $game)) {
+        if (game_can_start_new_attempt($game)) {
             echo '<br>';
             echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">".
-                get_string( 'nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+                get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     } else if ($info != '') {
         if ($print === false) {
@@ -198,7 +242,7 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
     }
 
     if ($attempt->language != '') {
-        $wordrtl = game_right_to_left( $attempt->language);
+        $wordrtl = game_right_to_left($attempt->language);
     } else {
         $wordrtl = right_to_left();
     }
@@ -210,7 +254,7 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
         $textdir = '';
     }
 
-    echo '<style>'.file_get_contents( dirname(__FILE__).'/styles.css').'</style>';
+    echo '<style>'.file_get_contents(dirname(__FILE__).'/styles.css').'</style>';
 ?>
 </head>
 
@@ -240,7 +284,7 @@ function game_cross_play( $cm, $game, $attempt, $crossrec, $g, $onlyshow, $shows
     if ($game->param3 == 1) {
         // Legends is at the right.
         echo "<tr>\r\n";
-        game_cross_show_welcome( $game);
+        game_cross_show_welcome($game);
         echo "</tr>\r\n";
         echo "<tr><tr><td>&nbsp</td></tr>\r\n";
     }
@@ -269,7 +313,7 @@ var CrosswordFinished, Initialized;
 // Check the user's browser and then initialize the puzzle.
 if (document.getElementById("waitmessage") != null)
 {
-    document.getElementById("waitmessage").innerHTML = "<?php echo get_string( 'cross_pleasewait', 'game'); ?>";
+    document.getElementById("waitmessage").innerHTML = "<?php echo get_string('cross_pleasewait', 'game'); ?>";
 
     // Current game variables
     CurrentWord = -1;
@@ -319,13 +363,13 @@ if (document.getElementById("waitmessage") != null)
         so = Solutions[ i];
         for (var j = 0; j < WordLength[i]; j++) {
             TableAcrossWord[x + j][y] = i;
-            if( j < s.length)
-                c = s.substr( j, 1);
+            if(j < s.length)
+                c = s.substr(j, 1);
             else
                 c = '';
             GuessLeter[ x+ j][ y] = c;
-            if( j < so.length)
-                c = so.substr(  j, 1);
+            if(j < so.length)
+                c = so.substr( j, 1);
             else
                 c = '';
             solu[ x+j][ y] = c;
@@ -340,13 +384,13 @@ if (document.getElementById("waitmessage") != null)
         so = Solutions[ i];
         for (var j = 0; j < WordLength[i]; j++) {
             TableDownWord[x][y + j] = i;
-            if( j < s.length)
-                c = s.substr( j, 1);
+            if(j < s.length)
+                c = s.substr(j, 1);
             else
                 c = '';
             GuessLeter[ x][ y+j] = c;
-            if( j < so.length)
-                c = so.substr( j, 1);
+            if(j < so.length)
+                c = so.substr(j, 1);
             else
                 c = '';
             solu[ x][ y+j] = c;
@@ -367,14 +411,14 @@ if (document.getElementById("waitmessage") != null)
                 var s;
                 s = "<td id=\"c" + PadNumber(x) + PadNumber(y);
                 s += "\" class=\"gamebox boxnormal_unsel\" onclick=\"SelectThisWord(event);\">";
-                document.write( s);
+                document.write(s);
 
-                if( solu[x][y] != '')
-                    document.write( solu[x][y]);
-                else if( GuessLeter[x][y]== "_")
-                    document.write( "&nbsp;");
+                if(solu[x][y] != '')
+                    document.write(solu[x][y]);
+                else if(GuessLeter[x][y]== "_")
+                    document.write("&nbsp;");
                 else
-                    document.write( GuessLeter[x][y]);
+                    document.write(GuessLeter[x][y]);
 
                 document.write("</td>");
             } else {
@@ -440,7 +484,7 @@ function DeselectCurrentWord() {
 
     document.getElementById("answerbox").style.display = "none";
     document.getElementById("answerbox2").style.display = "none";
-    ChangeCurrentWordSelectedStyle( false);
+    ChangeCurrentWordSelectedStyle(false);
     CurrentWord = -1;
 }
 
@@ -543,20 +587,20 @@ function SelectThisWord(event) {
 
     document.getElementById("wordlabel").innerHTML = TheirWord;
     <?php
-    $msg = "\"".get_string( 'cross_across', 'game').", \" : \"".get_string( 'cross_down', 'game').", \"";
-    $letters = "\" ".get_string( 'letter', 'game').".\" : \" ".get_string( 'letters', 'game').".\"";
+    $msg = "\"" . get_string('cross_across', 'game') . ", \" : \"" . get_string( 'cross_down', 'game') . ", \"";
+    $letters = "\" " . get_string('letter', 'game') . ".\" : \" " . get_string( 'letters', 'game').".\"";
     ?>
     var s = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>);
     s = s + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
     document.getElementById("wordinfo").innerHTML = s;
 
-    if( CurrentWord <= LastHorizontalWord) {
-        id = 'a' + ( 1 + WordY[ CurrentWord]);
+    if(CurrentWord <= LastHorizontalWord) {
+        id = 'a' + (1 + WordY[ CurrentWord]);
     } else {
-        id = 'd' + ( 1 + WordX[ CurrentWord]);
+        id = 'd' + (1 + WordX[ CurrentWord]);
     }
     id = aid[ CurrentWord];
-    document.getElementById("wordclue").innerHTML = document.getElementById( id).innerHTML;
+    document.getElementById("wordclue").innerHTML = document.getElementById(id).innerHTML;
     document.getElementById("worderror").style.display = "none";
 
     if (TheirWordLength == WordLength[CurrentWord]) {
@@ -593,20 +637,20 @@ function OKClick() {
         return;
     }
     if (ContainsBadChars(TheirWord)) {
-        document.getElementById("worderror").innerHTML = "<?php echo get_string( 'cross_error_containsbadchars', 'game');?>";
+        document.getElementById("worderror").innerHTML = "<?php echo get_string('cross_error_containsbadchars', 'game');?>";
         document.getElementById("worderror").style.display = "block";
         return;
     }
     if (TheirWord.length < WordLength[CurrentWord]) {
-        var s = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>";
-        s = s + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
+        var s = "<?php echo get_string('cross_error_wordlength1', 'game');?>";
+        s = s + WordLength[CurrentWord] + " <?php echo get_string('cross_error_wordlength2', 'game');?>";
         document.getElementById("worderror").innerHTML  = s;
         document.getElementById("worderror").style.display = "block";
         return;
     }
     if (TheirWord.length > WordLength[CurrentWord]) {
-        var s = "<?php echo get_string( 'cross_error_wordlength1', 'game');?>";
-        s = s + WordLength[CurrentWord] + " <?php echo get_string( 'cross_error_wordlength2', 'game');?>";
+        var s = "<?php echo get_string('cross_error_wordlength1', 'game');?>";
+        s = s + WordLength[CurrentWord] + " <?php echo get_string('cross_error_wordlength2', 'game');?>";
         document.getElementById("worderror").innerHTML = s;
         document.getElementById("worderror").style.display = "block";
         return;
@@ -625,42 +669,42 @@ function OKClick() {
     <?php
     if ($showhtmlsolutions == false) {
     ?>
-function PackPuzzle( sData) {
+function PackPuzzle(sData) {
     var i, s, s2, n, j;
 
     s = "";
     len = sData.length;
     for(i=0; i < len; i++) {
-        c = sData.charAt( i);
-        if( (c > "0") && (c <= "9")) {
-            s = s.concat( '/');
+        c = sData.charAt(i);
+        if((c > "0") && (c <= "9")) {
+            s = s.concat('/');
         }
-        s = s.concat( c);
+        s = s.concat(c);
     }
 
     for(;;) {
-        i = s.indexOf( "__");
-        if( i == -1) {
+        i = s.indexOf("__");
+        if(i == -1) {
             break;
         }
         len = s.length;
 
-        for( j=i ; j < len; j++) {
-            if( s.charAt( j) != "_") {
+        for(j=i ; j < len; j++) {
+            if(s.charAt(j) != "_") {
                 break;
             }
         }
         n = j - i;
-        s2 = s.substr( 0, i);
-        s2 = s2.concat( n);
-        s = s2.concat( s.substr( j));
+        s2 = s.substr(0, i);
+        s2 = s2.concat(n);
+        s = s2.concat(s.substr( j));
     }
 
-    return encodeURIComponent( s);
+    return encodeURIComponent(s);
 }
 
 // Called when the "check server" link is clicked.
-function CheckServerClick( endofgame) {
+function CheckServerClick(endofgame) {
     var i, j, x, y, UserEntry, ErrorsFound = 0, EmptyFound = 0, TableCell;
     if (CrosswordFinished) {
         return;
@@ -690,7 +734,7 @@ function CheckServerClick( endofgame) {
             }
             if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;") {
                 UserEntry += TableCell.innerHTML.toUpperCase();
-            } else if( TableCell.innerHTML.toLowerCase() == "&nbsp;") {
+            } else if(TableCell.innerHTML.toLowerCase() == "&nbsp;") {
                 UserEntry += " ";
             } else {
                 UserEntry += "_";
@@ -699,7 +743,7 @@ function CheckServerClick( endofgame) {
         sData += UserEntry;
     }
 
-    sData = PackPuzzle( sData);
+    sData = PackPuzzle(sData);
 
     if( endofgame) {
         sData += "&finishattempt=1";

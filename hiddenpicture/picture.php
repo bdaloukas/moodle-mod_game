@@ -22,7 +22,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-require( '../../../config.php');
+require('../../../config.php');
 require_login();
 
 $id = required_param('id', PARAM_INT); // Course Module ID.
@@ -34,7 +34,7 @@ $filehash = required_param('p', PARAM_PATH);
 $cols = required_param('cols', PARAM_INT);
 $rows = required_param('rows', PARAM_INT);
 $filenamenumbers = required_param('n', PARAM_TEXT); // Path to numbers picture.
-create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
+create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
 
 /**
  * Create an image.
@@ -48,22 +48,22 @@ create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $fi
  * @param int $rows
  * @param string $filenamenumbers
  */
-function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers) {
+function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers) {
     global $CFG;
 
-    $a = explode( ',', $foundcells);
+    $a = explode(',', $foundcells);
     $found = [];
     foreach ($a as $s) {
         $found[$s] = 1;
     }
 
-    $a = explode( ',', $cells);
+    $a = explode(',', $cells);
     $cells = [];
     foreach ($a as $s) {
         $cells[$s] = 1;
     }
 
-    $file = get_file_storage()->get_file_by_hash( $filehash);
+    $file = get_file_storage()->get_file_by_hash($filehash);
     $image = $file->get_imageinfo();
 
     if ($image === false) {
@@ -74,12 +74,12 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
 
     $mime = $image['mimetype'];
 
-    $imgnumbers = imagecreatefrompng( $filenamenumbers);
-    $sizenumbers = getimagesize ($filenamenumbers);
+    $imgnumbers = imagecreatefrompng($filenamenumbers);
+    $sizenumbers = getimagesize($filenamenumbers);
 
     header("Content-type: $mime");
 
-    $color = imagecolorallocate( $imghandle, 100, 100, 100);
+    $color = imagecolorallocate($imghandle, 100, 100, 100);
 
     $width = $image['width'];
     $height = $image['height'];
@@ -90,13 +90,13 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
     for ($y = 0; $y < $rows; $y++) {
         for ($x = 0; $x < $cols; $x++) {
             $pos++;
-            if (!array_key_exists( $pos, $found)) {
+            if (!array_key_exists($pos, $found)) {
                 $x1 = $x * $width / $cols;
                 $y1 = $y * $height / $rows;
-                imagefilledrectangle( $imghandle, $x1, $y1, $x1 + $width / $cols, $y1 + $height / $rows, $color);
+                imagefilledrectangle($imghandle, $x1, $y1, $x1 + $width / $cols, $y1 + $height / $rows, $color);
 
-                if (array_key_exists( $pos, $cells)) {
-                    shownumber( $imghandle, $imgnumbers, $pos, $x1 , $y1, $width / $cols, $height / $rows, $sizenumbers);
+                if (array_key_exists($pos, $cells)) {
+                    shownumber($imghandle, $imgnumbers, $pos, $x1 , $y1, $width / $cols, $height / $rows, $sizenumbers);
                 }
             }
         }
@@ -132,9 +132,8 @@ function create_image( $id, $attemptid, $foundcells, $cells, $filehash, $cols, $
  * @param int $height
  * @param int $sizenumbers
  */
-function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
+function shownumber($imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
-        $widthnumber = $sizenumbers[0] / 10;
         $dstx = $x1 + $width / 3;
         $dsty = $y1 + $height / 3;
         $srcx = $number * $sizenumbers[0] / 10;
@@ -142,11 +141,11 @@ function shownumber( $imghandle, $imgnumbers, $number, $x1 , $y1, $width, $heigh
         $srch = $sizenumbers[1];
         $dstw = $width / 10;
         $dsth = $dstw * $srch / $srcw;
-        imagecopyresized( $imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);
+        imagecopyresized($imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);
     } else {
-        $number1 = floor( $number / 10);
+        $number1 = floor($number / 10);
         $number2 = $number % 10;
-        shownumber( $imghandle, $imgnumbers, $number1, $x1 - $width / 20, $y1, $width, $height, $sizenumbers);
-        shownumber( $imghandle, $imgnumbers, $number2, $x1 + $width / 20, $y1, $width, $height, $sizenumbers);
+        shownumber($imghandle, $imgnumbers, $number1, $x1 - $width / 20, $y1, $width, $height, $sizenumbers);
+        shownumber($imghandle, $imgnumbers, $number2, $x1 + $width / 20, $y1, $width, $height, $sizenumbers);
     }
 }

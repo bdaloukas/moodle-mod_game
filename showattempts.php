@@ -51,6 +51,8 @@ echo $OUTPUT->footer();
 /**
  * Show users
  *
+ * package mod_game
+ *
  * @param stdClass $game
  */
 function game_showusers($game) {
@@ -82,7 +84,7 @@ function game_showusers($game) {
                 {
                     var groupid = document.getElementById('menugroup').value;
                     window.location.href =
-                        "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid='+groupid;
+                        "<?php echo $href;?>" + document.getElementById('menuuser').value + '&groupid=' + groupid;
                 }
             </script>
     <?php
@@ -124,6 +126,8 @@ function game_showusers($game) {
 /**
  * Show groups
  *
+ * package mod_game
+ *
  * @param stdClass $game
  */
 function game_showgroups($game) {
@@ -156,7 +160,7 @@ function game_showgroups($game) {
     $selected = optional_param('groupid', 0, PARAM_INT);
 
     $output = '<select id="' . $id . '" class="' . $class . '" name="' . $name . '" ' . $attributes . '>' . "\n";
-    $output .= '   <option value="'. $nothingvalue . '"' . "\n";
+    $output .= '   <option value="' . $nothingvalue . '"' . "\n";
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
     }
@@ -166,13 +170,14 @@ function game_showgroups($game) {
         foreach ($options as $value => $label) {
             $output .= '   <option value="' . s($value) . '"';
             if ((string)$value == (string)$selected ||
-                (is_array($selected) && in_array($value, $selected))) {
+                (is_array($selected) && in_array($value, $selected))
+            ) {
                 $output .= ' selected="selected"';
             }
             if ($label === '') {
-                $output .= '>' . $value .'</option>' . "\n";
+                $output .= '>' . $value . '</option>' . "\n";
             } else {
-                $output .= '>' . $label .'</option>' . "\n";
+                $output .= '>' . $label . '</option>' . "\n";
             }
         }
     }
@@ -181,6 +186,8 @@ function game_showgroups($game) {
 
 /**
  * Show attempts
+ *
+ * package mod_game
  *
  * @param stdClass $game
  */
@@ -197,7 +204,7 @@ function game_showattempts($game) {
     // Here are user attempts.
     $table = "{game_attempts} as ga, {user} u, {game} as g";
     $select = "ga.userid=u.id AND ga.gameid={$game->id} AND g.id={$game->id}";
-    $fields = "ga.id, u.lastname, u.firstname, ga.attempts,".
+    $fields = "ga.id, u.lastname, u.firstname, ga.attempts," .
         "timestart, timefinish, timelastattempt, ga.score";
     if ($userid != 0) {
         $select .= ' AND u.id=' . $userid;
@@ -214,7 +221,7 @@ function game_showattempts($game) {
             if ($i == $limitfrom) {
                 echo ($i + 1) . ' ';
             } else {
-                echo "<a href=\"{$CFG->wwwroot}/mod/game/showattempts.php?q={$game->id}&amp;limitfrom=$i&\">".($i + 1)."</a>";
+                echo "<a href=\"{$CFG->wwwroot}/mod/game/showattempts.php?q={$game->id}&amp;limitfrom=$i&\">" . ($i + 1) . "</a>";
                 echo ' &nbsp;';
             }
         }
@@ -244,10 +251,10 @@ function game_showattempts($game) {
                     echo '&allowdelete=1';
                 }
                 echo '">';
-                echo '<img src="'.game_pix_url('t/delete').'" alt="'.get_string('delete').'" style="width: 1em" /></a>';
+                echo '<img src="' . game_pix_url('t/delete').'" alt="' . get_string('delete') . '" style="width: 1em" /></a>';
             }
             echo '</center></td>';
-            echo '<td><center>' . $rec->firstname. ' ' . $rec->lastname.'</center></td>';
+            echo '<td><center>' . $rec->firstname . ' ' . $rec->lastname.'</center></td>';
             echo '<td><center>' . ($rec->timestart != 0 ? userdate($rec->timestart) : '') . "</center></td>\r\n";
             echo '<td><center>' . ($rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '') . '</center></td>';
             echo '<td><center>' . ($rec->timefinish != 0 ? userdate($rec->timefinish) : '') . '</center></td>';
@@ -260,17 +267,17 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update=' . $update . "&amp;q={$game->id}\">";
-                echo '<img src="' . game_pix_url('t/preview') . '" alt="' . get_string('preview', 'game').'" style="width: 1em" /></a>';
+                echo '<img src="' . game_pix_url('t/preview') . '" alt="' . get_string('preview', 'game') . '" style="width: 1em" /></a>';
             }
             echo '</center></td>';
 
             // Show the solution.
             echo '<td><center>';
-            if (($gamekind == 'cross') || ($gamekind == 'sudoku') || ($gamekind == 'hangman') || ($gamekind == 'cryptex') ) {
+            if (($gamekind == 'cross') || ($gamekind == 'sudoku') || ($gamekind == 'hangman') || ($gamekind == 'cryptex')) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=solution&amp;" .
                     "attemptid={$rec->id}&amp;gamekind={$gamekind}&amp;update=$update&amp;&amp;" .
                     "q={$game->id}\">";
-                echo '<img src="' . game_pix_url('t/preview') . '" alt="'.
+                echo '<img src="' . game_pix_url('t/preview') . '" alt="' .
                         get_string('showsolution', 'game') . '" style="width: 1em" /></a>';
             }
             echo '</center></td>';
@@ -282,6 +289,8 @@ function game_showattempts($game) {
 
 /**
  * One delete attempt
+ *
+ * package mod_game
  *
  * @param stdClass $game
  */

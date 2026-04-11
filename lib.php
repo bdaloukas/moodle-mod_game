@@ -263,7 +263,7 @@ function game_user_outline($course, $user, $mod, $game) {
 
     if ($grade = $DB->get_record_select('game_grades', "userid=$user->id AND gameid = $game->id", null, 'id,score,timemodified')) {
 
-        $result = new stdClass;
+        $result = new stdClass();
         if ((float)$grade->score) {
             $result->info = get_string('gradenoun').':&nbsp;'.round($grade->score * $game->grade, $game->decimalpoints).' '.
                             get_string('percent', 'game').':&nbsp;'.round(100 * $grade->score, $game->decimalpoints).' %';
@@ -355,7 +355,7 @@ function game_grades($gameid) {
         return null;
     }
 
-    $return = new stdClass;
+    $return = new stdClass();
     $return->grades = $DB->get_records_menu('game_grades', 'gameid', $game->id, '', "userid, score * {$game->grade}");
     $return->maxgrade = $game->grade;
 
@@ -435,7 +435,7 @@ function game_update_grades($game=null, $userid=0, $nullifnone=true) {
             game_grade_item_update($game, $grades);
 
         } else if ($userid && $nullifnone) {
-            $grade = new stdClass;
+            $grade = new stdClass();
             $grade->userid = $userid;
             $grade->rawgrade = null;
             game_grade_item_update($game, $grade);
@@ -599,7 +599,7 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
             }
         }
 
-        $tmpactivity = new stdClass;
+        $tmpactivity = new stdClass();
 
         $tmpactivity->type = 'game';
         $tmpactivity->gameid = $attempt->gameid;
@@ -608,13 +608,13 @@ function game_get_recent_mod_activity(&$activities, &$index, $timestart, $course
         $tmpactivity->sectionnum = $cm->sectionnum;
         $tmpactivity->timestamp = $attempt->timefinish;
 
-        $tmpactivity->content = new stdClass;
+        $tmpactivity->content = new stdClass();
         $tmpactivity->content->attemptid = $attempt->id;
         $tmpactivity->content->sumgrades = $attempt->score * $attempt->grade;
         $tmpactivity->content->maxgrade = $attempt->grade;
         $tmpactivity->content->attempt = $attempt->attempt;
 
-        $tmpactivity->user = new stdClass;
+        $tmpactivity->user = new stdClass();
         $tmpactivity->user->userid = $tmpactivity->user->id = $attempt->userid;
         $tmpactivity->user->fullname = fullname($attempt, $viewfullnames);
         $tmpactivity->user->firstname = $attempt->firstname;
@@ -939,7 +939,7 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
 }
 
 /* Returns an array of game type objects to construct menu list when adding new game  */
-require($CFG->dirroot.'/version.php');
+require($CFG->dirroot . '/version.php');
 if ($branch >= '31' && $branch < '401') {
     define('USE_GET_SHORTCUTS', '1');
 }
@@ -959,7 +959,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 
         $types = [];
 
-        $type = new stdClass;
+        $type = new stdClass();
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game_group_start";
         $type->typestr = '--'.get_string('modulenameplural', 'game');
@@ -968,7 +968,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
         $hide = (isset($config->hidehangman) ? ($config->hidehangman != 0) : false);
 
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=hangman";
             $type->typestr = get_string('game_hangman', 'game');
@@ -982,7 +982,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
         }
 
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=cross";
             $type->typestr = get_string('game_cross', 'game');
@@ -996,7 +996,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
         }
 
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=cryptex";
             $type->typestr = get_string('game_cryptex', 'game');
@@ -1005,7 +1005,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 
         $hide = (isset($config->hidemillionaire) ? ($config->hidemillionaire != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=millionaire";
             $type->typestr = get_string('game_millionaire', 'game');
@@ -1014,7 +1014,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 
         $hide = (isset($config->hidesudoku) ? ($config->hidesudoku != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=sudoku";
             $type->typestr = get_string('game_sudoku', 'game');
@@ -1023,7 +1023,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 
         $hide = (isset($config->hidesnakes) ? ($config->hidesnakes != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=snakes";
             $type->typestr = get_string('game_snakes', 'game');
@@ -1032,7 +1032,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
 
         $hide = (isset($config->hidehiddenpicture) ? ($config->hidehiddenpicture != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->modclass = MOD_CLASS_ACTIVITY;
             $type->type = "game&amp;type=hiddenpicture";
             $type->typestr = get_string('game_hiddenpicture', 'game');
@@ -1042,7 +1042,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
         $hide = (isset($config->hidebookquiz) ? ($config->hidebookquiz != 0) : false);
         if ($hide == false) {
             if ($DB->get_record('modules', [ 'name' => 'book'], 'id,id')) {
-                $type = new stdClass;
+                $type = new stdClass();
                 $type->modclass = MOD_CLASS_ACTIVITY;
                 $type->type = "game&amp;type=bookquiz";
                 $type->typestr = get_string('game_bookquiz', 'game');
@@ -1050,7 +1050,7 @@ if (!defined('USE_GET_SHORTCUTS')) {
             }
         }
 
-        $type = new stdClass;
+        $type = new stdClass();
         $type->modclass = MOD_CLASS_ACTIVITY;
         $type->type = "game_group_end";
         $type->typestr = '--';
@@ -1072,11 +1072,11 @@ if (defined('USE_GET_SHORTCUTS')) {
         $types = [];
         $hide = (isset($config->hidehangman) ? ($config->hidehangman != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=hangman";
             $type->name = preg_replace('/.*type=/', '', $type->type);
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_hangman', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_hangman', 'game');
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
                 get_string_manager()->string_exists('help' . $type->name, 'game')) {
@@ -1090,7 +1090,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $hide = false;
         }
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=cross";
             $type->name = preg_replace('/.*type=/', '', $type->type);
@@ -1108,7 +1108,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $hide = false;
         }
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=cryptex";
             $type->title = get_string('pluginname', 'game').' - '.get_string('game_cryptex', 'game');
@@ -1122,7 +1122,7 @@ if (defined('USE_GET_SHORTCUTS')) {
         }
         $hide = (isset($config->hidemillionaire) ? ($config->hidemillionaire != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=millionaire";
             $type->title = get_string('pluginname', 'game').' - '.get_string('game_millionaire', 'game');
@@ -1136,10 +1136,10 @@ if (defined('USE_GET_SHORTCUTS')) {
         }
         $hide = (isset($config->hidesudoku) ? ($config->hidesudoku != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=sudoku";
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_sudoku', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_sudoku', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
@@ -1150,21 +1150,20 @@ if (defined('USE_GET_SHORTCUTS')) {
         }
         $hide = (isset($config->hidesnakes) ? ($config->hidesnakes != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=snakes";
             $type->title = get_string('pluginname', 'game').' - '.get_string('game_snakes', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
-            if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+            if (empty($type->help) && !empty($type->name) && get_string_manager()->string_exists('help' . $type->name, 'game')) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
         }
         $hide = (isset($config->hidehiddenpicture) ? ($config->hidehiddenpicture != 0) : false);
         if ($hide == false) {
-            $type = new stdClass;
+            $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=hiddenpicture";
             $type->title = get_string('pluginname', 'game').' - '.get_string('game_hiddenpicture', 'game');
@@ -1179,14 +1178,13 @@ if (defined('USE_GET_SHORTCUTS')) {
         $hide = (isset($config->hidebookquiz) ? ($config->hidebookquiz != 0) : false);
         if ($hide == false) {
             if ($DB->get_record('modules', [ 'name' => 'book'], 'id,id')) {
-                $type = new stdClass;
+                $type = new stdClass();
                 $type->archetype = MOD_CLASS_ACTIVITY;
                 $type->type = "game&type=bookquiz";
-                $type->title = get_string('pluginname', 'game').' - '.get_string('game_bookquiz', 'game');
+                $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_bookquiz', 'game');
                 $type->name = preg_replace('/.*type=/', '', $type->type);
                 $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
-                if (empty($type->help) && !empty($type->name) &&
-                    get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                if (empty($type->help) && !empty($type->name) && get_string_manager()->string_exists('help' . $type->name, 'game')) {
                         $type->help = get_string('help' . $type->name, 'game');
                 }
                 $types[] = $type;
@@ -1201,12 +1199,15 @@ if (defined('GAME_MOODLE_401')) {
      * Return the preconfigured tools which are configured for inclusion in the activity picker.
      *
      * @param content_item $defaultmodulecontentitem reference to the content item for the LTI module.
-     * @param \stdClass $user the user object, to use for cap checks if desired.
+     * @param stdClass $user the user object, to use for cap checks if desired.
      * @param stdClass $course the course to scope items to.
      * @return array the array of content items.
      */
-    function mod_game_get_course_content_items(content_item $defaultmodulecontentitem, \stdClass $user,
-                                               \stdClass    $course) {
+    function mod_game_get_course_content_items(
+        content_item $defaultmodulecontentitem,
+        stdClass $user,
+        stdClass $course
+    ) {
 
         $types = [];
         mod_game_get_course_content_items_type($defaultmodulecontentitem, $user, $course, $types, 'hangman');
@@ -1234,8 +1235,13 @@ if (defined('GAME_MOODLE_401')) {
      * @throws coding_exception
      * @throws dml_exception
      */
-    function mod_game_get_course_content_items_type(content_item $defaultmodulecontentitem,
-                                                    stdClass $user, stdClass $course, &$types, string $kind) {
+    function mod_game_get_course_content_items_type(
+        content_item $defaultmodulecontentitem,
+        stdClass $user,
+        stdClass $course,
+        &$types,
+        string $kind
+    ) {
         global $OUTPUT;
 
         $name = 'hide' . $kind;
@@ -1244,12 +1250,14 @@ if (defined('GAME_MOODLE_401')) {
         if ($hide) {
             return;
         }
-        $type = new stdClass;
+        $type = new stdClass();
         $type->type = "game&type=".$kind;
         $type->name = preg_replace('/.*type=/', '', $type->type);
         $type->title = get_string('pluginname', 'game').' - '.get_string('game_'.$kind, 'game');
-        $type->link = new moodle_url('/course/modedit.php',
-            ['add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id, 'id' => $course->id]);
+        $type->link = new moodle_url(
+            '/course/modedit.php',
+            ['add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id, 'id' => $course->id]
+        );
         $type->help = '';
         if (empty($type->help) && !empty($type->name) &&
             get_string_manager()->string_exists('help' . $type->name, 'game')) {
@@ -1390,8 +1398,8 @@ function game_reset_userdata($data) {
             if (empty($data->reset_game_all)) {
                 continue;
             }
-            $allgamessql = 'SELECT g.id FROM {game} g WHERE g.course = '.$data->courseid;
-            $allattemptssql = 'SELECT ga.id FROM {game} g LEFT JOIN {game_attempts} ga ON g.id = ga.gameid WHERE g.course = '.
+            $allgamessql = 'SELECT g.id FROM {game} g WHERE g.course = ' . $data->courseid;
+            $allattemptssql = 'SELECT ga.id FROM {game} g LEFT JOIN {game_attempts} ga ON g.id = ga.gameid WHERE g.course = ' .
                 $data->courseid;
             $newstatus = ['component' => $componentstr, 'item' => get_string('reset_game_all', 'game'), 'error' => false];
         } else if ($i == 2) {
@@ -1417,7 +1425,7 @@ function game_reset_userdata($data) {
                 $fs->delete_area_files($context->id, 'mod_game', 'gnakes_board');
 
                 // Reset grades.
-                $game = $DB->get_record_select('game', 'id='.$rec->id, null, 'id,name,course ');
+                $game = $DB->get_record_select('game', 'id=' . $rec->id, null, 'id,name,course ');
                 $grades = null;
                 $params = ['itemname' => $game->name, 'idnumber' => 0];
                 $params['reset'] = true;
@@ -1458,18 +1466,20 @@ function game_reset_userdata($data) {
     $a = [ 'bookquiz', 'cross', 'cryptex', 'grades', 'bookquiz_questions', 'export_html', 'export_javame', 'hangman',
             'hiddenpicture', 'millionaire', 'snakes', 'sudoku'];
     foreach ($a as $table) {
-        $DB->delete_records_select('game_'.$table, "NOT EXISTS(SELECT * FROM {game} g WHERE {game_$table}.id=g.id)");
+        $DB->delete_records_select('game_' . $table, "NOT EXISTS(SELECT * FROM {game} g WHERE {game_$table}.id=g.id)");
     }
 
     $a = [ 'grades', 'queries', 'repetitions'];
     foreach ($a as $table) {
-        $DB->delete_records_select('game_'.$table, "NOT EXISTS(SELECT * FROM {game} g WHERE {game_$table}.gameid=g.id)");
+        $DB->delete_records_select('game_' . $table, "NOT EXISTS(SELECT * FROM {game} g WHERE {game_$table}.gameid=g.id)");
     }
 
     $a = [ 'bookquiz_chapters'];
     foreach ($a as $table) {
-        $DB->delete_records_select('game_'.$table,
-            "NOT EXISTS(SELECT * FROM {game_attempts} ga WHERE {game_$table}.attemptid=ga.id)");
+        $DB->delete_records_select(
+            'game_' . $table,
+            "NOT EXISTS(SELECT * FROM {game_attempts} ga WHERE {game_$table}.attemptid=ga.id)"
+        );
     }
 
     return $status;
@@ -1585,18 +1595,18 @@ function game_get_context_course_instance($courseid) {
  *
  * @return stdClass url
  */
-function game_pix_url($filename, $module='') {
+function game_pix_url($filename, $module = '') {
     global $OUTPUT;
 
     if (game_get_moodle_version() >= '04.00') {
         global $CFG;
-        $ret = $CFG->wwwroot.(substr($CFG->wwwroot, -1) == '/' ? '' : '/').'mod/game/pix'.'/'.$filename.'.';
+        $ret = $CFG->wwwroot . (substr($CFG->wwwroot, -1) == '/' ? '' : '/') . 'mod/game/pix'.'/' . $filename . '.';
 
-        $file = dirname(__FILE__).DIRECTORY_SEPARATOR.'pix'.DIRECTORY_SEPARATOR.$filename.'.';
+        $file = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pix' . DIRECTORY_SEPARATOR . $filename . '.';
         $exts = [ 'svg', 'png', 'jpg'];
         foreach ($exts as $ext) {
             if (file_exists($file.$ext)) {
-                return $ret.$ext;
+                return $ret . $ext;
             }
         }
         return $OUTPUT->image_url($filename);
@@ -1615,8 +1625,7 @@ function game_pix_url($filename, $module='') {
  */
 function mod_game_get_completion_active_rule_descriptions($cm) {
     // Values will be present in cm_info, and we assume these are up to date.
-    if (empty($cm->customdata['customcompletionrules'])
-        || $cm->completion != COMPLETION_TRACKING_AUTOMATIC) {
+    if (empty($cm->customdata['customcompletionrules']) || $cm->completion != COMPLETION_TRACKING_AUTOMATIC) {
         return [];
     }
 

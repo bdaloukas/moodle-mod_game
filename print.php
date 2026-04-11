@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page export the game to html
+ * Export game to printable HTML format.
  *
  * @package    mod_game
  * @copyright  2007 Vasilis Daloukas
@@ -48,6 +48,8 @@ game_print($cm, $game, $context, $course);
 /**
  * Print
  *
+ * package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $context
@@ -63,6 +65,8 @@ function game_print($cm, $game, $context, $course) {
 
 /**
  * Prints a cross.
+ *
+ * package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -114,6 +118,8 @@ function game_print_cross($cm, $game, $context, $course) {
 
 /**
  * Prints a cryptex.
+ *
+ * package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game

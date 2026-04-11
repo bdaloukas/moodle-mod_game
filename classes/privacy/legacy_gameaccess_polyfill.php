@@ -31,7 +31,6 @@ namespace mod_game\privacy;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 trait legacy_gameaccess_polyfill {
-
     /**
      * Export all user data for the specified user, for the specified game.
      *

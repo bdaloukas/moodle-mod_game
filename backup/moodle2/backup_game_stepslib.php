@@ -99,40 +99,40 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         $sudoku = new backup_nested_element('game_sudoku', ['id'], ['level', 'data', 'opened', 'guess']);
 
         // Build the tree.
-        $game->add_child( $bookquizquestions);
-        $bookquizquestions->add_child( $bookquizquestion);
+        $game->add_child($bookquizquestions);
+        $bookquizquestions->add_child($bookquizquestion);
 
-        $game->add_child( $exporthtmls);
-        $exporthtmls->add_child( $exporthtml);
+        $game->add_child($exporthtmls);
+        $exporthtmls->add_child($exporthtml);
 
-        $game->add_child( $exportjavames);
-        $exportjavames->add_child( $exportjavame);
+        $game->add_child($exportjavames);
+        $exportjavames->add_child($exportjavame);
 
         // All these source definitions only happen if we are including user info.
         if ($userinfo) {
-            $game->add_child( $grades);
-            $grades->add_child( $grade);
+            $game->add_child($grades);
+            $grades->add_child($grade);
 
-            $game->add_child( $repetitions);
-            $repetitions->add_child( $repetition);
+            $game->add_child($repetitions);
+            $repetitions->add_child($repetition);
 
-            $game->add_child( $attempts);
-            $attempts->add_child( $attempt);
+            $game->add_child($attempts);
+            $attempts->add_child($attempt);
 
-            $attempt->add_child( $querys);
-            $querys->add_child( $query);
+            $attempt->add_child($querys);
+            $querys->add_child($query);
 
             // All games.
-            $attempt->add_child( $bookquiz);
-            $attempt->add_child( $bookquizchapters);
+            $attempt->add_child($bookquiz);
+            $attempt->add_child($bookquizchapters);
             $bookquizchapters->add_child($bookquizchapter);
-            $attempt->add_child( $cross);
-            $attempt->add_child( $cryptex);
-            $attempt->add_child( $hangman);
-            $attempt->add_child( $hiddenpicture);
-            $attempt->add_child( $millionaire);
-            $attempt->add_child( $snake);
-            $attempt->add_child( $sudoku);
+            $attempt->add_child($cross);
+            $attempt->add_child($cryptex);
+            $attempt->add_child($hangman);
+            $attempt->add_child($hiddenpicture);
+            $attempt->add_child($millionaire);
+            $attempt->add_child($snake);
+            $attempt->add_child($sudoku);
         }
 
         // Define sources.
@@ -181,6 +181,6 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         $game->annotate_files('mod_game', 'snakes_board', null); // This file area hasn't itemid.
 
         // Return the root element (game), wrapped into standard activity structure.
-        return $this->prepare_activity_structure( $game);
+        return $this->prepare_activity_structure($game);
     }
 }

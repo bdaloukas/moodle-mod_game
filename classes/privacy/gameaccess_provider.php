@@ -23,9 +23,10 @@
  */
 namespace mod_game\privacy;
 
-use \core_privacy\local\request\contextlist;
-use \core_privacy\local\request\approved_contextlist;
+use core_privacy\local\request\plugin\subplugin_provider;
+use game;
 use mod_game\game_settings;
+use stdClass;
 
 /**
  * The gameaccess_provider interface provides the expected interface for all 'gameaccess' gameaccesss.
@@ -34,29 +35,29 @@ use mod_game\game_settings;
  * @copyright 2018 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface gameaccess_provider extends \core_privacy\local\request\plugin\subplugin_provider {
+interface gameaccess_provider extends subplugin_provider {
 
     /**
      * Export all user data for the specified user, for the specified game.
      *
-     * @param   \stdClass        $game The game being exported
-     * @param   \stdClass       $user The user to export data for
-     * @return  \stdClass       The data to be exported for this access rule.
+     * @param   stdClass        $game The game being exported
+     * @param   stdClass       $user The user to export data for
+     * @return  stdClass       The data to be exported for this access rule.
      */
-    public static function export_gameaccess_user_data(\stdClass $game, \stdClass $user) : \stdClass;
+    public static function export_gameaccess_user_data(stdClass $game, stdClass $user) : stdClass;
 
     /**
      * Delete all data for all users in the specified game.
      *
-     * @param   \game           $game The game being deleted
+     * @param   game           $game The game being deleted
      */
-    public static function delete_gameaccess_data_for_all_users_in_context(\game $game);
+    public static function delete_gameaccess_data_for_all_users_in_context(game $game);
 
     /**
      * Delete all user data for the specified user, in the specified game.
      *
-     * @param   \game           $game The game being deleted
-     * @param   \stdClass       $user The user to export data for
+     * @param   game           $game The game being deleted
+     * @param   stdClass       $user The user to export data for
      */
-    public static function delete_gameaccess_data_for_user(\game $game, \stdClass $user);
+    public static function delete_gameaccess_data_for_user(game $game, stdClass $user);
 }

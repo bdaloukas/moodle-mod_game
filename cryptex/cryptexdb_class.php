@@ -277,7 +277,7 @@ class CryptexDB extends CrossDB {
                 for ($i = 0; $i < $len; $i++) {
                     $c = ($found ? '1' : '2');
 
-                    if (game_substr($mask, $pos,  1) != '1') {
+                    if (game_substr($mask, $pos, 1) != '1') {
                         game_setchar($mask, $pos, $c);
                     }
 
@@ -321,7 +321,7 @@ class CryptexDB extends CrossDB {
      * @param int $maxwords
      * @param int $mtimelimit
      */
-    public function computedata(&$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
+    public function computedata(&$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit = 3) {
         if (!cross::computedata($crossm, $crossd, $letters, $minwords, $maxwords, $mtimelimit)) {
             return false;
         }

@@ -25,7 +25,7 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot.'/course/moodleform_mod.php');
+require_once($CFG->dirroot . '/course/moodleform_mod.php');
 require_once('locallib.php');
 
 /**
@@ -36,7 +36,6 @@ require_once('locallib.php');
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_game_mod_form extends moodleform_mod {
-
     /**
      * definition
      */
@@ -78,7 +77,7 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setType('name', PARAM_CLEAN);
         }
         if (!isset($g) && $gamekind != '') {
-            $mform->setDefault('name', get_string('game_'.$gamekind, 'game'));
+            $mform->setDefault('name', get_string('game_' . $gamekind, 'game'));
         }
         $mform->addRule('name', null, 'required', null, 'client');
 
@@ -105,12 +104,12 @@ class mod_game_mod_form extends moodleform_mod {
 
         if ($hasglossary) {
             $a = [];
-            $sql = "SELECT id,name,globalglossary,course FROM {$CFG->prefix}glossary ".
+            $sql = "SELECT id,name,globalglossary,course FROM {$CFG->prefix}glossary " .
             "WHERE course={$COURSE->id} OR globalglossary=1 ORDER BY globalglossary DESC,name";
             if ($recs = $DB->get_records_sql($sql)) {
                 foreach ($recs as $rec) {
                     if (($rec->globalglossary != 0) && ($rec->course != $COURSE->id)) {
-                        $rec->name = '*'.$rec->name;
+                        $rec->name = '*' . $rec->name;
                     }
                     $a[$rec->id] = $rec->name;
                 }
@@ -186,12 +185,10 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('select', 'grademethod', get_string('grademethod', 'game'), $gradingtypeoptions);
 
         // Open and close dates.
-        $mform->addElement('date_time_selector', 'timeopen', get_string('gameopen', 'game'),
-                ['optional' => true, 'step' => 1]);
+        $mform->addElement('date_time_selector', 'timeopen', get_string('gameopen', 'game'), ['optional' => true, 'step' => 1]);
         $mform->addHelpButton('timeopen', 'gameopenclose', 'game');
 
-        $mform->addElement('date_time_selector', 'timeclose', get_string('gameclose', 'game'),
-                ['optional' => true, 'step' => 1]);
+        $mform->addElement('date_time_selector', 'timeclose', get_string('gameclose', 'game'), ['optional' => true, 'step' => 1]);
 
         // Bookquiz options.
         if ($gamekind == 'bookquiz') {
@@ -199,8 +196,7 @@ class mod_game_mod_form extends moodleform_mod {
             $bookquizlayoutoptions = [];
             $bookquizlayoutoptions[0] = get_string('bookquiz_layout0', 'game');
             $bookquizlayoutoptions[1] = get_string('bookquiz_layout1', 'game');
-            $mform->addElement('select', 'param3',
-                get_string('bookquiz_layout', 'game'), $bookquizlayoutoptions);
+            $mform->addElement('select', 'param3', get_string('bookquiz_layout', 'game'), $bookquizlayoutoptions);
         }
 
         // Hangman options.
@@ -437,15 +433,15 @@ class mod_game_mod_form extends moodleform_mod {
             $select = 'gc.glossaryid = -1';
         } else if (count($a) == 1) {
             foreach ($a as $id => $name) {
-                $select = 'gc.glossaryid = '.$id;
+                $select = 'gc.glossaryid = ' . $id;
                 break;
             }
         } else {
             $select = '';
             foreach ($a as $id => $name) {
-                $select .= ','.$id;
+                $select .= ',' . $id;
             }
-            $select = 'gc.glossaryid IN ('.substr($select, 1).')';
+            $select = 'gc.glossaryid IN ('.substr($select, 1) . ')';
         }
 
         $a = [];
@@ -454,15 +450,15 @@ class mod_game_mod_form extends moodleform_mod {
         $a[0] = '';
         // Fills with the count of entries in each category.
         $sql2 = "SELECT COUNT(*) ".
-        " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec".
+        " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec" .
         " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
-        $sql = "SELECT gc.id,gc.name,g.name as name2,g.globalglossary,g.course, ($sql2) as c ".
-        " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g".
-        " WHERE $select AND gc.glossaryid=g.id".
+        $sql = "SELECT gc.id,gc.name,g.name as name2,g.globalglossary,g.course, ($sql2) as c " .
+        " FROM {$CFG->prefix}glossary_categories gc, {$CFG->prefix}glossary g" .
+        " WHERE $select AND gc.glossaryid=g.id" .
         " ORDER BY g.name, gc.name";
         if ($recs = $DB->get_records_sql($sql)) {
             foreach ($recs as $rec) {
-                $a[$rec->id] = $rec->name2.' -> '.$rec->name.' ('.$rec->c.')';
+                $a[$rec->id] = $rec->name2 . ' -> ' . $rec->name . ' (' . $rec->c . ')';
             }
         }
 
@@ -570,21 +566,22 @@ class mod_game_mod_form extends moodleform_mod {
                 $errors['questioncategoryid'] = get_string('sourcemodule_questioncategory', 'game');
             }
         } else if($data['sourcemodule'] == 'quiz') {
-            if(!array_key_exists('quizid', $data) || $data[ 'quizid'] == 0) {
+            if(!array_key_exists('quizid', $data) || $data['quizid'] == 0) {
                 $errors['quizid'] = get_string('sourcemodule_quiz', 'game');
             }
         }
 
         // Check open and close times are consistent.
         if ($data['timeopen'] != 0 && $data['timeclose'] != 0 &&
-                $data['timeclose'] < $data['timeopen']) {
+                $data['timeclose'] < $data['timeopen']
+        ) {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
 
         if (array_key_exists('glossarycategoryid', $data)) {
             if ($data['glossarycategoryid'] != 0) {
-                $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories ".
-                " WHERE id=".$data['glossarycategoryid'];
+                $sql = "SELECT glossaryid FROM {$CFG->prefix}glossary_categories " .
+                " WHERE id=" . $data['glossarycategoryid'];
                 $rec = $DB->get_record_sql($sql);
                 if ($rec != false) {
                     if ($data['glossaryid'] != $rec->glossaryid) {
@@ -645,7 +642,7 @@ class mod_game_mod_form extends moodleform_mod {
                 }
             } else if ($defaultvalues->gamekind == 'millionaire') {
                 if (isset($defaultvalues->param8)) {
-                    $defaultvalues->param8 = '#'.substr('000000'.strtoupper(dechex($defaultvalues->param8)), -6);
+                    $defaultvalues->param8 = '#' . substr('000000' . strtoupper(dechex($defaultvalues->param8)), -6);
                 }
             } else if ($defaultvalues->gamekind == 'cross') {
                 if ($defaultvalues->param5 == null) {
@@ -719,11 +716,21 @@ class mod_game_mod_form extends moodleform_mod {
         $items = [];
 
         $group = [];
-        $group[] = $mform->createElement('advcheckbox', 'completionpass', null, get_string('completionpass', 'game'),
-                ['group' => 'cpass']);
+        $group[] = $mform->createElement(
+            'advcheckbox',
+            'completionpass',
+            null,
+            get_string('completionpass', 'game'),
+            ['group' => 'cpass'])
+        ;
         $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
-        $group[] = $mform->createElement('advcheckbox', 'completionattemptsexhausted', null,
-                get_string('completionattemptsexhausted', 'quiz'), ['group' => 'cattempts']);
+        $group[] = $mform->createElement(
+            'advcheckbox',
+            'completionattemptsexhausted',
+            null,
+            get_string('completionattemptsexhausted', 'quiz'),
+            ['group' => 'cattempts']
+        );
         $mform->disabledIf('completionattemptsexhausted', 'completionpass', 'notchecked');
         $mform->addGroup($group, 'completionpassgroup', get_string('completionpass', 'game'), ' &nbsp; ', false);
         $mform->addHelpButton('completionpassgroup', 'completionpass', 'game');

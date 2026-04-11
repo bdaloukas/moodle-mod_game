@@ -201,7 +201,7 @@ function game_cryptex_play(
         $print,
         $showhtmlprintbutton,
         $course
-) {
+    ) {
     global $CFG, $DB;
 
     if ($game->toptext != '') {
@@ -227,7 +227,7 @@ function game_cryptex_play(
     }
     $reverseprint = ($wordrtl != right_to_left());
     if ($reverseprint) {
-        $textdir = 'dir="' . ($wordrtl ? 'rtl' : 'ltr').'"';
+        $textdir = 'dir="' . ($wordrtl ? 'rtl' : 'ltr') . '"';
     } else {
         $textdir = '';
     }
@@ -401,8 +401,8 @@ width: 240pt;
         echo "<script>var msg{$q->id}=" . json_encode($question2) . ';</script>';
         if (($onlyshow == false) && ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
-                $question .= ' &nbsp;<input type="submit" value="'.
-                get_string('answer').'" onclick="OnCheck(' . $q->id.",msg{$q->id});\" />";
+                $question .= ' &nbsp;<input type="submit" value="' .
+                get_string('answer').'" onclick="OnCheck(' . $q->id . ",msg{$q->id});\" />";
             }
         }
         echo $question;
@@ -435,7 +435,7 @@ width: 240pt;
         }
     </script>
     <?php
-    echo '<style>'.file_get_contents('cryptex/styles.css').'</style>';
+    echo '<style>' . file_get_contents('cryptex/styles.css') . '</style>';
     echo '</head>';
     if ($print) {
         echo '<body onload="window.print()">';
@@ -445,6 +445,8 @@ width: 240pt;
 }
 /**
  * On finished.
+ *
+ * package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game

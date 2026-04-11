@@ -210,8 +210,7 @@ function game_sudoku_compute_offsetquestions($sourcemodule, $attempt, &$numbers,
     $select = "attemptid = $attempt->id";
 
     $fields = 'id, mycol, score';
-    switch ($sourcemodule)
-    {
+    switch ($sourcemodule) {
         case 'quiz':
         case 'question':
             $fields .= ',questionid as id2';
@@ -340,7 +339,7 @@ function game_sudoku_showsudoku(
                                 if (!array_key_exists($pos, $correctquestions)) {
                                     if (array_key_exists($pos, $offsetquestions)) {
                                         if ($s != $g) {
-                                            $s = '<input type="submit" value="A' . $pos . '" onclick="OnCheck('.$pos.');" />';
+                                            $s = '<input type="submit" value="A' . $pos . '" onclick="OnCheck(' . $pos . ');" />';
                                         }
                                     } else if ($g == 0) {
                                         $s = '<input type="submit" value="" onclick="OnCheck(' . $pos . ');" />';
@@ -464,6 +463,8 @@ function game_sudoku_getglossaryentries($game, $offsetentries, &$entrylist, $num
 /**
  * Plays the game hangman
  *
+ * package mod_game
+ *
  * @param int $id
  * @param stdClass $game
  * @param stdClass $attempt
@@ -486,7 +487,8 @@ function game_sudoku_showquestions_quiz(
         $onlyshow,
         $showsolution,
         $context
-) {
+    )
+{
     global $CFG;
 
     $questionlist = game_sudoku_getquestionlist($offsetquestions);
@@ -556,6 +558,8 @@ function game_sudoku_showquestions_quiz(
 /**
  * Show the sudoku and glossaryentries.
  *
+ * package mod_game
+ *
  * @param int $id
  * @param string $game
  * @param stdClass $attempt
@@ -576,7 +580,8 @@ function game_sudoku_showquestions_glossary(
         $correctentries,
         $onlyshow,
         $showsolution
-) {
+    )
+{
     global $CFG;
 
     $entries = game_sudoku_getglossaryentries($game, $offsetentries, $questionlist, $numbers);
@@ -616,7 +621,7 @@ function game_sudoku_showquestions_glossary(
     // Print all the questions.
 
     // Add a hidden field with questionids.
-    echo '<input type="hidden" name="questionids" value="'.$questionlist . "\" />\n";
+    echo '<input type="hidden" name="questionids" value="' . $questionlist . "\" />\n";
 
     $number = 0;
     foreach ($entries2 as $entry) {
@@ -628,7 +633,7 @@ function game_sudoku_showquestions_glossary(
         $query = new StdClass();
         $query->glossaryid = $game->glossaryid;
         $query->glossaryentryid = $entry->id;
-        $s = '<b>A'.$ofs.'.</b> '.game_show_query($game, $query, $entry->definition, 0) . '<br>';
+        $s = '<b>A' . $ofs . '.</b> ' . game_show_query($game, $query, $entry->definition, 0) . '<br>';
         if ($showsolution) {
             $s .= get_string('answer') . ': ';
             $s .= "<input type=\"text\" name=\"resp{$entry->id}\" value=\"$entry->concept\"size=30 /><br>";
@@ -643,7 +648,7 @@ function game_sudoku_showquestions_glossary(
 
     // Finish the form.
     if ($hasquestions) {
-        echo "<center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
+        echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
     }
 
     echo "</form>\n";
@@ -651,6 +656,8 @@ function game_sudoku_showquestions_glossary(
 
 /**
  * Show question onfinish
+ *
+ * package mod_game
  *
  * @param int $id
  * @param stdClass $game
@@ -669,6 +676,8 @@ function game_sudoku_showquestion_onfinish($id, $game, $attempt, $sudoku) {
 
 /**
  * Check answers
+ *
+ * package mod_game
  */
 function game_sudoku_checkanswers() {
     $responses = data_submitted();
@@ -678,6 +687,8 @@ function game_sudoku_checkanswers() {
 
 /**
  * Checks questions
+ *
+ * package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -729,6 +740,8 @@ function game_sudoku_check_questions($cm, $game, $attempt, $sudoku, $finishattem
 /**
  * Check glossary entries
  *
+ * package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -744,7 +757,7 @@ function game_sudoku_check_glossaryentries($cm, $game, $attempt, $sudoku, $finis
     // This function returns offsetentries, numbers, correctquestions.
     $offsetentries = game_sudoku_compute_offsetquestions($game->sourcemodule, $attempt, $numbers, $correctquestions);
 
-    $entrieslist = game_sudoku_getquestionlist($offsetentries );
+    $entrieslist = game_sudoku_getquestionlist($offsetentries);
 
     // Load the glossary entries.
     if (!($entries = $DB->get_records_select('glossary_entries', "id IN ($entrieslist)"))) {
@@ -785,6 +798,8 @@ function game_sudoku_check_glossaryentries($cm, $game, $attempt, $sudoku, $finis
 /**
  * This is the last function after submiting the answers.
  *
+ * package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -808,6 +823,8 @@ function game_sudoku_check_last($cm, $game, $attempt, $sudoku, $finishattempt, $
 
 /**
  * Check number
+ *
+ * package mod_game
  *
  * @param int $id
  * @param stdClass $game

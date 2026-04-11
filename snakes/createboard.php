@@ -175,7 +175,7 @@ function makeboardl($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
         $startx = $temp;
         $temp = $y2;
         $y2 = $starty;
-        $starty =$temp;
+        $starty = $temp;
     }
     $movex = $x2 - $startx;
     $movey = $y2 - $starty;
@@ -214,10 +214,29 @@ function makeboardl($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
     $dsth = ($movey + 1) * $cy / $colsy;
 
     if ($stamp == 0) {
-        game_printladder($im, $file, $dstx + $ofsleft, $dsty + $ofstop, $dstw, $dsth, $cx / $colsx, $cy / $colsy);
+        game_printladder(
+            $im,
+            $file,
+            $dstx + $ofsleft,
+            $dsty + $ofstop,
+            $dstw,
+            $dsth,
+            $cx / $colsx,
+            $cy / $colsy
+        );
     } else {
-        imagecopyresampled($im, $stamp, $ofsleft + $dstx, $ofstop + $dsty, 0, 0, $dstw, $dsth,
-            100 * $movex + 100, 100 * $movey + 100);
+        imagecopyresampled(
+            $im,
+            $stamp,
+            $ofsleft + $dstx,
+            $ofstop + $dsty,
+            0,
+            0,
+            $dstw,
+            $dsth,
+            100 * $movex + 100,
+            100 * $movey + 100
+        );
     }
 }
 
@@ -278,7 +297,7 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
         }
     } else if (($movex < 0) && ($movey >= 0)) {
         $letter = 'd';
-        $file = $dir.'/sa'.$movey.$movex.'.png';
+        $file = $dir . '/sa' . $movey . $movex . '.png';
         $source = game_imagecreatefrompng($file);
         if ($source != 0) {
             $stamp = imagerotate($source, 270, 0);
@@ -308,10 +327,28 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
     $dsth = ($movey + 1) * $cy / $colsy;
 
     if ($stamp == 0) {
-        game_printsnake($im, $file, $dstx + $ofsleft, $dsty + $ofstop, $dstw, $dsth, $cx / $colsx, $cy / $colsy);
+        game_printsnake(
+            $im,
+            $file,
+            $dstx + $ofsleft,
+            $dsty + $ofstop,
+            $dstw,
+            $dsth,
+            $cx / $colsx,
+            $cy / $colsy
+        );
     } else {
-        imagecopyresampled($im, $stamp, $dstx + $ofsleft, $dsty + $ofstop, 0, 0, $dstw, $dsth,
-            100 * $movex + 100, 100 * $movey + 100);
+        imagecopyresampled($im,
+            $stamp,
+            $dstx + $ofsleft,
+            $dsty + $ofstop,
+            0,
+            0,
+            $dstw,
+            $dsth,
+            100 * $movex + 100,
+            100 * $movey + 100
+        );
     }
 }
 
@@ -340,7 +377,7 @@ function game_imagecreatefrompng($file) {
  * @param int $height
  * @param int $sizenumbers
  */
-function shownumber($imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
+function shownumber($imghandle, $imgnumbers, $number, $x1, $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
         $widthnumber = $sizenumbers[0] / 10;
         $dstx = $x1 + $width / 10;

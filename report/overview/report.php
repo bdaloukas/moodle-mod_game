@@ -85,7 +85,7 @@ class game_report extends game_default_report {
         if (!$download) {
             // Do not print notices when downloading.
             if ($attemptnum = count_records('game_attempts', 'gameid', $game->id)) {
-                $a = new stdClass;
+                $a = new stdClass();
                 $a->attemptnum = $attemptnum;
                 $a->studentnum = count_records_select(
                     'game_attempts',
@@ -233,7 +233,7 @@ class game_report extends game_default_report {
                     get_string('attemptduration', 'game')];
 
             if ($game->grade) {
-                $headers[] = get_string('grade', 'game').'/'.$game->grade;
+                $headers[] = get_string('grade', 'game') . '/' . $game->grade;
             }
             if ($detailedmarks) {
                 foreach ($questionids as $id) {
@@ -312,10 +312,10 @@ class game_report extends game_default_report {
             header("Pragma: public");
 
             $headers = get_string('fullname') . "\t" . get_string('startedon', 'game') .
-                "\t" . get_string('timecompleted', 'game')."\t" . get_string('attemptduration', 'game');
+                "\t" . get_string('timecompleted', 'game') . "\t" . get_string('attemptduration', 'game');
 
             if ($game->grade) {
-                $headers .= "\t".get_string('grade', 'game')."/".$game->grade;
+                $headers .= "\t".get_string('grade', 'game') . "/" . $game->grade;
             }
             if ($detailedmarks) {
                 foreach ($questionids as $id) {
@@ -325,7 +325,7 @@ class game_report extends game_default_report {
             if ($hasfeedback) {
                 $headers .= "\t" . get_string('feedback', 'game');
             }
-            echo $headers." \n";
+            echo $headers . " \n";
         }
 
         $contextlists = get_related_contexts_string(game_get_context_course_instance($course->id));
@@ -349,8 +349,8 @@ class game_report extends game_default_report {
                 // So join on groups_members and left join on attempts...
                 $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
                     groups_members_join_sql().
-                    'LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = '.$game->id;
-                $where = ' WHERE ra.contextid ' .$contextlists . ' AND '.groups_members_where_sql($currentgroup);
+                    'LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = ' . $game->id;
+                $where = ' WHERE ra.contextid ' .$contextlists . ' AND '. groups_members_where_sql($currentgroup);
                 if ($noattempts == 1) {
                     // Noattempts = 1 means only no attempts, so make the left join ask.
                     // For only records where the right is null (no attempts).
@@ -362,7 +362,7 @@ class game_report extends game_default_report {
             } else if (empty($currentgroup)) {
                 // We don't care about group, and we to do something funky with attempts.
                 // So do a left join on attempts.
-                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
+                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id ' .
                     ' LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = ' . $game->id;
                 $where = " WHERE ra.contextid $contextlists";
                 if (empty($noattempts)) {
@@ -379,12 +379,12 @@ class game_report extends game_default_report {
                     $where = ' WHERE qa.gameid = ' . $game->id . ' AND qa.preview = 0';
                 } // The noattempts = 2 means we want all students, with or without attempts.
             }
-            $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) ' . $from . $where;
+            $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')) . ')) ' . $from . $where;
         } else {
             if (empty($noattempts)) {
                 $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
-                $where = ' WHERE qa.gameid = ' . $game->id.' AND qa.preview = 0';
-                $countsql = 'SELECT COUNT(DISTINCT('.sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')).')) ' . $from . $where;
+                $where = ' WHERE qa.gameid = ' . $game->id . ' AND qa.preview = 0';
+                $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')) . ')) ' . $from . $where;
             }
         }
         if (!$download) {
@@ -415,7 +415,7 @@ class game_report extends game_default_report {
                             $select .= ', grade ';
                             $from .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id '.
                                                 'LEFT JOIN {question_states} qs ON qs.id = qns.newgraded ';
-                            $where .= ' AND ('.sql_isnull('qns.questionid').' OR qns.questionid = ' . $qid.')';
+                            $where .= ' AND (' . sql_isnull('qns.questionid') . ' OR qns.questionid = ' . $qid.')';
                             $newsort[] = 'grade ' . (strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
                             $questionsort = true;
                         }
@@ -468,12 +468,12 @@ class game_report extends game_default_report {
                     $picture = print_user_picture($attempt->userid, $course->id, $attempt->picture, false, true);
                     if (!$download) {
                         $row = [
-                                '<input type="checkbox" name="attemptid[]" value="'.$attempt->attempt.'" />',
+                                '<input type="checkbox" name="attemptid[]" value="' . $attempt->attempt . '" />',
                                 $picture,
                                 $userlink,
-                                empty($attempt->attempt) ? '-' : '<a href="review.php?q='.
-                                    $game->id . '&amp;attempt=' . $attempt->attempt . '">'.
-                                    userdate($attempt->timestart, $strtimeformat).'</a>',
+                                empty($attempt->attempt) ? '-' : '<a href="review.php?q=' .
+                                    $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
+                                    userdate($attempt->timestart, $strtimeformat) . '</a>' ,
                                 empty($attempt->timefinish) ? '-' : '<a href="review.php?q='.
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
                                     userdate($attempt->timefinish, $strtimeformat) . '</a>',
@@ -485,14 +485,14 @@ class game_report extends game_default_report {
                                 empty($attempt->attempt) ? '-' : userdate($attempt->timestart, $strtimeformat),
                                 empty($attempt->timefinish) ? '-' : userdate($attempt->timefinish, $strtimeformat),
                                 empty($attempt->attempt) ? '-' : (
-                                    empty($attempt->timefinish) ? get_string(
-                                    'unfinished', 'game') : format_time($attempt->duration))];
+                                    empty($attempt->timefinish) ?
+                                        get_string('unfinished', 'game') : format_time($attempt->duration))];
                     }
 
                     if ($game->grade) {
                         if (!$download) {
                             $row[] = $attempt->score === null ? '-' : '<a href="review.php?q=' .
-                                $game->id.'&amp;attempt=' . $attempt->attempt . '">' .
+                                $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
                                 round($attempt->score * $game->grade, $game->decimalpoints) . '</a>';
                         } else {
                             $row[] = $attempt->score === null ? '-' : round($attempt->score * $game->grade, $game->decimalpoints);
@@ -505,8 +505,14 @@ class game_report extends game_default_report {
                             }
                         } else {
                             foreach ($questionids as $questionid) {
-                                if ($gradedstateid = get_field('question_sessions', 'newgraded',
-                                    'attemptid', $attempt->attemptuniqueid, 'questionid', $questionid)) {
+                                if ($gradedstateid = get_field(
+                                    'question_sessions',
+                                    'newgraded',
+                                    'attemptid',
+                                    $attempt->attemptuniqueid,
+                                    'questionid',
+                                    $questionid
+                                )) {
                                     $grade = round(
                                         get_field('question_states', 'grade', 'id', $gradedstateid),
                                         $game->decimalpoints
@@ -515,7 +521,7 @@ class game_report extends game_default_report {
                                     $grade = '--';
                                 }
                                 if (!$download) {
-                                    $row[] = link_to_popup_window (
+                                    $row[] = link_to_popup_window(
                                         '/mod/game/reviewquestion.php?state=' . $gradedstateid.'&amp;number=' . $questions[$questionid]->number,
                                         'reviewquestion',
                                         $grade,
@@ -556,9 +562,9 @@ class game_report extends game_default_report {
             if (!$download) {
                 // Start form.
                 echo '<div id="tablecontainer">';
-                echo '<form id="attemptsform" method="post" action="report.php" '.
-                    'onsubmit="var menu = document.getElementById(\'menuaction\'); '.
-                    'return (menu.options[menu.selectedIndex].value == \'delete\' ? confirm(\''.$strreallydel.'\') : true);">';
+                echo '<form id="attemptsform" method="post" action="report.php" ' .
+                    'onsubmit="var menu = document.getElementById(\'menuaction\'); ' .
+                    'return (menu.options[menu.selectedIndex].value == \'delete\' ? confirm(\'' . $strreallydel . '\') : true);">';
                 echo '<div>';
                 echo '<input type="hidden" name="id" value="' . $cm->id . '" />';
                 echo '<input type="hidden" name="mode" value="overview" />';
@@ -576,7 +582,13 @@ class game_report extends game_default_report {
                         get_string('selectnone', 'game').'</a> ';
                     echo '&nbsp;&nbsp;';
                     $options = ['delete' => get_string('delete')];
-                    echo choose_from_menu($options, 'action', '', get_string('withselected', 'game'),
+                    echo choose_from_menu(
+                        $options,
+                        'action',
+                        '',
+                        get_string('withselected',
+                        'game'
+                    ),
                         'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');', '', true);
                     echo '<noscript id="noscriptmenuaction" style="display: inline;"><div>';
                     echo '<input type="submit" value="' . get_string('go') . '" /></div></noscript>';
@@ -622,7 +634,6 @@ class game_report extends game_default_report {
             } else if ($download == 'CSV') {
                 exit;
             }
-
         } else {
             if (!$download) {
                 $table->print_html();
@@ -640,8 +651,8 @@ class game_report extends game_default_report {
         echo '<input type="hidden" name="detailedmarks" value="0" />';
         echo '<table id="overview-options" class="boxaligncenter">';
         echo '<tr align="left">';
-        echo '<td><label for="pagesize">' . get_string('pagesize', 'game').'</label></td>';
-        echo '<td><input type="text" id="pagesize" name="pagesize" size="3" value="'.$pagesize.'" /></td>';
+        echo '<td><label for="pagesize">' . get_string('pagesize', 'game') . '</label></td>';
+        echo '<td><input type="text" id="pagesize" name="pagesize" size="3" value="' . $pagesize . '" /></td>';
         echo '</tr>';
         echo '<tr align="left">';
         echo '<td colspan="2">';

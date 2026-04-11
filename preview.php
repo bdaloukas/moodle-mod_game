@@ -15,7 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page prints a particular attempt of game
+ * Preview page for game attempts.
+ *
+ * This page prints a particular attempt of a game instance.
  *
  * @package    mod_game
  * @copyright  2007 Vasilis Daloukas

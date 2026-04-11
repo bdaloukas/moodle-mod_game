@@ -29,7 +29,7 @@ require_once("headergame.php");
 require_login($course->id, false, $cm);
 $context = game_get_context_module_instance($cm->id);
 require_capability('mod/game:view', $context);
-require_once($CFG->dirroot.'/lib/formslib.php');
+require_once($CFG->dirroot . '/lib/formslib.php');
 
 require_login($course->id, false, $cm);
 
@@ -47,7 +47,6 @@ $target = optional_param('target', "", PARAM_ALPHANUM); // The target is HTML or
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_game_exporthtml_form extends moodleform {
-
     /**
      * Definition of form.
      */
@@ -316,13 +315,15 @@ echo $OUTPUT->footer();
 /**
  * Sends via html a file.
  *
+ * package mod_game
+ *
  * @param string $file
  */
 function game_send_stored_file($file) {
     if (file_exists($file)) {
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.basename($file));
+        header('Content-Disposition: attachment; filename=' . basename($file));
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
@@ -333,6 +334,6 @@ function game_send_stored_file($file) {
         readfile($file);
         exit;
     } else {
-        throw new moodle_exception('game_error', 'game', "export.php: File does not exists ".$file);
+        throw new moodle_exception('game_error', 'game', "export.php: File does not exists " . $file);
     }
 }

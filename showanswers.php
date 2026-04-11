@@ -70,8 +70,8 @@ function game_compute_repetitions($game) {
 
     $DB->delete_records('game_repetitions', ['gameid' => $game->id, 'userid' => $USER->id]);
 
-    $sql = "INSERT INTO {game_repetitions}(gameid,userid,questionid,glossaryentryid,repetitions) ".
-           "SELECT $game->id,$USER->id,questionid,glossaryentryid,COUNT(*) ".
+    $sql = "INSERT INTO {game_repetitions}(gameid,userid,questionid,glossaryentryid,repetitions) " .
+           "SELECT $game->id,$USER->id,questionid,glossaryentryid,COUNT(*) " .
            "FROM {game_queries} WHERE gameid=$game->id AND userid=$USER->id GROUP BY questionid,glossaryentryid";
 
     if (!$DB->execute($sql)) {
@@ -297,28 +297,28 @@ function game_showanswers_quiz($game, $context) {
         $recs = $DB->get_records_sql($sql);
         $ret = [];
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
-            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect( $game).
+            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect($game).
             ' ORDER BY version DESC';
         foreach ($recs as $rec) {
-            $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
+            $recsq = $DB->get_records_sql($sql, [ $rec->questionbankentryid], 0, 1);
             foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
         }
         $table = '{question} q';
-        if (count( $a) == 0) {
+        if (count($a) == 0) {
             $select = 'q.id IN (0)';
         } else {
-            $select = 'q.id IN ('.implode( ',', $a).')';
+            $select = 'q.id IN ('.implode(',', $a).')';
         }
         $sort = 'questiontext';
     } else {
         $select = "qs.quizid='$game->quizid' ".
-            " AND qs.questionid=q.id ".game_showanswers_appendselect( $game);
+            " AND qs.questionid=q.id ".game_showanswers_appendselect($game);
         $table = "{question} q,{quiz_slots} qs";
     }
 
-    game_showanswers_question_select( $game, $table, $select, 'q.*', $sort, false, $game->course, $context);
+    game_showanswers_question_select($game, $table, $select, 'q.*', $sort, false, $game->course, $context);
 }
 
 /**
@@ -333,11 +333,11 @@ function game_showanswers_quiz($game, $context) {
  * @param int $courseid
  * @param stdClass $context
  */
-function game_showanswers_question_select( $game, $table, $select, $fields, $order, $showcategoryname, $courseid, $context) {
+function game_showanswers_question_select($game, $table, $select, $fields, $order, $showcategoryname, $courseid, $context) {
     global $CFG, $DB, $OUTPUT;
 
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY $order";
-    if (($questions = $DB->get_records_sql( $sql)) === false) {
+    if (($questions = $DB->get_records_sql($sql)) === false) {
         return;
     }
 
@@ -348,14 +348,14 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
         $select .= " AND gr.userid=$userid";
     }
     $sql = "SELECT q.id as id,SUM(repetitions) as c FROM {$table} WHERE $select GROUP BY q.id";
-    $reps = $DB->get_records_sql( $sql);
+    $reps = $DB->get_records_sql($sql);
 
     $categorynames = [];
     if ($showcategoryname) {
         $select = '';
-        $recs = $DB->get_records( 'question_categories', null, '', '*', 0, 1);
+        $recs = $DB->get_records('question_categories', null, '', '*', 0, 1);
         foreach ($recs as $rec) {
-            if (array_key_exists( 'course', $rec)) {
+            if (array_key_exists('course', $rec)) {
                 $select = "course=$courseid";
             } else {
                 $context = get_context_instance(50, $courseid);
@@ -364,7 +364,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
             break;
         }
 
-        if (($categories = $DB->get_records_select( 'question_categories', $select, null, '', 'id,name'))) {
+        if (($categories = $DB->get_records_select('question_categories', $select, null, '', 'id,name'))) {
             foreach ($categories as $rec) {
                 $categorynames[$rec->id] = $rec->name;
             }
@@ -374,24 +374,24 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
     echo '<table border="1">';
     echo '<tr><td></td>';
     if ($showcategoryname) {
-        echo '<td><b>'.get_string( 'categories', 'quiz').'</b></td>';
+        echo '<td><b>' . get_string('categories', 'quiz') . '</b></td>';
     }
-    echo '<td><b>'.get_string( 'questions', 'quiz').'</b></td>';
-    echo '<td><b>'.get_string( 'answers', 'quiz').'</b></td>';
-    echo '<td><b>'.get_string( 'feedbacks', 'game').'</b></td>';
+    echo '<td><b>' . get_string('questions', 'quiz') . '</b></td>';
+    echo '<td><b>' . get_string('answers', 'quiz') . '</b></td>';
+    echo '<td><b>' . get_string('feedbacks', 'game') . '</b></td>';
     if ($reps) {
-        echo '<td><b>'.get_string( 'repetitions', 'game').'</b></td>';
+        echo '<td><b>' . get_string('repetitions', 'game') . '</b></td>';
     }
     echo "</tr>\r\n";
     $line = 0;
     foreach ($questions as $question) {
         echo '<tr>';
-        echo '<td>'.(++$line);
+        echo '<td>' . (++$line);
         echo '</td>';
 
         if ($showcategoryname) {
             echo '<td>';
-            if (array_key_exists( $question->category, $categorynames)) {
+            if (array_key_exists($question->category, $categorynames)) {
                 echo $categorynames[$question->category];
             } else {
                 echo '&nbsp;';
@@ -406,16 +406,15 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
             $href = "{$CFG->wwwroot}/question/question.php?inpopup=1&amp;id=$question->id&courseid=$courseid&cmid=$cm->id";
         }
         echo '<td>';
-        echo "<a title=\"Edit\" ".
-            "href=\"{$href}\" target=\"_blank\">";
-        echo "<img src=\"".game_pix_url('t/edit')."\" alt=\"Edit\" style=\"width: 1em\"/></a> ";
+        echo "<a title=\"Edit\" href=\"{$href}\" target=\"_blank\">";
+        echo "<img src=\"" . game_pix_url('t/edit')."\" alt=\"Edit\" style=\"width: 1em\"/></a> ";
 
-        echo game_filterquestion(str_replace( [ "\'", '\"'], [ "'", '"'],
+        echo game_filterquestion(str_replace([ "\'", '\"'], [ "'", '"'],
             $question->questiontext), $question->id, $context->id, $game->course);
 
         switch ($question->qtype) {
             case 'shortanswer':
-                $recs = $DB->get_records( 'question_answers',
+                $recs = $DB->get_records('question_answers',
                     [ 'question' => $question->id], 'fraction DESC', 'id,answer,feedback');
                 if ($recs == false) {
                     $rec = false;
@@ -432,7 +431,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
                 break;
             case 'multichoice':
             case 'truefalse':
-                $recs = $DB->get_records( 'question_answers', [ 'question' => $question->id]);
+                $recs = $DB->get_records('question_answers', [ 'question' => $question->id]);
                 $feedback = '';
                 echo '<td>';
                 $i = 0;
@@ -465,9 +464,9 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
 
         // Show repetitions.
         if ($reps) {
-            if (array_key_exists( $question->id, $reps)) {
+            if (array_key_exists($question->id, $reps)) {
                 $rep = $reps[$question->id];
-                echo '<td><center>'.$rep->c.'</td>';
+                echo '<td><center>' . $rep->c . '</td>';
             } else {
                 echo '<td>&nbsp;</td>';
             }
@@ -483,7 +482,7 @@ function game_showanswers_question_select( $game, $table, $select, $fields, $ord
  *
  * @param stdClass $game
  */
-function game_showanswers_glossary( $game) {
+function game_showanswers_glossary($game) {
     global $CFG, $DB;
 
     $table = '{glossary_entries} ge';
@@ -498,7 +497,7 @@ function game_showanswers_glossary( $game) {
         $select .= ' AND (ge.approved=1 OR teacherentry=1)';
     }
     $sql = "SELECT ge.id,definition,concept FROM $table WHERE $select ORDER BY definition";
-    if (($questions = $DB->get_records_sql( $sql)) === false) {
+    if (($questions = $DB->get_records_sql($sql)) === false) {
         return;
     }
 
@@ -515,25 +514,25 @@ function game_showanswers_glossary( $game) {
         $table .= ",{glossary_entries_categories} gec";
     }
     $sql = "SELECT ge.id,SUM(repetitions) as c FROM {$table} WHERE $select GROUP BY ge.id";
-    $reps = $DB->get_records_sql( $sql);
+    $reps = $DB->get_records_sql($sql);
 
     echo '<table border="1">';
     echo '<tr><td></td>';
-    echo '<td><b>'.get_string( 'questions', 'quiz').'</b></td>';
-    echo '<td><b>'.get_string( 'answers', 'quiz').'</b></td>';
+    echo '<td><b>'.get_string('questions', 'quiz') . '</b></td>';
+    echo '<td><b>'.get_string('answers', 'quiz') . '</b></td>';
     if ($reps != false) {
-        echo '<td><b>'.get_string( 'repetitions', 'game').'</b></td>';
+        echo '<td><b>' . get_string('repetitions', 'game') . '</b></td>';
     }
     echo "</tr>\r\n";
     $line = 0;
     foreach ($questions as $question) {
         if ($game->param7 == 0) {        // Not allowed spaces.
-            if (!( strpos( $question->concept, ' ') === false)) {
+            if (!(strpos($question->concept, ' ') === false)) {
                 continue;
             }
         }
         if ($game->param8 == 0) {        // Not allowed -.
-            if (!( strpos( $question->concept, '-') === false)) {
+            if (!(strpos($question->concept, '-') === false)) {
                 continue;
             }
         }
@@ -545,13 +544,13 @@ function game_showanswers_glossary( $game) {
         $query = new StdClass;
         $query->glossaryid = $game->glossaryid;
         $query->glossaryentryid = $question->id;
-        echo '<td>'.game_show_query( $game, $query, $question->definition).'</td>';
+        echo '<td>'.game_show_query($game, $query, $question->definition).'</td>';
 
         echo '<td>'.$question->concept.'</td>';
         if ($reps != false) {
-            if (array_key_exists( $question->id, $reps)) {
+            if (array_key_exists($question->id, $reps)) {
                 $rep = $reps[$question->id];
-                echo '<td><center>'.$rep->c.'</td>';
+                echo '<td><center>' . $rep->c . '</td>';
             } else {
                 echo '<td>&nbsp;</td>';
             }
@@ -564,18 +563,25 @@ function game_showanswers_glossary( $game) {
 /**
  * Show answers bookquiz
  *
+ * package mod_game
+ *
  * @param stdClass $game
  * @param stdClass $context
  */
-function game_showanswers_bookquiz( $game, $context) {
-    global $CFG;
-
-    $select = "gbq.questioncategoryid=q.category ".
-        " AND gbq.gameid = $game->id ".
+function game_showanswers_bookquiz($game, $context) {
+    $select = "gbq.questioncategoryid=q.category " .
+        " AND gbq.gameid = $game->id " .
         " AND bc.id = gbq.chapterid";
     $table = "{question} q,{game_bookquiz_questions} gbq,{book_chapters} bc";
 
     $showcategories = ($game->gamekind == 'bookquiz');
-    game_showanswers_question_select( $game, $table, $select, "DISTINCT q.*",
-        "bc.pagenum,questiontext", $showcategories, $game->course, $context);
+    game_showanswers_question_select($game,
+        $table,
+        $select,
+        "DISTINCT q.*",
+        "bc.pagenum,questiontext",
+        $showcategories,
+        $game->course,
+        $context
+    );
 }

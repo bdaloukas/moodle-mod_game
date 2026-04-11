@@ -83,8 +83,11 @@ if ($currenttab == 'reports' && isset($mode)) {
     $row = [];
     $currenttab = '';
     foreach ($reportlist as $report) {
-        $row[] = new tabobject($report, "{$CFG->wwwroot}/mod/game/report.php?q=$game->id&amp;mode=$report",
-                                get_string($report, 'game'));
+        $row[] = new tabobject(
+            $report,
+            "{$CFG->wwwroot}/mod/game/report.php?q=$game->id&amp;mode=$report",
+            get_string($report, 'game')
+        );
         if ($report == $mode) {
             $currenttab = $report;
         }
