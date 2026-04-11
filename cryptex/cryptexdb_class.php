@@ -30,7 +30,6 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class CryptexDB extends CrossDB {
-
     /** @var array Contains the words that cannot be created in the game. */
     protected $badwords;
 
@@ -104,12 +103,12 @@ class CryptexDB extends CrossDB {
             }
 
             for ($i = 0; $i < $len; $i++) {
-                $this->setchar($letters, $pos,  $a[$i]);
+                $this->setchar($letters, $pos, $a[$i]);
                 $pos += ($rec->horizontal ? 1 : $cols);
 
                 $freqs1[++$count1] = $a[$i];
                 if ($i + 1 < $len) {
-                    $freqs2[++$count2] = $a[$i].$a[$i + 1];
+                    $freqs2[++$count2] = $a[$i] . $a[$i + 1];
                 }
             }
         }
@@ -210,13 +209,13 @@ class CryptexDB extends CrossDB {
     public function insertchars(&$letters, $cols, $rows, $char, &$spaces) {
         $len = game_strlen($letters);
         for ($i = 0; $i < $len; $i++) {
-            if (game_substr($letters, $i, 1) == '.'  && game_substr($letters, $i + 1, 1) == '.' ) {
+            if (game_substr($letters, $i, 1) == '.'  && game_substr($letters, $i + 1, 1) == '.') {
                 $this->setchar($letters, $i, game_substr($char, 0, 1));
                 $this->setchar($letters, $i + 1, game_substr($char, 1, 1));
                 $spaces -= 2;
                 return true;
             }
-            if (game_substr($letters, $i, 1) == '.' && game_substr($letters, $i + $cols + 1, 1) == '.' ) {
+            if (game_substr($letters, $i, 1) == '.' && game_substr($letters, $i + $cols + 1, 1) == '.') {
                 $this->setchar($letters, $i, game_substr($char, 0, 1));
                 $this->setchar($letters, $i + $cols + 1, game_substr($char, 1, 1));
                 $spaces -= 2;
@@ -267,7 +266,7 @@ class CryptexDB extends CrossDB {
                 if ($rec->questiontext == '') {
                     $rec->questiontext = ' ';
                 }
-                $key = $this->gethash($rec->questiontext).'-'.$rec->answertext.'-'.$rec->id;
+                $key = $this->gethash($rec->questiontext) . '-' . $rec->answertext . '-' . $rec->id;
                 $questions[$key] = $rec;
 
                 $word = $rec->answertext;
@@ -372,8 +371,18 @@ class CryptexDB extends CrossDB {
 
             // Diagonial 4.
             for ($x = 0; $x < $cols; $x++) {
-                $ret |= $this->repair_bad_words_step($letters, $freqs1, $original, $badwords, $cols, $rows, $cols - 1,
-                    $rows - 1, -1, -1);
+                $ret |= $this->repair_bad_words_step(
+                    $letters,
+                    $freqs1,
+                    $original,
+                    $badwords,
+                    $cols,
+                    $rows,
+                    $cols - 1,
+                    $rows - 1,
+                    -1,
+                    -1
+                );
             }
 
             if ($ret == false) {

@@ -210,7 +210,7 @@ function game_sudoku_compute_offsetquestions($sourcemodule, $attempt, &$numbers,
     $select = "attemptid = $attempt->id";
 
     $fields = 'id, mycol, score';
-    switch($sourcemodule)
+    switch ($sourcemodule)
     {
         case 'quiz':
         case 'question':
@@ -222,7 +222,7 @@ function game_sudoku_compute_offsetquestions($sourcemodule, $attempt, &$numbers,
     }
     if (($recs = $DB->get_records_select('game_queries', $select, null, '', $fields)) == false) {
         $DB->execute("DELETE FROM {$CFG->prefix}game_sudoku WHERE id={$attempt->id}");
-        throw new moodle_exception('sudoku_error', 'game', 'There are no questions '.$attempt->id);
+        throw new moodle_exception('sudoku_error', 'game', 'There are no questions ' . $attempt->id);
     }
 
     $numbers = [];
@@ -300,11 +300,21 @@ function game_sudoku_getclosed($data) {
  * @param stdClass $game
  * @param stdClass $course
  */
-function game_sudoku_showsudoku($data, $guess, $bshowlegend, $bshowsolution, $offsetquestions,
-    $correctquestions, $cm, $attempt, $game, $course) {
-    global $CFG, $DB;
+function game_sudoku_showsudoku(
+    $data,
+    $guess,
+    $bshowlegend,
+    $bshowsolution,
+    $offsetquestions,
+    $correctquestions,
+    $cm,
+    $attempt,
+    $game,
+    $course
+) {
+    global $CFG;
 
-    $correct = $count = 0;
+    $count = 0;
 
     echo "<br>\r\n";
     echo '<table border="1" style="border-collapse: separate; border-spacing: 0px;">';
@@ -330,28 +340,28 @@ function game_sudoku_showsudoku($data, $guess, $bshowlegend, $bshowsolution, $of
                                 if (!array_key_exists($pos, $correctquestions)) {
                                     if (array_key_exists($pos, $offsetquestions)) {
                                         if ($s != $g) {
-                                            $s = '<input type="submit" value="A'.$pos.'" onclick="OnCheck('.$pos.');" />';
+                                            $s = '<input type="submit" value="A' . $pos . '" onclick="OnCheck('.$pos.');" />';
                                         }
                                     } else if ($g == 0) {
-                                        $s = '<input type="submit" value="" onclick="OnCheck('.$pos.');" />';
+                                        $s = '<input type="submit" value="" onclick="OnCheck(' . $pos . ');" />';
                                     }
                                 } else {
                                     // Correct question.
                                     $count++;
                                 }
                             }
-                            echo '<td width=33% style="text-align: center; padding: .6em; '.
+                            echo '<td width=33% style="text-align: center; padding: .6em; ' .
                                 ' color: red; font-weight: lighter; font-size: 1em;">'.$s.'</td>';
                         } else {
                             // Not show legend.
-                            echo '<td width=33% style="text-align: center; padding: .6em;'.
+                            echo '<td width=33% style="text-align: center; padding: .6em;' .
                                 ' color: red; font-weight: lighter; font-size: 1em;">&nbsp;</td>';
                         }
                     } else {
                         $s = strpos("-ABCDEFGHI", $s);
                         $count++;
-                        echo '<td width=33% style="text-align: center; padding: .6em; '.
-                            ' color: black; font-weight: lighter; font-size: 1em;">'.$s.'</td>';
+                        echo '<td width=33% style="text-align: center; padding: .6em; ' .
+                            ' color: black; font-weight: lighter; font-size: 1em;">' . $s . '</td>';
                     }
                 }
                 echo "</tr>";
@@ -361,7 +371,7 @@ function game_sudoku_showsudoku($data, $guess, $bshowlegend, $bshowsolution, $of
         echo "</tr>";
     }
     echo "</table>\r\n";
-    $href = $CFG->wwwroot.'/mod/game/attempt.php?action=sudokucheckn&id='.$cm->id;
+    $href = $CFG->wwwroot . '/mod/game/attempt.php?action=sudokucheckn&id=' . $cm->id;
 
 ?>
     <script language="javascript">
@@ -387,11 +397,11 @@ function game_sudoku_showsudoku($data, $guess, $bshowlegend, $bshowsolution, $of
         return $count;
     }
 
-    echo '<B><br>'.get_string('win', 'game').'</B><BR>';
+    echo '<B><br>' . get_string('win', 'game') . '</B><BR>';
     echo '<br>';
-    echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}&finishattempt=1\">".
-        get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">".get_string('finish', 'game').'</a> ';
+    echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}&finishattempt=1\">" .
+        get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+    echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
 
     game_updateattempts($game, $attempt, 1, game_sudoku_check_found_all_numbers(), $cm, $course);
 
@@ -414,7 +424,7 @@ function game_sudoku_getquestionlist($offsetquestions) {
     $questionlist = '';
     foreach ($offsetquestions as $q) {
         if ($q != 0) {
-            $questionlist .= ','.$q;
+            $questionlist .= ',' . $q;
         }
     }
     $questionlist = substr($questionlist, 1);
@@ -465,8 +475,18 @@ function game_sudoku_getglossaryentries($game, $offsetentries, &$entrylist, $num
  * @param boolean $showsolution
  * @param stdClass $context
  */
-function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetquestions, $numbers,
-     $correctquestions, $onlyshow, $showsolution, $context) {
+function game_sudoku_showquestions_quiz(
+        $id,
+        $game,
+        $attempt,
+        $sudoku,
+        $offsetquestions,
+        $numbers,
+        $correctquestions,
+        $onlyshow,
+        $showsolution,
+        $context
+) {
     global $CFG;
 
     $questionlist = game_sudoku_getquestionlist($offsetquestions);
@@ -485,7 +505,6 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
         return;
     }
 
-    $number = 0;
     $found = false;
     foreach ($questions2 as $question) {
         $ofs = $numbers[$question->id];
@@ -496,13 +515,13 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
         if ($found == false) {
             $found = true;
             // Start the form.
-            echo "<form id=\"responseform\" method=\"post\" ".
+            echo "<form id=\"responseform\" method=\"post\" " .
                 "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
             if (($onlyshow === false) && ($showsolution === false)) {
-                echo "<br><center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\">";
+                echo "<br><center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game') . "\">";
 
-                echo " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" name=\"finishattempt\" value=\"".
-                get_string('sudoku_finishattemptbutton', 'game')."\">";
+                echo " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" name=\"finishattempt\" value=\"" .
+                get_string('sudoku_finishattemptbutton', 'game') . "\">";
             }
 
             // Add a hidden field with the quiz id.
@@ -513,7 +532,7 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
             // Print all the questions.
 
             // Add a hidden field with questionids.
-            echo '<input type="hidden" name="questionids" value="'.$questionlist."\" />\n";
+            echo '<input type="hidden" name="questionids" value="' . $questionlist . "\" />\n";
         }
 
         $number = "<a name=\"a$ofs\">A$ofs</a>";
@@ -527,7 +546,7 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
         // Finish the form.
         echo '</div>';
         if (($onlyshow === false) && ($showsolution === false)) {
-            echo "<center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
+            echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
         }
 
         echo "</form>\n";
@@ -547,8 +566,17 @@ function game_sudoku_showquestions_quiz($id, $game, $attempt, $sudoku, $offsetqu
  * @param boolean $onlyshow
  * @param boolean $showsolution
  */
-function game_sudoku_showquestions_glossary($id, $game, $attempt, $sudoku, $offsetentries, $numbers,
- $correctentries, $onlyshow, $showsolution) {
+function game_sudoku_showquestions_glossary(
+        $id,
+        $game,
+        $attempt,
+        $sudoku,
+        $offsetentries,
+        $numbers,
+        $correctentries,
+        $onlyshow,
+        $showsolution
+) {
     global $CFG;
 
     $entries = game_sudoku_getglossaryentries($game, $offsetentries, $questionlist, $numbers);
@@ -567,7 +595,7 @@ function game_sudoku_showquestions_glossary($id, $game, $attempt, $sudoku, $offs
     }
 
     // Start the form.
-    echo "<br><form id=\"responseform\" method=\"post\" ".
+    echo "<br><form id=\"responseform\" method=\"post\" " .
         "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
 
     if ($onlyshow) {
@@ -577,7 +605,7 @@ function game_sudoku_showquestions_glossary($id, $game, $attempt, $sudoku, $offs
     }
 
     if ($hasquestions) {
-        echo "<center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
+        echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
     }
 
     // Add a hidden field with the quiz id.
@@ -588,7 +616,7 @@ function game_sudoku_showquestions_glossary($id, $game, $attempt, $sudoku, $offs
     // Print all the questions.
 
     // Add a hidden field with questionids.
-    echo '<input type="hidden" name="questionids" value="'.$questionlist."\" />\n";
+    echo '<input type="hidden" name="questionids" value="'.$questionlist . "\" />\n";
 
     $number = 0;
     foreach ($entries2 as $entry) {
@@ -597,18 +625,18 @@ function game_sudoku_showquestions_glossary($id, $game, $attempt, $sudoku, $offs
             continue;   // I don't show the correct answers.
         }
 
-        $query = new StdClass;
+        $query = new StdClass();
         $query->glossaryid = $game->glossaryid;
         $query->glossaryentryid = $entry->id;
-        $s = '<b>A'.$ofs.'.</b> '.game_show_query($game, $query, $entry->definition, 0).'<br>';
+        $s = '<b>A'.$ofs.'.</b> '.game_show_query($game, $query, $entry->definition, 0) . '<br>';
         if ($showsolution) {
-            $s .= get_string('answer').': ';
+            $s .= get_string('answer') . ': ';
             $s .= "<input type=\"text\" name=\"resp{$entry->id}\" value=\"$entry->concept\"size=30 /><br>";
         } else if ($onlyshow === false) {
-            $s .= get_string('answer').': ';
+            $s .= get_string('answer') . ': ';
             $s .= "<input type=\"text\" name=\"resp{$entry->id}\" size=30 /><br>";
         }
-        echo $s."<hr>\r\n";
+        echo $s . "<hr>\r\n";
     }
 
     echo "</div>";
@@ -632,11 +660,11 @@ function game_sudoku_showquestions_glossary($id, $game, $attempt, $sudoku, $offs
 function game_sudoku_showquestion_onfinish($id, $game, $attempt, $sudoku) {
     global $CFG;
 
-    echo '<B>'.get_string('win', 'game').'</B><BR>';
+    echo '<B>' . get_string('win', 'game') . '</B><BR>';
     echo '<br>';
     echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
-        get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"{$CFG->wwwroot}?id=$id\">".get_string('finish', 'game').'</a> ';
+        get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+    echo "<a href=\"{$CFG->wwwroot}?id=$id\">" . get_string('finish', 'game') . '</a> ';
 }
 
 /**
@@ -723,11 +751,11 @@ function game_sudoku_check_glossaryentries($cm, $game, $attempt, $sudoku, $finis
         throw new moodle_exception('noglossaryentriesfound', 'game');
     }
     foreach ($entries as $entry) {
-        $answerundefined = optional_param('resp'.$entry->id, 'undefined', PARAM_TEXT);
+        $answerundefined = optional_param('resp' . $entry->id, 'undefined', PARAM_TEXT);
         if ($answerundefined == 'undefined') {
             continue;
         }
-        $answer = optional_param('resp'.$entry->id, '', PARAM_TEXT);
+        $answer = optional_param('resp' . $entry->id, '', PARAM_TEXT);
         if ($answer == '') {
             continue;
         }

@@ -188,8 +188,20 @@ function game_cryptex_check($cm, $game, $attempt, $cryptexrec, $q, $answer, $fin
  * @param boolean $showhtmlprintbutton
  * @param stdClass $course
  */
-function game_cryptex_play($cm, $game, $attempt, $cryptexrec, $crossm,
-        $updateattempt, $onlyshow, $showsolution, $context, $print, $showhtmlprintbutton, $course) {
+function game_cryptex_play(
+        $cm,
+        $game,
+        $attempt,
+        $cryptexrec,
+        $crossm,
+        $updateattempt,
+        $onlyshow,
+        $showsolution,
+        $context,
+        $print,
+        $showhtmlprintbutton,
+        $course
+) {
     global $CFG, $DB;
 
     if ($game->toptext != '') {

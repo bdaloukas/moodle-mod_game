@@ -984,10 +984,12 @@ class sudoku extends ObjectS {
                 $c =& $c->getcell($j);
                 $thesolvedstate = $c->solvedstate();
 
-                printf("<td style=\"text-align: center; padding: .6em; color: %s; font-weight: %s; font-size: %s;\">",
-                $thecolors[$thesolvedstate],
-                $thefontweight[$thesolvedstate],
-                $thefontsize[$thesolvedstate]);
+                printf(
+                    "<td style=\"text-align: center; padding: .6em; color: %s; font-weight: %s; font-size: %s;\">",
+                    $thecolors[$thesolvedstate],
+                    $thefontweight[$thesolvedstate],
+                    $thefontsize[$thesolvedstate]
+                );
                 $xxx = $c->asstring($this->thedebug);
                 print ($xxx == " " ? "&nbsp;" : $xxx);
                 printf("</td>\n");

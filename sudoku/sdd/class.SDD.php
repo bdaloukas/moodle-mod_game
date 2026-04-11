@@ -111,7 +111,7 @@ class sdd {
                                                     '|<|s',
                                                     '&lt;',
                                                     var_export($thevalue, true)
-                                                            ) : var_export($thevalue, true));
+                                            ) : var_export($thevalue, true));
             }
         }
 
@@ -191,16 +191,17 @@ class sdd {
             foreach ($theclassvars[$theclass] as $thevariable => $value) {
                 if (array_key_exists($thevariable, $theobjectvars)) {
                     if (is_array($theobjectvars[$thevariable])) {
-                        $theoutput[$theclass][] = $thevariable . " = " .$this->darray($theobjectvars[$thevariable], $thehtmlflag);
+                        $theoutput[$theclass][] = $thevariable . " = "  . $this->darray($theobjectvars[$thevariable], $thehtmlflag);
                     } else if (is_object($theobjectvars[$thevariable])) {
-                        $theoutput[$theclass][] = $thevariable . " = ".$this->dobject($theobjectvars[$thevariable], $thehtmlflag);
+                        $theoutput[$theclass][] = $thevariable . " = " . $this->dobject($theobjectvars[$thevariable], $thehtmlflag);
                     } else {
                         $theotput[$theclass][] = $thevariable . " = " .
                             ($thehtmlflag ? preg_replace(
                                 '|<|s',
                                 '&lt;',
-                                var_export($theobjectvars[$thevariable], true)
-                                    ) : var_export($theobjectvars[$thevariable], true));
+                                var_export($theobjectvars[$thevariable],
+                                    true)
+                            ) : var_export($theobjectvars[$thevariable], true));
                     }
 
                     unset($theobjectvars[$thevariable]);

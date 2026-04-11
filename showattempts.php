@@ -89,20 +89,20 @@ function game_showusers($game) {
 
     $attributes = 'onchange="javascript:onselectuser();"';
     $name = 'user';
-    $id = 'menu'.$name;
-    $class = 'menu'.$name;
+    $id = 'menu' . $name;
+    $class = 'menu' . $name;
     $class = 'select ' . $class; // Add 'select' selector always.
     $nothing = get_string("allparticipants");
     $nothingvalue = '0';
     $options = $users;
     $selected = optional_param('userid', 0, PARAM_INT);
 
-    $output = '<select id="'. $id . '" class="' . $class .'" name="' . $name . '" ' . $attributes . '>' . "\n";
+    $output = '<select id="' . $id . '" class="' . $class . '" name="' . $name . '" ' . $attributes . '>' . "\n";
     $output .= '   <option value="' . s($nothingvalue) . '"' . "\n";
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
     }
-    $output .= '>'. $nothing . '</option>' . "\n";
+    $output .= '>' . $nothing . '</option>' . "\n";
 
     if (!empty($options)) {
         foreach ($options as $value => $label) {
@@ -147,8 +147,8 @@ function game_showgroups($game) {
 
     $attributes = 'onchange="javascript:onselectgroup();"';
     $name = 'group';
-    $id = 'menu'.$name;
-    $class = 'menu'.$name;
+    $id = 'menu' . $name;
+    $class = 'menu' . $name;
     $class = 'select ' . $class; // Add 'select' selector always.
     $nothing = get_string("allgroups");
     $nothingvalue = '0';
