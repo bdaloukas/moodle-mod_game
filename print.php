@@ -48,7 +48,7 @@ game_print($cm, $game, $context, $course);
 /**
  * Print
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -66,7 +66,7 @@ function game_print($cm, $game, $context, $course) {
 /**
  * Prints a cross.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -119,7 +119,7 @@ function game_print_cross($cm, $game, $context, $course) {
 /**
  * Prints a cryptex.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game

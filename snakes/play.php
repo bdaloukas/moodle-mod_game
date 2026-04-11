@@ -359,9 +359,9 @@ function game_snakes_showquestion_glossary($id, $snakes, $query, $game) {
         $contextglossary->id,
         $game->course
     );
-    echo $s.'<br>';
+    echo $s . '<br>';
 
-    echo get_string('answer').': ';
+    echo get_string('answer') . ': ';
     echo "<input type=\"text\" name=\"answer\" size=30 /><br>";
 
     echo "</form>\n";
@@ -437,7 +437,7 @@ function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $co
 
     $glossaryentry = $DB->get_record('glossary_entries', [ 'id' => $query->glossaryentryid]);
 
-    $name = 'resp'.$query->glossaryentryid;
+    $name = 'resp' . $query->glossaryentryid;
     $useranswer = $responses->answer;
 
     if (game_upper($useranswer) != game_upper($glossaryentry->concept)) {
@@ -463,7 +463,7 @@ function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $co
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param boolean $correct
- * @param stdClasss $query
+ * @param stdClass $query
  * @param stdClass $context
  * @param stdClass $course
  */
@@ -507,6 +507,8 @@ function game_snakes_position($cm, $game, $attempt, $snakes, $correct, $query, $
 /**
  * In lander go forward.
  *
+ * @package mod_game
+ *
  * @param int $position
  * @param string $data
  */
@@ -523,6 +525,8 @@ function game_snakes_foundlander($position, $data) {
 /**
  * In snake go backward.
  *
+ * package mod_game
+ *
  * @param int $position
  * @param string $data
  */
@@ -538,6 +542,8 @@ function game_snakes_foundsnake($position, $data) {
 
 /**
  * Removes attempt data.
+ *
+ * package mod_game
  *
  * @param int $questionusageid
  * @param int $questionid

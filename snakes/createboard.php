@@ -262,8 +262,12 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
     computexy($to, $x2, $y2, $colsx, $colsy);
     $swap = 0;
     if (($x2 < $startx) && ($y2 < $starty)) {
-        $temp = $x2; $x2 = $startx; $startx = $temp;
-        $temp = $y2; $y2 = $starty; $starty = $temp;
+        $temp = $x2;
+        $x2 = $startx;
+        $startx = $temp;
+        $temp = $y2;
+        $y2 = $starty;
+        $starty = $temp;
         $swap = 1;
     }
     $movex = $x2 - $startx;
@@ -301,12 +305,13 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
         $source = game_imagecreatefrompng($file);
         if ($source != 0) {
             $stamp = imagerotate($source, 270, 0);
-            $startx += $movex; $movex = -$movex;
+            $startx += $movex;
+            $movex = -$movex;
         } else {
             $rotate = 270;
         }
     } else {
-        $file = $dir.'/sa'.$movex.$movey.'.png';
+        $file = $dir . '/sa' . $movex . $movey . '.png';
         $stamp = game_imagecreatefrompng($file);
     }
 
@@ -338,7 +343,8 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
             $cy / $colsy
         );
     } else {
-        imagecopyresampled($im,
+        imagecopyresampled(
+            $im,
             $stamp,
             $dstx + $ofsleft,
             $dsty + $ofstop,

@@ -51,7 +51,7 @@ echo $OUTPUT->footer();
 /**
  * Show users
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $game
  */
@@ -126,7 +126,7 @@ function game_showusers($game) {
 /**
  * Show groups
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $game
  */
@@ -187,7 +187,7 @@ function game_showgroups($game) {
 /**
  * Show attempts
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $game
  */
@@ -290,7 +290,7 @@ function game_showattempts($game) {
 /**
  * One delete attempt
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $game
  */

@@ -315,7 +315,7 @@ class game_report extends game_default_report {
                 "\t" . get_string('timecompleted', 'game') . "\t" . get_string('attemptduration', 'game');
 
             if ($game->grade) {
-                $headers .= "\t".get_string('grade', 'game') . "/" . $game->grade;
+                $headers .= "\t" . get_string('grade', 'game') . "/" . $game->grade;
             }
             if ($detailedmarks) {
                 foreach ($questionids as $id) {
@@ -340,17 +340,17 @@ class game_report extends game_default_report {
                 // We want a particular group and we only want to see students WITH attempts.
                 // So join on groups_members and do an inner join on attempts.
                 $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id ' .
-                    groups_members_join_sql().
+                    groups_members_join_sql() .
                     'JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = ' . $game->id;
                 $where = ' WHERE ra.contextid ' . $contextlists .
                         ' AND ' . groups_members_where_sql($currentgroup) . ' AND qa.preview = 0';
             } else if (!empty($currentgroup) && !empty($noattempts)) {
                 // We want a particular group and we want to do something funky with attempts.
-                // So join on groups_members and left join on attempts...
-                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id '.
-                    groups_members_join_sql().
+                // So join on groups_members and left join on attempts.
+                $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id ' .
+                    groups_members_join_sql() .
                     'LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = ' . $game->id;
-                $where = ' WHERE ra.contextid ' .$contextlists . ' AND '. groups_members_where_sql($currentgroup);
+                $where = ' WHERE ra.contextid ' . $contextlists . ' AND '. groups_members_where_sql($currentgroup);
                 if ($noattempts == 1) {
                     // Noattempts = 1 means only no attempts, so make the left join ask.
                     // For only records where the right is null (no attempts).
@@ -379,7 +379,8 @@ class game_report extends game_default_report {
                     $where = ' WHERE qa.gameid = ' . $game->id . ' AND qa.preview = 0';
                 } // The noattempts = 2 means we want all students, with or without attempts.
             }
-            $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')) . ')) ' . $from . $where;
+            $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')) . ')) ' .
+                $from . $where;
         } else {
             if (empty($noattempts)) {
                 $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
@@ -414,7 +415,7 @@ class game_report extends game_default_report {
                             $qid = intval(substr($sortpart, 1));
                             $select .= ', grade ';
                             $from .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id '.
-                                                'LEFT JOIN {question_states} qs ON qs.id = qns.newgraded ';
+                                'LEFT JOIN {question_states} qs ON qs.id = qns.newgraded ';
                             $where .= ' AND (' . sql_isnull('qns.questionid') . ' OR qns.questionid = ' . $qid.')';
                             $newsort[] = 'grade ' . (strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
                             $questionsort = true;
@@ -447,7 +448,8 @@ class game_report extends game_default_report {
         if (!empty($from)) {
             // If we're in the site course and displaying no attempts, it makes no sense to do the query.
             if (!$download) {
-                $attempts = get_records_sql($select . $from . $where . $sort,
+                $attempts = get_records_sql(
+                    $select . $from . $where . $sort,
                     $table->get_page_start(),
                     $table->get_page_size()
                 );
@@ -474,7 +476,7 @@ class game_report extends game_default_report {
                                 empty($attempt->attempt) ? '-' : '<a href="review.php?q=' .
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
                                     userdate($attempt->timestart, $strtimeformat) . '</a>' ,
-                                empty($attempt->timefinish) ? '-' : '<a href="review.php?q='.
+                                empty($attempt->timefinish) ? '-' : '<a href="review.php?q=' .
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
                                     userdate($attempt->timefinish, $strtimeformat) . '</a>',
                                 empty($attempt->attempt) ? '-' : (
@@ -522,7 +524,7 @@ class game_report extends game_default_report {
                                 }
                                 if (!$download) {
                                     $row[] = link_to_popup_window(
-                                        '/mod/game/reviewquestion.php?state=' . $gradedstateid.'&amp;number=' . $questions[$questionid]->number,
+                                        '/mod/game/reviewquestion.php?state=' . $gradedstateid . '&amp;number=' . $questions[$questionid]->number,
                                         'reviewquestion',
                                         $grade,
                                         450,
@@ -586,10 +588,10 @@ class game_report extends game_default_report {
                         $options,
                         'action',
                         '',
-                        get_string('withselected',
-                        'game'
-                    ),
-                        'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');', '', true);
+                        get_string('withselected', 'game'),
+                        'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');', '',
+                        true
+                    );
                     echo '<noscript id="noscriptmenuaction" style="display: inline;"><div>';
                     echo '<input type="submit" value="' . get_string('go') . '" /></div></noscript>';
                     echo '<script type="text/javascript">' . "\n<!--\n" .
@@ -643,9 +645,9 @@ class game_report extends game_default_report {
         echo '<div class="controls">';
         echo '<form id="options" action="report.php" method="get">';
         echo '<div>';
-        echo '<p>'.get_string('displayoptions', 'game') . ': </p>';
-        echo '<input type="hidden" name="id" value="' . $cm->id.'" />';
-        echo '<input type="hidden" name="q" value="' . $game->id.'" />';
+        echo '<p>' . get_string('displayoptions', 'game') . ': </p>';
+        echo '<input type="hidden" name="id" value="' . $cm->id . '" />';
+        echo '<input type="hidden" name="q" value="' . $game->id . '" />';
         echo '<input type="hidden" name="mode" value="overview" />';
         echo '<input type="hidden" name="noattempts" value="0" />';
         echo '<input type="hidden" name="detailedmarks" value="0" />';
