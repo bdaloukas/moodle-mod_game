@@ -30,7 +30,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class backup_game_activity_structure_step extends backup_activity_structure_step {
-
     /**
      * Defines the needed structures.
      */
@@ -74,7 +73,8 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
 
         $repetitions = new backup_nested_element('game_repetitions');
         $repetition = new backup_nested_element(
-            'game_repetition', ['id'],
+            'game_repetition',
+            ['id'],
             ['userid', 'questionid', 'glossaryentryid', 'repetitions']
         );
 
@@ -88,7 +88,7 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
         $query = new backup_nested_element(
             'game_query',
             ['id'],
-           ['gamekind', 'userid', 'sourcemodule', 'questionid', 'glossaryentryid',
+            ['gamekind', 'userid', 'sourcemodule', 'questionid', 'glossaryentryid',
             'questiontext', 'score', 'timelastattempt', 'studentanswer', 'col', 'row',
             'horizontal', 'answertext', 'correct', 'attachment', 'answerid', 'tries']
         );

@@ -132,7 +132,7 @@ class restore_game_activity_task extends restore_activity_task {
         // Extract Game configdata and update it to point to the new glossary.
         $rec = $DB->get_record_select(
             'game',
-            'id='.$gameid,
+            'id=' . $gameid,
             null,
             'id,quizid,glossaryid,glossarycategoryid,questioncategoryid,bookid,glossaryid2,glossarycategoryid2'
         );
@@ -202,7 +202,7 @@ class restore_game_activity_task extends restore_activity_task {
         // Read game_queries.
         $recs = $DB->get_records_select(
             'game_queries',
-            'gameid='.$gameid,
+            'gameid=' . $gameid,
             null,
             '',
             'id,questionid,glossaryentryid,answerid'

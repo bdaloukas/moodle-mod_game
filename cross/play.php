@@ -110,7 +110,7 @@ function game_cross_new($game, $attemptid, &$crossm) {
 
     $recs = game_questions_shortanswer($game);
     if ($recs == false) {
-        throw new moodle_exception('cross_error', 'game', 'game_cross_continue: '.get_string( 'no_words', 'game'));
+        throw new moodle_exception('cross_error', 'game', 'game_cross_continue: ' . get_string('no_words', 'game'));
     }
 
     foreach ($recs as $rec) {
@@ -122,9 +122,9 @@ function game_cross_new($game, $attemptid, &$crossm) {
 
         $rec->answertext = game_upper($rec->answertext);
         $answers[$rec->answertext] = game_repairquestion($rec->questiontext);
-        $infos[$rec->answertext] = [ $game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment];
+        $infos[$rec->answertext] = [$game->sourcemodule, $rec->questionid, $rec->glossaryentryid, $rec->attachment];
 
-        $a = [ 'gameid' => $game->id, 'userid' => $USER->id,
+        $a = ['gameid' => $game->id, 'userid' => $USER->id,
             'questionid' => $rec->questionid, 'glossaryentryid' => $rec->glossaryentryid];
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions AS r')) != false) {
             $reps[$rec->answertext] = $rec2->r;
@@ -152,7 +152,7 @@ function game_cross_new($game, $attemptid, &$crossm) {
 
     if ($crossd == null || count($crossd) == 0) {
         $s = 'game_cross_continue: '.get_string('no_words', 'game');
-        throw new moodle_exception( 'cross_error', 'game', '', $s);
+        throw new moodle_exception('cross_error', 'game', '', $s);
     }
 }
 
@@ -221,8 +221,8 @@ function game_cross_play($cm, $game, $attempt, $crossrec, $g, $onlyshow, $showso
     );
 
     if ($language != $attempt->language) {
-        if (!$DB->set_field('game_attempts', 'language', $attempt->language, [ 'id' => $attempt->id])) {
-            throw new moodle_exception( 'cross_error', 'game', "game_cross_play: Can't set language");
+        if (!$DB->set_field('game_attempts', 'language', $attempt->language, ['id' => $attempt->id])) {
+            throw new moodle_exception('cross_error', 'game', "game_cross_play: Can't set language");
         }
     }
 
@@ -337,7 +337,7 @@ if (document.getElementById("waitmessage") != null)
     for (var x = 0; x < CrosswordWidth; x++) {
         GuessLeter[x] = new Array(CrosswordHeight);
         for (var y = 0; y < CrosswordHeight; y++)  {
-            GuessLeter[ x][ y] = "_";
+            GuessLeter[x][y] = "_";
         }
     }
 
@@ -345,7 +345,7 @@ if (document.getElementById("waitmessage") != null)
     for (var x = 0; x < CrosswordWidth; x++) {
         solu[x] = new Array(CrosswordHeight);
         for (var y = 0; y < CrosswordHeight; y++) {
-            solu[ x][ y] = "";
+            solu[x][y] = "";
         }
     }
 
@@ -359,20 +359,20 @@ if (document.getElementById("waitmessage") != null)
     for (var i = 0; i <= LastHorizontalWord; i++) {
         x = WordX[i];
         y = WordY[i];
-        s = Guess[ i];
-        so = Solutions[ i];
+        s = Guess[i];
+        so = Solutions[i];
         for (var j = 0; j < WordLength[i]; j++) {
             TableAcrossWord[x + j][y] = i;
             if(j < s.length)
                 c = s.substr(j, 1);
             else
                 c = '';
-            GuessLeter[ x+ j][ y] = c;
+            GuessLeter[x+ j][y] = c;
             if(j < so.length)
-                c = so.substr( j, 1);
+                c = so.substr(j, 1);
             else
                 c = '';
-            solu[ x+j][ y] = c;
+            solu[x+j][y] = c;
         }
     }
 
@@ -380,20 +380,20 @@ if (document.getElementById("waitmessage") != null)
     for (var i = LastHorizontalWord + 1; i < Words; i++) {
         x = WordX[i];
         y = WordY[i];
-        s = Guess[ i];
-        so = Solutions[ i];
+        s = Guess[i];
+        so = Solutions[i];
         for (var j = 0; j < WordLength[i]; j++) {
             TableDownWord[x][y + j] = i;
             if(j < s.length)
                 c = s.substr(j, 1);
             else
                 c = '';
-            GuessLeter[ x][ y+j] = c;
+            GuessLeter[x][y+j] = c;
             if(j < so.length)
                 c = so.substr(j, 1);
             else
                 c = '';
-            solu[ x][ y+j] = c;
+            solu[x][y+j] = c;
         }
     }
 
@@ -587,19 +587,19 @@ function SelectThisWord(event) {
 
     document.getElementById("wordlabel").innerHTML = TheirWord;
     <?php
-    $msg = "\"" . get_string('cross_across', 'game') . ", \" : \"" . get_string( 'cross_down', 'game') . ", \"";
-    $letters = "\" " . get_string('letter', 'game') . ".\" : \" " . get_string( 'letters', 'game').".\"";
+    $msg = "\"" . get_string('cross_across', 'game') . ", \" : \"" . get_string('cross_down', 'game') . ", \"";
+    $letters = "\" " . get_string('letter', 'game') . ".\" : \" " . get_string('letters', 'game').".\"";
     ?>
     var s = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>);
     s = s + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
     document.getElementById("wordinfo").innerHTML = s;
 
     if(CurrentWord <= LastHorizontalWord) {
-        id = 'a' + (1 + WordY[ CurrentWord]);
+        id = 'a' + (1 + WordY[CurrentWord]);
     } else {
-        id = 'd' + (1 + WordX[ CurrentWord]);
+        id = 'd' + (1 + WordX[CurrentWord]);
     }
-    id = aid[ CurrentWord];
+    id = aid[CurrentWord];
     document.getElementById("wordclue").innerHTML = document.getElementById(id).innerHTML;
     document.getElementById("worderror").style.display = "none";
 
@@ -697,7 +697,7 @@ function PackPuzzle(sData) {
         n = j - i;
         s2 = s.substr(0, i);
         s2 = s2.concat(n);
-        s = s2.concat(s.substr( j));
+        s = s2.concat(s.substr(j));
     }
 
     return encodeURIComponent(s);
@@ -745,7 +745,7 @@ function CheckServerClick(endofgame) {
 
     sData = PackPuzzle(sData);
 
-    if( endofgame) {
+    if(endofgame) {
         sData += "&finishattempt=1";
     }
 
@@ -767,7 +767,7 @@ function OnPrint()
         global $CFG;
 
         $params = "id={$cm->id}&gameid={$game->id}";
-        echo "window.open( \"{$CFG->wwwroot}/mod/game/print.php?$params\")";
+        echo "window.open(\"{$CFG->wwwroot}/mod/game/print.php?$params\")";
     ?>
 }
 
@@ -850,7 +850,7 @@ var Base64 = {
         var string = "";
         var i = 0;
         var c = c1 = c2 = 0;
-        while ( i < utftext.length ) {
+        while (i < utftext.length ) {
             c = utftext.charCodeAt(i);
 
             if (c < 128) {
@@ -878,7 +878,7 @@ function CheckHtmlClick() {
 
     sData = "";
     for (i = 0; i < Words; i++) {
-        solution = Base64.decode( HtmlSolutions[ i]);
+        solution = Base64.decode(HtmlSolutions[i]);
         // Get the user's entry for this word.
         UserEntry = "";
         for (j = 0; j < WordLength[i]; j++) {
@@ -889,13 +889,13 @@ function CheckHtmlClick() {
             }
             if (TableCell.innerHTML.length > 0 && TableCell.innerHTML.toLowerCase() != "&nbsp;") {
                 UserEntry += TableCell.innerHTML.toUpperCase();
-            } else if( TableCell.innerHTML.toLowerCase() == "&nbsp;") {
+            } else if(TableCell . innerHTML.toLowerCase() == "&nbsp;") {
                 UserEntry += " ";
             } else {
                 UserEntry += "_";
             }
 
-            if( UserEntry[ j] != solution[ j]) {
+            if(UserEntry[j] != solution[j]) {
                 TableCell.innerHTML = "&nbsp;";
             }
         }
@@ -911,7 +911,7 @@ function CheckHtmlClick() {
         var i = 0;
         var c = c1 = c2 = 0;
 
-        while ( i < utftext.length ) {
+        while (i < utftext.length ) {
 
             c = utftext.charCodeAt(i);
 
@@ -947,10 +947,10 @@ function CheckHtmlClick() {
     <?php
     if ($game->param3 == 1) {
         echo '<td>&nbsp &nbsp &nbsp</td><td>';
-        game_cross_show_legends( $game, $cross);
+        game_cross_show_legends($game, $cross);
         echo '</td>';
     } else {
-        game_cross_show_welcome( $game);
+        game_cross_show_welcome($game);
     }
     ?>
 
@@ -961,19 +961,19 @@ function CheckHtmlClick() {
         echo '<div style="margin-top: 1em;">';
 
         if (!$done) {
-            echo '<button id="checkbutton" type="button" onclick="CheckServerClick( 0);" style="display: inline;">'.
-            get_string( 'cross_checkbutton', 'game');
+            echo '<button id="checkbutton" type="button" onclick="CheckServerClick(0);" style="display: inline;">'.
+            get_string('cross_checkbutton', 'game');
             echo '</button>';
 
-            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" '.
-                ' type="button" onclick="CheckServerClick( 1);" style="display: inline;">'.
-            get_string( 'cross_endofgamebutton', 'game');
+            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" ' .
+                ' type="button" onclick="CheckServerClick(1);" style="display: inline;">' .
+            get_string('cross_endofgamebutton', 'game');
             echo '</button>';
         }
 
         if ($game->param5 == 1 || $game->param5 == null) {
-            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" '.
-            ' onclick="OnPrint( 0);" style="display: inline;">'.get_string( 'print', 'game');
+            echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" ' .
+            ' onclick="OnPrint(0);" style="display: inline;">'.get_string('print', 'game');
             echo '</button>';
         }
 
@@ -985,8 +985,8 @@ function CheckHtmlClick() {
     }
 
     if ($showhtmlsolutions) {
-        echo '<button id="checkhtmlbutton" type="button" '.
-        ' onclick="CheckHtmlClick();" visible=true>'.get_string( 'cross_checkbutton', 'game');
+        echo '<button id="checkhtmlbutton" type="button" ' .
+        ' onclick="CheckHtmlClick();" visible=true>'.get_string('cross_checkbutton', 'game');
         echo '</button>';
     }
 
@@ -994,15 +994,15 @@ function CheckHtmlClick() {
         if ($showhtmlsolutions) {
             echo "&nbsp;&nbsp;&nbsp;&nbsp;";
         }
-        echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick( 0);" visible=true>'.get_string( 'print', 'game');
+        echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick(0);" visible=true>'.get_string('print', 'game');
         echo '</button>';
     }
 
     if ($game->param3 == 1) {
         echo '<td>&nbsp &nbsp &nbsp</td>';
-        game_cross_show_welcome( $game);
+        game_cross_show_welcome($game);
     } else {
-        game_cross_show_legends( $game, $cross);
+        game_cross_show_legends($game, $cross);
     }
 
     if ($game->bottomtext != '') {
@@ -1045,9 +1045,9 @@ function CheckHtmlClick() {
  *
  * @param stdClass $game
  */
-function game_cross_show_welcome( $game) {
+function game_cross_show_welcome($game) {
     if ($game->param3 == 0) {
-        game_cross_show_welcome0( $game);
+        game_cross_show_welcome0($game);
     } else {
         game_cross_show_welcome1();
     }
@@ -1058,12 +1058,12 @@ function game_cross_show_welcome( $game) {
  *
  * @param stdClass $game
  */
-function game_cross_show_welcome0( $game) {
+function game_cross_show_welcome0($game) {
 ?>
 <td valign="top" style="padding-left: 1em;">
 
 <div id="welcomemessage" class="answerboxstyle" style="display:none;">
-    <?php echo get_string( 'cross_welcome', 'game'); ?> </div>
+    <?php echo get_string('cross_welcome', 'game'); ?> </div>
 
 <div id="answerbox2"  style="display:none;"></div>
 
@@ -1082,7 +1082,7 @@ function game_cross_show_welcome0( $game) {
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
     <?php
     if ($game->param3 == 2) {
-        game_cross_show_welcome( $game);
+        game_cross_show_welcome($game);
     }
     ?>
 <div id="worderror" style="color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
@@ -1109,7 +1109,7 @@ function game_cross_show_welcome1() {
 <td valign="top" style="padding-left: 1em;">
 
 <div id="welcomemessage" class="answerboxstyle" style="display:none;">
-    <?php echo get_string( 'cross_welcome', 'game'); ?> </div>
+    <?php echo get_string('cross_welcome', 'game'); ?> </div>
 
 <div id="answerbox" class="answerboxstyle" style="display:none;">
 
@@ -1147,13 +1147,13 @@ function game_cross_show_welcome1() {
  * @param stdClass $cross
  * @throws coding_exception
  */
-function game_cross_show_legends( stdClass $game, stdClass $cross) {
-    if( $game->param3 == 2) {
+function game_cross_show_legends(stdClass $game, stdClass $cross) {
+    if($game->param3 == 2) {
         echo '<div hidden>';
     }
-    ShowLegend( 'a', $cross->mlegendh,  get_string( 'cross_across', 'game'));
-    ShowLegend( 'd', $cross->mlegendv, get_string( 'cross_down', 'game'));
-    if( $game->param3 == 2) {
+    ShowLegend('a', $cross->mlegendh,  get_string('cross_across', 'game'));
+    ShowLegend('d', $cross->mlegendv, get_string('cross_down', 'game'));
+    if($game->param3 == 2) {
         echo '</div>';
     }
 }

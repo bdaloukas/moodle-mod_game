@@ -48,10 +48,10 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
  */
 class provider implements
     // This plugin has data.
-    \core_privacy\local\request\plugin\provider,
     \core_privacy\local\metadata\provider,
+    \core_privacy\local\request\plugin\provider,
     core_userlist_provider {
-    // This plugin currently implements the original plugin_provider interface.{
+    // This plugin currently implements the original plugin_provider interface.
     /**
      * Get the list of contexts that contain user information for the specified user.
      *
@@ -187,7 +187,7 @@ class provider implements
      * @param   int             $userid The user to search.
      * @return  contextlist     $contextlist The contextlist containing the list of contexts used in this plugin.
      */
-    public static function get_contexts_for_userid(int $userid) : contextlist {
+    public static function get_contexts_for_userid(int $userid): contextlist {
         // Select the context of any game attempt where a user has an attempt, plus the related usages.
         $sql = "SELECT c.id
                   FROM {context} c
