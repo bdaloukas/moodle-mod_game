@@ -523,7 +523,7 @@ function game_sudoku_showquestions_quiz(
             echo "<form id=\"responseform\" method=\"post\" " .
                 "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
             if (($onlyshow === false) && ($showsolution === false)) {
-                echo "<br><center><input type=\"submit\" name=\"submit\" value=\"".get_string('sudoku_submit', 'game') . "\">";
+                echo "<br><center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\">";
 
                 echo " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" name=\"finishattempt\" value=\"" .
                 get_string('sudoku_finishattemptbutton', 'game') . "\">";

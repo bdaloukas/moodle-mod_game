@@ -166,7 +166,6 @@ class mod_game_exporthtml_form extends moodleform {
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class mod_game_exportjavame_form extends moodleform {
-
     /**
      * Definition of form.
      */

@@ -59,7 +59,7 @@ function mpgame_db_copy_string_to_int($table, $from, $to) {
         if ($val == 0) {
             continue;
         }
-        $updrec = new stdClass;
+        $updrec = new stdClass();
         $updrec->id = $rec->id;
         $updrec->$to = $val;
         $DB->update_record($table, $updrec);
@@ -79,8 +79,16 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007082802) {
         $table = new xmldb_table('game');
-        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10',
-            XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'glossarycategoryid');
+        $field = new xmldb_field(
+            'questioncategoryid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            XMLDB_NOTNULL,
+            null,
+            '0',
+            'glossarycategoryid'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -96,22 +104,46 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007082803) {
         $table = new xmldb_table('game_hangman');
-        $field = new xmldb_field('glossaryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'quizid');
+        $field = new xmldb_field(
+            'glossaryid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'quizid'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
         $table = new xmldb_table('game_hangman');
-        $field = new xmldb_field('glossarycategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'glossaryid');
+        $field = new xmldb_field(
+            'glossarycategoryid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'glossaryid'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
         $table = new xmldb_table('game_hangman');
-        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'glossarycategoryid');
+        $field = new xmldb_field(
+            'questioncategoryid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'glossarycategoryid'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -121,8 +153,16 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007082804) {
         $table = new xmldb_table('game_millionaire');
-        $field = new xmldb_field('questioncategoryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'quizid');
+        $field = new xmldb_field(
+            'questioncategoryid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'quizid'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -132,8 +172,16 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007082805) {
         $table = new xmldb_table('game_hangman');
-        $field = new xmldb_field('try', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'answer');
+        $field = new xmldb_field(
+            'try',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'answer'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -156,8 +204,16 @@ function xmldb_game_upgrade($oldversion) {
         }
 
         $table = new xmldb_table('game_hangman');
-        $field = new xmldb_field('corrects', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'finishedword');
+        $field = new xmldb_field(
+            'corrects',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'finishedword'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -167,8 +223,16 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007082808) {
         $table = new xmldb_table('game');
-        $field = new xmldb_field('param7', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'param6');
+        $field = new xmldb_field(
+            'param7',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'param6'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -188,8 +252,16 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007082901) {
         $table = new xmldb_table('game_hangman');
-        $field = new xmldb_field('glossaryid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0', 'quizid');
+        $field = new xmldb_field(
+            'glossaryid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0',
+            'quizid'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -221,8 +293,15 @@ function xmldb_game_upgrade($oldversion) {
         $table = new xmldb_table('game_bookquiz_chapters');
 
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
-        $table->add_field('gameinstanceid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            XMLDB_NOTNULL, null, '0');
+        $table->add_field(
+            'gameinstanceid',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            XMLDB_NOTNULL,
+            null,
+            '0'
+        );
         $table->add_field('chapterid', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
 
         $table->add_key('PRIMARY', XMLDB_KEY_PRIMARY, ['id']);
@@ -284,8 +363,15 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2007092302) {
         $table = new xmldb_table('game_snakes_database');
-        $field = new xmldb_field('height', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED,
-            null, null, '0');
+        $field = new xmldb_field(
+            'height',
+            XMLDB_TYPE_INTEGER,
+            '10',
+            XMLDB_UNSIGNED,
+            null,
+            null,
+            '0'
+        );
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
@@ -792,7 +878,7 @@ function xmldb_game_upgrade($oldversion) {
         $table->add_field('id', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, XMLDB_SEQUENCE);
         $table->add_field('name', XMLDB_TYPE_CHAR, '100', null, XMLDB_NOTNULL, null, '');
         $table->add_field('course', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0');
-        $table->add_field('sourcemodule', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null,  '');
+        $table->add_field('sourcemodule', XMLDB_TYPE_CHAR, '20', null, XMLDB_NOTNULL, null, '');
         $table->add_field('ids', XMLDB_TYPE_TEXT, null, null, XMLDB_NOTNULL, null, '');
 
         $table->add_key('primary', XMLDB_KEY_PRIMARY, [ 'id']);
@@ -1252,7 +1338,7 @@ function xmldb_game_upgrade($oldversion) {
 
     if ($oldversion < 2008111701) {
         $table = new xmldb_table('game_snakes_database');
-        $field = new xmldb_field('file', XMLDB_TYPE_CHAR, 100, null, null, null,  '');
+        $field = new xmldb_field('file', XMLDB_TYPE_CHAR, 100, null, null, null, '');
 
         $dbman->rename_field($table, $field, 'fileboard');
         upgrade_mod_savepoint(true, 2008111701, 'game');

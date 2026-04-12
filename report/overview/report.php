@@ -476,13 +476,13 @@ class game_report extends game_default_report {
                                 $userlink,
                                 empty($attempt->attempt) ? '-' : '<a href="review.php?q=' .
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
-                                    userdate($attempt->timestart, $strtimeformat) . '</a>' ,
+                                    userdate($attempt->timestart, $strtimeformat) . '</a>',
                                 empty($attempt->timefinish) ? '-' : '<a href="review.php?q=' .
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
                                     userdate($attempt->timefinish, $strtimeformat) . '</a>' ,
-                                empty($attempt->attempt) ? '-' : (
-                                    empty($attempt->timefinish) ? get_string('unfinished', 'game') : format_time(
-                                    $attempt->duration)
+                                empty($attempt->attempt) ? '-' :
+                                    (empty($attempt->timefinish) ? get_string('unfinished', 'game') :
+                                        format_time($attempt->duration)
                                 )
                                 ];
                     } else {
@@ -510,14 +510,16 @@ class game_report extends game_default_report {
                             }
                         } else {
                             foreach ($questionids as $questionid) {
-                                if ($gradedstateid = get_field(
-                                    'question_sessions',
-                                    'newgraded',
-                                    'attemptid',
-                                    $attempt->attemptuniqueid,
-                                    'questionid',
-                                    $questionid
-                                )) {
+                                if (
+                                    $gradedstateid = get_field(
+                                        'question_sessions',
+                                        'newgraded',
+                                        'attemptid',
+                                        $attempt->attemptuniqueid,
+                                        'questionid',
+                                        $questionid
+                                    )
+                                ) {
                                     $grade = round(
                                         get_field('question_states', 'grade', 'id', $gradedstateid),
                                         $game->decimalpoints
@@ -526,7 +528,8 @@ class game_report extends game_default_report {
                                     $grade = '--';
                                 }
                                 if (!$download) {
-                                    $url = '/mod/game/reviewquestion.php?state=' . $gradedstateid . '&amp;number=' . $questions[$questionid]->number;
+                                    $url = '/mod/game/reviewquestion.php?state=' . $gradedstateid . '&amp;number=' .
+                                        $questions[$questionid]->number;
                                     $row[] = link_to_popup_window(
                                         $url,
                                         'reviewquestion',

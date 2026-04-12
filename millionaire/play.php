@@ -285,13 +285,13 @@ function game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, $
             $style = $stylequestionselected;
         }
 
-        $button = '<input style="' . $style . '" ' . $disabled . 'type="submit" name="' . $name . '" value="' . $s . '" id="' . $name . "1\"".
+        $button = '<input style="' . $style . '" ' . $disabled . 'type="submit" name="' . $name . '" value="' . $s . '" id="' . $name . "1\"" .
             " onmouseover=\"this.style.backgroundColor = '$color2';$name.style.backgroundColor = '$color2';\" " .
             " onmouseout=\"this.style.backgroundColor = '$colorback';$name.style.backgroundColor = '$colorback';\" >";
         $text = game_filtertext($aanswer[$i - 1], $game->course);
         $answer = "<span id=$name style=\"$style\" " .
-            " onmouseover=\"this.style.backgroundColor = '$color2';{$name}1.style.backgroundColor = '$color2';\" ".
-            " onmouseout=\"this.style.backgroundColor = '$colorback';{$name}1.style.backgroundColor = '$colorback';\" >".
+            " onmouseover=\"this.style.backgroundColor = '$color2';{$name}1.style.backgroundColor = '$color2';\" " .
+            " onmouseout=\"this.style.backgroundColor = '$colorback';{$name}1.style.backgroundColor = '$colorback';\" >" .
             $text . '</span>';
         if ($aanswer[$i - 1] != "") {
             echo "<tr>\n";
@@ -428,9 +428,11 @@ function game_millionaire_selectquestion(&$aanswer, $game, $attempt, &$millionai
             $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv";
             $cats = $game->subcategories ? question_categorylist($game->questioncategoryid) : [];
             if (count($cats)) {
-                $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid IN (' . implode(',', $cats) . ')';
+                $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid IN (' .
+                    implode(',', $cats) . ')';
             } else {
-                $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid=' . $game->questioncategoryid;
+                $select2 = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid=' .
+                    $game->questioncategoryid;
             }
             $select2 .= " AND qv.id = (SELECT id FROM {question_versions} WHERE questionbankentryid = qv.questionbankentryid
                 ORDER BY version DESC LIMIT 1)";

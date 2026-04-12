@@ -140,8 +140,7 @@ function game_showgroups($game) {
     $href = $CFG->wwwroot . '/mod/game/showattempts.php?q=' . $game->id . '&groupid=';
 ?>
             <script type="text/javascript">
-                function onselectgroup()
-                {
+                function onselectgroup() {
                     window.location.href = "<?php echo $href;?>" + document.getElementById('menugroup').value;
                 }
             </script>
@@ -167,7 +166,8 @@ function game_showgroups($game) {
     if (!empty($options)) {
         foreach ($options as $value => $label) {
             $output .= '   <option value="' . s($value) . '"';
-            if ((string)$value == (string)$selected || (is_array($selected) && in_array($value, $selected))
+            if (
+                (string)$value == (string)$selected || (is_array($selected) && in_array($value, $selected))
             ) {
                 $output .= ' selected="selected"';
             }
@@ -228,7 +228,7 @@ function game_showattempts($game) {
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY timelastattempt DESC,timestart DESC";
     if (($recs = $DB->get_records_sql($sql, null, $recslimitfrom, $recslimitnum)) != false) {
         echo '<table border="1">';
-        echo '<tr><td><b>' . get_string('delete').'</td><td><b>' . get_string('user') . '</td>';
+        echo '<tr><td><b>' . get_string('delete') . '</td><td><b>' . get_string('user') . '</td>';
         echo '<td><b>' . get_string('timestart', 'game') . '</b></td>';
         echo '<td><b>' . get_string('timelastattempt', 'game') . '</b></td>';
         echo '<td><b>' . get_string('timefinish', 'game') . '</b></td>';
@@ -248,7 +248,7 @@ function game_showattempts($game) {
                     echo '&allowdelete=1';
                 }
                 echo '">';
-                echo '<img src="' . game_pix_url('t/delete').'" alt="' . get_string('delete') . '" style="width: 1em" /></a>';
+                echo '<img src="' . game_pix_url('t/delete') . '" alt="' . get_string('delete') . '" style="width: 1em" /></a>';
             }
             echo '</center></td>';
             echo '<td><center>' . $rec->firstname . ' ' . $rec->lastname . '</center></td>';

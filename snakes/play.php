@@ -178,6 +178,8 @@ top:<?php p(-2 * round($board->height / 3));?>px; ">
 /**
  * Computes player's position.
  *
+ * @package mod_game
+ *
  * @param stdClass $snakes
  * @param stdClass $board
  */
@@ -551,7 +553,7 @@ function game_snakes_foundlander($position, $data) {
  * @param string $data
  */
 function game_snakes_foundsnake($position, $data) {
-    preg_match("/S([0-9]*)-$position,/", $data.',', $matches);
+    preg_match("/S([0-9]*)-$position,/", $data . ',', $matches);
 
     if (count($matches)) {
         return $matches[1];
@@ -568,7 +570,7 @@ function game_snakes_foundsnake($position, $data) {
  * @param int $questionusageid
  * @param int $questionid
  */
-function game_snakes_remove_attemptdata ($questionusageid, $questionid) {
+function game_snakes_remove_attemptdata($questionusageid, $questionid) {
     global $DB;
 
     $sql = "SELECT qas.id
