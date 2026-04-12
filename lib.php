@@ -910,14 +910,26 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
         switch($game->gamekind) {
             case 'bookquiz':
                 $url = new moodle_url('/mod/game/bookquiz/questions.php',  ['q' => $PAGE->cm->instance]);
-                $exportnode = $gamenode->add(get_string('bookquiz_questions', 'game'), $url, navigation_node::TYPE_SETTING,
-                    null, null, new pix_icon('i/item', ''));
+                $exportnode = $gamenode->add(
+                    get_string('bookquiz_questions', 'game'),
+                    $url,
+                    navigation_node::TYPE_SETTING,
+                    null,
+                    ull,
+                    new pix_icon('i/item', '')
+                );
                 break;
             case 'hangman':
                 $url = new moodle_url('/mod/game/export.php', [ 'id' => $PAGE->cm->id,
                     'courseid' => $courseid, 'target' => 'html']);
-                $gamenode->add(get_string('export_to_html', 'game'), $url, navigation_node::TYPE_SETTING,
-                    null, null, new pix_icon('i/item', ''));
+                $gamenode->add(get_string(
+                    'export_to_html', 'game'),
+                    $url,
+                    navigation_node::TYPE_SETTING,
+                    null,
+                    null,
+                    new pix_icon('i/item','')
+                );
 
                 $url = new moodle_url('/mod/game/export.php', [ 'id' => $PAGE->cm->id,
                     'courseid' => $courseid, 'target' => 'javame']);
@@ -1079,7 +1091,8 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_hangman', 'game');
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                get_string_manager()->string_exists('help' . $type->name, 'game')
+            ) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
@@ -1094,10 +1107,11 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=cross";
             $type->name = preg_replace('/.*type=/', '', $type->type);
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_cross', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_cross', 'game');
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                get_string_manager()->string_exists('help' . $type->name, 'game')
+            ) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
@@ -1111,11 +1125,12 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=cryptex";
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_cryptex', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_cryptex', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                get_string_manager()->string_exists('help' . $type->name, 'game')
+            ) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
@@ -1125,11 +1140,12 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=millionaire";
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_millionaire', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_millionaire', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                get_string_manager()->string_exists('help' . $type->name, 'game')
+            ) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
@@ -1143,7 +1159,8 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                get_string_manager()->string_exists('help' . $type->name, 'game')
+            ) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
@@ -1153,7 +1170,7 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=snakes";
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_snakes', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_snakes', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) && get_string_manager()->string_exists('help' . $type->name, 'game')) {
@@ -1166,11 +1183,12 @@ if (defined('USE_GET_SHORTCUTS')) {
             $type = new stdClass();
             $type->archetype = MOD_CLASS_ACTIVITY;
             $type->type = "game&type=hiddenpicture";
-            $type->title = get_string('pluginname', 'game').' - '.get_string('game_hiddenpicture', 'game');
+            $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_hiddenpicture', 'game');
             $type->name = preg_replace('/.*type=/', '', $type->type);
             $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
             if (empty($type->help) && !empty($type->name) &&
-                get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                get_string_manager()->string_exists('help' . $type->name, 'game')
+            ) {
                     $type->help = get_string('help' . $type->name, 'game');
             }
             $types[] = $type;
@@ -1184,7 +1202,8 @@ if (defined('USE_GET_SHORTCUTS')) {
                 $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_bookquiz', 'game');
                 $type->name = preg_replace('/.*type=/', '', $type->type);
                 $type->link = new moodle_url($defaultitem->link, ['type' => $type->name]);
-                if (empty($type->help) && !empty($type->name) && get_string_manager()->string_exists('help' . $type->name, 'game')) {
+                if (empty($type->help) && !empty($type->name) && get_string_manager()->string_exists('help' . $type->name, 'game')
+                ) {
                         $type->help = get_string('help' . $type->name, 'game');
                 }
                 $types[] = $type;
@@ -1229,7 +1248,7 @@ if (defined('GAME_MOODLE_401')) {
      * @param content_item $defaultmodulecontentitem reference to the content item for the LTI module.
      * @param stdClass $user the user object, to use for cap checks if desired.
      * @param stdClass $course the course to scope items to.
-     * @param $types
+     * @param array &$types
      * @param string $kind the kind of each game.
      * @throws \core\exception\moodle_exception
      * @throws coding_exception
@@ -1239,7 +1258,7 @@ if (defined('GAME_MOODLE_401')) {
         content_item $defaultmodulecontentitem,
         stdClass $user,
         stdClass $course,
-        &$types,
+        array &$types,
         string $kind
     ) {
         global $OUTPUT;
@@ -1251,16 +1270,17 @@ if (defined('GAME_MOODLE_401')) {
             return;
         }
         $type = new stdClass();
-        $type->type = "game&type=".$kind;
+        $type->type = "game&type=" . $kind;
         $type->name = preg_replace('/.*type=/', '', $type->type);
-        $type->title = get_string('pluginname', 'game').' - '.get_string('game_'.$kind, 'game');
+        $type->title = get_string('pluginname', 'game') . ' - ' . get_string('game_' . $kind, 'game');
         $type->link = new moodle_url(
             '/course/modedit.php',
             ['add' => 'game', 'return' => 0, 'type' => $kind, 'course' => $course->id, 'id' => $course->id]
         );
         $type->help = '';
         if (empty($type->help) && !empty($type->name) &&
-            get_string_manager()->string_exists('help' . $type->name, 'game')) {
+            get_string_manager()->string_exists('help' . $type->name, 'game')
+        ) {
                 $type->help = get_string('help' . $type->name, 'game');
         }
 
@@ -1605,7 +1625,7 @@ function game_pix_url($filename, $module = '') {
         $file = dirname(__FILE__) . DIRECTORY_SEPARATOR . 'pix' . DIRECTORY_SEPARATOR . $filename . '.';
         $exts = [ 'svg', 'png', 'jpg'];
         foreach ($exts as $ext) {
-            if (file_exists($file.$ext)) {
+            if (file_exists($file . $ext)) {
                 return $ret . $ext;
             }
         }

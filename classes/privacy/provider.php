@@ -48,18 +48,17 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
  */
 class provider implements
     // This plugin has data.
+    \core_privacy\local\request\plugin\provider,
     \core_privacy\local\metadata\provider,
-    core_userlist_provider,
-
-    // This plugin currently implements the original plugin_provider interface.
-    \core_privacy\local\request\plugin\provider {
+    core_userlist_provider {
+    // This plugin currently implements the original plugin_provider interface.{
     /**
      * Get the list of contexts that contain user information for the specified user.
      *
      * @param   collection  $items  The collection to add metadata to.
      * @return  collection  The array of metadata
      */
-    public static function get_metadata(collection $items) : collection {
+    public static function get_metadata(collection $items): collection {
         // The table 'game' stores a record for each game.
         // It does not contain user personal data, but data is returned from it for contextual requirements.
 
@@ -189,7 +188,6 @@ class provider implements
      * @return  contextlist     $contextlist The contextlist containing the list of contexts used in this plugin.
      */
     public static function get_contexts_for_userid(int $userid) : contextlist {
-
         // Select the context of any game attempt where a user has an attempt, plus the related usages.
         $sql = "SELECT c.id
                   FROM {context} c
@@ -362,7 +360,7 @@ class provider implements
             $data->attempts = $attempt->attempts;
             $data->language = $attempt->language;
 
-            switch($attempt->gamekind) {
+            switch ($attempt->gamekind) {
                 case 'bookquiz':
                     self::export_game_attempts_bookquiz($attempt, $data);
                     break;
@@ -574,7 +572,7 @@ class provider implements
         $params = [
             'contextid' => $context->id,
             'contextlevel' => CONTEXT_MODULE,
-            'modname' => 'game'
+            'modname' => 'game',
         ];
 
         // Find users with game attempt entries.
@@ -622,16 +620,13 @@ class provider implements
         $userlist->add_from_sql('userid', $sql, $params);
 
         // Find users with game attempts.
-        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_attempts',
-                $context->id);
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_attempts', $context->id);
 
         // Find users with game grades.
-        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_grades',
-                $context->id);
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_grades', $context->id);
 
         // Find users with game queries.
-        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_queries',
-                $context->id);
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_queries', $context->id);
 
         // Find users with game queries.
         providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_repetitions', $context->id);

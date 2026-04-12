@@ -120,8 +120,8 @@ function game_showusers($game) {
     $options = $users;
     $selected = optional_param('userid', $USER->id, PARAM_INT);
 
-    $output = '<select id="' . $id . '" class="' . $class . '" name="' . $name . '" ' . $attributes .'>' . "\n";
-    $output .= '   <option value="'. s($nothingvalue) . '"' . "\n";
+    $output = '<select id="' . $id . '" class="' . $class . '" name="' . $name . '" ' . $attributes . '>' . "\n";
+    $output .= '   <option value="' . s($nothingvalue) . '"' . "\n";
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
     }

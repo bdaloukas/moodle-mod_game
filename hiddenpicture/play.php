@@ -14,7 +14,6 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-
 /**
  * This file plays the game Hidden Picture.
  *
@@ -136,9 +135,9 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
 
     $sql = "SELECT ge.id,attachment FROM $table WHERE $select";
     if (($recs = $DB->get_records_sql($sql)) == false) {
-        $a->name = "'".$DB->get_field('glossary', 'name', ['id' => $game->glossaryid2])."'";
+        $a = new stdClass();
+        $a->name = "'" . $DB->get_field('glossary', 'name', ['id' => $game->glossaryid2]) . "'";
         throw new moodle_exception('hiddenpicture_nomainquestion', 'game', $a);
-        return false;
     }
     $ids = $keys = [];
     $fs = get_file_storage();
@@ -191,7 +190,7 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
 
     $sql = 'SELECT id, concept as answertext, definition as questiontext,' .
         ' id as glossaryentryid, 0 as questionid, glossaryid, attachment' .
-        ' FROM {glossary_entries} WHERE id = '.$glossaryentryid;
+        ' FROM {glossary_entries} WHERE id = ' . $glossaryentryid;
     if (($rec = $DB->get_record_sql($sql)) == false) {
         return false;
     }
@@ -216,7 +215,7 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
     $newrec->id = $attempt->id;
     $newrec->correct = 0;
     if (!game_insert_record('game_hiddenpicture', $newrec)) {
-        throw new moodle_exception('hiddenpicture_error', 'game',  'Error inserting in game_hiddenpicture');
+        throw new moodle_exception('hiddenpicture_error', 'game', 'Error inserting in game_hiddenpicture');
     }
 
     game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
@@ -237,7 +236,7 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
  */
 function game_hiddenpicture_play($cm, $game, $attempt, $hiddenpicture, $showsolution, $context, $course) {
     if ($game->toptext != '') {
-        echo $game->toptext.'<br>';
+        echo $game->toptext . '<br>';
     }
 
     // Show picture.
@@ -251,7 +250,7 @@ function game_hiddenpicture_play($cm, $game, $attempt, $hiddenpicture, $showsolu
         $hiddenpicture,
         $showsolution,
         $offsetquestions,
-        $correctquestions
+        $correctquestions,
     );
 
     // Show questions.
@@ -261,17 +260,36 @@ function game_hiddenpicture_play($cm, $game, $attempt, $hiddenpicture, $showsolu
     switch ($game->sourcemodule) {
         case 'quiz':
         case 'question':
-            game_sudoku_showquestions_quiz($cm->id, $game, $attempt, $hiddenpicture, $offsetquestions,
-                $numbers, $correctquestions, $onlyshow, $showsolution, $context);
+            game_sudoku_showquestions_quiz(
+                $cm->id,
+                $game,
+                $attempt,
+                $hiddenpicture,
+                $offsetquestions,
+                $numbers,
+                $correctquestions,
+                $onlyshow,
+                $showsolution,
+                $context,
+            );
             break;
         case 'glossary':
-            game_sudoku_showquestions_glossary($cm->id, $game, $attempt, $hiddenpicture,
-                $offsetquestions, $numbers, $correctquestions, $onlyshow, $showsolution);
+            game_sudoku_showquestions_glossary(
+                $cm->id,
+                $game,
+                $attempt,
+                $hiddenpicture,
+                $offsetquestions,
+                $numbers,
+                $correctquestions,
+                $onlyshow,
+                $showsolution,
+            );
             break;
     }
 
     if ($game->bottomtext != '') {
-        echo '<br><br>'.$game->bottomtext;
+        echo '<br><br>' . $game->bottomtext;
     }
 }
 
@@ -361,7 +379,7 @@ function game_hiddenpicture_showquestion_glossary($game, $id, $query) {
 
     // Start the form.
     echo '<br>';
-    echo "<form id=\"responseform\" method=\"post\" ".
+    echo "<form id=\"responseform\" method=\"post\" " .
         "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
     echo "<center><input type=\"submit\" name=\"finishattempt\" " .
         "value=\"" . get_string('hiddenpicture_mainsubmit', 'game') . "\"></center>\n";

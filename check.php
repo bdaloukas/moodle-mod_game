@@ -312,7 +312,7 @@ function game_check_common_problems_shortanswer_allowspaces($game, &$warnings, $
     }
 
     if (count($ret) != 0) {
-        $warnings[] = get_string('common_problems_allowspaces', 'game') . ': ' . count($ret) . ' ('.implode(', ', $ret) . ')';
+        $warnings[] = get_string('common_problems_allowspaces', 'game') . ': ' . count($ret) . ' (' . implode(', ', $ret) . ')';
     }
 }
 
@@ -326,7 +326,6 @@ function game_check_common_problems_shortanswer_allowspaces($game, &$warnings, $
 function game_check_common_problems_shortanswer_hangman($game, &$warnings, $a) {
     $ret = [];
     foreach ($a as $word) {
-
         $word = game_upper(str_replace(' ', '', $word), $game->language);
         if ($game->language == '') {
             $game->language = game_detectlanguage($word);
@@ -342,7 +341,8 @@ function game_check_common_problems_shortanswer_hangman($game, &$warnings, $a) {
     }
 
     if (count($ret) != 0) {
-        $warnings[] = get_string('common_problems_shortanswer_hangman', 'game') . ': '.count($ret) . ' (' . implode(', ', $ret) . ')';
+        $warnings[] = get_string('common_problems_shortanswer_hangman', 'game') . ': '.count($ret) .
+            ' (' . implode(', ', $ret) . ')';
     }
 }
 

@@ -33,7 +33,6 @@ require_once($CFG->dirroot . '/mod/game/locallib.php');
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class restore_game_activity_structure_step extends restore_activity_structure_step {
-
     /**
      * Defines the neeeded structures.
      *
@@ -49,7 +48,9 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
         $paths[] = new restore_path_element('game_export_html', '/activity/game/game_export_htmls/game_export_html');
         $paths[] = new restore_path_element('game_export_javame', '/activity/game/game_export_htmls/game_export_javame');
         $paths[] = new restore_path_element(
-            'game_bookquiz_question', '/activity/game/game_bookquiz_questions/game_bookquiz_question');
+            'game_bookquiz_question',
+            '/activity/game/game_bookquiz_questions/game_bookquiz_question'
+        );
         if ($userinfo) {
             $paths[] = new restore_path_element('game_grade', '/activity/game/game_grades/game_grade');
             $paths[] = new restore_path_element('game_repetition', '/activity/game/game_repetiotions/game_repetition');
@@ -58,13 +59,17 @@ class restore_game_activity_structure_step extends restore_activity_structure_st
 
             // The games.
             $paths[] = new restore_path_element('game_bookquiz', '/activity/game/game_attempts/game_attempt/game_bookquiz');
-            $paths[] = new restore_path_element('game_bookquiz_chapter',
-                '/activity/game/game_attempts/game_attempt/game_bookquiz_chapters/game_bookquiz_chapter');
+            $paths[] = new restore_path_element(
+                'game_bookquiz_chapter',
+                '/activity/game/game_attempts/game_attempt/game_bookquiz_chapters/game_bookquiz_chapter'
+            );
             $paths[] = new restore_path_element('game_cross', '/activity/game/game_attempts/game_attempt/game_cross');
             $paths[] = new restore_path_element('game_cryptex', '/activity/game/game_attempts/game_attempt/game_cryptex');
             $paths[] = new restore_path_element('game_hangman', '/activity/game/game_attempts/game_attempt/game_hangman');
-            $paths[] = new restore_path_element('game_hiddenpicture',
-            '/activity/game/game_attempts/game_attempt/game_hiddenpicture');
+            $paths[] = new restore_path_element(
+                'game_hiddenpicture',
+                '/activity/game/game_attempts/game_attempt/game_hiddenpicture'
+            );
             $paths[] = new restore_path_element('game_millionaire', '/activity/game/game_attempts/game_attempt/game_millionaire');
             $paths[] = new restore_path_element('game_snake', '/activity/game/game_attempts/game_attempt/game_snake');
             $paths[] = new restore_path_element('game_sudoku', '/activity/game/game_attempts/game_attempt/game_sudoku');

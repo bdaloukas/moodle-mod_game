@@ -96,7 +96,7 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
                 imagefilledrectangle($imghandle, $x1, $y1, $x1 + $width / $cols, $y1 + $height / $rows, $color);
 
                 if (array_key_exists($pos, $cells)) {
-                    shownumber($imghandle, $imgnumbers, $pos, $x1 , $y1, $width / $cols, $height / $rows, $sizenumbers);
+                    shownumber($imghandle, $imgnumbers, $pos, $x1, $y1, $width / $cols, $height / $rows, $sizenumbers);
                 }
             }
         }
@@ -104,20 +104,20 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
 
     switch ($mime) {
         case 'image/png':
-            imagepng ($imghandle);
+            imagepng($imghandle);
             break;
         case 'image/jpeg':
-            imagejpeg ($imghandle);
+            imagejpeg($imghandle);
             break;
         case 'image/gif':
-            imagegif ($imghandle);
+            imagegif($imghandle);
             break;
         default:
             die('Aknown mime type $mime');
             return false;
     }
 
-    imagedestroy ($imghandle);
+    imagedestroy($imghandle);
 }
 
 /**
@@ -132,7 +132,7 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
  * @param int $height
  * @param int $sizenumbers
  */
-function shownumber($imghandle, $imgnumbers, $number, $x1 , $y1, $width, $height, $sizenumbers) {
+function shownumber($imghandle, $imgnumbers, $number, $x1, $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
         $dstx = $x1 + $width / 3;
         $dsty = $y1 + $height / 3;
