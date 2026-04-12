@@ -24,6 +24,7 @@
 
 namespace mod_game\privacy;
 
+use core_comment\privacy\provider as providerAlias;
 use core_privacy\local\request\core_userlist_provider;
 use core_privacy\local\request\writer;
 use core_privacy\local\request\transform;
@@ -52,7 +53,6 @@ class provider implements
 
     // This plugin currently implements the original plugin_provider interface.
     \core_privacy\local\request\plugin\provider {
-
     /**
      * Get the list of contexts that contain user information for the specified user.
      *
@@ -622,20 +622,19 @@ class provider implements
         $userlist->add_from_sql('userid', $sql, $params);
 
         // Find users with game attempts.
-        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_attempts',
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_attempts',
                 $context->id);
 
         // Find users with game grades.
-        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_grades',
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_grades',
                 $context->id);
 
         // Find users with game queries.
-        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_queries',
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_queries',
                 $context->id);
 
         // Find users with game queries.
-        \core_comment\privacy\provider::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_repetitions',
-                $context->id);
+        providerAlias::get_users_in_context_from_sql($userlist, 'com', 'mod_game', 'game_repetitions', $context->id);
     }
 
 

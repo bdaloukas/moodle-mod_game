@@ -140,7 +140,7 @@ class mod_game_mod_form extends moodleform_mod {
         // Quiz Category.
         if ($gamekind != 'bookquiz') {
             $a = [];
-            if ($recs = $DB->get_records('quiz', [ 'course' => $COURSE->id], 'id,name')) {
+            if ($recs = $DB->get_records('quiz', ['course' => $COURSE->id], 'id,name')) {
                 foreach ($recs as $rec) {
                     $a[$rec->id] = $rec->name;
                 }
@@ -152,7 +152,7 @@ class mod_game_mod_form extends moodleform_mod {
         // Book.
         if ($gamekind == 'bookquiz') {
             $a = [];
-            if ($recs = $DB->get_records('book', [ 'course' => $COURSE->id], 'id,name')) {
+            if ($recs = $DB->get_records('book', ['course' => $COURSE->id], 'id,name')) {
                 foreach ($recs as $rec) {
                     $a[$rec->id] = $rec->name;
                 }
@@ -388,11 +388,11 @@ class mod_game_mod_form extends moodleform_mod {
             $mform->setDefault('param2', 3);
 
             $a = [];
-            if ($recs = $DB->get_records('glossary', [ 'course' => $COURSE->id], 'id,name')) {
+            if ($recs = $DB->get_records('glossary', ['course' => $COURSE->id], 'id,name')) {
                 foreach ($recs as $rec) {
                     $cmg = get_coursemodule_from_instance('glossary', $rec->id, $COURSE->id);
                     $context = game_get_context_module_instance($cmg->id);
-                    if ($DB->record_exists('files', [ 'contextid' => $context->id])) {
+                    if ($DB->record_exists('files', ['contextid' => $context->id])) {
                         $a[$rec->id] = $rec->name;
                     }
                 }
@@ -441,7 +441,7 @@ class mod_game_mod_form extends moodleform_mod {
             foreach ($a as $id => $name) {
                 $select .= ',' . $id;
             }
-            $select = 'gc.glossaryid IN ('.substr($select, 1) . ')';
+            $select = 'gc.glossaryid IN (' . substr($select, 1) . ')';
         }
 
         $a = [];
@@ -557,12 +557,12 @@ class mod_game_mod_form extends moodleform_mod {
 
         $errors = parent::validation($data, $files);
 
-        if ($data[ 'sourcemodule'] == 'glossary') {
-            if (!array_key_exists('glossaryid', $data) || $data[ 'glossaryid'] == 0) {
-                $errors[ 'glossaryid'] = get_string('sourcemodule_glossary', 'game');
+        if ($data['sourcemodule'] == 'glossary') {
+            if (!array_key_exists('glossaryid', $data) || $data['glossaryid'] == 0) {
+                $errors['glossaryid'] = get_string('sourcemodule_glossary', 'game');
             }
-        } else if ($data[ 'sourcemodule'] == 'question') {
-            if (!array_key_exists('questioncategoryid', $data) || $data[ 'questioncategoryid'] == 0) {
+        } else if ($data['sourcemodule'] == 'question') {
+            if (!array_key_exists('questioncategoryid', $data) || $data['questioncategoryid'] == 0) {
                 $errors['questioncategoryid'] = get_string('sourcemodule_questioncategory', 'game');
             }
         } else if ($data['sourcemodule'] == 'quiz') {
@@ -669,7 +669,7 @@ class mod_game_mod_form extends moodleform_mod {
             if (isset($defaultvalues->param3)) {
                 $board = $defaultvalues->param3;
                 if ($board != 0) {
-                    $rec = $DB->get_record('game_snakes_database', [ 'id' => $board]);
+                    $rec = $DB->get_record('game_snakes_database', ['id' => $board]);
                     $defaultvalues->snakes_data = $rec->data;
                     $defaultvalues->snakes_cols = $rec->usedcols;
                     $defaultvalues->snakes_rows = $rec->usedrows;

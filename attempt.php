@@ -113,9 +113,9 @@ function game_show_header(&$id, &$game, &$course, &$context, &$cm) {
 
     if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
         $buttons = '<table><tr><td><form method="get" action="view.php"><div>' .
-                '<input type="hidden" name="id" value="'.$cm->id.'" />' .
+                '<input type="hidden" name="id" value="' . $cm->id . '" />' .
                 '<input type="hidden" name="edit" value="' . ($PAGE->user_is_editing() ? 'off' : 'on') . '" />'.
-                '<input type="submit" value="'.get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
+                '<input type="submit" value="' . get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
                 '" /></div></form></td></tr></table>';
         $PAGE->set_button($buttons);
     }
@@ -144,7 +144,7 @@ function game_do_attempt($game, $action, $course, $context, $cm) {
     $num = optional_param('num', 0, PARAM_INT);
     $q = optional_param('q', 0, PARAM_INT);
     $attemptid = optional_param('attemptid', 0, PARAM_INT);
-    $g = optional_param('g',  '', PARAM_RAW);
+    $g = optional_param('g', '', PARAM_RAW);
     $finishattempt = optional_param('finishattempt', '', PARAM_TEXT);
     $answer = optional_param('answer', '', PARAM_TEXT);
     $continue = false;

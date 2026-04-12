@@ -36,7 +36,7 @@ function game_check_common_problems($context, $game) {
 
     $warnings = [];
 
-    switch($game->gamekind) {
+    switch ($game->gamekind) {
         case 'millionaire':
             game_check_common_problems_multichoice($game, $warnings);
             break;
@@ -104,7 +104,7 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
             }
         }
     } else {
-        $select = 'q.category='.$game->questioncategoryid;
+        $select = 'q.category=' . $game->questioncategoryid;
         if ($game->subcategories) {
             $cats = question_categorylist($game->questioncategoryid);
             if (count($cats) > 0) {
@@ -179,7 +179,7 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         if (count($a) == 0) {
             $select = 'q.id IN (0)';
         } else {
-            $select = 'q.id IN ('.implode(',', $a).')';
+            $select = 'q.id IN (' . implode(',', $a) . ')';
         }
         $select .= " AND qmo.questionid=q.id AND qmo.single <> 1";
         $table .= ",{$CFG->prefix}qtype_multichoice_options qmo";
@@ -259,7 +259,7 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
         }
     } else {
         $table2 = '';
-        $select = 'category='.$game->questioncategoryid;
+        $select = 'category=' . $game->questioncategoryid;
         if ($game->subcategories) {
             $cats = question_categorylist($game->questioncategoryid);
             if (count($cats) > 0) {
@@ -312,7 +312,7 @@ function game_check_common_problems_shortanswer_allowspaces($game, &$warnings, $
     }
 
     if (count($ret) != 0) {
-        $warnings[] = get_string('common_problems_allowspaces', 'game') . ': ' . count($ret) . ' ('.implode( ', ', $ret) . ')';
+        $warnings[] = get_string('common_problems_allowspaces', 'game') . ': ' . count($ret) . ' ('.implode(', ', $ret) . ')';
     }
 }
 
@@ -323,16 +323,16 @@ function game_check_common_problems_shortanswer_allowspaces($game, &$warnings, $
  * @param array $warnings
  * @param array $a the words contained
  */
-function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) {
+function game_check_common_problems_shortanswer_hangman($game, &$warnings, $a) {
     $ret = [];
     foreach ($a as $word) {
 
-        $word = game_upper( str_replace( ' ', '', $word), $game->language);
+        $word = game_upper(str_replace(' ', '', $word), $game->language);
         if ($game->language == '') {
-            $game->language = game_detectlanguage( $word);
-            $word = game_upper( $word, $game->language);
+            $game->language = game_detectlanguage($word);
+            $word = game_upper($word, $game->language);
         }
-        $allletters = game_getallletters( $word, $game->language, $game->userlanguage);
+        $allletters = game_getallletters($word, $game->language, $game->userlanguage);
 
         if ($allletters != '') {
             continue;
@@ -341,8 +341,8 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
         $ret[] = $word;
     }
 
-    if (count( $ret) != 0) {
-        $warnings[] = get_string( 'common_problems_shortanswer_hangman', 'game') . ': '.count($ret) . ' (' . implode( ', ', $ret) . ')';
+    if (count($ret) != 0) {
+        $warnings[] = get_string('common_problems_shortanswer_hangman', 'game') . ': '.count($ret) . ' (' . implode(', ', $ret) . ')';
     }
 }
 
@@ -354,6 +354,6 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
  */
 function game_check_common_problems_crossword_cryptex($game, &$warnings) {
     if (($game->param1 < 10) && ($game->param1 > 0)) {
-        $warnings[] = get_string( 'common_problems_crossword_param1', 'game') . ' (=' . $game->param1 . ')';
+        $warnings[] = get_string('common_problems_crossword_param1', 'game') . ' (=' . $game->param1 . ')';
     }
 }

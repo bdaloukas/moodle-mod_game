@@ -285,7 +285,8 @@ function game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, $
             $style = $stylequestionselected;
         }
 
-        $button = '<input style="' . $style . '" ' . $disabled . 'type="submit" name="' . $name . '" value="' . $s . '" id="' . $name . "1\"" .
+        $button = '<input style="' . $style . '" ' . $disabled . 'type="submit" name="' . $name .
+            '" value="' . $s . '" id="' . $name . "1\"" .
             " onmouseover=\"this.style.backgroundColor = '$color2';$name.style.backgroundColor = '$color2';\" " .
             " onmouseout=\"this.style.backgroundColor = '$colorback';$name.style.backgroundColor = '$colorback';\" >";
         $text = game_filtertext($aanswer[$i - 1], $game->course);

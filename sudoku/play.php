@@ -375,7 +375,7 @@ function game_sudoku_showsudoku(
 ?>
     <script language="javascript">
         function OnCheck(pos) {
-            s = window.prompt("<?php echo get_string ('sudoku_guessnumber', 'game') ?>", "");
+            s = window.prompt("<?php echo get_string('sudoku_guessnumber', 'game') ?>", "");
             if (s < "1")
                 return;
             if (s > "9")

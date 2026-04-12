@@ -136,7 +136,7 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
 
     $sql = "SELECT ge.id,attachment FROM $table WHERE $select";
     if (($recs = $DB->get_records_sql($sql)) == false) {
-        $a->name = "'".$DB->get_field('glossary', 'name', [ 'id' => $game->glossaryid2])."'";
+        $a->name = "'".$DB->get_field('glossary', 'name', ['id' => $game->glossaryid2])."'";
         throw new moodle_exception('hiddenpicture_nomainquestion', 'game', $a);
         return false;
     }
@@ -159,7 +159,7 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
     }
     if (count($ids) == 0) {
         $a = new stdClass();
-        $a->name = "'".$DB->get_field('glossary', 'name', [ 'id' => $game->glossaryid2])."'";
+        $a->name = "'" . $DB->get_field('glossary', 'name', ['id' => $game->glossaryid2]) . "'";
         throw new moodle_exception('hiddenpicture_nomainquestion', 'game', $a);
         return false;
     }
@@ -175,7 +175,7 @@ function game_hiddenpicture_selectglossaryentry($game, $attempt) {
     for ($i = 0; $i < count($ids); $i++) {
         $pos = $poss[$i];
         $tempid = $ids[$pos];
-        $a = [ 'gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid];
+        $a = ['gameid' => $game->id, 'userid' => $USER->id, 'questionid' => 0, 'glossaryentryid' => $tempid];
         if (($rec2 = $DB->get_record('game_repetitions', $a, 'id,repetitions r')) != false) {
             if (($rec2->r < $minnum) || ($minnum == 0)) {
                 $minnum = $rec2->r;
@@ -244,8 +244,15 @@ function game_hiddenpicture_play($cm, $game, $attempt, $hiddenpicture, $showsolu
     $offsetquestions = game_sudoku_compute_offsetquestions($game->sourcemodule, $attempt, $numbers, $correctquestions);
     unset($offsetquestions[0]);
 
-    game_hiddenpicture_showhiddenpicture($cm->id, $game, $attempt, $hiddenpicture, $showsolution,
-        $offsetquestions, $correctquestions);
+    game_hiddenpicture_showhiddenpicture(
+        $cm->id,
+        $game,
+        $attempt,
+        $hiddenpicture,
+        $showsolution,
+        $offsetquestions,
+        $correctquestions
+    );
 
     // Show questions.
     $onlyshow = false;
@@ -301,26 +308,37 @@ function game_hidden_picture_computescore($game, $hiddenpicture) {
  * @param int $offsetquestions
  * @param int $correctquestions
  */
-function game_hiddenpicture_showhiddenpicture($id, $game, $attempt, $hiddenpicture, $showsolution,
-            $offsetquestions, $correctquestions) {
+function game_hiddenpicture_showhiddenpicture(
+    $id,
+    $game,
+    $attempt,
+    $hiddenpicture,
+    $showsolution,
+    $offsetquestions,
+    $correctquestions
+) {
     global $DB;
 
     $foundcells = '';
     foreach ($correctquestions as $key => $val) {
-        $foundcells .= ','.$key;
+        $foundcells .= ',' . $key;
     }
     $cells = '';
     foreach ($offsetquestions as $key => $val) {
         if ($key != 0) {
-            $cells .= ','.$key;
+            $cells .= ',' . $key;
         }
     }
 
-    $query = $DB->get_record_select('game_queries', "attemptid=$hiddenpicture->id AND mycol=0",
-        null, 'id,glossaryentryid,attachment,questiontext');
+    $query = $DB->get_record_select(
+        'game_queries',
+        "attemptid=$hiddenpicture->id AND mycol=0",
+        null,
+        'id,glossaryentryid,attachment,questiontext'
+    );
 
     // Grade.
-    echo "<br/>".get_string('grade', 'game') . ' : ' . round($attempt->score * 100) . ' %';
+    echo "<br/>" . get_string('grade', 'game') . ' : ' . round($attempt->score * 100) . ' %';
 
     game_hiddenpicture_showquestion_glossary($game, $id, $query);
 
@@ -339,14 +357,14 @@ function game_hiddenpicture_showhiddenpicture($id, $game, $attempt, $hiddenpictu
 function game_hiddenpicture_showquestion_glossary($game, $id, $query) {
     global $CFG, $DB;
 
-    $entry = $DB->get_record('glossary_entries', [ 'id' => $query->glossaryentryid]);
+    $entry = $DB->get_record('glossary_entries', ['id' => $query->glossaryentryid]);
 
     // Start the form.
     echo '<br>';
     echo "<form id=\"responseform\" method=\"post\" ".
         "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
-    echo "<center><input type=\"submit\" name=\"finishattempt\" ".
-        "value=\"".get_string('hiddenpicture_mainsubmit', 'game')."\"></center>\n";
+    echo "<center><input type=\"submit\" name=\"finishattempt\" " .
+        "value=\"" . get_string('hiddenpicture_mainsubmit', 'game') . "\"></center>\n";
 
     // Add a hidden field with the queryid.
     echo '<input type="hidden" name="id" value="' . s($id) . "\" />\n";
@@ -354,14 +372,14 @@ function game_hiddenpicture_showquestion_glossary($game, $id, $query) {
     echo '<input type="hidden" name="queryid" value="' . $query->id . "\" />\n";
 
     // Add a hidden field with glossaryentryid.
-    echo '<input type="hidden" name="glossaryentryid" value="'.$query->glossaryentryid."\" />\n";
+    echo '<input type="hidden" name="glossaryentryid" value="' . $query->glossaryentryid . "\" />\n";
 
     $temp = $game->glossaryid;
     $game->glossaryid = $game->glossaryid2;
     echo game_show_query($game, $query, $entry->definition);
     $game->glossaryid = $temp;
 
-    echo get_string('answer').': ';
+    echo get_string('answer') . ': ';
     echo "<input type=\"text\" name=\"answer\" size=30 /><br>";
 
     echo "</form><br>\n";
@@ -387,7 +405,7 @@ function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpi
     $queryid = $responses->queryid;
 
     // Load the glossary entry.
-    if (!($entry = $DB->get_record('glossary_entries', [ 'id' => $glossaryentryid]))) {
+    if (!($entry = $DB->get_record('glossary_entries', ['id' => $glossaryentryid]))) {
         throw new moodle_exception('noglossaryentriesfound', 'game');
     }
     $answer = $responses->answer;
@@ -399,8 +417,8 @@ function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpi
     }
 
     // Load the query.
-    if (!($query = $DB->get_record('game_queries', [ 'id' => $queryid]))) {
-        throw new moodle_exception('hiddenpicture_error', 'game',  "The query $queryid not found");
+    if (!($query = $DB->get_record('game_queries', ['id' => $queryid]))) {
+        throw new moodle_exception('hiddenpicture_error', 'game', "The query $queryid not found");
     }
 
     game_update_queries($game, $attempt, $query, $correct, $answer);
@@ -423,8 +441,12 @@ function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpi
     }
 
     // Finish the game.
-    $query = $DB->get_record_select('game_queries', "attemptid=$hiddenpicture->id AND mycol=0",
-        null, 'id,glossaryentryid,attachment,questiontext');
+    $query = $DB->get_record_select(
+        'game_queries',
+        "attemptid=$hiddenpicture->id AND mycol=0",
+        null,
+        'id,glossaryentryid,attachment,questiontext'
+    );
     game_showpicture($cm->id, $game, $attempt, $query, '', '', false);
     echo '<p><br/><font size="5" color="green">' . get_string('win', 'game') . '</font><BR/><BR/></p>';
     global $CFG;
@@ -434,7 +456,7 @@ function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpi
     echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}\">";
     echo get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp;';
 
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">" . get_string('finish', 'game').'</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
 
     return false;
 }
@@ -453,7 +475,7 @@ function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpi
 function game_showpicture($id, $game, $attempt, $query, $cells, $foundcells, $usemap) {
     global $CFG;
 
-    $filenamenumbers = str_replace("\\", '/', $CFG->dirroot)."/mod/game/hiddenpicture/numbers.png";
+    $filenamenumbers = str_replace("\\", '/', $CFG->dirroot) . "/mod/game/hiddenpicture/numbers.png";
     if ($usemap) {
         $cols = $game->param1;
         $rows = $game->param2;

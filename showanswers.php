@@ -46,7 +46,7 @@ echo '<b>' . get_string('repetitions', 'game') . ': &nbsp;&nbsp;</b>';
 echo get_string('user') . ': ';
 game_showusers($game);
 echo " &nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&action=delstats\">" .
-    get_string('clearrepetitions', 'game').'</a>';
+    get_string('clearrepetitions', 'game') . '</a>';
 echo " &nbsp;&nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&action=computestats\">" .
     get_string('computerepetitions', 'game') . '</a>';
 echo '<br><br>';
@@ -120,7 +120,7 @@ function game_showusers($game) {
     $options = $users;
     $selected = optional_param('userid', $USER->id, PARAM_INT);
 
-    $output = '<select id="'. $id . '" class="'. $class . '" name="'. $name . '" ' . $attributes .'>' . "\n";
+    $output = '<select id="' . $id . '" class="' . $class . '" name="' . $name . '" ' . $attributes .'>' . "\n";
     $output .= '   <option value="'. s($nothingvalue) . '"' . "\n";
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
@@ -130,8 +130,7 @@ function game_showusers($game) {
     if (!empty($options)) {
         foreach ($options as $value => $label) {
             $output .= '   <option value="' . s($value) . '"';
-            if ((string)$value == (string)$selected ||
-                    (is_array($selected) && in_array($value, $selected))) {
+            if ((string)$value == (string)$selected || (is_array($selected) && in_array($value, $selected))) {
                 $output .= ' selected="selected"';
             }
             if ($label === '') {
@@ -173,7 +172,9 @@ function game_showanswers($game, $existsbook, $context) {
 }
 
 /**
- * append select to SQL
+ * Append select to SQL
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  */
@@ -280,6 +281,8 @@ function game_showanswers_question($game, $context) {
 /**
  * Show answers quiz
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param stdClass $context
  */
@@ -300,8 +303,8 @@ function game_showanswers_quiz($game, $context) {
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql($sql);
         $ret = [];
-        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
-            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? ' . game_showanswers_appendselect($game).
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q " .
+            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? ' . game_showanswers_appendselect($game) .
             ' ORDER BY version DESC';
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql($sql, [ $rec->questionbankentryid], 0, 1);
@@ -318,7 +321,7 @@ function game_showanswers_quiz($game, $context) {
         $sort = 'questiontext';
     } else {
         $select = "qs.quizid='$game->quizid' " .
-            " AND qs.questionid=q.id ".game_showanswers_appendselect($game);
+            " AND qs.questionid=q.id " . game_showanswers_appendselect($game);
         $table = "{question} q,{quiz_slots} qs";
     }
 
@@ -416,9 +419,7 @@ function game_showanswers_question_select($game, $table, $select, $fields, $orde
         echo "<img src=\"" . game_pix_url('t/edit') . "\" alt=\"Edit\" style=\"width: 1em\"/></a> ";
 
         echo game_filterquestion(
-            str_replace([ "\'", '\"'],
-            [ "'", '"'],
-            $question->questiontext),
+            str_replace([ "\'", '\"'], [ "'", '"'], $question->questiontext),
             $question->id,
             $context->id,
             $game->course

@@ -479,11 +479,11 @@ class game_report extends game_default_report {
                                     userdate($attempt->timestart, $strtimeformat) . '</a>',
                                 empty($attempt->timefinish) ? '-' : '<a href="review.php?q=' .
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
-                                    userdate($attempt->timefinish, $strtimeformat) . '</a>' ,
+                                    userdate($attempt->timefinish, $strtimeformat) . '</a>',
                                 empty($attempt->attempt) ? '-' :
                                     (empty($attempt->timefinish) ? get_string('unfinished', 'game') :
                                         format_time($attempt->duration)
-                                )
+                                ),
                                 ];
                     } else {
                         $row = [ fullname($attempt),
