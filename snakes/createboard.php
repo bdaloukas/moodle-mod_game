@@ -284,7 +284,8 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
         $source = game_imagecreatefrompng($file);
         if ($source != 0) {
             $stamp = imagerotate($source, 270, 0);
-            $starty += $movey; $movey = -$movey;
+            $starty += $movey;
+            $movey = -$movey;
         } else {
             $rotate = 270;
         }
@@ -294,8 +295,10 @@ function makeboards($im, $dir, $cx, $cy, $s, $colsx, $colsy, $ofsleft, $ofstop) 
         $source = game_imagecreatefrompng($file);
         if ($source != 0) {
             $stamp = imagerotate($source, 180, 0);
-            $startx += $movex; $movex = -$movex;
-            $starty += $movey; $movey = -$movey;
+            $startx += $movex;
+            $movex = -$movex;
+            $starty += $movey;
+            $movey = -$movey;
         } else {
             $rotate = 180;
         }

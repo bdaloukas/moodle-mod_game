@@ -43,12 +43,12 @@ if ($action == 'computestats') {
 }
 
 echo '<b>'.get_string('repetitions', 'game').': &nbsp;&nbsp;</b>';
-echo get_string('user').': ';
+echo get_string('user') . ': ';
 game_showusers($game);
-echo " &nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&action=delstats\">".
+echo " &nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&action=delstats\">" .
     get_string('clearrepetitions', 'game').'</a>';
-echo " &nbsp;&nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&action=computestats\">".
-    get_string('computerepetitions', 'game').'</a>';
+echo " &nbsp;&nbsp;<a href=\"{$CFG->wwwroot}/mod/game/showanswers.php?q=$q&action=computestats\">" .
+    get_string('computerepetitions', 'game') . '</a>';
 echo '<br><br>';
 
 $existsbook = ($DB->get_record('modules', [ 'name' => 'book'], 'id,id'));
@@ -70,7 +70,7 @@ function game_compute_repetitions($game) {
 
     $DB->delete_records('game_repetitions', ['gameid' => $game->id, 'userid' => $USER->id]);
 
-    $sql = "INSERT INTO {game_repetitions}(gameid,userid,questionid,glossaryentryid,repetitions) " .
+    $sql = "INSERT INTO {game_repetitions}(gameid,userid,questionid,glossaryentryid,repetitions) "  .
            "SELECT $game->id,$USER->id,questionid,glossaryentryid,COUNT(*) " .
            "FROM {game_queries} WHERE gameid=$game->id AND userid=$USER->id GROUP BY questionid,glossaryentryid";
 
@@ -99,7 +99,7 @@ function game_showusers($game) {
     if ($guest = guest_user()) {
         $users[$guest->id] = fullname($guest);
     }
-    $href = $CFG->wwwroot.'/mod/game/showanswers.php?q='.$game->id.'&userid=';
+    $href = $CFG->wwwroot.'/mod/game/showanswers.php?q=' . $game->id . '&userid=';
     ?>
         <script type="text/javascript">
             function onselectuser()
@@ -112,16 +112,16 @@ function game_showusers($game) {
 
     $attributes = 'onchange="javascript:onselectuser();"';
     $name = 'user';
-    $id = 'menu'.$name;
-    $class = 'menu'.$name;
+    $id = 'menu' . $name;
+    $class = 'menu' . $name;
     $class = 'select ' . $class; // Add 'select' selector always.
     $nothing = get_string("allparticipants");
     $nothingvalue = '0';
     $options = $users;
     $selected = optional_param('userid', $USER->id, PARAM_INT);
 
-    $output = '<select id="'. $id .'" class="'. $class .'" name="'. $name .'" '. $attributes .'>' . "\n";
-    $output .= '   <option value="'. s($nothingvalue) .'"'. "\n";
+    $output = '<select id="'. $id .'" class="'. $class . '" name="'. $name . '" ' . $attributes .'>' . "\n";
+    $output .= '   <option value="'. s($nothingvalue) . '"' . "\n";
     if ($nothingvalue === $selected) {
         $output .= ' selected="selected"';
     }
@@ -129,7 +129,7 @@ function game_showusers($game) {
 
     if (!empty($options)) {
         foreach ($options as $value => $label) {
-            $output .= '   <option value="'. s($value) .'"';
+            $output .= '   <option value="'. s($value) . '"';
             if ((string)$value == (string)$selected ||
                     (is_array($selected) && in_array($value, $selected))) {
                 $output .= ' selected="selected"';
@@ -205,12 +205,12 @@ function game_showanswers_question($game, $context) {
 
     if ($game->gamekind != 'bookquiz') {
         if (game_get_moodle_version() >= '04.00') {
-            $sql = "SELECT qbe.id FROM $table,{$CFG->prefix}question_bank_entries qbe ".
+            $sql = "SELECT qbe.id FROM $table,{$CFG->prefix}question_bank_entries qbe " .
                 " WHERE qbe.id=q.id AND qbe.questioncategoryid=?";
             $recs = $DB->get_records_sql($sql, [ $game->questioncategoryid]);
             $ret = [];
-            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
-                ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect($game).
+            $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q " .
+                ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? ' . game_showanswers_appendselect($game) .
                 ' ORDER BY version DESC';
             foreach ($recs as $rec) {
                 $recsq = $DB->get_records_sql($sql, [ $rec->id], 0, 1);
@@ -222,14 +222,14 @@ function game_showanswers_question($game, $context) {
             if ($a === null || count($a) == 0) {
                 $select = 'q.id IN (0)';
             } else {
-                $select = 'q.id IN ('.implode(',', $a).')';
+                $select = 'q.id IN ('.implode(',', $a) . ')';
             }
         } else {
             $select = 'category='.$game->questioncategoryid;
             if ($game->subcategories) {
                 $cats = question_categorylist($game->questioncategoryid);
                 if (count($cats) > 0) {
-                    $select = 'category in ('.implode(',', $cats).')';
+                    $select = 'category in (' . implode(',', $cats) . ')';
                 }
             }
         }
@@ -245,9 +245,9 @@ function game_showanswers_question($game, $context) {
 
         if (game_get_moodle_version() >= '04.00') {
             $table .= ",{$CFG->prefix}question_bank_entries qbe ";
-            $select = 'qbe.id=q.id AND qbe.questioncategoryid IN ('.substr($select2, 1).')';
+            $select = 'qbe.id=q.id AND qbe.questioncategoryid IN (' . substr($select2, 1) . ')';
         } else {
-            $select = ' AND category IN ('.substr($select2, 1).')';
+            $select = ' AND category IN ('.substr($select2, 1) . ')';
         }
     }
 
@@ -285,9 +285,9 @@ function game_showanswers_quiz($game, $context) {
     $sort = 'category,questiontext';
 
     if (game_get_moodle_version() < '02.07') {
-        $select = "quiz='$game->quizid' ".
-            ' AND qqi.question=q.id'.
-            ' AND q.hidden=0'.
+        $select = "quiz='$game->quizid' " .
+            ' AND qqi.question=q.id' .
+            ' AND q.hidden=0' .
             game_showanswers_appendselect($game);
         $table = '{question} q,{quiz_question_instances} qqi';
     } else if (game_get_moodle_version() >= '04.00') {
@@ -297,7 +297,7 @@ function game_showanswers_quiz($game, $context) {
         $recs = $DB->get_records_sql($sql);
         $ret = [];
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
-            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? '.game_showanswers_appendselect($game).
+            ' WHERE qv.questionid=q.id AND qv.questionbankentryid=? ' . game_showanswers_appendselect($game).
             ' ORDER BY version DESC';
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql($sql, [ $rec->questionbankentryid], 0, 1);
@@ -309,11 +309,11 @@ function game_showanswers_quiz($game, $context) {
         if (count($a) == 0) {
             $select = 'q.id IN (0)';
         } else {
-            $select = 'q.id IN ('.implode(',', $a).')';
+            $select = 'q.id IN (' . implode(',', $a) . ')';
         }
         $sort = 'questiontext';
     } else {
-        $select = "qs.quizid='$game->quizid' ".
+        $select = "qs.quizid='$game->quizid' " .
             " AND qs.questionid=q.id ".game_showanswers_appendselect($game);
         $table = "{question} q,{quiz_slots} qs";
     }
@@ -503,13 +503,13 @@ function game_showanswers_glossary($game) {
 
     // Show repetitions of questions.
     $table = "{glossary_entries} ge, {game_repetitions} gr";
-    $select = "glossaryid={$game->glossaryid} AND gr.glossaryentryid=ge.id AND gr.gameid=".$game->id;
+    $select = "glossaryid={$game->glossaryid} AND gr.glossaryentryid=ge.id AND gr.gameid=" . $game->id;
     $userid = optional_param('userid', 0, PARAM_INT);
     if ($userid) {
         $select .= " AND gr.userid=$userid";
     }
     if ($game->glossarycategoryid) {
-        $select .= " AND gec.entryid = ge.id ".
+        $select .= " AND gec.entryid = ge.id " .
             " AND gec.categoryid = {$game->glossarycategoryid}";
         $table .= ",{glossary_entries_categories} gec";
     }
@@ -538,15 +538,15 @@ function game_showanswers_glossary($game) {
         }
 
         echo '<tr>';
-        echo '<td>'.(++$line);
+        echo '<td>' . (++$line);
         echo '</td>';
 
         $query = new StdClass;
         $query->glossaryid = $game->glossaryid;
         $query->glossaryentryid = $question->id;
-        echo '<td>'.game_show_query($game, $query, $question->definition).'</td>';
+        echo '<td>'.game_show_query($game, $query, $question->definition) . '</td>';
 
-        echo '<td>'.$question->concept.'</td>';
+        echo '<td>' . $question->concept . '</td>';
         if ($reps != false) {
             if (array_key_exists($question->id, $reps)) {
                 $rep = $reps[$question->id];
@@ -563,7 +563,7 @@ function game_showanswers_glossary($game) {
 /**
  * Show answers bookquiz
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $game
  * @param stdClass $context
@@ -575,7 +575,8 @@ function game_showanswers_bookquiz($game, $context) {
     $table = "{question} q,{game_bookquiz_questions} gbq,{book_chapters} bc";
 
     $showcategories = ($game->gamekind == 'bookquiz');
-    game_showanswers_question_select($game,
+    game_showanswers_question_select(
+        $game,
         $table,
         $select,
         "DISTINCT q.*",

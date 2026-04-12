@@ -265,7 +265,6 @@ class mod_game_exportjavame_form extends moodleform {
         require_once("export/exportjavame.php");
         game_OnExportJavaME($game, $javame);
     }
-
 }
 
 // Creates form and set initial data.
@@ -315,7 +314,7 @@ echo $OUTPUT->footer();
 /**
  * Sends via html a file.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param string $file
  */

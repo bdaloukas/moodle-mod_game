@@ -350,7 +350,7 @@ function game_sudoku_showsudoku(
                                 }
                             }
                             echo '<td width=33% style="text-align: center; padding: .6em; ' .
-                                ' color: red; font-weight: lighter; font-size: 1em;">'.$s.'</td>';
+                                ' color: red; font-weight: lighter; font-size: 1em;">' . $s . '</td>';
                         } else {
                             // Not show legend.
                             echo '<td width=33% style="text-align: center; padding: .6em;' .
@@ -376,12 +376,10 @@ function game_sudoku_showsudoku(
     <script language="javascript">
         function OnCheck(pos) {
             s = window.prompt("<?php echo get_string ('sudoku_guessnumber', 'game') ?>", "");
-
             if (s < "1")
                 return;
             if (s > "9")
                 return;
-
             window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
         }
     </script>
@@ -409,6 +407,8 @@ function game_sudoku_showsudoku(
 
 /**
  * Check that all numbers are found
+ *
+ * @package mod_game
  */
 function game_sudoku_check_found_all_numbers() {
     return false;
@@ -416,6 +416,8 @@ function game_sudoku_check_found_all_numbers() {
 
 /**
  * Get question list
+ *
+ * @package mod_game
  *
  * @param int $offsetquestions
  */
@@ -437,6 +439,8 @@ function game_sudoku_getquestionlist($offsetquestions) {
 
 /**
  * Get glossary entries
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param int $offsetentries
@@ -463,7 +467,7 @@ function game_sudoku_getglossaryentries($game, $offsetentries, &$entrylist, $num
 /**
  * Plays the game hangman
  *
- * package mod_game
+ * @package mod_game
  *
  * @param int $id
  * @param stdClass $game
@@ -477,18 +481,17 @@ function game_sudoku_getglossaryentries($game, $offsetentries, &$entrylist, $num
  * @param stdClass $context
  */
 function game_sudoku_showquestions_quiz(
-        $id,
-        $game,
-        $attempt,
-        $sudoku,
-        $offsetquestions,
-        $numbers,
-        $correctquestions,
-        $onlyshow,
-        $showsolution,
-        $context
-    )
-{
+    $id,
+    $game,
+    $attempt,
+    $sudoku,
+    $offsetquestions,
+    $numbers,
+    $correctquestions,
+    $onlyshow,
+    $showsolution,
+    $context
+) {
     global $CFG;
 
     $questionlist = game_sudoku_getquestionlist($offsetquestions);
@@ -558,7 +561,7 @@ function game_sudoku_showquestions_quiz(
 /**
  * Show the sudoku and glossaryentries.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param int $id
  * @param string $game
@@ -571,17 +574,16 @@ function game_sudoku_showquestions_quiz(
  * @param boolean $showsolution
  */
 function game_sudoku_showquestions_glossary(
-        $id,
-        $game,
-        $attempt,
-        $sudoku,
-        $offsetentries,
-        $numbers,
-        $correctentries,
-        $onlyshow,
-        $showsolution
-    )
-{
+    $id,
+    $game,
+    $attempt,
+    $sudoku,
+    $offsetentries,
+    $numbers,
+    $correctentries,
+    $onlyshow,
+    $showsolution
+) {
     global $CFG;
 
     $entries = game_sudoku_getglossaryentries($game, $offsetentries, $questionlist, $numbers);
@@ -657,7 +659,7 @@ function game_sudoku_showquestions_glossary(
 /**
  * Show question onfinish
  *
- * package mod_game
+ * @package mod_game
  *
  * @param int $id
  * @param stdClass $game
@@ -669,7 +671,7 @@ function game_sudoku_showquestion_onfinish($id, $game, $attempt, $sudoku) {
 
     echo '<B>' . get_string('win', 'game') . '</B><BR>';
     echo '<br>';
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">".
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id=$id\">" .
         get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
     echo "<a href=\"{$CFG->wwwroot}?id=$id\">" . get_string('finish', 'game') . '</a> ';
 }
@@ -677,7 +679,7 @@ function game_sudoku_showquestion_onfinish($id, $game, $attempt, $sudoku) {
 /**
  * Check answers
  *
- * package mod_game
+ * @package mod_game
  */
 function game_sudoku_checkanswers() {
     $responses = data_submitted();
@@ -688,7 +690,7 @@ function game_sudoku_checkanswers() {
 /**
  * Checks questions
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -740,7 +742,7 @@ function game_sudoku_check_questions($cm, $game, $attempt, $sudoku, $finishattem
 /**
  * Check glossary entries
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -798,7 +800,7 @@ function game_sudoku_check_glossaryentries($cm, $game, $attempt, $sudoku, $finis
 /**
  * This is the last function after submiting the answers.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -824,7 +826,7 @@ function game_sudoku_check_last($cm, $game, $attempt, $sudoku, $finishattempt, $
 /**
  * Check number
  *
- * package mod_game
+ * @package mod_game
  *
  * @param int $id
  * @param stdClass $game

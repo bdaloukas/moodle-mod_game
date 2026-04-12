@@ -36,7 +36,6 @@ use stdClass;
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 interface gameaccess_provider extends subplugin_provider {
-
     /**
      * Export all user data for the specified user, for the specified game.
      *
@@ -44,7 +43,7 @@ interface gameaccess_provider extends subplugin_provider {
      * @param   stdClass       $user The user to export data for
      * @return  stdClass       The data to be exported for this access rule.
      */
-    public static function export_gameaccess_user_data(stdClass $game, stdClass $user) : stdClass;
+    public static function export_gameaccess_user_data(stdClass $game, stdClass $user): stdClass;
 
     /**
      * Delete all data for all users in the specified game.

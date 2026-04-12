@@ -350,7 +350,7 @@ class game_report extends game_default_report {
                 $from = 'FROM {user} u JOIN {role_assignments} ra ON ra.userid = u.id ' .
                     groups_members_join_sql() .
                     'LEFT JOIN {game_attempts} qa ON u.id = qa.userid AND qa.gameid = ' . $game->id;
-                $where = ' WHERE ra.contextid ' . $contextlists . ' AND '. groups_members_where_sql($currentgroup);
+                $where = ' WHERE ra.contextid ' . $contextlists . ' AND ' . groups_members_where_sql($currentgroup);
                 if ($noattempts == 1) {
                     // Noattempts = 1 means only no attempts, so make the left join ask.
                     // For only records where the right is null (no attempts).
@@ -385,7 +385,8 @@ class game_report extends game_default_report {
             if (empty($noattempts)) {
                 $from = 'FROM {user} u JOIN {game_attempts} qa ON u.id = qa.userid ';
                 $where = ' WHERE qa.gameid = ' . $game->id . ' AND qa.preview = 0';
-                $countsql = 'SELECT COUNT(DISTINCT(' . sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')) . ')) ' . $from . $where;
+                $countsql = 'SELECT COUNT(DISTINCT(' .
+                    sql_concat('u.id', '\'#\'', $db->IfNull('qa.attempt', '0')) . ')) ' . $from . $where;
             }
         }
         if (!$download) {
@@ -414,9 +415,9 @@ class game_report extends game_default_report {
                         if (!$questionsort) {
                             $qid = intval(substr($sortpart, 1));
                             $select .= ', grade ';
-                            $from .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id '.
+                            $from .= ' LEFT JOIN {question_sessions} qns ON qns.attemptid = qa.id ' .
                                 'LEFT JOIN {question_states} qs ON qs.id = qns.newgraded ';
-                            $where .= ' AND (' . sql_isnull('qns.questionid') . ' OR qns.questionid = ' . $qid.')';
+                            $where .= ' AND (' . sql_isnull('qns.questionid') . ' OR qns.questionid = ' . $qid . ')';
                             $newsort[] = 'grade ' . (strpos($sortpart, 'ASC') ? 'ASC' : 'DESC');
                             $questionsort = true;
                         }
@@ -478,10 +479,12 @@ class game_report extends game_default_report {
                                     userdate($attempt->timestart, $strtimeformat) . '</a>' ,
                                 empty($attempt->timefinish) ? '-' : '<a href="review.php?q=' .
                                     $game->id . '&amp;attempt=' . $attempt->attempt . '">' .
-                                    userdate($attempt->timefinish, $strtimeformat) . '</a>',
+                                    userdate($attempt->timefinish, $strtimeformat) . '</a>' ,
                                 empty($attempt->attempt) ? '-' : (
                                     empty($attempt->timefinish) ? get_string('unfinished', 'game') : format_time(
-                                    $attempt->duration))];
+                                    $attempt->duration)
+                                )
+                                ];
                     } else {
                         $row = [ fullname($attempt),
                                 empty($attempt->attempt) ? '-' : userdate($attempt->timestart, $strtimeformat),
@@ -523,8 +526,9 @@ class game_report extends game_default_report {
                                     $grade = '--';
                                 }
                                 if (!$download) {
+                                    $url = '/mod/game/reviewquestion.php?state=' . $gradedstateid . '&amp;number=' . $questions[$questionid]->number;
                                     $row[] = link_to_popup_window(
-                                        '/mod/game/reviewquestion.php?state=' . $gradedstateid . '&amp;number=' . $questions[$questionid]->number,
+                                        $url,
                                         'reviewquestion',
                                         $grade,
                                         450,
@@ -581,7 +585,7 @@ class game_report extends game_default_report {
                     echo '<a href="javascript:select_all_in(\'DIV\',null,\'tablecontainer\');">' .
                         get_string('selectall', 'game') . '</a> / ';
                     echo '<a href="javascript:deselect_all_in(\'DIV\',null,\'tablecontainer\');">' .
-                        get_string('selectnone', 'game').'</a> ';
+                        get_string('selectnone', 'game') . '</a> ';
                     echo '&nbsp;&nbsp;';
                     $options = ['delete' => get_string('delete')];
                     echo choose_from_menu(
@@ -589,7 +593,8 @@ class game_report extends game_default_report {
                         'action',
                         '',
                         get_string('withselected', 'game'),
-                        'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');', '',
+                        'if(this.selectedIndex > 0) submitFormById(\'attemptsform\');',
+                        '',
                         true
                     );
                     echo '<noscript id="noscriptmenuaction" style="display: inline;"><div>';

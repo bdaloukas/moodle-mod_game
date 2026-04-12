@@ -248,7 +248,7 @@ class provider implements
         $games = $DB->get_recordset_sql($sql, $params);
         foreach ($games as $game) {
             list($course, $cm) = get_course_and_cm_from_cmid($game->cmid, 'game');
-            $context = game_get_context_module_instance( $cm->id);
+            $context = game_get_context_module_instance($cm->id);
 
             $gamedata = \core_privacy\local\request\helper::get_context_data($context, $contextlist->get_user());
 
@@ -287,7 +287,7 @@ class provider implements
         }
 
         // This will delete all attempts and game grades for this game.
-        game_delete_instance( $cm->instance);
+        game_delete_instance($cm->instance);
     }
 
     /**
@@ -313,7 +313,7 @@ class provider implements
             $user = $contextlist->get_user();
 
             // This will delete all attempts and game grades for this game.
-            game_delete_user_attempts( $cm->instance, $user);
+            game_delete_user_attempts($cm->instance, $user);
         }
     }
 
@@ -344,7 +344,7 @@ class provider implements
         $attempts = $DB->get_recordset_sql($sql, $params);
         foreach ($attempts as $attempt) {
             $attemptsubcontext = helper::get_game_attempt_subcontext($attempt, $contextlist->get_user());
-            $context = game_get_context_module_instance( $attempt->cmid);
+            $context = game_get_context_module_instance($attempt->cmid);
 
             // Store the game attempt data.
             $data = (object) [];
@@ -362,27 +362,27 @@ class provider implements
             $data->attempts = $attempt->attempts;
             $data->language = $attempt->language;
 
-            switch( $attempt->gamekind) {
+            switch($attempt->gamekind) {
                 case 'bookquiz':
-                    self::export_game_attempts_bookquiz( $attempt, $data);
+                    self::export_game_attempts_bookquiz($attempt, $data);
                     break;
                 case 'cross':
-                    self::export_game_attempts_cross( $attempt, $data);
+                    self::export_game_attempts_cross($attempt, $data);
                     break;
                 case 'cryptex':
-                    self::export_game_attempts_cryptex( $attempt, $data);
+                    self::export_game_attempts_cryptex($attempt, $data);
                     break;
                 case 'hangman':
-                    self::export_game_attempts_hangman( $attempt, $data);
+                    self::export_game_attempts_hangman($attempt, $data);
                     break;
                 case 'hiddenpicture':
-                    self::export_game_attempts_hiddenpicture( $attempt, $data);
+                    self::export_game_attempts_hiddenpicture($attempt, $data);
                     break;
                 case 'snakes':
-                    self::export_game_attempts_snakes( $attempt, $data);
+                    self::export_game_attempts_snakes($attempt, $data);
                     break;
                 case 'sudoku':
-                    self::export_game_attempts_sudoku( $attempt, $data);
+                    self::export_game_attempts_sudoku($attempt, $data);
                     break;
             }
 
@@ -397,17 +397,17 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_bookquiz( $attempt, &$data) {
+    private static function export_game_attempts_bookquiz($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_bookquiz WHERE id={$attempt->id}";
-        $bookquiz = $DB->get_record_sql( $sql);
+        $bookquiz = $DB->get_record_sql($sql);
         if ($bookquiz === false) {
             return;
         }
         if ($bookquiz->lastchapterid != 0) {
             $sql = "SELECT title FROM {$CFG->prefix}book_chapters WHERE id={$bookquiz->lastchapterid}";
-            $rec = $DB->get_record_sql( $sql);
+            $rec = $DB->get_record_sql($sql);
             if ($rec != false) {
                 $data->bookquiz_lastchapter = $rec->title;
             }
@@ -420,11 +420,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_cross( $attempt, &$data) {
+    private static function export_game_attempts_cross($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_cross WHERE id={$attempt->id}";
-        $cross = $DB->get_record_sql( $sql);
+        $cross = $DB->get_record_sql($sql);
         if ($cross === false) {
             return;
         }
@@ -447,11 +447,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_cryptex( $attempt, &$data) {
+    private static function export_game_attempts_cryptex($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_cryptex WHERE id={$attempt->id}";
-        $cryptex = $DB->get_record_sql( $sql);
+        $cryptex = $DB->get_record_sql($sql);
         if ($cryptex === false) {
             return;
         }
@@ -464,11 +464,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_hangman( $attempt, &$data) {
+    private static function export_game_attempts_hangman($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_hangman WHERE id={$attempt->id}";
-        $hangman = $DB->get_record_sql( $sql);
+        $hangman = $DB->get_record_sql($sql);
         if ($hangman === false) {
             return;
         }
@@ -487,11 +487,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_hiddenpicture( $attempt, &$data) {
+    private static function export_game_attempts_hiddenpicture($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_hiddenpicture WHERE id={$attempt->id}";
-        $hiddenpicture = $DB->get_record_sql( $sql);
+        $hiddenpicture = $DB->get_record_sql($sql);
         if ($hiddenpicture === false) {
             return;
         }
@@ -506,11 +506,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_millionaire( $attempt, &$data) {
+    private static function export_game_attempts_millionaire($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_millionaire WHERE id={$attempt->id}";
-        $millionaire = $DB->get_record_sql( $sql);
+        $millionaire = $DB->get_record_sql($sql);
         if ($millionaire === false) {
             return;
         }
@@ -525,11 +525,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_snakes( $attempt, &$data) {
+    private static function export_game_attempts_snakes($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_snakes WHERE id={$attempt->id}";
-        $snakes = $DB->get_record_sql( $sql);
+        $snakes = $DB->get_record_sql($sql);
         if ($snakes === false) {
             return;
         }
@@ -545,11 +545,11 @@ class provider implements
      * @param stdClass $attempt The attempt to be exported.
      * @param stdClass $data    The data to be returned
      */
-    private static function export_game_attempts_sudoku( $attempt, &$data) {
+    private static function export_game_attempts_sudoku($attempt, &$data) {
         global $CFG, $DB;
 
         $sql = "SELECT * FROM {$CFG->prefix}game_sudoku WHERE id={$attempt->id}";
-        $sudoku = $DB->get_record_sql( $sql);
+        $sudoku = $DB->get_record_sql($sql);
         if ($sudoku === false) {
             return;
         }
@@ -558,7 +558,6 @@ class provider implements
         $data->sudoku_opened = $sudoku->opened;
         $data->sudoku_guess = $sudoku->guess;
     }
-
 
     /**
      * Get the list of users who have data within a context.
@@ -661,5 +660,4 @@ class provider implements
         $DB->delete_records_select('game_queries', $sql, $params);
         $DB->delete_records_select('game_repetitions', $sql, $params);
     }
-
 }

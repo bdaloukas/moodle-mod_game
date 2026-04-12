@@ -35,6 +35,8 @@ if ($action == 'create') {
 
 /**
  * Show form
+ *
+ * @package mod_game
  */
 function showform() {
     $id = required_param('id', PARAM_NUMBER);   // The action.
@@ -63,7 +65,7 @@ function showform() {
 /**
  * Append sudoku
  *
- * package mod_game
+ * @package mod_game
  */
 function appendsudokub() {
     global $DB;
@@ -100,7 +102,7 @@ function appendsudokub() {
 /**
  * Pack sudoku
  *
- * package mod_game
+ * @package mod_game
  *
  * @param object $si
  * @param object $sp
@@ -135,7 +137,7 @@ function packsudoku($si, $sp): string {
 /**
  * Creates a sudoku
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $si
  * @param object $sp
@@ -165,7 +167,7 @@ function create(&$si, &$sp, $level = 1) {
 /**
  * get opened
  *
- * package mod_game
+ * @package mod_game
  *
  * @param stdClass $si
  *

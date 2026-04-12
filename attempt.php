@@ -55,7 +55,7 @@ function game_show_header(&$id, &$game, &$course, &$context, &$cm) {
     global $DB, $USER, $PAGE, $OUTPUT;
 
     $id = optional_param('id', 0, PARAM_INT); // It represents Course Module ID.
-    $q = optional_param('q',  0, PARAM_INT);  // It represents game id.
+    $q = optional_param('q', 0, PARAM_INT);  // It represents game id.
 
     if ($id) {
         if (! $cm = get_coursemodule_from_id('game', $id)) {
@@ -112,9 +112,9 @@ function game_show_header(&$id, &$game, &$course, &$context, &$cm) {
     $title = $course->shortname . ': ' . format_string($game->name);
 
     if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
-        $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
-                '<input type="hidden" name="id" value="'.$cm->id.'" />'.
-                '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on').'" />'.
+        $buttons = '<table><tr><td><form method="get" action="view.php"><div>' .
+                '<input type="hidden" name="id" value="'.$cm->id.'" />' .
+                '<input type="hidden" name="edit" value="' . ($PAGE->user_is_editing() ? 'off' : 'on') . '" />'.
                 '<input type="submit" value="'.get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
                 '" /></div></form></td></tr></table>';
         $PAGE->set_button($buttons);
@@ -140,13 +140,13 @@ function game_do_attempt($game, $action, $course, $context, $cm) {
 
     $forcenew = optional_param('forcenew', false, PARAM_BOOL); // Teacher has requested new preview.
     $endofgame = optional_param('endofgame', false, PARAM_BOOL);
-    $pos = optional_param('pos',  0, PARAM_INT);
-    $num = optional_param('num',  0, PARAM_INT);
-    $q = optional_param('q',  0, PARAM_INT);
-    $attemptid = optional_param('attemptid',  0, PARAM_INT);
+    $pos = optional_param('pos', 0, PARAM_INT);
+    $num = optional_param('num', 0, PARAM_INT);
+    $q = optional_param('q', 0, PARAM_INT);
+    $attemptid = optional_param('attemptid', 0, PARAM_INT);
     $g = optional_param('g',  '', PARAM_RAW);
-    $finishattempt = optional_param('finishattempt',  '', PARAM_TEXT);
-    $answer = optional_param('answer',  '', PARAM_TEXT);
+    $finishattempt = optional_param('finishattempt', '', PARAM_TEXT);
+    $answer = optional_param('answer', '', PARAM_TEXT);
     $continue = false;
 
     // Print the main part of the page.
@@ -219,9 +219,9 @@ function game_do_attempt($game, $action, $course, $context, $cm) {
  */
 function game_create($game, $forcenew, $course, $context, $finishattempt, $cm) {
     $attempt = game_getattempt($game, $detail);
-    $chapterid = optional_param('chapterid',  0, PARAM_INT);
-    $newletter = optional_param('newletter',  '', PARAM_ALPHA);
-    $action2 = optional_param('action2',  '', PARAM_ALPHA);
+    $chapterid = optional_param('chapterid', 0, PARAM_INT);
+    $newletter = optional_param('newletter', '', PARAM_ALPHA);
+    $action2 = optional_param('action2', '', PARAM_ALPHA);
 
     switch ($game->gamekind) {
         case 'cross':
@@ -269,7 +269,7 @@ function game_cross_unpackpuzzle($g) {
                 if ($i > 0) {
                     // Found escape character.
                     if (game_substr($g, $i - 1, 1) == '/') {
-                        $g = game_substr($g, 0, $i - 1).game_substr($g, $i);
+                        $g = game_substr($g, 0, $i - 1) . game_substr($g, $i);
                         $i--;
                         $len--;
                         continue;

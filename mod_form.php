@@ -128,7 +128,7 @@ class mod_game_mod_form extends moodleform_mod {
 
         // Question Category - Short Answer.
         if ($gamekind != 'bookquiz') {
-            $a = $this->get_array_question_categories($COURSE->id, $gamekind );
+            $a = $this->get_array_question_categories($COURSE->id, $gamekind);
             $mform->addElement('select', 'questioncategoryid', get_string('sourcemodule_questioncategory', 'game'), $a);
             $mform->disabledIf('questioncategoryid', 'sourcemodule', 'neq', 'question');
 
@@ -412,7 +412,7 @@ class mod_game_mod_form extends moodleform_mod {
         $mform->addElement('editor', 'toptext', get_string('toptext', 'game'));
         $mform->addElement('editor', 'bottomtext', get_string('bottomtext', 'game'));
 
-        $features = new stdClass;
+        $features = new stdClass();
         $this->standard_coursemodule_elements($features);
 
         // Buttons.
@@ -449,7 +449,7 @@ class mod_game_mod_form extends moodleform_mod {
         // Fills with the count of entries in each glossary.
         $a[0] = '';
         // Fills with the count of entries in each category.
-        $sql2 = "SELECT COUNT(*) ".
+        $sql2 = "SELECT COUNT(*) " .
         " FROM {$CFG->prefix}glossary_entries ge, {$CFG->prefix}glossary_entries_categories gec" .
         " WHERE gec.categoryid=gc.id AND gec.entryid=ge.id";
         $sql = "SELECT gc.id,gc.name,g.name as name2,g.globalglossary,g.course, ($sql2) as c " .
@@ -484,7 +484,7 @@ class mod_game_mod_form extends moodleform_mod {
 				WHERE ctx.contextlevel = 70 AND cm.course = ? AND m.name = ?";
             $recs = $DB->get_records_sql($sql, [$courseid, 'qbank']);
             $contextids = [];
-            foreach($recs as $rec) {
+            foreach ($recs as $rec) {
                 $contextids[] = $rec->contextid;
             }
             if (count($contextids) === 0) {
@@ -516,11 +516,11 @@ class mod_game_mod_form extends moodleform_mod {
             $sql2 = "SELECT COUNT(*) FROM $table WHERE q.category = qc.id $select";
         }
         [$insql, $params] = $DB->get_in_or_equal($contextids);
-        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid ".$insql;
+        $sql = "SELECT id,name,($sql2) as c FROM {$CFG->prefix}question_categories qc WHERE contextid " . $insql;
 
         if ($recs = $DB->get_records_sql($sql, $params)) {
             foreach ($recs as $rec) {
-                $a[$rec->id] = $rec->name.' ('.$rec->c.')';
+                $a[$rec->id] = $rec->name . ' (' . $rec->c . ')';
             }
         }
 
@@ -558,23 +558,21 @@ class mod_game_mod_form extends moodleform_mod {
         $errors = parent::validation($data, $files);
 
         if ($data[ 'sourcemodule'] == 'glossary') {
-            if(!array_key_exists('glossaryid', $data) || $data[ 'glossaryid'] == 0) {
+            if (!array_key_exists('glossaryid', $data) || $data[ 'glossaryid'] == 0) {
                 $errors[ 'glossaryid'] = get_string('sourcemodule_glossary', 'game');
             }
         } else if ($data[ 'sourcemodule'] == 'question') {
-            if(!array_key_exists('questioncategoryid', $data) || $data[ 'questioncategoryid'] == 0) {
+            if (!array_key_exists('questioncategoryid', $data) || $data[ 'questioncategoryid'] == 0) {
                 $errors['questioncategoryid'] = get_string('sourcemodule_questioncategory', 'game');
             }
-        } else if($data['sourcemodule'] == 'quiz') {
-            if(!array_key_exists('quizid', $data) || $data['quizid'] == 0) {
+        } else if ($data['sourcemodule'] == 'quiz') {
+            if (!array_key_exists('quizid', $data) || $data['quizid'] == 0) {
                 $errors['quizid'] = get_string('sourcemodule_quiz', 'game');
             }
         }
 
         // Check open and close times are consistent.
-        if ($data['timeopen'] != 0 && $data['timeclose'] != 0 &&
-                $data['timeclose'] < $data['timeopen']
-        ) {
+        if ($data['timeopen'] != 0 && $data['timeclose'] != 0 && $data['timeclose'] < $data['timeopen']) {
             $errors['timeclose'] = get_string('closebeforeopen', 'quiz');
         }
 
@@ -721,8 +719,8 @@ class mod_game_mod_form extends moodleform_mod {
             'completionpass',
             null,
             get_string('completionpass', 'game'),
-            ['group' => 'cpass'])
-        ;
+            ['group' => 'cpass']
+        );
         $mform->disabledIf('completionpass', 'completionusegrade', 'notchecked');
         $group[] = $mform->createElement(
             'advcheckbox',

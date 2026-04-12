@@ -408,7 +408,7 @@ width: 240pt;
         if (($onlyshow == false) && ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
                 $question .= ' &nbsp;<input type="submit" value="' .
-                get_string('answer').'" onclick="OnCheck(' . $q->id . ",msg{$q->id});\" />";
+                get_string('answer') . '" onclick="OnCheck(' . $q->id . ",msg{$q->id});\" />";
             }
         }
         echo $question;

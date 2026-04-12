@@ -879,13 +879,11 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111309, 'game');
     }
 
     if ($oldversion < 2007111310) {
         $DB->execute('UPDATE {game} SET grade=0 WHERE grade IS NULL', true);
-
         upgrade_mod_savepoint(true, 2007111310, 'game');
     }
 
@@ -914,7 +912,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111844, 'game');
     }
 
@@ -944,7 +941,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111847, 'game');
     }
 
@@ -954,7 +950,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111848, 'game');
     }
 
@@ -964,7 +959,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111849, 'game');
     }
 
@@ -974,7 +968,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111850, 'game');
     }
 
@@ -984,13 +977,11 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111851, 'game');
     }
 
     if ($oldversion < 2007111853) {
         execute_sql('UPDATE {game} SET grademethod=1 WHERE grademethod=0 OR grademethod IS NULL', true);
-
         upgrade_mod_savepoint(true, 2007111853, 'game');
     }
 
@@ -1000,7 +991,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111854, 'game');
     }
 
@@ -1010,7 +1000,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111855, 'game');
     }
 
@@ -1020,7 +1009,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007111856, 'game');
     }
 
@@ -1046,7 +1034,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2007120106, 'game');
     }
 
@@ -1058,7 +1045,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2008011301, 'game');
     }
 
@@ -1068,7 +1054,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2008011302, 'game');
     }
 
@@ -1078,7 +1063,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2008011308, 'game');
     }
 
@@ -1186,7 +1170,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2008090101, 'game');
     }
 
@@ -1281,19 +1264,16 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2008111801, 'game');
     }
 
     // Year 2009 starts here.
-
     if ($oldversion < 2009010502) {
         $table = new xmldb_table('game_export_javame');
         $field = new xmldb_field('maxpicturewidth', XMLDB_TYPE_INTEGER, '7');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2009010502, 'game');
     }
 
@@ -1322,7 +1302,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2009071403, 'game');
     }
 
@@ -1332,7 +1311,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2009072801, 'game');
     }
 
@@ -1352,7 +1330,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2009073101, 'game');
     }
 
@@ -1362,7 +1339,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2009073102, 'game');
     }
 
@@ -1382,7 +1358,6 @@ function xmldb_game_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
-
         upgrade_mod_savepoint(true, 2010031101, 'game');
     }
 
@@ -1425,7 +1400,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < 2010072605) {
-
         // Define field language to be added to game_attempts.
         $table = new xmldb_table('game_attempts');
         $field = new xmldb_field('language', XMLDB_TYPE_CHAR, '10', null, null, null, null, 'attempts');
@@ -1440,7 +1414,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < 2010090301) {
-
         // Define field param9 to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('param9', XMLDB_TYPE_TEXT, 'medium', null, null, null, null, 'param8');
@@ -1484,7 +1457,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < 2011072902) {
-
         // Define field param10 to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('param10', XMLDB_TYPE_INTEGER, '10', null, null, null, null, 'param9');
@@ -1499,7 +1471,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < 2011082603) {
-
         // Define field timeopen to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('timeopen', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'sourcemodule');
@@ -1514,7 +1485,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < 2011082604) {
-
         // Define field timeclose to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('timeclose', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, null, null, '0', 'timeopen');
@@ -1529,7 +1499,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < 2013072601) {
-
         // Define field timeclose to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('maxattempts', XMLDB_TYPE_INTEGER, '3', XMLDB_UNSIGNED, null, null, '0', 'subcategories');
@@ -1596,7 +1565,6 @@ function xmldb_game_upgrade($oldversion) {
         } else {
             $dbman->add_field($table, $field);
         }
-
     }
 
     if ($oldversion < ($ver = 2017062801)) {
@@ -1661,7 +1629,7 @@ function xmldb_game_upgrade($oldversion) {
                 continue;
             }
 
-            $updrec = new stdClass;
+            $updrec = new stdClass();
             $updrec->id = $rec->id;
             if ($rec->id == 1) {
                 $value = 8;
@@ -1683,7 +1651,6 @@ function xmldb_game_upgrade($oldversion) {
     }
 
     if ($oldversion < ($ver = 2017071901)) {
-
         // Define field completionattemptsexhausted to be added to game.
         $table = new xmldb_table('game');
         $field = new xmldb_field('completionattemptsexhausted', XMLDB_TYPE_INTEGER, '1', null, null, null, '0');
@@ -1843,4 +1810,3 @@ function xmldb_game_upgrade($oldversion) {
 
     return true;
 }
-

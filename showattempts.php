@@ -88,7 +88,6 @@ function game_showusers($game) {
                 }
             </script>
     <?php
-
     $attributes = 'onchange="javascript:onselectuser();"';
     $name = 'user';
     $id = 'menu' . $name;
@@ -109,12 +108,11 @@ function game_showusers($game) {
     if (!empty($options)) {
         foreach ($options as $value => $label) {
             $output .= '   <option value="' . s($value) . '"';
-            if ((string)$value == (string)$selected ||
-                (is_array($selected) && in_array($value, $selected))) {
+            if ((string)$value == (string)$selected || (is_array($selected) && in_array($value, $selected))) {
                 $output .= ' selected="selected"';
             }
             if ($label === '') {
-                $output .= '>' . $value .'</option>' . "\n";
+                $output .= '>' . $value . '</option>' . "\n";
             } else {
                 $output .= '>' . $label . '</option>' . "\n";
             }
@@ -169,8 +167,7 @@ function game_showgroups($game) {
     if (!empty($options)) {
         foreach ($options as $value => $label) {
             $output .= '   <option value="' . s($value) . '"';
-            if ((string)$value == (string)$selected ||
-                (is_array($selected) && in_array($value, $selected))
+            if ((string)$value == (string)$selected || (is_array($selected) && in_array($value, $selected))
             ) {
                 $output .= ' selected="selected"';
             }
@@ -197,7 +194,7 @@ function game_showattempts($game) {
     $allowdelete = has_capability('mod/game:manage', $context);
 
     $userid = optional_param('userid', 0, PARAM_INT);
-    $limitfrom = optional_param('limitfrom',  0, PARAM_INT);
+    $limitfrom = optional_param('limitfrom', 0, PARAM_INT);
     $gamekind = $game->gamekind;
     $update = get_coursemodule_from_instance('game', $game->id, $game->course)->id;
 
@@ -231,7 +228,7 @@ function game_showattempts($game) {
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY timelastattempt DESC,timestart DESC";
     if (($recs = $DB->get_records_sql($sql, null, $recslimitfrom, $recslimitnum)) != false) {
         echo '<table border="1">';
-        echo '<tr><td><b>' . get_string('delete').'</td><td><b>' . get_string('user').'</td>';
+        echo '<tr><td><b>' . get_string('delete').'</td><td><b>' . get_string('user') . '</td>';
         echo '<td><b>' . get_string('timestart', 'game') . '</b></td>';
         echo '<td><b>' . get_string('timelastattempt', 'game') . '</b></td>';
         echo '<td><b>' . get_string('timefinish', 'game') . '</b></td>';
@@ -254,7 +251,7 @@ function game_showattempts($game) {
                 echo '<img src="' . game_pix_url('t/delete').'" alt="' . get_string('delete') . '" style="width: 1em" /></a>';
             }
             echo '</center></td>';
-            echo '<td><center>' . $rec->firstname . ' ' . $rec->lastname.'</center></td>';
+            echo '<td><center>' . $rec->firstname . ' ' . $rec->lastname . '</center></td>';
             echo '<td><center>' . ($rec->timestart != 0 ? userdate($rec->timestart) : '') . "</center></td>\r\n";
             echo '<td><center>' . ($rec->timelastattempt != 0 ? userdate($rec->timelastattempt) : '') . '</center></td>';
             echo '<td><center>' . ($rec->timefinish != 0 ? userdate($rec->timefinish) : '') . '</center></td>';
@@ -267,7 +264,8 @@ function game_showattempts($game) {
                 echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/preview.php?action=preview&amp;";
                 echo "attemptid={$rec->id}&amp;gamekind=$gamekind";
                 echo '&amp;update=' . $update . "&amp;q={$game->id}\">";
-                echo '<img src="' . game_pix_url('t/preview') . '" alt="' . get_string('preview', 'game') . '" style="width: 1em" /></a>';
+                echo '<img src="' . game_pix_url('t/preview') .
+                        '" alt="' . get_string('preview', 'game') . '" style="width: 1em" /></a>';
             }
             echo '</center></td>';
 

@@ -27,13 +27,13 @@ namespace mod_game\event;
 
 defined('MOODLE_INTERNAL') || die();
 
-require(dirname(__FILE__).'/../../../../version.php');
+require(dirname(__FILE__) . '/../../../../version.php');
 
 if ($branch >= '402') {
     define('GAME_MOODLE_402', 1);
 }
 
-if (defined( 'GAME_MOODLE_402')) {
+if (defined('GAME_MOODLE_402')) {
     /**
      * The mod_game chapter viewed event class.
      *
@@ -43,7 +43,6 @@ if (defined( 'GAME_MOODLE_402')) {
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
     class game_played extends \core\event\base {
-
         /**
          * Returns description of what happened.
          *
@@ -102,7 +101,6 @@ if (defined( 'GAME_MOODLE_402')) {
     }
 } else {
     class game_played extends \core\event\base {
-
         /**
          * Returns description of what happened.
          *

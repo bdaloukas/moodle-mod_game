@@ -27,6 +27,8 @@
 /**
  * Plays the game "Snakes and Ladders".
  *
+ * @package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -61,6 +63,8 @@ function game_snakes_continue($cm, $game, $attempt, $snakes, $context, $course) 
 
 /**
  * Plays the game "Snakes and Ladders".
+ *
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -106,11 +110,11 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
 ?>
     <script language="javascript" event="onload" for="window">
     <!--
-    var retVal = new Array();
-    var elements = document.getElementsByTagName("*");
-    for(var i = 0;i < elements.length;i++){
-        if(elements[i].type == 'text'){
-            elements[i].focus();
+    var retVal = [];
+    const elements = document.getElementsByTagName("*");
+    for (const item of elements) {
+        if(item.type == 'text'){
+            item.focus();
             break;
         }
     }
@@ -147,6 +151,8 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
 
 /**
  * Show dice
+ *
+ * @package mod_game
  *
  * @param stdClass $snakes
  * @param boolean $board
@@ -206,6 +212,8 @@ function game_snakes_computeplayerposition($snakes, $board) {
 
 /**
  * Computes next question.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param stdClass $snakes
@@ -272,6 +280,8 @@ function game_snakes_computenextquestion($game, &$snakes, &$query) {
 /**
  * Shows the question.
  *
+ * @package mod_game
+ *
  * @param int $id
  * @param stdClass $game
  * @param stdClass $snakes
@@ -288,6 +298,8 @@ function game_snakes_showquestion($id, $game, $snakes, $query, $context) {
 
 /**
  * Shows the question.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param int $id
@@ -323,6 +335,8 @@ function game_snakes_showquestion_question($game, $id, $snakes, $query, $context
 
 /**
  * Show a glossary question.
+ *
+ * @package mod_game
  *
  * @param int $id
  * @param stdClass $snakes
@@ -370,6 +384,8 @@ function game_snakes_showquestion_glossary($id, $snakes, $query, $game) {
 /**
  * Checks if answer is correct.
  *
+ * @package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -416,6 +432,8 @@ function game_snakes_check_questions($cm, $game, $attempt, $snakes, $context, $c
 /**
  * Checks if the glossary answer is correct.
  *
+ * @package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -457,6 +475,8 @@ function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $co
 
 /**
  * Computes the position.
+ *
+ * @package mod_game
  *
  * @param stdClass $cm
  * @param stdClass $game
@@ -525,7 +545,7 @@ function game_snakes_foundlander($position, $data) {
 /**
  * In snake go backward.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param int $position
  * @param string $data
@@ -543,7 +563,7 @@ function game_snakes_foundsnake($position, $data) {
 /**
  * Removes attempt data.
  *
- * package mod_game
+ * @package mod_game
  *
  * @param int $questionusageid
  * @param int $questionid

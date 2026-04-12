@@ -36,30 +36,30 @@ function game_check_common_problems($context, $game) {
 
     $warnings = [];
 
-    switch( $game->gamekind) {
+    switch($game->gamekind) {
         case 'millionaire':
-            game_check_common_problems_multichoice( $game, $warnings);
+            game_check_common_problems_multichoice($game, $warnings);
             break;
         case 'hangman':
-            game_check_common_problems_shortanswer( $game, $warnings);
+            game_check_common_problems_shortanswer($game, $warnings);
             break;
         case 'cross':
         case 'cryptex':
-            game_check_common_problems_shortanswer( $game, $warnings);
-            game_check_common_problems_crossword_cryptex( $game, $warnings);
+            game_check_common_problems_shortanswer($game, $warnings);
+            game_check_common_problems_crossword_cryptex($game, $warnings);
             break;
     }
 
-    if (count( $warnings) == 0) {
+    if (count($warnings) == 0) {
         return '';
     }
 
-    $s = '<ul><b>'.get_string( 'common_problems', 'game').'</b>';
+    $s = '<ul><b>' . get_string('common_problems', 'game') . '</b>';
     foreach ($warnings as $line) {
-        $s .= '<li>'.$line.'</li>';
+        $s .= '<li>' . $line . '</li>';
     }
 
-    return $s.'</ul>';
+    return $s . '</ul>';
 }
 
 /**
@@ -72,7 +72,7 @@ function game_check_common_problems_multichoice($game, &$warnings) {
 
     if ($game->sourcemodule == 'question') {
         game_check_common_problems_multichoice_question($game, $warnings);
-    } else if ( $game->sourcemodule == 'quiz') {
+    } else if ($game->sourcemodule == 'quiz') {
         game_check_common_problems_multichoice_quiz($game, $warnings);
     }
 }
@@ -87,7 +87,7 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
     global $CFG, $DB;
 
     if ($game->questioncategoryid == 0) {
-        $warnings[] = get_string( 'must_select_questioncategory', 'game');
+        $warnings[] = get_string('must_select_questioncategory', 'game');
         return;
     }
 
@@ -95,20 +95,20 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
     $table = '{question} q';
     if (game_get_moodle_version() >= '04.00') {
         $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
-        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
+        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid=' . $game->questioncategoryid;
         if ($game->subcategories) {
-            $cats = question_categorylist( $game->questioncategoryid);
-            if (count( $cats) > 0) {
-                $s = implode( ',', $cats);
-                $select = 'qbe.questioncategoryid in ('.$s.') AND qbe.id=qv.questionbankentryid AND q.id=qv.questionid';
+            $cats = question_categorylist($game->questioncategoryid);
+            if (count($cats) > 0) {
+                $s = implode(',', $cats);
+                $select = 'qbe.questioncategoryid in (' . $s . ') AND qbe.id=qv.questionbankentryid AND q.id=qv.questionid';
             }
         }
     } else {
         $select = 'q.category='.$game->questioncategoryid;
         if ($game->subcategories) {
-            $cats = question_categorylist( $game->questioncategoryid);
-            if (count( $cats) > 0) {
-                $select = 'q.category in ('.implode( ',', $cats).')';
+            $cats = question_categorylist($game->questioncategoryid);
+            if (count($cats) > 0) {
+                $select = 'q.category in (' . implode(',', $cats) . ')';
             }
         }
     }
@@ -124,9 +124,9 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
     }
 
     $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";
-    $rec = $DB->get_record_sql( $sql);
+    $rec = $DB->get_record_sql($sql);
     if ($rec->c != 0) {
-        $warnings[] = get_string( 'millionaire_also_multichoice', 'game').': '.$rec->c;
+        $warnings[] = get_string('millionaire_also_multichoice', 'game') . ': ' . $rec->c;
     }
 
     $select = $select0;
@@ -137,9 +137,9 @@ function game_check_common_problems_multichoice_question($game, &$warnings) {
     }
 
     $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";
-    $rec = $DB->get_record_sql( $sql);
+    $rec = $DB->get_record_sql($sql);
     if ($rec->c == 0) {
-        $warnings[] = get_string( 'millionaire_no_multichoice_questions', 'game');
+        $warnings[] = get_string('millionaire_no_multichoice_questions', 'game');
     }
 }
 
@@ -153,24 +153,24 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
     global $CFG, $DB;
 
     if (game_get_moodle_version() < '02.06') {
-        $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.question=q.id".
+        $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.question=q.id" .
         " AND qqi.question=q.id";
         $table = "{quiz_question_instances} qqi,{question} q, {question_multichoice} qmo";
     } else if (game_get_moodle_version() < '02.07') {
-        $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id".
+        $select = "qtype='multichoice' AND quiz='$game->quizid' AND qmo.questionid=q.id" .
         " AND qqi.question=q.id";
         $table = "{quiz_question_instances} qqi,{question} q, {qtype_multichoice_options} qmo";
     } else if (game_get_moodle_version() >= '04.00') {
         $select = "qs.quizid='$game->quizid' AND qs.id=qr.itemid ";
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
-        $recs = $DB->get_records_sql( $sql);
+        $recs = $DB->get_records_sql($sql);
         $ret = [];
-        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q " .
             " WHERE q.qtype='multichoice' AND qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         $a = [];
         foreach ($recs as $rec) {
-            $recsq = $DB->get_records_sql( $sql, [ $rec->questionbankentryid], 0, 1);
+            $recsq = $DB->get_records_sql($sql, [ $rec->questionbankentryid], 0, 1);
             foreach ($recsq as $recq) {
                 $a[] = $recq->id;
             }
@@ -179,7 +179,7 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
         if (count($a) == 0) {
             $select = 'q.id IN (0)';
         } else {
-            $select = 'q.id IN ('.implode( ',', $a).')';
+            $select = 'q.id IN ('.implode(',', $a).')';
         }
         $select .= " AND qmo.questionid=q.id AND qmo.single <> 1";
         $table .= ",{$CFG->prefix}qtype_multichoice_options qmo";
@@ -189,9 +189,9 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
     }
 
     $sql = "SELECT COUNT(*) as c FROM $table WHERE $select";
-    $rec = $DB->get_record_sql( $sql);
+    $rec = $DB->get_record_sql($sql);
     if ($rec->c != 0) {
-        $warnings[] = get_string( 'millionaire_also_multichoice', 'game').': '.$rec->c;
+        $warnings[] = get_string('millionaire_also_multichoice', 'game') . ': ' . $rec->c;
     }
 }
 
@@ -204,7 +204,7 @@ function game_check_common_problems_multichoice_quiz($game, &$warnings) {
 function game_check_common_problems_shortanswer($game, &$warnings) {
     if ($game->sourcemodule == 'question') {
         game_check_common_problems_shortanswer_question($game, $warnings);
-    } else if ( $game->sourcemodule == 'glossary') {
+    } else if ($game->sourcemodule == 'glossary') {
         game_check_common_problems_shortanswer_glossary($game, $warnings);
     }
 }
@@ -220,15 +220,15 @@ function game_check_common_problems_shortanswer_glossary($game, &$warnings) {
     global $CFG, $DB;
 
     $sql = "SELECT id,concept FROM {$CFG->prefix}glossary_entries WHERE glossaryid=$game->glossaryid";
-    $recs = $DB->get_records_sql( $sql);
+    $recs = $DB->get_records_sql($sql);
     $a = [];
     foreach ($recs as $rec) {
         $a[] = $rec->concept;
     }
 
-    game_check_common_problems_shortanswer_allowspaces( $game, $warnings, $a);
+    game_check_common_problems_shortanswer_allowspaces($game, $warnings, $a);
     if ($game->gamekind == 'hangman') {
-        game_check_common_problems_shortanswer_hangman( $game, $warnings, $a);
+        game_check_common_problems_shortanswer_hangman($game, $warnings, $a);
     }
 }
 
@@ -243,27 +243,27 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     global $CFG, $DB;
 
     if ($game->questioncategoryid == 0) {
-        $warnings[] = get_string( 'must_select_questioncategory', 'game');
+        $warnings[] = get_string('must_select_questioncategory', 'game');
         return;
     }
 
     if (game_get_moodle_version() >= '04.00') {
         $table2 = ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
-        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid='.$game->questioncategoryid;
+        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid AND qbe.questioncategoryid=' . $game->questioncategoryid;
         if ($game->subcategories) {
-            $cats = question_categorylist( $game->questioncategoryid);
-            if (count( $cats) > 0) {
-                $s = implode( ',', $cats);
-                $select = 'qbe.questioncategoryid in ('.$s.')';
+            $cats = question_categorylist($game->questioncategoryid);
+            if (count($cats) > 0) {
+                $s = implode(',', $cats);
+                $select = 'qbe.questioncategoryid in (' . $s . ')';
             }
         }
     } else {
         $table2 = '';
         $select = 'category='.$game->questioncategoryid;
         if ($game->subcategories) {
-            $cats = question_categorylist( $game->questioncategoryid);
-            if (count( $cats) > 0) {
-                $select = 'qbe.id=q.id AND qbe.questioncategoryid IN ('.implode( ',', $cats).')';
+            $cats = question_categorylist($game->questioncategoryid);
+            if (count($cats) > 0) {
+                $select = 'qbe.id=q.id AND qbe.questioncategoryid IN (' . implode(',', $cats) . ')';
             }
         }
     }
@@ -276,17 +276,17 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
     $a = [];
     foreach ($recs as $rec) {
         // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
-        $sql = "SELECT DISTINCT answer, fraction ".
+        $sql = "SELECT DISTINCT answer, fraction " .
         "FROM {$CFG->prefix}question_answers WHERE question=$rec->id ORDER BY fraction DESC";
-        $recs2 = $DB->get_records_sql( $sql);
+        $recs2 = $DB->get_records_sql($sql);
         foreach ($recs2 as $rec2) {
             $a[] = $rec2->answer;
             break;
         }
     }
-    game_check_common_problems_shortanswer_allowspaces( $game, $warnings, $a);
+    game_check_common_problems_shortanswer_allowspaces($game, $warnings, $a);
     if ($game->gamekind == 'hangman') {
-        game_check_common_problems_shortanswer_hangman( $game, $warnings, $a);
+        game_check_common_problems_shortanswer_hangman($game, $warnings, $a);
     }
 }
 
@@ -297,7 +297,7 @@ function game_check_common_problems_shortanswer_question($game, &$warnings) {
  * @param array $warnings
  * @param array $a the words contained
  */
-function game_check_common_problems_shortanswer_allowspaces( $game, &$warnings, $a) {
+function game_check_common_problems_shortanswer_allowspaces($game, &$warnings, $a) {
     if ($game->param7 != 0) {
         // Allow spaces, so no check is needed.
         return;
@@ -305,14 +305,14 @@ function game_check_common_problems_shortanswer_allowspaces( $game, &$warnings, 
 
     $ret = [];
     foreach ($a as $word) {
-        if (strpos( $word, ' ') === false) {
+        if (strpos($word, ' ') === false) {
             continue;
         }
         $ret[] = $word;
     }
 
-    if (count( $ret) != 0) {
-        $warnings[] = get_string( 'common_problems_allowspaces', 'game').': '.count($ret).' ('.implode( ', ', $ret).')';
+    if (count($ret) != 0) {
+        $warnings[] = get_string('common_problems_allowspaces', 'game') . ': ' . count($ret) . ' ('.implode( ', ', $ret) . ')';
     }
 }
 
@@ -342,7 +342,7 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
     }
 
     if (count( $ret) != 0) {
-        $warnings[] = get_string( 'common_problems_shortanswer_hangman', 'game').': '.count($ret).' ('.implode( ', ', $ret).')';
+        $warnings[] = get_string( 'common_problems_shortanswer_hangman', 'game') . ': '.count($ret) . ' (' . implode( ', ', $ret) . ')';
     }
 }
 
@@ -353,9 +353,7 @@ function game_check_common_problems_shortanswer_hangman( $game, &$warnings, $a) 
  * @param array $warnings
  */
 function game_check_common_problems_crossword_cryptex($game, &$warnings) {
-
     if (($game->param1 < 10) && ($game->param1 > 0)) {
-        $warnings[] = get_string( 'common_problems_crossword_param1', 'game').' (='.$game->param1.')';
+        $warnings[] = get_string( 'common_problems_crossword_param1', 'game') . ' (=' . $game->param1 . ')';
     }
 }
-
