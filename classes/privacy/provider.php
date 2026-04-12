@@ -219,7 +219,7 @@ class provider implements
 
         $user = $contextlist->get_user();
         $userid = $user->id;
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT
                     g.*,
@@ -245,7 +245,7 @@ class provider implements
         // Fetch the individual games.
         $games = $DB->get_recordset_sql($sql, $params);
         foreach ($games as $game) {
-            list($course, $cm) = get_course_and_cm_from_cmid($game->cmid, 'game');
+            [$course, $cm] = get_course_and_cm_from_cmid($game->cmid, 'game');
             $context = game_get_context_module_instance($cm->id);
 
             $gamedata = \core_privacy\local\request\helper::get_context_data($context, $contextlist->get_user());
@@ -324,7 +324,7 @@ class provider implements
         global $DB;
 
         $userid = $contextlist->get_user()->id;
-        list($contextsql, $contextparams) = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
+        [$contextsql, $contextparams] = $DB->get_in_or_equal($contextlist->get_contextids(), SQL_PARAMS_NAMED);
 
         $sql = "SELECT
                     c.id AS contextid,
@@ -645,7 +645,7 @@ class provider implements
         $cm = $DB->get_record('course_modules', ['id' => $context->instanceid]);
         $game = $DB->get_record('game', ['id' => $cm->instance]);
 
-        list($userinsql, $userinparams) = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
+        [$userinsql, $userinparams] = $DB->get_in_or_equal($userlist->get_userids(), SQL_PARAMS_NAMED);
         $params = array_merge(['gameid' => $game->id], $userinparams);
         $sql = "gameid = :gameid AND userid {$userinsql}";
 

@@ -80,8 +80,10 @@ class backup_game_activity_structure_step extends backup_activity_structure_step
 
         $attempts = new backup_nested_element('game_attempts');
         $attempt = new backup_nested_element(
-            'game_attempt', ['id'],
-            ['userid', 'timestart', 'timefinish', 'timelastattempt', 'lastip', 'lastremotehost', 'preview', 'attempt', 'score', 'attempts', 'language']
+            'game_attempt',
+            ['id'],
+            ['userid', 'timestart', 'timefinish', 'timelastattempt', 'lastip', 'lastremotehost', 'preview',
+                'attempt', 'score', 'attempts', 'language']
         );
 
         $querys = new backup_nested_element('game_queries');

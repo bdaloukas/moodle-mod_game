@@ -24,9 +24,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-define('NUM_NONE',     '0');
-define('NUM_NUMBERS',  '1');
-define('NUM_BULLETS',  '2');
+define('NUM_NONE', '0');
+define('NUM_NUMBERS','1');
+define('NUM_BULLETS', '2');
 define('NUM_INDENTED', '3');
 
 $currtitle = '';    // Active chapter title (plain text).
@@ -62,9 +62,9 @@ if ($print) {
     // TOC for printing.
     $toc .= '<a name="toc"></a>';
     if ($book->customtitles) {
-        $toc .= '<h1>'.get_string('toc', 'book').'</h1>';
+        $toc .= '<h1>' . get_string('toc', 'book') . '</h1>';
     } else {
-        $toc .= '<p class="book_chapter_title">'.get_string('toc', 'book').'</p>';
+        $toc .= '<p class="book_chapter_title">' . get_string('toc', 'book') . '</p>';
     }
     $titles = [];
     $toc .= '<ul>';
@@ -123,9 +123,9 @@ if ($print) {
                     $currsubtitle = '&nbsp;';
                 }
             } else {
-                if (array_key_exists( $ch->id, $okchapters)) {
-                    $toc .= '<a title="'.htmlspecialchars($title).'" href="attempt.php?id='
-                        .$cm->id.'&chapterid='.$ch->id.'">'.$title.'</a>';
+                if (array_key_exists($ch->id, $okchapters)) {
+                    $toc .= '<a title="' . htmlspecialchars($title) . '" href="attempt.php?id='
+                        . $cm->id . '&chapterid=' . $ch->id . '">' . $title . '</a>';
                 } else {
                     $toc .= htmlspecialchars($title);
                 }

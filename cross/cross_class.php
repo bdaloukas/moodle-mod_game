@@ -105,29 +105,29 @@ class Cross {
      *
      * @return moodle_url
      */
-    public function setwords( $answers, $maxcols, $reps) {
+    public function setwords($answers, $maxcols, $reps) {
         $this->mreps = [];
         foreach ($reps as $word => $r) {
-            $this->mreps[game_upper( $word)] = $r;
+            $this->mreps[game_upper($word)] = $r;
         }
         $this->maveragereps = 0;
         foreach ($reps as $r) {
             $this->maveragereps += $r;
         }
-        if (count( $reps)) {
-            $this->maveragereps /= count( $reps);
+        if (count($reps)) {
+            $this->maveragereps /= count($reps);
         }
 
         $this->minputanswers = [];
         foreach ($answers as $word => $answer) {
-            $this->minputanswers[game_upper( $word)] = $answer;
+            $this->minputanswers[game_upper($word)] = $answer;
         }
 
         $this->mwords = [];
 
         $maxlen = 0;
         foreach ($this->minputanswers as $word => $answer) {
-            $len = game_strlen( $word);
+            $len = game_strlen($word);
             if ($len > $maxlen) {
                 $maxlen = $len;
             }
@@ -138,9 +138,9 @@ class Cross {
             $n20 = 15;
         }
 
-        $this->mn20min = round( $n20 - $n20 / 4);
-        $this->mn20max = round( $n20 + $n20 / 4);
-        if ( $this->mn20max > $maxcols && $maxcols > 0) {
+        $this->mn20min = round($n20 - $n20 / 4);
+        $this->mn20max = round($n20 + $n20 / 4);
+        if ($this->mn20max > $maxcols && $maxcols > 0) {
             $this->mn20max = $maxcols;
         }
         if ($this->mn20min > $this->mn20max) {
@@ -149,27 +149,27 @@ class Cross {
 
         $this->mwords = [];
         foreach ($this->minputanswers as $word => $answer) {
-            $len = game_strlen( $word);
+            $len = game_strlen($word);
 
             if ($len <= $this->mn20max) {
-                $this->mwords[] = game_upper( $word);
+                $this->mwords[] = game_upper($word);
             }
         }
 
         $this->randomize();
 
-        return count( $this->mwords);
+        return count($this->mwords);
     }
 
     /**
      * Randomizes the words.
      */
     public function randomize() {
-        $n = count( $this->mwords);
+        $n = count($this->mwords);
         for ($j = 0; $j <= $n / 4; $j++) {
-            $i = array_rand( $this->mwords);
+            $i = array_rand($this->mwords);
 
-            $this->swap( $this->mwords[$i], $this->mwords[0]);
+            $this->swap($this->mwords[$i], $this->mwords[0]);
         }
     }
 
@@ -185,7 +185,7 @@ class Cross {
      *
      * @return the crossword
      */
-    public function computedata( &$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
+    public function computedata(&$crossm, &$crossd, &$letters, $minwords, $maxwords, $mtimelimit=3) {
         $t1 = time();
 
         $ctries = 0;
@@ -201,9 +201,9 @@ class Cross {
         }
         for (;;) {
             // Selects the size of the cross.
-            $n20 = mt_rand( $this->mn20min, $this->mn20max);
+            $n20 = mt_rand($this->mn20min, $this->mn20max);
 
-            if (!$this->computenextcross( $n20, $ctries, $minwords, $maxwords, $nochange)) {
+            if (!$this->computenextcross($n20, $ctries, $minwords, $maxwords, $nochange)) {
                 break;
             }
 
@@ -218,11 +218,11 @@ class Cross {
             }
         }
 
-        if (!$this->computepuzzleinfo( $this->mbestn20, $this->mbestcrosspos, $this->mbestcrossdir, $this->mbestcrossword, false)) {
+        if (!$this->computepuzzleinfo($this->mbestn20, $this->mbestcrosspos, $this->mbestcrossdir, $this->mbestcrossword, false)) {
             return false;
         }
 
-        return $this->savepuzzle( $crossm, $crossd, $ctries, time() - $t1);
+        return $this->savepuzzle($crossm, $crossd, $ctries, time() - $t1);
     }
 
     /**
@@ -236,9 +236,7 @@ class Cross {
      *
      * @return \moodle_url
      */
-    public function computenextcross( $n20, $ctries, $minwords, $maxwords, &$nochange) {
-        $maxw = $n20;
-
+    public function computenextcross($n20, $ctries, $minwords, $maxwords, &$nochange) {
         $n21 = $n20 + 1;
         $n22 = $n20 + 2;
         $n2222 = $n22 * $n22;
@@ -268,8 +266,8 @@ class Cross {
 
         $puzzle = $basepuzzle;
 
-        $row = mt_rand(3, max( 3, $n20 - 3));
-        $col = mt_rand(3, max( 3, $n20 - 3));
+        $row = mt_rand(3, max(3, $n20 - 3));
+        $col = mt_rand(3, max(3, $n20 - 3));
         $pos = $n22 * $row + $col;
 
         $poss = [];
@@ -279,7 +277,7 @@ class Cross {
             $p = array_shift($poss);
 
             if ($this->scan_pos($p[0], $p[1], false, $puzzle, $words, $magics, $poss, $crosspos, $crossdir, $crossword, $n20)) {
-                $nwords = count( $crossword);
+                $nwords = count($crossword);
                 if ($maxwords) {
                     if ($nwords >= $maxwords) {
                         break;
@@ -288,19 +286,19 @@ class Cross {
             }
         }
 
-        $nwords = count( $crossword);
+        $nwords = count($crossword);
 
-        $score = $this->computescore( $puzzle, $n20, $n22, $n2222, $nwords, $nconnectors, $nfilleds, $cspaces, $crossword);
+        $score = $this->computescore($puzzle, $n20, $n22, $n2222, $nwords, $nconnectors, $nfilleds, $cspaces, $crossword);
         $keep = false;
         if ($nwords < $minwords) {
-            if( $this->mbestcrossword == null || $nwords >= count( $this->mbestcrossword)) {
+            if ($this->mbestcrossword == null || $nwords >= count($this->mbestcrossword)) {
                 $keep = true;
             }
-        } else if ( $score > $this->mbestscore) {
+        } else if ($score > $this->mbestscore) {
             $keep = true;
         }
 
-        if( $keep) {
+        if ($keep) {
             $this->mbestcrosspos = $crosspos;
             $this->mbestcrossdir = $crossdir;
             $this->mbestcrossword = $crossword;
@@ -340,7 +338,7 @@ class Cross {
      *
      * @return \moodle_url
      */
-    public function computescore( $puzzle, $n20, $n22, $n2222, $nwords, &$nconnectors, &$nfilleds, &$cspaces, $crossword) {
+    public function computescore($puzzle, $n20, $n22, $n2222, $nwords, &$nconnectors, &$nfilleds, &$cspaces, $crossword) {
         $nconnectors = $nfilleds = 0;
         $puzzle00 = str_replace('.', '0', $puzzle);
 
@@ -357,14 +355,14 @@ class Cross {
             }
         }
 
-        $cspaces = substr_count( $puzzle, ".");
+        $cspaces = substr_count($puzzle, ".");
         $score = ($nwords * 5) + ($nconnectors * 3) + $nfilleds;
 
         $sumrep = 0;
         foreach ($crossword as $word) {
-            $word = game_substr( $word, 1, -1);
+            $word = game_substr($word, 1, -1);
 
-            if (array_key_exists( $word, $this->mreps)) {
+            if (array_key_exists($word, $this->mreps)) {
                 $sumrep += $this->mreps[$word] - $this->maveragereps;
             }
         }
@@ -381,7 +379,7 @@ class Cross {
      * @param stdClass $crossword
      * @param boolean $bprint
      */
-    public function computepuzzleinfo( $n20, $crosspos, $crossdir, $crossword, $bprint=false) {
+    public function computepuzzleinfo($n20, $crosspos, $crossdir, $crossword, $bprint=false) {
         $bprint = false;
         $n22 = $n20 + 2;
 
@@ -391,20 +389,20 @@ class Cross {
         $this->mmaxrow = 0;
         $this->mcletter = 0;
 
-        if ($crossword == null || count( $crossword) == 0) {
+        if ($crossword == null || count($crossword) == 0) {
             return false;
         }
 
         if ($bprint) {
-            echo "<br><br>PuzzleInfo n20=$n20 words=".count( $crossword)."<BR>";
+            echo "<br><br>PuzzleInfo n20=$n20 words=".count($crossword)."<BR>";
         }
         for ($i = 0; $i < count($crosspos); $i++) {
             $pos = $crosspos[$i];
             $col = $pos % $n22;
-            $row = floor( $pos / $n22);
+            $row = floor($pos / $n22);
             $dir = $crossdir[$i];
 
-            $len = game_strlen( $crossword[$i]) - 3;
+            $len = game_strlen($crossword[$i]) - 3;
 
             if ($bprint) {
                 echo "col=$col row=$row dir=$dir word=".$crossword[$i]."<br>";
@@ -456,7 +454,7 @@ class Cross {
      * @param int $ctries
      * @param int $time
      */
-    public function savepuzzle( &$crossm, &$crossd, $ctries, $time) {
+    public function savepuzzle(&$crossm, &$crossd, $ctries, $time) {
         $n22 = $this->mbestn20 + 2;
 
         $cols = $this->mmaxcol - $this->mmincol + 1;
@@ -465,9 +463,9 @@ class Cross {
         $bswapcolrow = false;
 
         if ($bswapcolrow) {
-            swap( $cols, $rows);
-            swap( $this->mmincol, $this->mminrow);
-            swap( $this->mmaxcol, $this->mmaxrow);
+            swap($cols, $rows);
+            swap($this->mmincol, $this->mminrow);
+            swap($this->mmaxcol, $this->mmaxrow);
         }
 
         $crossm = new stdClass();
@@ -475,8 +473,8 @@ class Cross {
         $crossm->time = $time;
         $crossm->usedcols = $cols;
         $crossm->usedrows = $rows;
-        $crossm->words = count( $this->mbestcrosspos);
-        $crossm->wordsall = count( $this->minputanswers);
+        $crossm->words = count($this->mbestcrosspos);
+        $crossm->wordsall = count($this->minputanswers);
 
         $crossm->createscore = $this->mbestscore;
         $crossm->createtries = $ctries;
@@ -489,14 +487,14 @@ class Cross {
             $pos = $this->mbestcrosspos[$i];
 
             $col = $pos % $n22;
-            $row = floor( ($pos - $col) / $n22);
+            $row = floor(($pos - $col) / $n22);
 
             $col += -$this->mmincol + 1;
             $row += -$this->mminrow + 1;
 
             $dir = $this->mbestcrossdir[$i];
             $word = $this->mbestcrossword[$i];
-            $word = substr( $word, 1, strlen( $word) - 2);
+            $word = substr($word, 1, strlen($word) - 2);
 
             $rec = new stdClass();
 
@@ -508,18 +506,18 @@ class Cross {
             $rec->questiontext = $this->minputanswers[$word];
 
             if ($rec->horizontal) {
-                $key = sprintf( 'h%10d %10d', $rec->myrow, $rec->mycol);
+                $key = sprintf('h%10d %10d', $rec->myrow, $rec->mycol);
             } else {
-                $key = sprintf( 'v%10d %10d', $rec->mycol, $rec->myrow);
+                $key = sprintf('v%10d %10d', $rec->mycol, $rec->myrow);
             }
 
             $crossd[$key] = $rec;
         }
-        if (count( $crossd) > 1) {
-            ksort( $crossd);
+        if (count($crossd) > 1) {
+            ksort($crossd);
         }
 
-        return (count( $crossd) > 0);
+        return (count($crossd) > 0);
     }
 
     /**
@@ -528,7 +526,7 @@ class Cross {
      * @param object $a
      * @param object $b
      */
-    public function swap( &$a, &$b) {
+    public function swap(&$a, &$b) {
         $temp = $a;
         $a = $b;
         $b = $temp;
@@ -549,19 +547,19 @@ class Cross {
 
         $ret = "<table border=0 cellpadding=2 cellspacing=1><tr>";
         for ($n = 0;; $n ++) {
-            $c = game_substr( $puzzle, $n, 1);
+            $c = game_substr($puzzle, $n, 1);
 
             if (($m = $n % $n22) == 0 || $m == $n21 || $n < $n22 || $n > $n2200) {
                 $ret .= "<td class=marc>  </td>";
-            } else if ( $c == '0') {
+            } else if ($c == '0') {
                 $ret .= "<td class=limit> </td>";
             } else if ($c == '.') {
                 $ret .= "<td class=blanc> </td>";
             } else {
-                if ((game_substr( $puzzle, $n - 1, 1) > '0' ||
-                    game_substr( $puzzle, $n + 1, 1) > '0') &&
-                    (game_substr( $puzzle, $n - $n22, 1) > '0'
-                    || game_substr( $puzzle, $n + $n22, 1) > '0')) {
+                if ((game_substr($puzzle, $n - 1, 1) > '0' ||
+                    game_substr($puzzle, $n + 1, 1) > '0') &&
+                    (game_substr($puzzle, $n - $n22, 1) > '0'
+                    || game_substr($puzzle, $n + $n22, 1) > '0')) {
                     $ret .= "<td align=center class=connector>$c</td>";
                 } else {
                     $ret .= "<td align=center class=filled>$c</td>";
@@ -618,23 +616,23 @@ class Cross {
             $newdir = 'h';
         }
 
-        $regex = game_substr( $puzzle, $pos, 1);
-        if ( ($regex == '0' || $regex == '.') && (!$valblanc)) {
+        $regex = game_substr($puzzle, $pos, 1);
+        if (($regex == '0' || $regex == '.') && (!$valblanc)) {
             return false;
         }
 
-        if ((game_substr( $puzzle, $pos - $inc, 1) > '0')) {
+        if ((game_substr($puzzle, $pos - $inc, 1) > '0')) {
             return false;
         }
 
-        if ((game_substr( $puzzle, $pos + $inc, 1) > '0')) {
+        if ((game_substr($puzzle, $pos + $inc, 1) > '0')) {
             return false;
         }
 
         $left = $right = 0;
-        for ($limita = $pos - $inc; ($w = game_substr( $puzzle, $limita, 1)) !== '0'; $limita -= $inc) {
-            if ($w == '.' && ((game_substr( $puzzle, $limita - $oinc, 1) > '0') ||
-                (game_substr( $puzzle, $limita + $oinc, 1) > '0'))) {
+        for ($limita = $pos - $inc; ($w = game_substr($puzzle, $limita, 1)) !== '0'; $limita -= $inc) {
+            if ($w == '.' && ((game_substr($puzzle, $limita - $oinc, 1) > '0') ||
+                (game_substr($puzzle, $limita + $oinc, 1) > '0'))) {
                 break;
             }
 
@@ -646,9 +644,9 @@ class Cross {
             $regex = $w . $regex;
         }
 
-        for ($limitb = $pos + $inc; ($w = game_substr( $puzzle, $limitb, 1)) !== '0'; $limitb += $inc) {
-            if ($w == '.' && ((game_substr( $puzzle, $limitb - $oinc, 1) > '0')
-                || (game_substr( $puzzle, $limitb + $oinc, 1) > '0'))) {
+        for ($limitb = $pos + $inc; ($w = game_substr($puzzle, $limitb, 1)) !== '0'; $limitb += $inc) {
+            if ($w == '.' && ((game_substr($puzzle, $limitb - $oinc, 1) > '0')
+                || (game_substr($puzzle, $limitb + $oinc, 1) > '0'))) {
                 break;
             }
 
@@ -671,46 +669,46 @@ class Cross {
             $posp = max($limita + $inc, $pos - (($lens - 1 ) * $inc));
 
             for ($posc = $ini; $posc <= $fin; $posc++, $posp += $inc) {
-                if (game_substr( $puzzle, $posp - $inc, 1) > '0') {
+                if (game_substr($puzzle, $posp - $inc, 1) > '0') {
                     continue;
                 }
 
                 $w = game_substr($regex, $posc, $lens);
 
-                if (!$this->my_preg_match( $w, $words, $word)) {
+                if (!$this->my_preg_match($w, $words, $word)) {
                     continue;
                 }
 
-                $larr0 = $posp + ((game_strlen( $word) - 2) * $inc);
+                $larr0 = $posp + ((game_strlen($word) - 2) * $inc);
 
                 if ($larr0 >= $n2222) {
                     continue;
                 }
 
-                if (game_substr( $puzzle, $larr0, 1) > '0') {
+                if (game_substr($puzzle, $larr0, 1) > '0') {
                     continue;
                 }
 
-                $words = str_replace( $word, ';', $words);
+                $words = str_replace($word, ';', $words);
 
-                $len = game_strlen( $word);
+                $len = game_strlen($word);
                 for ($n = 1, $pp = $posp; $n < $len - 1; $n++, $pp += $inc) {
-                    $this->setchar( $puzzle, $pp,  game_substr( $word , $n, 1));
+                    $this->setchar($puzzle, $pp, game_substr($word , $n, 1));
 
                     if ($pp == $pos) {
                         continue;
                     }
 
-                    $c = game_substr( $puzzle, $pp, 1);
-                    $poss[] = [ $pp, $newdir, ord( $c)];
+                    $c = game_substr($puzzle, $pp, 1);
+                    $poss[] = [ $pp, $newdir, ord($c)];
                 }
 
                 $crosspos[] = $posp;
                 $crossdir[] = ($newdir == 'h' ? 'v' : 'h');
                 $crossword[] = $word;
 
-                $this->setchar( $puzzle, $posp - $inc, '0');
-                $this->setchar( $puzzle, $pp, '0');
+                $this->setchar($puzzle, $posp - $inc, '0');
+                $this->setchar($puzzle, $pp, '0');
 
                 return true;
             }
@@ -728,19 +726,19 @@ class Cross {
      *
      * @return true if it is ok.
      */
-    public function my_preg_match( $w, $words, &$word) {
-        $a = explode( ";", $words);
-        $lenw = game_strlen( $w);
+    public function my_preg_match($w, $words, &$word) {
+        $a = explode(";", $words);
+        $lenw = game_strlen($w);
         foreach ($a as $test) {
-            if (game_strlen( $test) != $lenw) {
+            if (game_strlen($test) != $lenw) {
                 continue;
             }
 
             for ($i = 0; $i < $lenw; $i++) {
-                if (game_substr( $w, $i, 1) == '.') {
+                if (game_substr($w, $i, 1) == '.') {
                     continue;
                 }
-                if (game_substr( $w, $i, 1) != game_substr( $test, $i, 1) ) {
+                if (game_substr($w, $i, 1) != game_substr($test, $i, 1) ) {
                     break;
                 }
             }
@@ -761,14 +759,14 @@ class Cross {
      * @param int $pos
      * @param string $char
      */
-    public function setchar( &$s, $pos, $char) {
+    public function setchar(&$s, $pos, $char) {
         $ret = "";
 
         if ($pos > 0) {
-            $ret .= game_substr( $s, 0, $pos);
+            $ret .= game_substr($s, 0, $pos);
         }
 
-        $s = $ret . $char . game_substr( $s, $pos + 1, game_strlen( $s) - $pos - 1);
+        $s = $ret . $char . game_substr($s, $pos + 1, game_strlen($s) - $pos - 1);
     }
 
     /**
@@ -782,7 +780,7 @@ class Cross {
      * @param stdClass $context
      * @param stdClass $game
      */
-    public function showhtml_base( $crossm, $crossd, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game) {
+    public function showhtml_base($crossm, $crossd, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game) {
         global $CFG, $DB;
 
         $this->mLegendh = [];
@@ -791,7 +789,7 @@ class Cross {
         $sret = "CrosswordWidth  = {$crossm->usedcols};\n";
         $sret .= "CrosswordHeight = {$crossm->usedrows};\n";
 
-        $sret .= "Words=".count( $crossd).";\n";
+        $sret .= "Words=" . count($crossd) . ";\n";
         $swordlength = "";
         $sguess = "";
         $ssolutions = '';
@@ -805,9 +803,9 @@ class Cross {
 
         if ($game->glossaryid) {
             $sql = "SELECT id,course FROM {$CFG->prefix}glossary WHERE id={$game->glossaryid}";
-            $glossary = $DB->get_record_sql( $sql);
+            $glossary = $DB->get_record_sql($sql);
             $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $glossary->course);
-            $contextglossary = game_get_context_module_instance( $cmglossary->id);
+            $contextglossary = game_get_context_module_instance($cmglossary->id);
         }
         $aids = $idh = $idv = [];
         foreach ($crossd as $rec) {
@@ -817,52 +815,52 @@ class Cross {
 
             $i++;
 
-            $swordlength .= ",".game_strlen( $rec->answertext);
+            $swordlength .= "," . game_strlen($rec->answertext);
             if ($rec->questionid != 0) {
-                $q = game_filterquestion(str_replace( '\"', '"', $rec->questiontext),
+                $q = game_filterquestion(str_replace('\"', '"', $rec->questiontext),
                     $rec->questionid, $context->id, $game->course);
-                $rec->questiontext = game_repairquestion( $q);
+                $rec->questiontext = game_repairquestion($q);
             } else {
                 // Glossary.
-                $q = game_filterglossary(str_replace( '\"', '"', $rec->questiontext),
+                $q = game_filterglossary(str_replace('\"', '"', $rec->questiontext),
                     $rec->glossaryentryid, $contextglossary->id, $game->course);
-                $rec->questiontext = game_repairquestion( $q);
+                $rec->questiontext = game_repairquestion($q);
             }
 
-            $s = game_filtertext( $rec->questiontext, 0);
-            while (substr( $s, -4) == '<br>') {
-                $s = substr( $s, 0, strlen( $s) - 4);
+            $s = game_filtertext($rec->questiontext, 0);
+            while (substr($s, -4) == '<br>') {
+                $s = substr($s, 0, strlen($s) - 4);
             }
-            if (substr( $s, 0, 2) == '<p') {
-                $pos = strpos( $s, '>');
+            if (substr($s, 0, 2) == '<p') {
+                $pos = strpos($s, '>');
                 if ($pos != false) {
-                    $s = substr( $s, $pos + 1);
+                    $s = substr($s, $pos + 1);
                 }
             }
             $rec->questiontext = $s;
-            $sclue .= ',"'.game_tojavascriptstring( $s)."\"\r\n";
+            $sclue .= ',"' . game_tojavascriptstring($s) . "\"\r\n";
             if ($showstudentguess) {
-                $sguess .= ',"'.$rec->studentanswer.'"';
+                $sguess .= ',"' . $rec->studentanswer . '"';
             } else {
                 $sguess .= ",''";
             }
             $swordx .= ",".($rec->mycol - 1);
             $swordy .= ",".($rec->myrow - 1);
             if ($showsolution) {
-                $ssolutions .= ',"'.$rec->answertext.'"';
+                $ssolutions .= ',"' . $rec->answertext . '"';
             } else {
                 $ssolutions .= ',""';
             }
 
             if ($showhtmlsolutions) {
-                $shtmlsolutions .= ',"'.base64_encode( $rec->answertext).'"';
+                $shtmlsolutions .= ',"' . base64_encode($rec->answertext) . '"';
             }
 
             $attachment = '';
 
             $s = $rec->questiontext.$attachment;
             if ($rec->horizontal) {
-                if (array_key_exists( $rec->myrow, $legendh)) {
+                if (array_key_exists($rec->myrow, $legendh)) {
                     $legendh[$rec->myrow][] = $s;
                     $idh[$rec->myrow][] = $i;
                 } else {
@@ -870,7 +868,7 @@ class Cross {
                     $idh[$rec->myrow] = [ $i];
                 }
             } else {
-                if (array_key_exists( $rec->mycol, $legendv)) {
+                if (array_key_exists($rec->mycol, $legendv)) {
                     $legendv[$rec->mycol][] = $s;
                     $idv[$rec->mycol][] = $i;
                 } else {
@@ -880,56 +878,56 @@ class Cross {
             }
         }
 
-        $letters = get_string( 'lettersall', 'game');
+        $letters = get_string('lettersall', 'game');
 
         $this->mlegendh = $aid = [];
         foreach ($legendh as $key => $value) {
-            if (count( $value) == 1) {
+            if (count($value) == 1) {
                 $this->mlegendh[$key] = $value[0];
                 $pos = $idh[ $key][ 0];
                 $aid[ $pos] = '"a'.$key.'"';
             } else {
-                for ($i = 0; $i < count( $value); $i++) {
-                    $key2 = $key.game_substr( $letters, $i, 1);
+                for ($i = 0; $i < count($value); $i++) {
+                    $key2 = $key.game_substr($letters, $i, 1);
                     $this->mlegendh[$key2] = $value[$i];
                     $pos = $idh[ $key][ $i];
-                    $aid[ $pos] = '"a'.$key2.'"';
+                    $aid[ $pos] = '"a' . $key2 . '"';
                 }
             }
         }
 
         $this->mlegendv = [];
         foreach ($legendv as $key => $value) {
-            if (count( $value) == 1) {
+            if (count($value) == 1) {
                 $this->mlegendv[$key] = $value[0];
                 $pos = $idv[ $key][ 0];
-                $aid[ $pos] = '"d'.$key.'"';
+                $aid[ $pos] = '"d' . $key . '"';
             } else {
-                for ($i = 0; $i < count( $value); $i++) {
-                    $key2 = $key.game_substr( $letters, $i, 1);
+                for ($i = 0; $i < count($value); $i++) {
+                    $key2 = $key . game_substr($letters, $i, 1);
                     $this->mlegendv[$key2] = $value[$i];
                     $pos = $idv[ $key][ $i];
-                    $aid[ $pos] = '"d'.$key2.'"';
+                    $aid[ $pos] = '"d' . $key2 . '"';
                 }
             }
         }
 
-        ksort( $this->mlegendh);
-        ksort( $this->mlegendv);
+        ksort($this->mlegendh);
+        ksort($this->mlegendv);
 
-        $sclue = game_substr( $sclue, 1);
-        $sret .= "WordLength = new Array( ".game_substr( $swordlength, 1).");\n";
-        $sret .= "Clue = new Array( ".$sclue.");\n";
-        $sguess = str_replace( ' ', '_', $sguess);
-        $sret .= "Guess = new Array( ".game_substr( $sguess, 1).");\n";
-        $sret .= "Solutions = new Array( ".game_substr( $ssolutions, 1).");\n";
+        $sclue = game_substr($sclue, 1);
+        $sret .= "WordLength = new Array(" . game_substr($swordlength, 1) . ");\n";
+        $sret .= "Clue = new Array(".$sclue.");\n";
+        $sguess = str_replace(' ', '_', $sguess);
+        $sret .= "Guess = new Array(" . game_substr($sguess, 1) . ");\n";
+        $sret .= "Solutions = new Array(" . game_substr($ssolutions, 1) . ");\n";
         if ($showhtmlsolutions) {
-            $sret .= "HtmlSolutions = new Array( ".game_substr( $shtmlsolutions, 1).");\n";
+            $sret .= "HtmlSolutions = new Array(" . game_substr($shtmlsolutions, 1) . ");\n";
         }
-        $sret .= "WordX = new Array( ".game_substr( $swordx, 1).");\n";
-        $sret .= "WordY = new Array( ".game_substr( $swordy, 1).");\n";
-        ksort( $aid);
-        $sret .= 'aid = new Array( '.implode( ',', $aid).")\n";
+        $sret .= "WordX = new Array(" . game_substr($swordx, 1) . ");\n";
+        $sret .= "WordY = new Array(" . game_substr($swordy, 1) . ");\n";
+        ksort($aid);
+        $sret .= 'aid = new Array(' . implode(',', $aid) . ")\n";
         $sret .= "LastHorizontalWord = $lasthorizontalword;\n";
 
         return $sret;

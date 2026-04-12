@@ -46,16 +46,16 @@ class CrossDB extends Cross {
      * @param array $crossd
      * @param int $id
      */
-    public function savecross( $game, &$crossm, $crossd, $id) {
+    public function savecross($game, &$crossm, $crossd, $id) {
         global $DB, $USER;
 
         $crossm->id = $id;
         $crossm->sourcemodule = $game->sourcemodule;
 
-        $this->delete_records( $id);
+        $this->delete_records($id);
 
-        if (!(game_insert_record( "game_cross", $crossm))) {
-            throw new moodle_exception( 'cross_error', 'game', 'Insert page: new page game_cross not inserted');
+        if (!(game_insert_record("game_cross", $crossm))) {
+            throw new moodle_exception('cross_error', 'game', 'Insert page: new page game_cross not inserted');
         }
 
         foreach ($crossd as $rec) {
@@ -67,8 +67,8 @@ class CrossDB extends Cross {
             $rec->userid = $USER->id;
             $rec->sourcemodule = $game->sourcemodule;
 
-            if (!$DB->insert_record( 'game_queries', $rec)) {
-                throw new moodle_exception( 'cross_error', 'game', 'Insert page: new page game_queries not inserted');
+            if (!$DB->insert_record('game_queries', $rec)) {
+                throw new moodle_exception('cross_error', 'game', 'Insert page: new page game_queries not inserted');
             }
             game_update_repetitions($game->id, $USER->id, $rec->questionid, $rec->glossaryentryid);
         }
@@ -81,14 +81,14 @@ class CrossDB extends Cross {
      *
      * @param int $id
      */
-    public function delete_records( $id) {
+    public function delete_records($id) {
         global $DB;
 
-        if (!$DB->delete_records( 'game_queries', [ 'attemptid' => $id])) {
-            throw new moodle_exception( 'cross_error', 'game',  "Can't delete from game_queries attemptid=$id");
+        if (!$DB->delete_records('game_queries', [ 'attemptid' => $id])) {
+            throw new moodle_exception('cross_error', 'game', "Can't delete from game_queries attemptid=$id");
         }
-        if (!$DB->delete_records( 'game_cross', [ 'id' => $id])) {
-            throw new moodle_exception( 'cross_error', 'game', "Can't delete from game_cross id=$id");
+        if (!$DB->delete_records('game_cross', [ 'id' => $id])) {
+            throw new moodle_exception('cross_error', 'game', "Can't delete from game_cross id=$id");
         }
     }
 
@@ -112,7 +112,7 @@ class CrossDB extends Cross {
      * @param stdClass $course
      * @param stdClass $cm
      */
-    public function loadcross( $g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution,
+    public function loadcross($g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution,
     &$finishattempt, $showhtmlsolutions, &$language, $showstudentguess, $context, $course, $cm) {
         global $DB;
 
@@ -123,37 +123,47 @@ class CrossDB extends Cross {
         $html = '';
         $done = false;
 
-        $loadfromdb = ( $g == "");
+        $loadfromdb = $g == "");
 
         $this->mmincol = $this->mminrow = 0;
         $this->mmaxcol = $crossrec->usedcols;
         $this->mmaxrow = $crossrec->usedrows;
 
         if ($g == "") {
-            $g = str_repeat( ' ', $this->mmaxcol * $this->mmaxrow);
+            $g = str_repeat(' ', $this->mmaxcol * $this->mmaxrow);
         }
 
         $load = false;
 
         $puzzle = str_repeat('.', $this->mmaxrow * $this->mmaxcol);
-        if ($recs = $DB->get_records( 'game_queries', [ 'attemptid' => $crossrec->id])) {
+        if ($recs = $DB->get_records('game_queries', [ 'attemptid' => $crossrec->id])) {
             $a = [];
             foreach ($recs as $rec) {
                 if ($rec->horizontal) {
-                    $key = sprintf( 'h%10d %10d', $rec->myrow, $rec->mycol);
+                    $key = sprintf('h%10d %10d', $rec->myrow, $rec->mycol);
                 } else {
-                    $key = sprintf( 'v%10d %10d', $rec->mycol, $rec->myrow);
+                    $key = sprintf('v%10d %10d', $rec->mycol, $rec->myrow);
                 }
                 $a[$key] = $rec;
             }
 
-            ksort( $a);
+            ksort($a);
             $b = [];
             $correctletters = $wrongletters = $restletters = 0;
 
             foreach ($a as $rec) {
-                $this->updatecrossquestions( $rec, $g, $pos, $correctletters,
-                    $wrongletters, $restletters, $game, $attempt, $crossrec, $loadfromdb);
+                $this->updatecrossquestions(
+                    $rec,
+                    $g,
+                    $pos,
+                    $correctletters,
+                    $wrongletters,
+                    $restletters,
+                    $game,
+                    $attempt,
+                    $crossrec,
+                    $loadfromdb
+                );
                 $b[] = $rec;
 
                 if (($rec->mycol != 0) && ($rec->myrow != 0)) {
@@ -163,8 +173,19 @@ class CrossDB extends Cross {
                     $language = game_detectlanguage( $rec->answertext);
                 }
             }
-            $info = $this->game_cross_computecheck( $correctletters,  $wrongletters,
-                $restletters, $game, $attempt, $done, $onlyshow, $showsolution, $finishattempt, $course, $cm);
+            $info = $this->game_cross_computecheck(
+                $correctletters,
+                $wrongletters,
+                $restletters,
+                $game,
+                $attempt,
+                $done,
+                $onlyshow,
+                $showsolution,
+                $finishattempt,
+                $course,
+                $cm
+            );
             $html = $this->showhtml_base( $crossrec, $b, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game);
         }
 
@@ -190,13 +211,19 @@ class CrossDB extends Cross {
      * @param stdClass $course
      * @param stdClass $cm
      */
-    public function game_cross_computecheck( $correctletters,  $wrongletters, $restletters, $game,
-        $attempt, &$done, $onlyshow, $showsolution, $finishattempt, $course, $cm) {
-
-        $ret = '';
-
-        $and = get_string( 'and', 'game');
-
+    public function game_cross_computecheck(
+        $correctletters,
+        $wrongletters,
+        $restletters,
+        $game,
+        $attempt,
+        &$done,
+        $onlyshow,
+        $showsolution,
+        $finishattempt,
+        $course,
+        $cm
+    ) {
         $a = [];
         if ($correctletters) {
             $a[] = $correctletters.' '.
@@ -220,15 +247,15 @@ class CrossDB extends Cross {
             $i++;
 
             if ($i == 1) {
-                $ret .= ' '.$msg;
+                $ret .= ' ' . $msg;
             } else if ( $i == count($a)) {
-                $ret .= ' '.get_string( 'and', 'game').' '.$msg;
+                $ret .= ' ' . get_string( 'and', 'game') . ' ' . $msg;
             } else {
-                $ret .= ', '.$msg;
+                $ret .= ', ' . $msg;
             }
         }
 
-        $done = ( $restletters == 0 ? true : false);
+        $done = ($restletters == 0 ? true : false);
 
         if ($finishattempt == false) {
             if ($onlyshow || $showsolution) {
@@ -239,9 +266,9 @@ class CrossDB extends Cross {
         }
 
         $score = $correctletters / ($correctletters + $restletters);
-        $ret .= '<br>'.get_string( 'grade', 'game').' '.round( $score * 100).' %';
+        $ret .= '<br>' . get_string('grade', 'game') . ' ' . round( $score * 100) . ' %';
 
-        game_updateattempts( $game, $attempt, $score, $done, $cm, $course);
+        game_updateattempts($game, $attempt, $score, $done, $cm, $course);
 
         return $ret;
     }

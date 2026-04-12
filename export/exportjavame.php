@@ -28,59 +28,59 @@
  * @param object $game
  * @param object $javame
  */
-function game_onexportjavame( $game, $javame) {
+function game_onexportjavame($game, $javame) {
     global $CFG, $DB;
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
+    $course = $DB->get_record('course', ['id' => $courseid]);
 
     $destdir = game_export_createtempdir();
 
-    if ( $javame->type == 'hangmanp') {
+    if ($javame->type == 'hangmanp') {
         $destmobiledir = 'hangmanp';
     } else {
         $destmobiledir = 'hangman';
     }
     $src = $CFG->dirroot.'/mod/game/export/javame/'.$destmobiledir.'/simple';
 
-    if ( $javame->filename == '') {
+    if ($javame->filename == '') {
         $javame->filename = 'moodle'.$destmobiledir;
     }
 
-    $handle = opendir( $src);
+    $handle = opendir($src);
     while (false !== ($item = readdir($handle))) {
         if ($item != '.' && $item != '..') {
             if (!is_dir($src.'/'.$item)) {
                 $itemdest = $item;
 
-                if (substr( $item, -5) == '.java') {
+                if (substr($item, -5) == '.java') {
                     continue;   // Don't copy the java source code files.
                 }
 
-                if (substr( $itemdest, -8) == '-1.class') {
-                    $itemdest = substr( $itemdest, 0, -8).'$1.class';
+                if (substr($itemdest, -8) == '-1.class') {
+                    $itemdest = substr($itemdest, 0, -8).'$1.class';
                 }
 
-                copy( $src.'/'.$item, $destdir.'/'.$itemdest);
+                copy($src . '/' . $item, $destdir . '/' . $itemdest);
             }
         }
     }
 
-    mkdir( $destdir.'/META-INF');
+    mkdir($destdir.'/META-INF');
 
-    game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $javame->maxpicturewidth, $javame->maxpictureheight);
+    game_exportjavame_exportdata($src, $destmobiledir, $destdir, $game, $javame->maxpicturewidth, $javame->maxpictureheight);
 
-    game_create_manifest_mf( $destdir.'/META-INF', $javame, $destmobiledir);
+    game_create_manifest_mf($destdir.'/META-INF', $javame, $destmobiledir);
 
-    $filejar = game_create_jar( $destdir, $course, $javame);
+    $filejar = game_create_jar($destdir, $course, $javame);
     if ($filejar == '') {
-        $filezip = game_create_zip( $destdir, $course->id, $javame->filename.'.zip');
+        $filezip = game_create_zip($destdir, $course->id, $javame->filename.'.zip');
     } else {
         $filezip = '';
     }
 
     if ($destdir != '') {
-        remove_dir( $destdir);
+        remove_dir($destdir);
     }
 
     if ($filezip != '') {
@@ -89,7 +89,7 @@ function game_onexportjavame( $game, $javame) {
     }
 
     $file = ($filejar != '' ? $filejar : $filezip);
-    game_send_stored_file( $file);
+    game_send_stored_file($file);
 }
 
 /**
@@ -102,17 +102,17 @@ function game_onexportjavame( $game, $javame) {
  * @param int $maxwidth
  * @param int $maxheight
  */
-function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $maxwidth, $maxheight) {
+function game_exportjavame_exportdata($src, $destmobiledir, $destdir, $game, $maxwidth, $maxheight) {
     global $CFG;
 
-    mkdir( $destdir.'/'.$destmobiledir);
+    mkdir($destdir.'/'.$destmobiledir);
 
-    $handle = opendir( $src);
+    $handle = opendir($src);
     while (false !== ($item = readdir($handle))) {
         if ($item != '.' && $item != '..') {
             if (!is_dir($src.'/'.$item)) {
-                if (substr( $item, -4) == '.jpg') {
-                    copy( $src.'/'.$item, $destdir."/$destmobiledir/".$item);
+                if (substr($item, -4) == '.jpg') {
+                    copy($src.'/'.$item, $destdir."/$destmobiledir/".$item);
                 }
             }
         }
@@ -123,33 +123,33 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
         $lang = current_language();
     }
     $sourcefile = $src. '/lang/'.$lang.'/language.txt';
-    if (!file_exists( $sourcefile)) {
+    if (!file_exists($sourcefile)) {
         $sourcefile = $src. '/lang/'.$lang.'_utf8/language.txt';
     }
-    copy( $sourcefile,  $destdir."/$destmobiledir/language.txt");
+    copy($sourcefile, $destdir."/$destmobiledir/language.txt");
 
-    $exportattachment = ( $destmobiledir == 'hangmanp');
+    $exportattachment = ($destmobiledir == 'hangmanp');
 
-    $map = game_exmportjavame_getanswers( $game, $exportattachment, false, $destdir, $files);
+    $map = game_exmportjavame_getanswers($game, $exportattachment, false, $destdir, $files);
     if ($map == false) {
-        throw new moodle_exception( 'game_error', 'game',  'No Questions');
+        throw new moodle_exception('game_error', 'game',  'No Questions');
     }
 
     if ($destmobiledir == 'hangmanp') {
-        game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight);
+        game_exportjavame_exportdata_hangmanp($src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight);
         return;
     }
 
-    $fp = fopen( $destdir."/$destmobiledir/hangman.txt", "w");
-    fputs( $fp, "1.txt=$destmobiledir\r\n");
-    fclose( $fp);
+    $fp = fopen($destdir."/$destmobiledir/hangman.txt", "w");
+    fputs($fp, "1.txt=$destmobiledir\r\n");
+    fclose($fp);
 
-    $fp = fopen( $destdir."/$destmobiledir/1.txt", "w");
+    $fp = fopen($destdir . "/$destmobiledir/1.txt", "w");
     foreach ($map as $line) {
-        $s = game_upper( $line->answer) . '=' . $line->question;
-        fputs( $fp, "$s\r\n");
+        $s = game_upper($line->answer) . '=' . $line->question;
+        fputs($fp, "$s\r\n");
     }
-    fclose( $fp);
+    fclose($fp);
 }
 
 /**
@@ -163,30 +163,30 @@ function game_exportjavame_exportdata( $src, $destmobiledir, $destdir, $game, $m
  * @param int $maxwidth
  * @param int $maxheight
  */
-function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight) {
+function game_exportjavame_exportdata_hangmanp($src, $destmobiledir, $destdir, $game, $map, $maxwidth, $maxheight) {
     global $CFG;
 
-    $fp = fopen( $destdir."/$destmobiledir/$destmobiledir.txt", "w");
-    fputs( $fp, "01=01\r\n");
-    fclose( $fp);
+    $fp = fopen($destdir."/$destmobiledir/$destmobiledir.txt", "w");
+    fputs($fp, "01=01\r\n");
+    fclose($fp);
 
     $destdirphoto = $destdir.'/'.$destmobiledir.'/01';
-    mkdir( $destdirphoto);
+    mkdir($destdirphoto);
 
-    $fp = fopen( $destdirphoto.'/photo.txt', "w");
+    $fp = fopen($destdirphoto.'/photo.txt', "w");
     foreach ($map as $line) {
         $file = $line->attachment;
-        $pos = strrpos( $file, '.');
+        $pos = strrpos($file, '.');
         if ($pos != false) {
-            $file = $line->id.substr( $file, $pos);
+            $file = $line->id.substr($file, $pos);
             $src = $CFG->dataroot.'/'.$game->course.'/moddata/'.$line->attachment;
-            game_export_javame_smartcopyimage( $src, $destdirphoto.'/'.$file, $maxwidth, $maxheight);
+            game_export_javame_smartcopyimage($src, $destdirphoto.'/'.$file, $maxwidth, $maxheight);
 
-            $s = $file . '=' . game_upper( $line->answer);
-            fputs( $fp, "$s\r\n");
+            $s = $file . '=' . game_upper($line->answer);
+            fputs($fp, "$s\r\n");
         }
     }
-    fclose( $fp);
+    fclose($fp);
 }
 
 /**
@@ -198,16 +198,16 @@ function game_exportjavame_exportdata_hangmanp( $src, $destmobiledir, $destdir, 
  * @param string $dest
  * @param array $files
  */
-function game_exmportjavame_getanswers( $game, $context, $exportattachment, $dest, &$files) {
+function game_exmportjavame_getanswers($game, $context, $exportattachment, $dest, &$files) {
     $map = $files = [];
 
     switch ($game->sourcemodule) {
         case 'question':
-            return game_exmportjavame_getanswers_question( $game, $context, $dest, $files);
+            return game_exmportjavame_getanswers_question($game, $context, $dest, $files);
         case 'glossary':
-            return game_exmportjavame_getanswers_glossary( $game, $context, $exportattachment, $dest, $files);
+            return game_exmportjavame_getanswers_glossary($game, $context, $exportattachment, $dest, $files);
         case 'quiz':
-            return game_exmportjavame_getanswers_quiz( $game, $context, $dest, $files);
+            return game_exmportjavame_getanswers_quiz($game, $context, $dest, $files);
     }
 
     return false;
@@ -221,13 +221,21 @@ function game_exmportjavame_getanswers( $game, $context, $exportattachment, $des
  * @param string $destdir
  * @param array $files
  */
-function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$files) {
+function game_exmportjavame_getanswers_question($game, $context, $destdir, &$files) {
     $select = 'hidden = 0 AND category='.$game->questioncategoryid;
 
-    $select .= game_showanswers_appendselect( $game);
+    $select .= game_showanswers_appendselect($game);
 
-    return game_exmportjavame_getanswers_question_select( $game, $context, 'question',
-        $select, '*', $game->course, $destdir, $files);
+    return game_exmportjavame_getanswers_question_select(
+        $game,
+        $context,
+        'question',
+        $select,
+        '*',
+        $game->course,
+        $destdir,
+        $files
+    );
 }
 
 /**
@@ -238,16 +246,16 @@ function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$fi
  * @param string $destdir
  * @param array $files
  */
-function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) {
+function game_exmportjavame_getanswers_quiz($game, $context, $destdir, $files) {
     global $CFG;
 
     $select = "quiz='$game->quizid' ".
         " AND qqi.question=q.id".
         " AND q.hidden=0".
-        game_showanswers_appendselect( $game);
+        game_showanswers_appendselect($game);
     $table = "{question} q,{quiz_question_instances} qqi";
 
-    return game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, "q.*", $game->course, $destdir, $files);
+    return game_exmportjavame_getanswers_question_select($game, $context, $table, $select, "q.*", $game->course, $destdir, $files);
 }
 
 /**
@@ -262,27 +270,27 @@ function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) 
  * @param string $destdir
  * @param array $files
  */
-function game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, $fields, $courseid, $destdir, &$files) {
+function game_exmportjavame_getanswers_question_select($game, $context, $table, $select, $fields, $courseid, $destdir, &$files) {
     global $CFG, $DB;
 
-    if (($questions = $DB->get_records_select( $table, $select, null, '', $fields)) === false) {
+    if (($questions = $DB->get_records_select($table, $select, null, '', $fields)) === false) {
         return;
     }
 
     $line = 0;
     $map = [];
     foreach ($questions as $question) {
-        unset( $ret);
+        unset($ret);
         $ret = new stdClass();
         $ret->qtype = $question->qtype;
         $ret->question = $question->questiontext;
-        $ret->question = str_replace( [ '"', '#'], [ "'", ' '],
-            game_export_split_files( $game->course, $context, 'questiontext',
+        $ret->question = str_replace(['"', '#'], ["'", ' '],
+            game_export_split_files($game->course, $context, 'questiontext',
             $question->id, $ret->question, $destdir, $files));
 
         switch ($question->qtype) {
             case 'shortanswer':
-                $rec = $DB->get_record( 'question_answers', [ 'question' => $question->id],
+                $rec = $DB->get_record('question_answers', ['question' => $question->id],
                     'id,answer,feedback');
                 $ret->answer = $rec->answer;
                 $ret->feedback = $rec->feedback;
@@ -305,7 +313,7 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
  * @param string $destdir
  * @param array $files
  */
-function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachment, $destdir, &$files) {
+function game_exmportjavame_getanswers_glossary($game, $context, $exportattachment, $destdir, &$files) {
     global $CFG, $DB;
 
     $table = '{glossary_entries} ge';
@@ -325,7 +333,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
         $fields .= ',attachment';
     }
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY definition";
-    if (($questions = $DB->get_records_sql( $sql)) === false) {
+    if (($questions = $DB->get_records_sql($sql)) === false) {
         return false;
     }
 
@@ -337,7 +345,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
         $ret = new stdClass();
         $ret->id = $question->id;
         $ret->qtype = 'shortanswer';
-        $ret->question = strip_tags( $question->definition);
+        $ret->question = strip_tags($question->definition);
         $ret->answer = $question->concept;
         $ret->feedback = '';
         $ret->attachment = '';
@@ -351,7 +359,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
                 }
 
                 $ret->attachment = "glossary/{$game->glossaryid}/$question->id/$question->attachment";
-                $myfiles = $fs->get_area_files( $contextglossary->id, 'mod_glossary', 'attachment', $ret->id);
+                $myfiles = $fs->get_area_files($contextglossary->id, 'mod_glossary', 'attachment', $ret->id);
                 $i = 0;
 
                 foreach ($myfiles as $f) {
@@ -361,14 +369,14 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
                     $filename = $f->get_filename();
                     $url = "{$CFG->wwwroot}/pluginfile.php/{$f->get_contextid()}/mod_glossary/attachment}";
                     $fileurl = $url.$f->get_filepath().$f->get_itemid().'/'.$filename;
-                    $pos = strrpos( $filename, '.');
-                    $ext = substr( $filename, $pos);
+                    $pos = strrpos($filename, '.');
+                    $ext = substr($filename, $pos);
                     $destfile = $ret->id;
                     if ($i > 0) {
                         $destfile .= '_'.$i;
                     }
-                    $destfile = $destdir.'/'.$destfile.$ext;
-                    $f->copy_content_to( $destfile);
+                    $destfile = $destdir . '/' . $destfile . $ext;
+                    $f->copy_content_to($destfile);
                     $ret->attachment = $destfile;
                     $i++;
                     $files[] = $destfile;
@@ -389,20 +397,20 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
  * @param stdClass $javame
  * @param string $destmobiledir
  */
-function game_create_manifest_mf( $dir, $javame, $destmobiledir) {
-    $fp = fopen( $dir.'/MANIFEST.MF', "w");
-    fputs( $fp, "Manifest-Version: 1.0\r\n");
-    fputs( $fp, "Ant-Version: Apache Ant 1.7.0\r\n");
-    fputs( $fp, "Created-By: {$javame->createdby}\r\n");
-    fputs( $fp, "MIDlet-1: MoodleHangman,,$destmobiledir\r\n");
-    fputs( $fp, "MIDlet-Vendor: {$javame->vendor}\r\n");
-    fputs( $fp, "MIDlet-Name: {$javame->vendor}\r\n");
-    fputs( $fp, "MIDlet-Description: {$javame->description}\r\n");
-    fputs( $fp, "MIDlet-Version: {$javame->version}\r\n");
-    fputs( $fp, "MicroEdition-Configuration: CLDC-1.0\r\n");
-    fputs( $fp, "MicroEdition-Profile: MIDP-1.0\r\n");
+function game_create_manifest_mf($dir, $javame, $destmobiledir) {
+    $fp = fopen($dir.'/MANIFEST.MF', "w");
+    fputs($fp, "Manifest-Version: 1.0\r\n");
+    fputs($fp, "Ant-Version: Apache Ant 1.7.0\r\n");
+    fputs($fp, "Created-By: {$javame->createdby}\r\n");
+    fputs($fp, "MIDlet-1: MoodleHangman,,$destmobiledir\r\n");
+    fputs($fp, "MIDlet-Vendor: {$javame->vendor}\r\n");
+    fputs($fp, "MIDlet-Name: {$javame->vendor}\r\n");
+    fputs($fp, "MIDlet-Description: {$javame->description}\r\n");
+    fputs($fp, "MIDlet-Version: {$javame->version}\r\n");
+    fputs($fp, "MicroEdition-Configuration: CLDC-1.0\r\n");
+    fputs($fp, "MicroEdition-Profile: MIDP-1.0\r\n");
 
-    fclose( $fp);
+    fclose($fp);
 }
 
 /**
@@ -412,27 +420,27 @@ function game_create_manifest_mf( $dir, $javame, $destmobiledir) {
  * @param stdClass $course
  * @param stdClass $javame
  */
-function game_create_jar( $srcdir, $course, $javame) {
+function game_create_jar($srcdir, $course, $javame) {
     global $CFG;
 
     $dir = $CFG->dataroot . '/' . $course->id;
     $filejar = $dir . "/export/{$javame->filename}.jar";
-    if (!file_exists( $dir)) {
-        mkdir( $dir);
+    if (!file_exists($dir)) {
+        mkdir($dir);
     }
 
-    if (!file_exists( $dir.'/export')) {
-        mkdir( $dir.'/export');
+    if (!file_exists($dir.'/export')) {
+        mkdir($dir.'/export');
     }
 
-    if (file_exists( $filejar)) {
-        unlink( $filejar);
+    if (file_exists($filejar)) {
+        unlink($filejar);
     }
 
     $cmd = "cd $srcdir;jar cvfm $filejar META-INF/MANIFEST.MF *";
-    exec( $cmd);
+    exec($cmd);
 
-    return (file_exists( $filejar) ? $filejar : '');
+    return (file_exists($filejar) ? $filejar : '');
 }
 
 /**
@@ -440,8 +448,8 @@ function game_create_jar( $srcdir, $course, $javame) {
  *
  * @param stdClass $form
  */
-function game_showanswers_appendselect( $form) {
-    switch( $form->gamekind){
+function game_showanswers_appendselect($form) {
+    switch ($form->gamekind){
         case 'hangman':
         case 'cross':
         case 'crypto':
@@ -464,34 +472,34 @@ function game_showanswers_appendselect( $form) {
  * @param string $dest
  * @param int $maxwidth
  */
-function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth) {
+function game_export_javame_smartcopyimage($filename, $dest, $maxwidth) {
     if ($maxwidth == 0) {
-        copy( $filename, $dest);
+        copy($filename, $dest);
         return;
     }
 
-    $size = getimagesize( $filename);
+    $size = getimagesize($filename);
     if ($size == false) {
-        copy( $filename, $dest);
+        copy($filename, $dest);
         return;
     }
 
     $mul = $maxwidth / $size[0];
     if ($mul > 1) {
-        copy( $filename, $dest);
+        copy($filename, $dest);
         return;
     }
 
     $mime = $size['mime'];
-    switch( $mime) {
+    switch ($mime) {
         case 'image/png':
-            $srcimage = imagecreatefrompng( $filename);
+            $srcimage = imagecreatefrompng($filename);
             break;
         case 'image/jpeg':
-            $srcimage = imagecreatefromjpeg( $filename);
+            $srcimage = imagecreatefromjpeg($filename);
             break;
         case 'image/gif':
-            $srcimage = imagecreatefromgif( $filename);
+            $srcimage = imagecreatefromgif($filename);
             break;
         default:
             die('Aknown mime type $mime');
@@ -500,8 +508,8 @@ function game_export_javame_smartcopyimage( $filename, $dest, $maxwidth) {
 
     $dstw = $size[0] * $mul;
     $dsth = $size[1] * $mul;
-    $dstimage = imagecreatetruecolor( $dstw, $dsth);
-    imagecopyresampled( $dstimage, $srcimage, 0, 0, 0, 0, $dstw, $dsth, $size[0], $size[1]);
+    $dstimage = imagecreatetruecolor($dstw, $dsth);
+    imagecopyresampled($dstimage, $srcimage, 0, 0, 0, 0, $dstw, $dsth, $size[0], $size[1]);
 
-    imagejpeg( $dstimage, $dest);
+    imagejpeg($dstimage, $dest);
 }

@@ -33,13 +33,21 @@
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_bookquiz_continue( $cm, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
+function game_bookquiz_continue(
+    $cm,
+    $game,
+    $attempt,
+    $bookquiz,
+    $chapterid,
+    $context,
+    $course
+) {
     if ($attempt != false && $bookquiz != false) {
-        return game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $context, $course);
+        return game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $context, $course);
     }
 
     if ($attempt == false) {
-        $attempt = game_addattempt( $game);
+        $attempt = game_addattempt($game);
     }
 
     $bookquiz = new stdClass();
@@ -47,11 +55,11 @@ function game_bookquiz_continue( $cm, $game, $attempt, $bookquiz, $chapterid, $c
     $bookquiz->id = $attempt->id;
     $bookquiz->bookid = $game->bookid;
 
-    if ( !game_insert_record( 'game_bookquiz', $bookquiz)) {
-        throw new moodle_exception( 'bookquiz_error_insert', 'mod_game');
+    if (!game_insert_record('game_bookquiz', $bookquiz)) {
+        throw new moodle_exception('bookquiz_error_insert', 'mod_game');
     }
 
-    return game_bookquiz_play( $cm, $game, $attempt, $bookquiz, 0, $context, $course);
+    return game_bookquiz_play($cm, $game, $attempt, $bookquiz, 0, $context, $course);
 }
 
 /**
@@ -65,35 +73,35 @@ function game_bookquiz_continue( $cm, $game, $attempt, $bookquiz, $chapterid, $c
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
+function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
     global $DB, $OUTPUT, $cm;
 
     // Find where the book is stoped.
     if ($bookquiz->lastchapterid == 0) {
-        game_bookquiz_play_computelastchapter( $game, $bookquiz);
+        game_bookquiz_play_computelastchapter($game, $bookquiz);
 
         if ($bookquiz->lastchapterid == 0) {
-            throw new moodle_exception( 'bookquiz_empty', 'game');
+            throw new moodle_exception('bookquiz_empty', 'game');
         }
     }
     if ($chapterid == 0) {
         $chapterid = $bookquiz->lastchapterid;
     } else {
-        if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $chapterid, [ 'id' => $bookquiz->id])) == false) {
-            throw new moodle_exception( 'bookquiz_cant_update_lastchaperid', 'game', $chapterid);
+        if (($DB->set_field('game_bookquiz', 'lastchapterid', $chapterid, ['id' => $bookquiz->id])) == false) {
+            throw new moodle_exception('bookquiz_cant_update_lastchaperid', 'game', $chapterid);
         }
     }
 
     // Loads the last chapter.
-    $book = $DB->get_record( 'book', ['id' => $game->bookid]);
-    if (!$chapter = $DB->get_record( 'book_chapters', ['id' => $chapterid])) {
-        throw new moodle_exception( 'bookquiz_error', 'game', 'Error reading book chapters.');
+    $book = $DB->get_record('book', ['id' => $game->bookid]);
+    if (!$chapter = $DB->get_record('book_chapters', ['id' => $chapterid])) {
+        throw new moodle_exception('bookquiz_error', 'game', 'Error reading book chapters.');
     }
     $select = "bookid = $game->bookid AND hidden = 0";
     $chapters = $DB->get_records_select('book_chapters', $select, null, 'pagenum', 'id, pagenum, subchapter, title, hidden');
 
     $okchapters = [];
-    if (($recs = $DB->get_records( 'game_bookquiz_chapters', [ 'attemptid' => $attempt->id])) != false) {
+    if (($recs = $DB->get_records('game_bookquiz_chapters', ['attemptid' => $attempt->id])) != false) {
         foreach ($recs as $rec) {
             // The 1 means correct answer.
             $okchapters[$rec->chapterid] = 1;
@@ -101,17 +109,17 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
     }
 
     // The 2 means current.
-    if (array_key_exists( $chapterid, $okchapters)) {
+    if (array_key_exists($chapterid, $okchapters)) {
         // Student answered correct the question in the past.
         $questionid = 0;
     } else {
         // Student didn't answer correct the questions, so have to ask him again.
-        $questions = $DB->get_records( 'game_bookquiz_questions', [ 'gameid' => $game->id, 'chapterid' => $chapterid]);
+        $questions = $DB->get_records('game_bookquiz_questions', ['gameid' => $game->id, 'chapterid' => $chapterid]);
         if ($questions === false) {
             $questionid = 0;
         } else {
             // Have to select random one question.
-            $questionid = game_bookquiz_selectrandomquestion( $questions);
+            $questionid = game_bookquiz_selectrandomquestion($questions);
         }
     }
 
@@ -136,8 +144,8 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
         $lastid = $ch->id;
     }
 
-    if (count( $chapters)) {
-        $scoreattempt = ($scoreattempt - 1) / count( $chapters);
+    if (count($chapters)) {
+        $scoreattempt = ($scoreattempt - 1) / count($chapters);
     }
 
     $chnavigation = '';
@@ -152,32 +160,32 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
 
     $nextbutton = '';
     if ($nextid) {
-        if ( $questionid == 0) {
-            $chnavigation .= '<a title="'.get_string('navnext', 'book').'" href="attempt.php?id='.
-            $cm->id.'&chapterid='.$nextid.'"><img src="'.
-            game_pix_url('bookquiz/nav_next', 'mod_game').'" class="bigicon" alt="'.get_string('navnext', 'book').'" ></a>';
+        if ($questionid == 0) {
+            $chnavigation .= '<a title="' . get_string('navnext', 'book') . '" href="attempt.php?id=' .
+            $cm->id.'&chapterid=' . $nextid . '"><img src="'.
+            game_pix_url('bookquiz/nav_next', 'mod_game') . '" class="bigicon" alt="'.get_string('navnext', 'book') . '" ></a>';
             $nextbutton = '<center>';
             $nextbutton .= '<form name="form" method="get" action="attempt.php">';
-            $nextbutton .= '<input type="hidden" name="id" value="'.$cm->id.'" >'."\r\n";
-            $nextbutton .= '<input type="hidden" name="chapterid" value="'.$nextid.'" >'."\r\n";
-            $nextbutton .= '<input type="submit" value="'.get_string( 'continue').'">';
+            $nextbutton .= '<input type="hidden" name="id" value="'.$cm->id.'" >' . "\r\n";
+            $nextbutton .= '<input type="hidden" name="chapterid" value="'.$nextid . '" >' . "\r\n";
+            $nextbutton .= '<input type="submit" value="' . get_string('continue') . '">';
             $nextbutton .= '</center>';
-            game_updateattempts_maxgrade( $game, $attempt, $scoreattempt, 0, $cm, $course);
+            game_updateattempts_maxgrade($game, $attempt, $scoreattempt, 0, $cm, $course);
         }
     } else {
-        game_updateattempts_maxgrade( $game, $attempt, 1, 0, $cm, $course);
+        game_updateattempts_maxgrade($game, $attempt, 1, 0, $cm, $course);
 
-        $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="attempt.php?id='.
-            $cm->id.'&chapterid='.$lastid.'><img src="'.game_pix_url('bookquiz/nav_exit', 'mod_game').
+        $chnavigation .= '<a title="'.get_string('navexit', 'book') . '" href="attempt.php?id=' .
+            $cm->id.'&chapterid='.$lastid.'><img src="' . game_pix_url('bookquiz/nav_exit', 'mod_game') .
             '" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';
     }
 
-    require( 'toc.php');
+    require('toc.php');
     $tocwidth = '10%';
 
     if ($questionid != 0) {
         if ($game->param3 == 0) {
-            game_bookquiz_showquestions( $cm->id, $questionid, $chapter->id, $nextid, $scoreattempt, $game, $context);
+            game_bookquiz_showquestions($cm->id, $questionid, $chapter->id, $nextid, $scoreattempt, $game, $context);
         }
     }
 
@@ -212,14 +220,14 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
     $content = '';
     if (!$book->customtitles) {
         if ($currsubtitle == '&nbsp;') {
-            $content .= '<p class="book_chapter_title">'.$currtitle.'</p>';
+            $content .= '<p class="book_chapter_title">' . $currtitle . '</p>';
         } else {
-            $content .= '<p class="book_chapter_title">'.$currtitle.'<br />'.$currsubtitle.'</p>';
+            $content .= '<p class="book_chapter_title">' . $currtitle . '<br />' . $currsubtitle . '</p>';
         }
     }
-    $cmbook = get_coursemodule_from_instance( 'book', $game->bookid, $game->course);
-    $modcontext = game_get_context_module_instance( $cmbook->id);
-    $content .= game_filterbook( $chapter->content, $chapter->id, $modcontext->id, $game->course);
+    $cmbook = get_coursemodule_from_instance('book', $game->bookid, $game->course);
+    $modcontext = game_get_context_module_instance($cmbook->id);
+    $content .= game_filterbook($chapter->content, $chapter->id, $modcontext->id, $game->course);
 
     $nocleanoption = new stdClass;
     $nocleanoption->noclean = true;
@@ -244,7 +252,7 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
     <?php
     if ($questionid != 0) {
         if ($game->param3 != 0) {
-            game_bookquiz_showquestions( $cm->id, $questionid, $chapter->id, $nextid, $scoreattempt, $game, $context);
+            game_bookquiz_showquestions($cm->id, $questionid, $chapter->id, $nextid, $scoreattempt, $game, $context);
         }
     }
 }
@@ -255,23 +263,23 @@ function game_bookquiz_play( $cm, $game, $attempt, $bookquiz, $chapterid, $conte
  * @param stdClass $game
  * @param stdClass $bookquiz
  */
-function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
+function game_bookquiz_play_computelastchapter($game, &$bookquiz) {
     global $DB;
 
     if ($game->bookid == 0) {
-        throw new moodle_exception( 'bookquiz_error', 'game', 'Not defined a book on this game');
+        throw new moodle_exception('bookquiz_error', 'game', 'Not defined a book on this game');
     }
 
-    $pagenum = $DB->get_field( 'book_chapters', 'min(pagenum) as p', [ 'bookid' => $game->bookid]);
+    $pagenum = $DB->get_field('book_chapters', 'min(pagenum) as p', ['bookid' => $game->bookid]);
 
     if ($pagenum) {
-        $bookquiz->lastchapterid = $DB->get_field( 'book_chapters', 'id', ['bookid' => $game->bookid, 'pagenum' => $pagenum]);
+        $bookquiz->lastchapterid = $DB->get_field('book_chapters', 'id', ['bookid' => $game->bookid, 'pagenum' => $pagenum]);
 
         if ($bookquiz->lastchapterid) {
             // Update the data in table game_bookquiz.
-            if (($DB->set_field( 'game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid,
+            if (($DB->set_field('game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid,
                 ['id' => $bookquiz->id])) == false) {
-                throw new moodle_exception( 'bookquiz_error', 'game',
+                throw new moodle_exception('bookquiz_error', 'game',
                     "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
             }
         }
@@ -289,12 +297,12 @@ function game_bookquiz_play_computelastchapter( $game, &$bookquiz) {
  * @param stdClass $game
  * @param stdClass $context
  */
-function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapterid, $scoreattempt, $game, $context) {
+function game_bookquiz_showquestions($id, $questionid, $chapterid, $nextchapterid, $scoreattempt, $game, $context) {
     $onlyshow = false;
     $showsolution = false;
 
     $questionlist = $questionid;
-    $questions = game_sudoku_getquestions( $questionlist);
+    $questions = game_sudoku_getquestions($questionlist);
 
     global $CFG;
 
@@ -320,7 +328,7 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
 
     $number = 0;
     foreach ($questions as $question) {
-        game_print_question( $game, $question, $context);
+        game_print_question($game, $question, $context);
     }
     echo "</div>";
 
@@ -340,7 +348,7 @@ function game_bookquiz_showquestions( $id, $questionid, $chapterid, $nextchapter
  *
  * @return the position of the random question.
  */
-function game_bookquiz_selectrandomquestion( $questions) {
+function game_bookquiz_selectrandomquestion($questions) {
     global $DB;
 
     $categorylist = '';
@@ -351,8 +359,8 @@ function game_bookquiz_selectrandomquestion( $questions) {
     foreach ($questions as $rec) {
         $categorylist .= ',' . $rec->questioncategoryid;
     }
-    $select = 'category in ('.substr( $categorylist, 1). ") AND qtype in ('shortanswer', 'truefalse', 'multichoice')";
-    if (($recs = $DB->get_records_select( 'question', $select, null, '', 'id,id')) == false) {
+    $select = 'category in (' . substr($categorylist, 1) . ") AND qtype in ('shortanswer', 'truefalse', 'multichoice')";
+    if (($recs = $DB->get_records_select('question', $select, null, '', 'id,id')) == false) {
         return 0;
     }
     $a = [];
@@ -360,10 +368,10 @@ function game_bookquiz_selectrandomquestion( $questions) {
         $a[$rec->id] = $rec->id;
     }
 
-    if (count( $a) == 0) {
+    if (count($a) == 0) {
         return 0;
     } else {
-        return array_rand( $a);
+        return array_rand($a);
     }
 }
 
@@ -377,7 +385,7 @@ function game_bookquiz_selectrandomquestion( $questions) {
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $context, $course) {
+function game_bookquiz_check_questions($cm, $game, $attempt, $bookquiz, $context, $course) {
     global $USER, $DB;
 
     $scoreattempt = optional_param('scoreattempt',  0, PARAM_INT);
@@ -385,8 +393,8 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
 
     $questionlist = $responses->questionids;
 
-    $questions = game_sudoku_getquestions( $questionlist);
-    $grades = game_grade_questions( $questions);
+    $questions = game_sudoku_getquestions($questionlist);
+    $grades = game_grade_questions($questions);
 
     $scorequestion = 0;
     $scoreattempt = 0;
@@ -395,7 +403,7 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
     $nextchapterid = required_param('nextchapterid', PARAM_INT);
 
     foreach ($questions as $question) {
-        if (!array_key_exists( $question->id, $grades)) {
+        if (!array_key_exists($question->id, $grades)) {
             // No answered.
             continue;
         }
@@ -405,12 +413,12 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
         }
 
         // Found one correct answer.
-        if (!$DB->get_field( 'game_bookquiz_chapters', 'id', [ 'attemptid' => $attempt->id, 'chapterid' => $chapterid])) {
+        if (!$DB->get_field('game_bookquiz_chapters', 'id', ['attemptid' => $attempt->id, 'chapterid' => $chapterid])) {
             $newrec = new stdClass();
             $newrec->attemptid = $attempt->id;
             $newrec->chapterid = $chapterid;
-            if (!$DB->insert_record( 'game_bookquiz_chapters', $newrec, false)) {
-                throw new moodle_exception( 'bookquiz_error', 'game', 'Can\'t insert to table game_bookquiz_chapters');
+            if (!$DB->insert_record('game_bookquiz_chapters', $newrec, false)) {
+                throw new moodle_exception('bookquiz_error', 'game', 'Can\'t insert to table game_bookquiz_chapters');
             }
         }
 
@@ -430,9 +438,9 @@ function game_bookquiz_check_questions( $cm, $game, $attempt, $bookquiz, $contex
     $query->glossaryentryid = 0;
     $query->questiontext = $question->questiontext;
     $query->timelastattempt = time();
-    game_update_queries( $game, $attempt, $query, $scorequestion, '');
+    game_update_queries($game, $attempt, $query, $scorequestion, '');
 
-    game_updateattempts( $game, $attempt, $scoreattempt, 0, $cm, $course);
+    game_updateattempts($game, $attempt, $scoreattempt, 0, $cm, $course);
 
-    game_bookquiz_continue( $cm, $game, $attempt, $bookquiz, $bookquiz->lastchapterid, $context, $course);
+    game_bookquiz_continue($cm, $game, $attempt, $bookquiz, $bookquiz->lastchapterid, $context, $course);
 }

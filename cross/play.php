@@ -151,7 +151,7 @@ function game_cross_new($game, $attemptid, &$crossm) {
     }
 
     if ($crossd == null || count($crossd) == 0) {
-        $s = 'game_cross_continue: '.get_string('no_words', 'game');
+        $s = 'game_cross_continue: ' . get_string('no_words', 'game');
         throw new moodle_exception('cross_error', 'game', '', $s);
     }
 }
@@ -171,7 +171,7 @@ function showlegend(string $dir, array $legend, string $title) {
     echo "<br><b>$title</b><br>\n";
     foreach ($legend as $key => $line) {
         $line = game_repairquestion($line);
-        echo "$key: <span id={$dir}{$key}>".game_filtertext("$line<br>", 0)."</span>\n";
+        echo "$key: <span id={$dir}{$key}>" . game_filtertext("$line<br>", 0) . "</span>\n";
     }
     echo "\n";
 }
@@ -195,8 +195,23 @@ function showlegend(string $dir, array $legend, string $title) {
  * @param stdClass $context
  * @param stdClass $course
  */
-function game_cross_play($cm, $game, $attempt, $crossrec, $g, $onlyshow, $showsolution,
-    $endofgame, $print, $checkbutton, $showhtmlsolutions, $showhtmlprintbutton, $showstudentguess, $context, $course) {
+function game_cross_play(
+    $cm,
+    $game,
+    $attempt,
+    $crossrec,
+    $g,
+    $onlyshow,
+    $showsolution,
+    $endofgame,
+    $print,
+    $checkbutton,
+    $showhtmlsolutions,
+    $showhtmlprintbutton,
+    $showstudentguess,
+    $context,
+    $course
+) {
     global $CFG, $DB;
 
     $cross = new CrossDB();
@@ -228,7 +243,7 @@ function game_cross_play($cm, $game, $attempt, $crossrec, $g, $onlyshow, $showso
 
     if ($done || $endofgame) {
         if ($endofgame == false) {
-            echo '<B>' . get_string('win', 'game').'</B><BR>';
+            echo '<B>' . get_string('win', 'game') . '</B><BR>';
         }
         if (game_can_start_new_attempt($game)) {
             echo '<br>';
@@ -249,12 +264,12 @@ function game_cross_play($cm, $game, $attempt, $crossrec, $g, $onlyshow, $showso
 
     $reverseprint = ($wordrtl != right_to_left());
     if ($reverseprint) {
-        $textdir = 'dir="'.($wordrtl ? 'rtl' : 'ltr').'"';
+        $textdir = 'dir="' . ($wordrtl ? 'rtl' : 'ltr') . '"';
     } else {
         $textdir = '';
     }
 
-    echo '<style>'.file_get_contents(dirname(__FILE__).'/styles.css').'</style>';
+    echo '<style>' . file_get_contents(dirname(__FILE__) . '/styles.css') . '</style>';
 ?>
 </head>
 
@@ -266,7 +281,7 @@ function game_cross_play($cm, $game, $attempt, $crossrec, $g, $onlyshow, $showso
     }
 
     if ($game->toptext != '') {
-        echo $game->toptext.'<br>';
+        echo $game->toptext . '<br>';
     }
 ?>
 <h1></h1>
@@ -588,7 +603,7 @@ function SelectThisWord(event) {
     document.getElementById("wordlabel").innerHTML = TheirWord;
     <?php
     $msg = "\"" . get_string('cross_across', 'game') . ", \" : \"" . get_string('cross_down', 'game') . ", \"";
-    $letters = "\" " . get_string('letter', 'game') . ".\" : \" " . get_string('letters', 'game').".\"";
+    $letters = "\" " . get_string('letter', 'game') . ".\" : \" " . get_string('letters', 'game') . ".\"";
     ?>
     var s = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>);
     s = s + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
@@ -752,7 +767,7 @@ function CheckServerClick(endofgame) {
         <?php
         if ($onlyshow == false) {
             global $CFG;
-            $params = 'id='.$cm->id.'&action=crosscheck&g=';
+            $params = 'id=' . $cm->id . '&action=crosscheck&g=';
             echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
         }
         ?>
@@ -1043,6 +1058,8 @@ function CheckHtmlClick() {
 /**
  * Shows welcome message.
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  */
 function game_cross_show_welcome($game) {
@@ -1055,6 +1072,8 @@ function game_cross_show_welcome($game) {
 
 /**
  * Shows welcome message0.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  */
@@ -1103,6 +1122,8 @@ function game_cross_show_welcome0($game) {
 
 /**
  * Shows welcome message 1.
+ *
+ * @package mod_game
  */
 function game_cross_show_welcome1() {
 ?>
@@ -1143,17 +1164,19 @@ function game_cross_show_welcome1() {
 /**
  * Show the legend (horizontal and vertical)
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param stdClass $cross
  * @throws coding_exception
  */
 function game_cross_show_legends(stdClass $game, stdClass $cross) {
-    if($game->param3 == 2) {
+    if ($game->param3 == 2) {
         echo '<div hidden>';
     }
-    ShowLegend('a', $cross->mlegendh,  get_string('cross_across', 'game'));
+    ShowLegend('a', $cross->mlegendh, get_string('cross_across', 'game'));
     ShowLegend('d', $cross->mlegendv, get_string('cross_down', 'game'));
-    if($game->param3 == 2) {
+    if ($game->param3 == 2) {
         echo '</div>';
     }
 }
