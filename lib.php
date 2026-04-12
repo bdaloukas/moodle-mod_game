@@ -532,7 +532,7 @@ function game_grade_item_delete($game) {
  * @param int $userid
  * @param int $groupid
  */
-function game_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
+function game_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid = 0, $groupid = 0) {
     global $DB, $COURSE, $USER;
 
     if ($COURSE->id == $courseid) {
@@ -662,7 +662,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
 
     echo '<div class="user">';
     echo "<a href=\"{$CFG->wwwroot}/user/view.php?id={$activity->user->userid}&amp;course=$courseid\">"
-         . "{$activity->user->fullname}</a> - ".userdate($activity->timestamp);
+         . "{$activity->user->fullname}</a> - " . userdate($activity->timestamp);
     echo '</div>';
 
     echo "</td></tr></table>";
@@ -675,7 +675,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
  * @param int $courseid
  * @param string $type
  **/
-function game_reset_gradebook($courseid, $type='') {
+function game_reset_gradebook($courseid, $type = '') {
     global $DB;
 
     $sql = "SELECT q.*, cm.idnumber as cmidnumber, q.course as courseid
@@ -703,7 +703,7 @@ function game_supports(string $feature) {
             return MOD_PURPOSE_ASSESSMENT;
         }
     }
-    switch($feature) {
+    switch ($feature) {
         case FEATURE_GRADE_HAS_GRADE:
             return true;
         case FEATURE_GROUPS:
@@ -760,7 +760,7 @@ function game_get_extra_capabilities(): array {
  * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)" or
  *          "Attemtps 123 (45 from this group)".
  */
-function game_num_attempt_summary(stdClass $game, stdClass $cm,bool $returnzero = false, int $currentgroup = 0) {
+function game_num_attempt_summary(stdClass $game, stdClass $cm, bool $returnzero = false, int $currentgroup = 0) {
     global $CFG, $USER, $DB;
 
     $numattempts = $DB->count_records('game_attempts', ['gameid' => $game->id, 'preview' => 0]);
@@ -779,13 +779,13 @@ function game_num_attempt_summary(stdClass $game, stdClass $cm,bool $returnzero 
                 return get_string('attemptsnumthisgroup', 'quiz', $a);
             } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) {
                 list($usql, $params) = $DB->get_in_or_equal(array_keys($groups));
-                $a->group = $DB->count_records_sql('SELECT count(1) FROM ' .
-                        '{game_attempts} qa JOIN ' .
-                        '{groups_members} gm ON qa.userid = gm.userid ' .
-                        'WHERE gameid = ? AND preview = 0 AND ' .
-                        "groupid $usql",
-                    array_merge([$game->id],
-                    $params)
+                $a->group = $DB->count_records_sql(
+                    'SELECT count(1) FROM ' .
+                    '{game_attempts} qa JOIN ' .
+                    '{groups_members} gm ON qa.userid = gm.userid ' .
+                    'WHERE gameid = ? AND preview = 0 AND ' .
+                    "groupid $usql",
+                    array_merge([$game->id], $params)
                 );
                 return get_string('attemptsnumyourgroups', 'quiz', $a);
             }
@@ -815,7 +815,7 @@ function game_format_score(stdClass $game, float $score): float {
  *
  * @return float score
  */
-function game_format_grade(stdClass $game, float $grade): float{
+function game_format_grade(stdClass $game, float $grade): float {
     return format_float($grade, $game->decimalpoints == null ? 2 : $game->decimalpoints);
 }
 
@@ -891,8 +891,7 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
             $cmd = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
             $url = new moodle_url('/mod/glossary/view.php', ['id' => $cmd->id]);
             $gamenode->add(
-                get_string('viewglossary', 'game',
-                    '&nbsp;' . $glossary->name),
+                get_string('viewglossary', 'game', '&nbsp;' . $glossary->name),
                 $url,
                 navigation_node::TYPE_SETTING,
                 null,
@@ -954,7 +953,7 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
         $game = $DB->get_record('game', ["id" => $PAGE->cm->instance]);
         $courseid = $game->course;
 
-        switch($game->gamekind) {
+        switch ($game->gamekind) {
             case 'bookquiz':
                 $url = new moodle_url('/mod/game/bookquiz/questions.php',  ['q' => $PAGE->cm->instance]);
                 $exportnode = $gamenode->add(
@@ -996,14 +995,16 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
             case 'millionaire':
                 $url = new moodle_url('/mod/game/export.php', ['q' => $game->id,
                     'courseid' => $courseid, 'target' => 'html']);
-                $gamenode->add(get_string(
-                    'export_to_html', 'game'),
-                    $url,
-                    navigation_node::TYPE_SETTING,
-                    null,
-                    null,
-                    new pix_icon('i/item', ''))
-                ;
+                $gamenode->add(
+                    get_string(
+                        'export_to_html', 'game'),
+                        $url,
+                        navigation_node::TYPE_SETTING,
+                        null,
+                        null,
+                        new pix_icon('i/item', ''
+                    )
+                );
                 break;
         }
     }
