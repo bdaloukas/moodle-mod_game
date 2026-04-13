@@ -871,7 +871,7 @@ function game_questions_shortanswer_quiz($game) {
         if ($a == null || count($a) == 0) {
             $a = [0];
         }
-        $select = "qtype='shortanswer' AND q.id IN (" . implode(',', $a).')' .
+        $select = "qtype='shortanswer' AND q.id IN (" . implode(',', $a) . ')' .
             " AND qa.question=q.id";
         $table = "{question} q,{question_answers} qa";
         $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, " .
