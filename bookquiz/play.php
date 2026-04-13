@@ -74,7 +74,7 @@ function game_bookquiz_continue(
  * @param stdClass $course
  */
 function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $context, $course) {
-    global $DB, $OUTPUT, $cm;
+    global $DB, $OUTPUT;
 
     // Find where the book is stoped.
     if ($bookquiz->lastchapterid == 0) {

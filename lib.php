@@ -749,14 +749,14 @@ function game_get_extra_capabilities(): array {
     return $caps;
 }
 
-/*
- * Return a textual summary of the number of attemtps that have been made at a particular game,
+/**
+ * Return a summary of the number of attempts made for a game.
  *
- * @param stdClass $game the game object. Only $game->id is used at the moment.
- * @param stcClass $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
- * @param bool $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
- * @param int $currentgroup if there is a concept of current group pass it in here. Default 0 which means no current group.
- * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)"
+ * @param stdClass $game The game object. Only $game->id is used.
+ * @param stdClass $cm The course module object. Only $cm->course, $cm->groupmode and $cm->groupingid are used.
+ * @param bool $returnzero If false, when no attempts have been made an empty string is returned.
+ * @param int $currentgroup The current group id. Default 0 means no current group.
+ * @return string A summary such as "Attempts: 123".
  */
 function game_num_attempt_summary(stdClass $game, stdClass $cm, bool $returnzero = false, int $currentgroup = 0) {
     global $CFG, $USER, $DB;

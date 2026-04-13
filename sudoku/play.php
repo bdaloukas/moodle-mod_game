@@ -372,19 +372,18 @@ function game_sudoku_showsudoku(
     echo "</table>\r\n";
     $href = $CFG->wwwroot . '/mod/game/attempt.php?action=sudokucheckn&id=' . $cm->id;
 
-?>
-    <script language="javascript">
-        function OnCheck(pos) {
-            s = window.prompt("<?php echo get_string('sudoku_guessnumber', 'game') ?>", "");
-            if (s < "1")
-                return;
-            if (s > "9")
-                return;
-            window.location.href = "<?php echo $href; ?>&pos=" + pos + "&num=" + s;
+    echo '<script type="text/javascript">
+    function OnCheck(pos) {
+        var s = window.prompt(' . json_encode(get_string('sudoku_guessnumber', 'game')) . ', "");
+        if (s < "1") {
+            return;
         }
-    </script>
-    <?php
-
+        if (s > "9") {
+            return;
+        }
+        window.location.href = ' . json_encode($href) . ' + "&pos=" + pos + "&num=" + s;
+    }
+</script>';
     // Here are the congratulations.
     if ($attempt->timefinish) {
         return $count;

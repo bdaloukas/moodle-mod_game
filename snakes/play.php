@@ -15,11 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Snakes and Ladders game play logic.
- *
- * This file contains all gameplay functions for the snakes game type.
+ * Export game to printable HTML format.
  *
  * @package    mod_game
+ * @subpackage snakes
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

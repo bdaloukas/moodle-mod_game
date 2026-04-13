@@ -34,32 +34,29 @@ if ($action == 'create') {
 }
 
 /**
- * Show form
+ * Show the form.
  *
  * @package mod_game
  */
 function showform() {
-    $id = required_param('id', PARAM_NUMBER);   // The action.
+    $id = required_param('id', PARAM_INT);
 
-?>
-<form name="form" method="post" action="create.php">
-<center>
-<table cellpadding="5">
-<tr valign="top">
-    <td align="right"><b><?php  echo get_string('sudoku_create_count', 'game'); ?>:</b></td>
-    <td>
-        <input type="text" name="count" size="6" value="2" /><br>
-    </td>
-</tr>
-<tr><td colspan=2><center><br><input type="submit" value="<?php  print_string('sudoku_create_start', 'game') ?>" /></td></tr>
-</table>
-<input type="hidden" name=action        value="create" >
-<input type="hidden" name=level1        value="1" >
-<input type="hidden" name=level2        value="10" >
-<input type="hidden" name=id        value="<?php  echo $id; ?>" />
-</form>
-
-    <?php
+    echo '<form name="form" method="post" action="create.php">';
+    echo '<div>';
+    echo '<table cellpadding="5">';
+    echo '<tr valign="top">';
+    echo '<td align="right"><b>' . get_string('sudoku_create_count', 'game') . ':</b></td>';
+    echo '<td><input type="text" name="count" size="6" value="2" /><br></td>';
+    echo '</tr>';
+    echo '<tr><td colspan="2"><center><br><input type="submit" value="' .
+            s(get_string('sudoku_create_start', 'game')) . '" /></center></td></tr>';
+    echo '</table>';
+    echo '<input type="hidden" name="action" value="create" />';
+    echo '<input type="hidden" name="level1" value="1" />';
+    echo '<input type="hidden" name="level2" value="10" />';
+    echo '<input type="hidden" name="id" value="' . s($id) . '" />';
+    echo '</div>';
+    echo '</form>';
 }
 
 /**
