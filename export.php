@@ -15,9 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This page exports a game to another platform e.g. html, jar
+ * This page exports a game to another platform, for example HTML or Java ME.
  *
  * @package    mod_game
+ * @subpackage game
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

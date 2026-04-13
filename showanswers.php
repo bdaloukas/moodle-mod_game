@@ -100,15 +100,11 @@ function game_showusers($game) {
         $users[$guest->id] = fullname($guest);
     }
     $href = $CFG->wwwroot . '/mod/game/showanswers.php?q=' . $game->id . '&userid=';
-    ?>
-        <script type="text/javascript">
-            function onselectuser()
-            {
-                window.location.href =
-                    "<?php echo $href;?>" + document.getElementById('menuuser').value;
-            }
-        </script>
-    <?php
+    echo '<script type="text/javascript">
+    function onselectuser() {
+        window.location.href = ' . json_encode($href) . ' + document.getElementById("menuuser").value;
+    }
+    </script>';
 
     $attributes = 'onchange="javascript:onselectuser();"';
     $name = 'user';

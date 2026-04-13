@@ -18,6 +18,7 @@
  * Creates a sudoku.
  *
  * @package    mod_game
+ * @subpackage sudoku
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -25,7 +26,7 @@ require("../../../config.php");
 require_once("class.Sudoku.php");
 require('../header.php');
 
-$action = optional_param('action', PARAM_ALPHA);   // The action.
+$action = optional_param('action', '', PARAM_ALPHA);   // The action.
 require_login();
 if ($action == 'create') {
     AppendSudokuB();
@@ -67,9 +68,9 @@ function showform() {
 function appendsudokub() {
     global $DB;
 
-    $level1 = required_param('level1', PARAM_NUMBER);
-    $level2 = required_param('level2', PARAM_NUMBER);
-    $count = required_param('count', PARAM_NUMBER);
+    $level1 = required_param('level1', PARAM_INT);
+    $level2 = required_param('level2', PARAM_INT);
+    $count = required_param('count', PARAM_INT);
 
     $level = $level1;
 

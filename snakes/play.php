@@ -15,13 +15,15 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Export game to printable HTML format.
+ * Plays the game "Snakes and Ladders".
  *
  * @package    mod_game
  * @subpackage snakes
  * @copyright  2007 Vasilis Daloukas
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+defined('MOODLE_INTERNAL') || die();
 
 /**
  * Plays the game "Snakes and Ladders".
