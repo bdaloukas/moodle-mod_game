@@ -13,11 +13,9 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This files plays the game "Crossword".
+ * This file plays the game "Crossword".
  *
  * @package mod_game
  * @copyright 2007 Vasilis Daloukas
@@ -270,10 +268,9 @@ function game_cross_play(
     }
 
     echo '<style>' . file_get_contents(dirname(__FILE__) . '/styles.css') . '</style>';
-?>
-</head>
 
-    <?php
+    echo '</head>';
+
     if ($print) {
         echo '<body onload="window.print()">';
     } else {
@@ -283,7 +280,7 @@ function game_cross_play(
     if ($game->toptext != '') {
         echo $game->toptext . '<br>';
     }
-?>
+    echo '
 <h1></h1>
 
 <div id="waitmessage" class="answerboxstyle">
@@ -293,9 +290,8 @@ function game_cross_play(
 </div>
 
 
-<p><table cellpadding="0" cellspacing="0" border="0">
+<p><table cellpadding="0" cellspacing="0" border="0">';
 
-    <?php
     if ($game->param3 == 1) {
         // Legends is at the right.
         echo "<tr>\r\n";
@@ -303,11 +299,33 @@ function game_cross_play(
         echo "</tr>\r\n";
         echo "<tr><tr><td>&nbsp</td></tr>\r\n";
     }
-    ?>
 
+    $crosspleasewait = get_string('cross_pleasewait', 'game');
+    $crosserrorcontainsbadchars = get_string('cross_error_containsbadchars', 'game');
+    $crosserrorwordlength1 = get_string('cross_error_wordlength1', 'game');
+    $crosserrorwordlength2 = get_string('cross_error_wordlength2', 'game');
+    $crossacross = get_string('cross_across', 'game');
+    $crossdown = get_string('cross_down', 'game');
+    $letter = get_string('letter', 'game');
+    $letters = get_string('letters', 'game');
+
+    $showcheckhtmlbutton = !empty($showhtmlsolutions);
+    $showwelcomemessage = !$print;
+    $showactionbuttons = !$showsolution;
+
+    $onprinturl = $CFG->wwwroot . '/mod/game/print.php?id=' . $cm->id . '&gameid=' . $game->id;
+    $checkserverurl = '';
+    if ($onlyshow == false) {
+        $checkserverurl = $CFG->wwwroot . '/mod/game/attempt.php?id=' . $cm->id . '&action=crosscheck&g=';
+    }
+
+    echo '
 <tr>
-<td class="crosswordarea">
-<table id="crossword" cellpadding="3" cellspacing="0" style="display: none; border-collapse: collapse;" <?php echo $textdir;?>>
+<td class="crosswordarea">';
+
+    echo '<table id="crossword" cellpadding="3" cellspacing="0" ' .
+            'style="display: none; border-collapse: collapse;" ' . $textdir . '>';
+    ?>
 
 <script language="JavaScript" type="text/javascript"><!--
 
@@ -326,16 +344,16 @@ var CurrentWord, PrevWordHorizontal, x, y, i, j;
 var CrosswordFinished, Initialized;
 
 // Check the user's browser and then initialize the puzzle.
-if (document.getElementById("waitmessage") != null)
-{
-    document.getElementById("waitmessage").innerHTML = "<?php echo get_string('cross_pleasewait', 'game'); ?>";
-
+if (document.getElementById("waitmessage") != null) {
+    <?php
+    echo 'document.getElementById("waitmessage").innerHTML = ' . json_encode($crosspleasewait) . '; ?>//;';
+    ?>
     // Current game variables
     CurrentWord = -1;
     PrevWordHorizontal = false;
 
     <?php
-        echo $html;
+    echo $html;
     ?>
     OnlyCheckOnce = false;
 
@@ -602,11 +620,14 @@ function SelectThisWord(event) {
 
     document.getElementById("wordlabel").innerHTML = TheirWord;
     <?php
-    $msg = "\"" . get_string('cross_across', 'game') . ", \" : \"" . get_string('cross_down', 'game') . ", \"";
-    $letters = "\" " . get_string('letter', 'game') . ".\" : \" " . get_string('letters', 'game') . ".\"";
-    ?>
-    var s = ((CurrentWord <= LastHorizontalWord) ? <?php echo $msg ?>);
-    s = s + WordLength[CurrentWord] + (WordLength[CurrentWord] == 1 ? <?php echo $letters;?>);
+    echo 'var acrosslabel = ' . json_encode($crossacross . ', ') . ';';
+    echo 'var downlabel = ' . json_encode($crossdown . ', ') . ';';
+    echo 'var oneletterlabel = ' . json_encode(' ' . $letter . '.') . ';';
+    echo 'var manyletterslabel = ' . json_encode(' ' . $letters . '.') . ';';
+?>
+    var s = (CurrentWord <= LastHorizontalWord) ? acrosslabel : downlabel;
+    s = s + WordLength[CurrentWord] +
+        (WordLength[CurrentWord] == 1 ? oneletterlabel : manyletterslabel);
     document.getElementById("wordinfo").innerHTML = s;
 
     if(CurrentWord <= LastHorizontalWord) {
@@ -652,20 +673,25 @@ function OKClick() {
         return;
     }
     if (ContainsBadChars(TheirWord)) {
-        document.getElementById("worderror").innerHTML = "<?php echo get_string('cross_error_containsbadchars', 'game');?>";
+        document.getElementById("worderror").innerHTML =
+        <?php echo json_encode($crosserrorcontainsbadchars); ?>;
         document.getElementById("worderror").style.display = "block";
         return;
     }
     if (TheirWord.length < WordLength[CurrentWord]) {
-        var s = "<?php echo get_string('cross_error_wordlength1', 'game');?>";
-        s = s + WordLength[CurrentWord] + " <?php echo get_string('cross_error_wordlength2', 'game');?>";
+        var s = <?php echo json_encode($crosserrorwordlength1); ?>;
+        s = s + WordLength[CurrentWord] + " " +
+        <?php echo json_encode($crosserrorwordlength2); ?>;
+
         document.getElementById("worderror").innerHTML  = s;
         document.getElementById("worderror").style.display = "block";
         return;
     }
     if (TheirWord.length > WordLength[CurrentWord]) {
-        var s = "<?php echo get_string('cross_error_wordlength1', 'game');?>";
-        s = s + WordLength[CurrentWord] + " <?php echo get_string('cross_error_wordlength2', 'game');?>";
+        var s = <?php echo json_encode($crosserrorwordlength1); ?>;
+        s = s + WordLength[CurrentWord] + " " +
+        <?php echo json_encode($crosserrorwordlength2); ?>;
+
         document.getElementById("worderror").innerHTML = s;
         document.getElementById("worderror").style.display = "block";
         return;
@@ -764,27 +790,18 @@ function CheckServerClick(endofgame) {
         sData += "&finishattempt=1";
     }
 
-        <?php
-        if ($onlyshow == false) {
-            global $CFG;
-            $params = 'id=' . $cm->id . '&action=crosscheck&g=';
-            echo "window.location = \"{$CFG->wwwroot}/mod/game/attempt.php?$params\"+ sData;\r\n";
-        }
-        ?>
+    var checkserverurl = <?php echo json_encode($checkserverurl); ?>;
+    if (checkserverurl !== "") {
+        window.location = checkserverurl + sData;
+    }
 }
         <?php
     }
         ?>
 
-function OnPrint()
-{
-    <?php
-        global $CFG;
-
-        $params = "id={$cm->id}&gameid={$game->id}";
-        echo "window.open(\"{$CFG->wwwroot}/mod/game/print.php?$params\")";
-    ?>
-}
+    function OnPrint() {
+        window.open(<?php echo json_encode($onprinturl); ?>);
+    }
 
     <?php
     if ($showhtmlprintbutton) {
@@ -792,17 +809,15 @@ function OnPrint()
     function PrintHtmlClick() {
         document.getElementById("printhtmlbutton").style.display = "none";
 
-        <?php
-        if ($showhtmlsolutions) {
-            ?> document.getElementById("checkhtmlbutton").style.display = "none"; <?php
+        var showcheckhtmlbutton = <?php echo $showcheckhtmlbutton ? 'true' : 'false'; ?>;
+
+        if (showcheckhtmlbutton) {
+            document.getElementById("checkhtmlbutton").style.display = "none";
         }
-        ?>
         window.print();
-        <?php
-        if ($showhtmlsolutions) {
-            ?> document.getElementById("checkhtmlbutton").style.display = "block"; <?php
+        if (showcheckhtmlbutton) {
+            document.getElementById("checkhtmlbutton").style.display = "block";
         }
-        ?>
         document.getElementById("printhtmlbutton").style.display = "block";
     }
         <?php
@@ -813,12 +828,8 @@ function OnPrint()
     if ($showhtmlprintbutton) {
     ?>
 
-/**
-*
-*  Base64 encode / decode
-*  http://www.webtoolkit.info/
-*
-**/
+    // Base64 encode / decode.
+    // Source adapted from webtoolkit.
 
 var Base64 = {
 
@@ -841,7 +852,7 @@ var Base64 = {
             enc4 = this._keyStr.indexOf(input.charAt(i++));
 
             chr1 = (enc1 << 2) | (enc2 >> 4);
-            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);bgColor = "Black";
+            chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
             chr3 = ((enc3 & 3) << 6) | enc4;
 
             output = output + String.fromCharCode(chr1);
@@ -1026,24 +1037,22 @@ function CheckHtmlClick() {
     if ($attempt != false) {
         if ($attempt->timefinish == 0 && $endofgame == 0) {
     ?>
-        <script language="JavaScript" type="text/javascript"><!--
-        if (Initialized) {
-            <?php
-            if ($print == false) {
-                echo "document.getElementById(\"welcomemessage\").style.display = \"\";";
-            }
+            <script language="JavaScript" type="text/javascript"><!--
+                var showwelcomemessage = <?php echo $showwelcomemessage ? 'true' : 'false'; ?>;
+                var showactionbuttons = <?php echo $showactionbuttons ? 'true' : 'false'; ?>;
 
-            if ($showsolution == false) {
-            ?>
-    document.getElementById("checkbutton").style.display = "";
-    document.getElementById("finishattemptbutton").style.display = "";
-    document.getElementById("printbutton").style.display = "";
-                <?php
-            }
-                ?>
-}
-//-->
-</script>
+                if (Initialized) {
+                    if (showwelcomemessage) {
+                        document.getElementById("welcomemessage").style.display = "";
+                    }
+                    if (showactionbuttons) {
+                        document.getElementById("checkbutton").style.display = "";
+                        document.getElementById("finishattemptbutton").style.display = "";
+                        document.getElementById("printbutton").style.display = "";
+                    }
+                }
+                //-->
+            </script>
             <?php
         }
     }

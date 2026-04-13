@@ -519,13 +519,12 @@ function move_pawn() {
 
 <?php
 /**
- * Javascript code
- *
- * @package mod_game
+ * Outputs the JavaScript used by the submodal popup.
  */
 function createsubmodaljs() {
-?>
-<script type="text/javascript" src="js/common.js">
+    echo <<<'EOT'
+<script type="text/javascript" src="js/common.js"></script>
+<script type="text/javascript">
 var gPopupMask = null;
 var gPopupContainer = null;
 var gPopFrame = null;
@@ -536,7 +535,7 @@ var gHideSelects = false;
 var gReturnVal = null;
 
 var gTabIndexes = new Array();
-// Pre-defined list of tags we want to disable/enable tabbing into
+// Pre-defined list of tags we want to disable/enable tabbing into.
 var gTabbableTags = new Array('A', 'BUTTON', 'TEXTAREA', 'INPUT', 'IFRAME');
 
 // If using Mozilla or Firefox, use Tab-key trap.
@@ -544,11 +543,9 @@ if (!document.all) {
     document.onkeypress = keyDownHandler;
 }
 
-/**
- * Initializes popup code on load.
- */
+// Initializes popup code on load.
 function initPopUp() {
-    // Add the HTML to the body
+    // Add the HTML to the body.
     theBody = document.getElementsByTagName('BODY')[0];
     popmask = document.createElement('div');
     popmask.id = 'popupMask';
@@ -562,9 +559,9 @@ function initPopUp() {
         '<img src="close.gif" onclick="hidePopWin(false);" id="popCloseBox" />' +
         '</div>' +
         '</div>' +
-        '<iframe src="'+ gDefaultPage +'" style="width:100%;height:100%;background-color:transparent;" ' +
-        ' scrolling="auto" frameborder="0" allowtransparency="true" id="popupFrame" name="popupFrame" ' +
-        ' width="100%" height="100%"></iframe>' +
+        '<iframe src="' + gDefaultPage + '" style="width:100%;height:100%;background-color:transparent;" ' +
+        'scrolling="auto" frameborder="0" allowtransparency="true" id="popupFrame" name="popupFrame" ' +
+        'width="100%" height="100%"></iframe>' +
         '</div>';
     theBody.appendChild(popmask);
     theBody.appendChild(popcont);
@@ -573,43 +570,38 @@ function initPopUp() {
     gPopupContainer = document.getElementById("popupContainer");
     gPopFrame = document.getElementById("popupFrame");
 
-    // check to see if this is IE version 6 or lower. hide select boxes if so
-    // maybe they'll fix this in version 7?
+    // Check to see if this is IE version 6 or lower. Hide select boxes if so.
     var brsVersion = parseInt(window.navigator.appVersion.charAt(0), 10);
     if (brsVersion <= 6 && window.navigator.userAgent.indexOf("MSIE") > -1) {
         gHideSelects = true;
     }
 
-    // Add onclick handlers to 'a' elements of class submodal or submodal-width-height
+    // Add onclick handlers to 'a' elements of class submodal or submodal-width-height.
     var elms = document.getElementsByTagName('a');
     for (i = 0; i < elms.length; i++) {
         if (elms[i].className.indexOf("submodal") == 0) {
-            elms[i].onclick = function(){
-                // default width and height
+            elms[i].onclick = function() {
                 var width = 400;
                 var height = 200;
-                // Parse out optional width and height from className
                 params = this.className.split('-');
                 if (params.length == 3) {
-                    width = parseInt(params[1]);
-                    height = parseInt(params[2]);
+                    width = parseInt(params[1], 10);
+                    height = parseInt(params[2], 10);
                 }
-                showPopWin(this.href,width,height,null); return false;
-            }
+                showPopWin(this.href, width, height, null);
+                return false;
+            };
         }
     }
 }
 addEvent(window, "load", initPopUp);
 
-/**
- * @argument width - int in pixels
- * @argument height - int in pixels
- * @argument url - url to display
- * @argument returnFunc - function to call when returning true from the window.
- * @argument showCloseBox - show the close box - default true
- */
+// width: int in pixels
+// height: int in pixels
+// url: URL to display
+// returnFunc: function to call when returning true from the window
+// showCloseBox: show the close box; default true
 function showPopWin(url, width, height, returnFunc, showCloseBox) {
-    // show or hide the window close widget
     if (showCloseBox == null || showCloseBox == true) {
         document.getElementById("popCloseBox").style.display = "block";
     } else {
@@ -619,32 +611,28 @@ function showPopWin(url, width, height, returnFunc, showCloseBox) {
     disableTabIndexes();
     gPopupMask.style.display = "block";
     gPopupContainer.style.display = "block";
-    // calculate where to place the window on screen
+
     centerPopWin(width, height);
 
     var titleBarHeight = parseInt(document.getElementById("popupTitleBar").offsetHeight, 10);
 
     gPopupContainer.style.width = width + "px";
-    gPopupContainer.style.height = (height+titleBarHeight) + "px";
+    gPopupContainer.style.height = (height + titleBarHeight) + "px";
 
     setMaskSize();
 
-    // need to set the width of the iframe to the title bar width because of the dropshadow
-    // some oddness was occuring and causing the frame to poke outside the border in IE6
     gPopFrame.style.width = parseInt(document.getElementById("popupTitleBar").offsetWidth, 10) + "px";
-    gPopFrame.style.height = (height) + "px";
-
-    // set the url
+    gPopFrame.style.height = height + "px";
     gPopFrame.src = url;
 
     gReturnFunc = returnFunc;
-    // for IE
     if (gHideSelects == true) {
         hideSelectBoxes();
     }
 }
 
 var gi = 0;
+
 function centerPopWin(width, height) {
     if (gPopupIsShown == true) {
         if (width == null || isNaN(width)) {
@@ -655,8 +643,8 @@ function centerPopWin(width, height) {
         }
 
         var theBody = document.getElementsByTagName("BODY")[0];
-        var scTop = parseInt(getScrollTop(),10);
-        var scLeft = parseInt(theBody.scrollLeft,10);
+        var scTop = parseInt(getScrollTop(), 10);
+        var scLeft = parseInt(theBody.scrollLeft, 10);
 
         setMaskSize();
 
@@ -665,25 +653,21 @@ function centerPopWin(width, height) {
         var fullHeight = getViewportHeight();
         var fullWidth = getViewportWidth();
 
-        gPopupContainer.style.top = (scTop + ((fullHeight - (height+titleBarHeight)) / 2)) + "px";
-        gPopupContainer.style.left =  (scLeft + ((fullWidth - width) / 2)) + "px";
+        gPopupContainer.style.top = (scTop + ((fullHeight - (height + titleBarHeight)) / 2)) + "px";
+        gPopupContainer.style.left = (scLeft + ((fullWidth - width) / 2)) + "px";
     }
 }
 addEvent(window, "resize", centerPopWin);
 addEvent(window, "scroll", centerPopWin);
 window.onscroll = centerPopWin;
 
-/**
- * Sets the size of the popup mask.
- *
- */
+// Sets the size of the popup mask.
 function setMaskSize() {
     var theBody = document.getElementsByTagName("BODY")[0];
 
     var fullHeight = getViewportHeight();
     var fullWidth = getViewportWidth();
 
-    // Determine what's bigger, scrollHeight or fullHeight / width
     if (fullHeight > theBody.scrollHeight) {
         popHeight = fullHeight;
     } else {
@@ -700,10 +684,8 @@ function setMaskSize() {
     gPopupMask.style.width = popWidth + "px";
 }
 
-/**
- * @argument callReturnFunc - bool - determines if we call the return function specified
- * @argument returnVal - anything - return value
- */
+// callReturnFunc: bool - determines if we call the return function specified
+// returnVal: mixed - return value
 function hidePopWin(callReturnFunc) {
     gPopupIsShown = false;
     var theBody = document.getElementsByTagName("BODY")[0];
@@ -715,41 +697,38 @@ function hidePopWin(callReturnFunc) {
     gPopupMask.style.display = "none";
     gPopupContainer.style.display = "none";
     if (callReturnFunc == true && gReturnFunc != null) {
-        // Set the return code to run in a timeout.
-        // Was having issues using with an Ajax.Request();
         gReturnVal = window.frames["popupFrame"].returnVal;
         window.setTimeout('gReturnFunc(gReturnVal);', 1);
     }
     gPopFrame.src = gDefaultPage;
-    // display all select boxes
     if (gHideSelects == true) {
         displaySelectBoxes();
     }
 }
 
-// Tab key trap. iff popup is shown and key was [TAB], suppress it.
-// @argument e - event - keyboard event that caused this function to be called.
+// Tab key trap. If popup is shown and key was TAB, suppress it.
 function keyDownHandler(e) {
-    if (gPopupIsShown && e.keyCode == 9)  return false;
+    if (gPopupIsShown && e.keyCode == 9) {
+        return false;
+    }
 }
 
-// For IE.  Go through predefined tags and disable tabbing into them.
+// For IE. Go through predefined tags and disable tabbing into them.
 function disableTabIndexes() {
     if (document.all) {
         var i = 0;
         for (var j = 0; j < gTabbableTags.length; j++) {
             var tagElements = document.getElementsByTagName(gTabbableTags[j]);
-            for (var k = 0 ; k < tagElements.length; k++) {
+            for (var k = 0; k < tagElements.length; k++) {
                 gTabIndexes[i] = tagElements[k].tabIndex;
-                tagElements[k].tabIndex="-1";
+                tagElements[k].tabIndex = "-1";
                 i++;
             }
         }
     }
 }
 
-function returnRefresh()
-{
+function returnRefresh() {
     window.location.reload();
 }
 
@@ -759,7 +738,7 @@ function restoreTabIndexes() {
         var i = 0;
         for (var j = 0; j < gTabbableTags.length; j++) {
             var tagElements = document.getElementsByTagName(gTabbableTags[j]);
-            for (var k = 0 ; k < tagElements.length; k++) {
+            for (var k = 0; k < tagElements.length; k++) {
                 tagElements[k].tabIndex = gTabIndexes[i];
                 tagElements[k].tabEnabled = true;
                 i++;
@@ -768,35 +747,23 @@ function restoreTabIndexes() {
     }
 }
 
-
-/**
- * Hides all drop down form select boxes on the screen so they do not appear above the mask layer.
- * IE has a problem with wanted select form tags to always be the topmost z-index or layer
- *
- * Thanks for the code Scott!
- */
+// Hides all drop-down form select boxes on the screen.
 function hideSelectBoxes() {
     var x = document.getElementsByTagName("SELECT");
 
-    for (i=0;x && i < x.length; i++) {
+    for (i = 0; x && i < x.length; i++) {
         x[i].style.visibility = "hidden";
     }
 }
 
-/**
- * Makes all drop down form select boxes on the screen visible so they do not
- * reappear after the dialog is closed.
- *
- * IE has a problem with wanting select form tags to always be the
- * topmost z-index or layer.
- */
+// Makes all drop-down form select boxes on the screen visible again.
 function displaySelectBoxes() {
     var x = document.getElementsByTagName("SELECT");
 
-    for (i=0;x && i < x.length; i++){
+    for (i = 0; x && i < x.length; i++) {
         x[i].style.visibility = "visible";
     }
 }
 </script>
-    <?php
+EOT;
 }

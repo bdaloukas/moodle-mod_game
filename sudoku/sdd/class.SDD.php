@@ -15,14 +15,14 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Dump structured data, i.e., Objects and Arrays, in either plain text or html.
+ * Dump structured data, i.e., objects and arrays, in either plain text or HTML.
  *
  * This is a class wrapper for a couple of utility routines that I use
- * all the time.  It's handier to have them as a class.
+ * all the time. It's handier to have them as a class.
  *
  * @author Dick Munroe <munroe@csworks.com> original package StructuredDataDumper
- * @copyright copyright @ by Dick Munroe, 2004
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @copyright Copyright by Dick Munroe, 2004
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package mod_game
  */
 
@@ -30,8 +30,8 @@
  * This is a class wrapper for a couple of utility routines that I use all the time.
  *
  * @author Dick Munroe <munroe@csworks.com>
- * @copyright copyright @ by Dick Munroe, 2004
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
+ * @copyright Copyright by Dick Munroe, 2004
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @package mod_game
  */
 class sdd {

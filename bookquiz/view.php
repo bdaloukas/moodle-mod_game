@@ -174,27 +174,21 @@ if ($book->disableprinting) {
  * Book display HTML code
  * =====================================================
  */
-echo "OK";
-?>
-<table border="0" cellspacing="0" width="100%" valign="top" cellpadding="2">
+echo '<table border="0" cellspacing="0" width="100%" valign="top" cellpadding="2">';
 
-<!-- subchapter title and upper navigation row //-->
-<tr>
-    <td width="<?php echo  10;?>" valign="bottom">
-    </td>
-    <td valign="top">
-        <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">
-        <tr>
-            <td align="right"><?php echo 'help' . $chnavigation ?></td>
-        </tr>
-        </table>
-    </td>
-</tr>
+echo '<tr>';
+echo '<td width="10" valign="bottom"></td>';
+echo '<td valign="top">';
+echo '<table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">';
+echo '<tr>';
+echo '<td align="right">' . 'help' . $chnavigation . '</td>';
+echo '</tr>';
+echo '</table>';
+echo '</td>';
+echo '</tr>';
 
-<!-- toc and chapter row //-->
-<tr>
-    <td width="<?php echo $tocwidth ?>" valign="top" align="left">
-<?php
+echo '<tr>';
+echo '<td width="' . s($tocwidth) . '" valign="top" align="left">';
 echo $OUTPUT->box_start('generalbox');
 echo $toc;
 echo $OUTPUT->box_end();
@@ -203,11 +197,11 @@ if ($allowedit && $edit) {
     helpbutton('faq', get_string('faq', 'book'), 'book', true, true);
     echo '</font>';
 }
-?>
-    </td>
-    <td valign="top" align="right">
-<?php
+echo '</td>';
+
+echo '<td valign="top" align="right">';
 echo $OUTPUT->box_start('generalbox');
+
 $content = '';
 if (!$book->customtitles) {
     if ($currsubtitle == '&nbsp;') {
@@ -225,12 +219,11 @@ echo '<div class="book_content">';
 echo format_text($content, FORMAT_HTML, $nocleanoption, $course->id);
 echo '</div>';
 echo $OUTPUT->box_end();
-// Lower navigation.
 echo '<p>' . $chnavigation . '</p>';
-?>
-    </td>
-</tr>
-</table>
+echo '</td>';
+echo '</tr>';
+echo '</table>';
 
-<?php
+echo $OUTPUT->footer($course);
+
 echo $OUTPUT->footer($course);

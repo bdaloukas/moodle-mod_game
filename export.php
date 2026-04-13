@@ -32,8 +32,6 @@ $context = game_get_context_module_instance($cm->id);
 require_capability('mod/game:view', $context);
 require_once($CFG->dirroot . '/lib/formslib.php');
 
-require_login($course->id, false, $cm);
-
 if (!has_capability('mod/game:viewreports', $context)) {
     return;
 }
@@ -109,21 +107,6 @@ class mod_game_exporthtml_form extends moodleform {
     }
 
     /**
-     * Validation of form.
-     *
-     * @param stdClass $data
-     * @param stdClass $files
-     *
-     * @return errors
-     */
-    public function validation($data, $files) {
-        global $CFG, $USER, $DB;
-        $errors = parent::validation($data, $files);
-
-        return $errors;
-    }
-
-    /**
      * Do the exporting.
      */
     public function export() {
@@ -159,114 +142,6 @@ class mod_game_exporthtml_form extends moodleform {
     }
 }
 
-/**
- * The mod_game_exportjavame_form show the export form.
- *
- * @package    mod_game
- * @copyright  2007 Vasilis Daloukas
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class mod_game_exportjavame_form extends moodleform {
-    /**
-     * Definition of form.
-     */
-    public function definition() {
-        global $CFG, $DB, $game;
-
-        $mform = $this->_form;
-        $javame = $this->_customdata['javame'];
-
-        $mform->addElement('header', 'general', get_string('general', 'form'));
-
-        if ($game->gamekind == 'hangman') {
-            $options = [];
-            $options['0'] = 'Hangman with phrases';
-            $options['hangmanp'] = 'Hangman with pictures';
-            $mform->addElement('select', 'type', get_string('javame_type', 'game'), $options);
-        }
-
-        $mform->addElement('text', 'filename', get_string('javame_filename', 'game'), [ 'size' => '30']);
-        $mform->setDefault('filename', $javame->filename);
-        $mform->setType('filename', PARAM_TEXT);
-        $mform->addElement('text', 'icon', get_string('javame_icon', 'game'));
-        $mform->setDefault('icon', $javame->icon);
-        $mform->setType('icon', PARAM_TEXT);
-        $mform->addElement('text', 'createdby', get_string('javame_createdby', 'game'));
-        $mform->setDefault('createdby', $javame->createdby);
-        $mform->setType('createdby', PARAM_TEXT);
-        $mform->addElement('text', 'vendor', get_string('javame_vendor', 'game'));
-        $mform->setDefault('vendor', $javame->vendor);
-        $mform->setType('vendor', PARAM_TEXT);
-        $mform->addElement('text', 'name', get_string('javame_name', 'game'), [ 'size' => '80']);
-        $mform->setDefault('name', $javame->name);
-        $mform->setType('name', PARAM_TEXT);
-        $mform->addElement('text', 'description', get_string('javame_description', 'game'), [ 'size' => '80']);
-        $mform->setDefault('description', $javame->description);
-        $mform->setType('description', PARAM_TEXT);
-        $mform->addElement('text', 'version', get_string('javame_version', 'game'), [ 'size' => '10']);
-        $mform->setDefault('version', $javame->version);
-        $mform->setType('version', PARAM_TEXT);
-        $mform->addElement('text', 'maxpicturewidth', get_string('javame_maxpicturewidth', 'game'), ['size' => '5']);
-        $mform->setDefault('maxpicturewidth', $javame->maxpicturewidth);
-        $mform->setType('maxpicturewidth', PARAM_INT);
-        $mform->addElement('text', 'maxpictureheight', get_string('javame_maxpictureheight', 'game'), ['size' => '5']);
-        $mform->setDefault('maxpictureheight', $javame->maxpictureheight);
-        $mform->setType('maxpictureheight', PARAM_INT);
-
-        $mform->addElement('hidden', 'q', $game->id);
-        $mform->setType('q', PARAM_INT);
-        $mform->addElement('hidden', 'target', 'javame');
-        $mform->setType('target', PARAM_TEXT);
-
-        $mform->addElement('submit', 'submitbutton', get_string('export', 'game'));
-        $mform->closeHeaderBefore('submitbutton');
-    }
-
-    /**
-     * Validation of form.
-     *
-     * @param stdClass $data
-     * @param stdClass $files
-     *
-     * @return errors
-     */
-    public function validation($data, $files) {
-        global $CFG, $USER, $DB;
-        $errors = parent::validation($data, $files);
-
-        return $errors;
-    }
-
-    /**
-     * Do the exporting.
-     */
-    public function export() {
-        global $game, $DB;
-
-        $mform = $this->_form;
-
-        $javame = $this->_customdata['javame'];
-
-        $javame->type = optional_param('type', 0, PARAM_ALPHANUM);
-        $javame->filename = $mform->getElementValue('filename');
-        $javame->icon = $mform->getElementValue('icon');
-        $javame->createdby = $mform->getElementValue('createdby');
-        $javame->vendor = $mform->getElementValue('vendor');
-        $javame->name = $mform->getElementValue('name');
-        $javame->description = $mform->getElementValue('description');
-        $javame->version = $mform->getElementValue('version');
-        $javame->maxpicturewidth = $mform->getElementValue('maxpicturewidth');
-        $javame->maxpictureheight = $mform->getElementValue('maxpictureheight');
-
-        if (!($DB->update_record('game_export_javame', $javame))) {
-            throw new moodle_exception('game_error', 'game', "game_export_javame: not updated id=$javame->id");
-        }
-
-        require_once("export/exportjavame.php");
-        game_OnExportJavaME($game, $javame);
-    }
-}
-
 // Creates form and set initial data.
 if ($target == 'html') {
     $html = $DB->get_record('game_export_html', [ 'id' => $game->id]);
@@ -280,16 +155,6 @@ if ($target == 'html') {
     }
     $html->type = 0;
     $mform = new mod_game_exporthtml_form(null, ['id' => $id, 'html' => $html]);
-} else {
-    $javame = $DB->get_record('game_export_javame', [ 'id' => $game->id]);
-    if ($javame == false) {
-        $javame = new stdClass();
-        $javame->id = $game->id;
-        $javame->filename = $game->gamekind;
-        game_insert_record('game_export_javame', $javame);
-        $javame = $DB->get_record('game_export_javame', [ 'id' => $game->id]);
-    }
-    $mform = new mod_game_exportjavame_form(null, ['id' => $id, 'javame' => $javame]);
 }
 
 if ($mform->is_cancelled()) {
@@ -335,4 +200,200 @@ function game_send_stored_file($file) {
     } else {
         throw new moodle_exception('game_error', 'game', "export.php: File does not exists " . $file);
     }
+}
+
+/**
+ * Exports to javame.
+ *
+ * @param stdClas $game
+ * @param stdClass $context
+ * @param boolean $exportattachment
+ * @param string $dest
+ * @param array $files
+ */
+function game_exmportjavame_getanswers( $game, $context, $exportattachment, $dest, &$files) {
+    $map = $files = [];
+
+    switch ($game->sourcemodule) {
+        case 'question':
+            return game_exmportjavame_getanswers_question( $game, $context, $dest, $files);
+        case 'glossary':
+            return game_exmportjavame_getanswers_glossary( $game, $context, $exportattachment, $dest, $files);
+        case 'quiz':
+            return game_exmportjavame_getanswers_quiz( $game, $context, $dest, $files);
+    }
+
+    return false;
+}
+
+/**
+ * Exports to javame.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $destdir
+ * @param array $files
+ */
+function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$files) {
+    $select = 'hidden = 0 AND category='.$game->questioncategoryid;
+
+    $select .= game_showanswers_appendselect( $game);
+
+    return game_exmportjavame_getanswers_question_select( $game, $context, 'question',
+        $select, '*', $game->course, $destdir, $files);
+}
+
+
+/**
+ * Exports to javame.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $table
+ * @param string $select
+ * @param string $fields
+ * @param int $courseid
+ * @param string $destdir
+ * @param array $files
+ */
+function game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, $fields, $courseid, $destdir, &$files) {
+    global $CFG, $DB;
+
+    if (($questions = $DB->get_records_select( $table, $select, null, '', $fields)) === false) {
+        return;
+    }
+
+    $line = 0;
+    $map = [];
+    foreach ($questions as $question) {
+        unset( $ret);
+        $ret = new stdClass();
+        $ret->qtype = $question->qtype;
+        $ret->question = $question->questiontext;
+        $ret->question = str_replace( [ '"', '#'], [ "'", ' '],
+            game_export_split_files( $game->course, $context, 'questiontext',
+                $question->id, $ret->question, $destdir, $files));
+
+        switch ($question->qtype) {
+            case 'shortanswer':
+                $rec = $DB->get_record( 'question_answers', [ 'question' => $question->id],
+                    'id,answer,feedback');
+                $ret->answer = $rec->answer;
+                $ret->feedback = $rec->feedback;
+                $map[] = $ret;
+                break;
+            default:
+                break;
+        }
+    }
+
+    return $map;
+}
+
+
+/**
+ * Exports to javame.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param boolean $exportattachment
+ * @param string $destdir
+ * @param array $files
+ */
+function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachment, $destdir, &$files) {
+    global $CFG, $DB;
+
+    $table = '{glossary_entries} ge';
+    $select = "glossaryid={$game->glossaryid}";
+    if ($game->glossarycategoryid) {
+        $select .= " AND gec.entryid = ge.id ".
+            " AND gec.categoryid = {$game->glossarycategoryid}";
+        $table .= ",{glossary_entries_categories} gec";
+    }
+
+    if ($exportattachment) {
+        $select .= " AND attachment <> ''";
+    }
+
+    $fields = 'ge.id,definition,concept';
+    if ($exportattachment) {
+        $fields .= ',attachment';
+    }
+    $sql = "SELECT $fields FROM $table WHERE $select ORDER BY definition";
+    if (($questions = $DB->get_records_sql( $sql)) === false) {
+        return false;
+    }
+
+    $fs = get_file_storage();
+    $map = [];
+    $cmglossary = false;
+
+    foreach ($questions as $question) {
+        $ret = new stdClass();
+        $ret->id = $question->id;
+        $ret->qtype = 'shortanswer';
+        $ret->question = strip_tags( $question->definition);
+        $ret->answer = $question->concept;
+        $ret->feedback = '';
+        $ret->attachment = '';
+
+        // Copies the appropriate files from the file storage to destdir.
+        if ($exportattachment) {
+            if ($question->attachment != '') {
+                if ($cmglossary === false) {
+                    $cmglossary = get_coursemodule_from_instance('glossary', $game->glossaryid, $game->course);
+                    $contextglossary = game_get_context_module_instance($cmglossary->id);
+                }
+
+                $ret->attachment = "glossary/{$game->glossaryid}/$question->id/$question->attachment";
+                $myfiles = $fs->get_area_files( $contextglossary->id, 'mod_glossary', 'attachment', $ret->id);
+                $i = 0;
+
+                foreach ($myfiles as $f) {
+                    if ($f->is_directory()) {
+                        continue;
+                    }
+                    $filename = $f->get_filename();
+                    $url = "{$CFG->wwwroot}/pluginfile.php/{$f->get_contextid()}/mod_glossary/attachment}";
+                    $fileurl = $url.$f->get_filepath().$f->get_itemid().'/'.$filename;
+                    $pos = strrpos( $filename, '.');
+                    $ext = substr( $filename, $pos);
+                    $destfile = $ret->id;
+                    if ($i > 0) {
+                        $destfile .= '_'.$i;
+                    }
+                    $destfile = $destdir.'/'.$destfile.$ext;
+                    $f->copy_content_to( $destfile);
+                    $ret->attachment = $destfile;
+                    $i++;
+                    $files[] = $destfile;
+                }
+            }
+        }
+
+        $map[] = $ret;
+    }
+
+    return $map;
+}
+
+
+/**
+ * Exports to javame.
+ *
+ * @param stdClass $game
+ * @param stdClass $context
+ * @param string $destdir
+ * @param array $files
+ */
+function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) {
+    global $CFG;
+
+    $select = "quiz='$game->quizid' ".
+        " AND qqi.question=q.id".
+        " AND q.hidden=0".
+        game_showanswers_appendselect( $game);
+    $table = "{question} q,{quiz_question_instances} qqi";
+
+    return game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, "q.*", $game->course, $destdir, $files);
 }

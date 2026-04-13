@@ -25,6 +25,8 @@
  */
 namespace mod_game\event;
 
+use core\event\base;
+
 defined('MOODLE_INTERNAL') || die();
 
 require(dirname(__FILE__) . '/../../../../version.php');
@@ -42,7 +44,7 @@ if (defined('GAME_MOODLE_402')) {
      * @copyright  2014 Vasilis Daloukas
      * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
      */
-    class game_played extends \core\event\base {
+    class game_played extends base {
         /**
          * Returns description of what happened.
          *
@@ -100,7 +102,7 @@ if (defined('GAME_MOODLE_402')) {
         }
     }
 } else {
-    class game_played extends \core\event\base {
+    class game_played extends base {
         /**
          * Returns description of what happened.
          *

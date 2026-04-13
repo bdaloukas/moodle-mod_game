@@ -15,11 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plays the game bookquiz.
+ * Plays the bookquiz game.
  *
- * @package mod_game
- * @copyright 2007 Vasilis Daloukas
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    mod_game
+ * @subpackage bookquiz
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 /**
@@ -189,34 +190,29 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
         }
     }
 
-    ?>
-    <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="2">
+    echo '<table border="0" cellspacing="0" width="100%" valign="top" cellpadding="2">';
 
-    <!-- subchapter title and upper navigation row //-->
-    <tr>
-        <td width="<?php echo  10;?>" valign="bottom">
-        </td>
-        <td valign="top">
-            <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">
-            <tr>
-                <td align="right"><?php echo $chnavigation ?></td>
-            </tr>
-            </table>
-        </td>
-    </tr>
+    echo '<tr>';
+    echo '<td width="10" valign="bottom"></td>';
+    echo '<td valign="top">';
+    echo '<table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">';
+    echo '<tr>';
+    echo '<td align="right">' . $chnavigation . '</td>';
+    echo '</tr>';
+    echo '</table>';
+    echo '</td>';
+    echo '</tr>';
 
-    <!-- toc and chapter row //-->
-    <tr>
-        <td width="<?php echo $tocwidth ?>" valign="top" align="left">
-            <?php
-            echo $OUTPUT->box_start('generalbox');
-            echo $toc;
-            echo $OUTPUT->box_end();
-            ?>
-        </td>
-        <td valign="top" align="left">
-    <?php
+    echo '<tr>';
+    echo '<td width="' . s($tocwidth) . '" valign="top" align="left">';
     echo $OUTPUT->box_start('generalbox');
+    echo $toc;
+    echo $OUTPUT->box_end();
+    echo '</td>';
+
+    echo '<td valign="top" align="left">';
+    echo $OUTPUT->box_start('generalbox');
+
     $content = '';
     if (!$book->customtitles) {
         if ($currsubtitle == '&nbsp;') {
@@ -225,12 +221,14 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
             $content .= '<p class="book_chapter_title">' . $currtitle . '<br />' . $currsubtitle . '</p>';
         }
     }
+
     $cmbook = get_coursemodule_from_instance('book', $game->bookid, $game->course);
     $modcontext = game_get_context_module_instance($cmbook->id);
     $content .= game_filterbook($chapter->content, $chapter->id, $modcontext->id, $game->course);
 
     $nocleanoption = new stdClass();
     $nocleanoption->noclean = true;
+
     echo '<div>';
     if ($nextbutton != '') {
         echo $nextbutton;
@@ -239,17 +237,15 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
     if ($nextbutton != '') {
         echo $nextbutton;
     }
-
     echo '</div>';
-    echo $OUTPUT->box_end();
-    // Lower navigation.
-    echo '<p align="right">' . $chnavigation . '</p>';
-    ?>
-        </td>
-    </tr>
-    </table>
 
-    <?php
+    echo $OUTPUT->box_end();
+    echo '<p align="right">' . $chnavigation . '</p>';
+    echo '</td>';
+    echo '</tr>';
+
+    echo '</table>';
+
     if ($questionid != 0) {
         if ($game->param3 != 0) {
             game_bookquiz_showquestions($cm->id, $questionid, $chapter->id, $nextid, $scoreattempt, $game, $context);

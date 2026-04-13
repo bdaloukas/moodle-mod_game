@@ -15,11 +15,11 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This file is the entry point to the game module. All pages are rendered from here
+ * This file is the entry point to the game module. All pages are rendered from here.
  *
- * @package mod_game
- * @copyright 2007 Vasilis Daloukas
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or late
+ * @package    mod_game
+ * @copyright  2007 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
