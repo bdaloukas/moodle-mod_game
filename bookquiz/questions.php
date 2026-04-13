@@ -78,27 +78,27 @@ if (($recs = $DB->get_records_sql($sql)) != false) {
 echo '<form name="form" method="post" action="questions.php">';
 echo '<table border=1>';
 echo '<tr>';
-echo '<td><center>'.get_string('bookquiz_chapters', 'game') . '</td>';
-echo '<td><center>'.get_string('bookquiz_categories', 'game') . '</td>';
-echo '<td><center>'.get_string('bookquiz_numquestions', 'game') . '</td>';
+echo '<td><center>' . get_string('bookquiz_chapters', 'game') . '</td>';
+echo '<td><center>' . get_string('bookquiz_categories', 'game') . '</td>';
+echo '<td><center>' . get_string('bookquiz_numquestions', 'game') . '</td>';
 echo "</tr>\r\n";
 $ids = '';
 if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pagenum', 'id,title')) != false) {
     foreach ($recs as $rec) {
         echo '<tr>';
-        echo '<td>'.$rec->title.'</td>';
+        echo '<td>' . $rec->title . '</td>';
         echo '<td>';
         if (array_key_exists($rec->id, $categories)) {
             $categoryid = $categories[$rec->id];
         } else {
             $categoryid = 0;
         }
-        echo game_showselectcontrol('categoryid_'.$rec->id, $a, $categoryid, '');
+        echo game_showselectcontrol('categoryid_' . $rec->id, $a, $categoryid, '');
         echo '</td>';
 
         echo '<td>';
         if (array_key_exists($rec->id, $numbers)) {
-            echo '<center>'.$numbers[$rec->id].'</center>';
+            echo '<center>' . $numbers[$rec->id] . '</center>';
         } else {
             echo '&nbsp;';
         }
@@ -106,7 +106,7 @@ if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pag
 
         echo "</tr>\r\n";
 
-        $ids .= ','.$rec->id;
+        $ids .= ',' . $rec->id;
     }
 }
 ?>
@@ -128,6 +128,8 @@ echo $OUTPUT->footer($course);
 /**
  * Save infos to database.
  *
+ * @package mod_game
+ *
  * @param int $gameid
  * @param int $bookid
  * @param array $ids
@@ -140,11 +142,11 @@ function game_bookquiz_save($gameid, $bookid, $ids, $form) {
 
     $questions = $recids = [];
     if (($recs = $DB->get_records(
-            'game_bookquiz_questions',
-            ['gameid' => $gameid],
-            '',
-            'id,chapterid,questioncategoryid')
-            ) != false) {
+        'game_bookquiz_questions',
+        ['gameid' => $gameid],
+        '',
+        'id,chapterid,questioncategoryid')
+     ) != false) {
         foreach ($recs as $rec) {
             $questions[$rec->chapterid] = $rec->questioncategoryid;
             $recids[$rec->chapterid] = $rec->id;
@@ -152,7 +154,7 @@ function game_bookquiz_save($gameid, $bookid, $ids, $form) {
     }
 
     foreach ($ids as $chapterid) {
-        $name = 'categoryid_'.$chapterid;
+        $name = 'categoryid_' . $chapterid;
         $categoryid = $form->$name;
 
         if (!array_key_exists($chapterid, $questions)) {
@@ -182,7 +184,7 @@ function game_bookquiz_save($gameid, $bookid, $ids, $form) {
                 throw new moodle_exception('bookquiz_error', 'game', 'Can\'t delete game_bookquiz_questions');
             }
         } else {
-            $updrec = new StdClass;
+            $updrec = new StdClass();
             $updrec->id = $recids[$chapterid];
             $updrec->questioncategoryid = $categoryid;
             if (($DB->update_record('game_bookquiz_questions', $updrec)) == false) {

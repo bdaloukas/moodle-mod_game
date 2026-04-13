@@ -84,10 +84,10 @@ class CrossDB extends Cross {
     public function delete_records($id) {
         global $DB;
 
-        if (!$DB->delete_records('game_queries', [ 'attemptid' => $id])) {
+        if (!$DB->delete_records('game_queries', ['attemptid' => $id])) {
             throw new moodle_exception('cross_error', 'game', "Can't delete from game_queries attemptid=$id");
         }
-        if (!$DB->delete_records('game_cross', [ 'id' => $id])) {
+        if (!$DB->delete_records('game_cross', ['id' => $id])) {
             throw new moodle_exception('cross_error', 'game', "Can't delete from game_cross id=$id");
         }
     }
@@ -123,7 +123,7 @@ class CrossDB extends Cross {
         $html = '';
         $done = false;
 
-        $loadfromdb = $g == "");
+        $loadfromdb = ($g == "");
 
         $this->mmincol = $this->mminrow = 0;
         $this->mmaxcol = $crossrec->usedcols;
@@ -136,7 +136,7 @@ class CrossDB extends Cross {
         $load = false;
 
         $puzzle = str_repeat('.', $this->mmaxrow * $this->mmaxcol);
-        if ($recs = $DB->get_records('game_queries', [ 'attemptid' => $crossrec->id])) {
+        if ($recs = $DB->get_records('game_queries', ['attemptid' => $crossrec->id])) {
             $a = [];
             foreach ($recs as $rec) {
                 if ($rec->horizontal) {
@@ -170,7 +170,7 @@ class CrossDB extends Cross {
                     $load = true;
                 }
                 if ($language == '') {
-                    $language = game_detectlanguage( $rec->answertext);
+                    $language = game_detectlanguage($rec->answertext);
                 }
             }
             $info = $this->game_cross_computecheck(
@@ -186,7 +186,7 @@ class CrossDB extends Cross {
                 $course,
                 $cm
             );
-            $html = $this->showhtml_base( $crossrec, $b, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game);
+            $html = $this->showhtml_base($crossrec, $b, $showsolution, $showhtmlsolutions, $showstudentguess, $context, $game);
         }
 
         if ($load == false) {
@@ -227,17 +227,17 @@ class CrossDB extends Cross {
         $a = [];
         if ($correctletters) {
             $a[] = $correctletters.' '.
-                ( $correctletters > 1 ? get_string( 'cross_corrects', 'game') : get_string( 'cross_correct', 'game'));
+                ($correctletters > 1 ? get_string('cross_corrects', 'game') : get_string('cross_correct', 'game'));
         }
         if ($wrongletters) {
             $a[] = '<b>'.$wrongletters.' '.
-                ( $wrongletters > 1 ? get_string( 'cross_errors', 'game') : get_string( 'cross_error', 'game')).'</b>';
+                ($wrongletters > 1 ? get_string('cross_errors', 'game') : get_string('cross_error', 'game')).'</b>';
         }
 
         if ($correctletters > 1 || $wrongletters > 1) {
-            $ret = get_string( 'cross_found_many', 'game');
-        } else if ( count( $a)) {
-            $ret = get_string( 'cross_found_one', 'game');
+            $ret = get_string('cross_found_many', 'game');
+        } else if (count($a)) {
+            $ret = get_string('cross_found_one', 'game');
         } else {
             $ret = '';
         }
@@ -248,8 +248,8 @@ class CrossDB extends Cross {
 
             if ($i == 1) {
                 $ret .= ' ' . $msg;
-            } else if ( $i == count($a)) {
-                $ret .= ' ' . get_string( 'and', 'game') . ' ' . $msg;
+            } else if ($i == count($a)) {
+                $ret .= ' ' . get_string('and', 'game') . ' ' . $msg;
             } else {
                 $ret .= ', ' . $msg;
             }
@@ -266,7 +266,7 @@ class CrossDB extends Cross {
         }
 
         $score = $correctletters / ($correctletters + $restletters);
-        $ret .= '<br>' . get_string('grade', 'game') . ' ' . round( $score * 100) . ' %';
+        $ret .= '<br>' . get_string('grade', 'game') . ' ' . round($score * 100) . ' %';
 
         game_updateattempts($game, $attempt, $score, $done, $cm, $course);
 
@@ -287,27 +287,27 @@ class CrossDB extends Cross {
      * @param stdClass $crossrec
      * @param boolean $loadfromdb
      */
-    public function updatecrossquestions( &$rec, &$g, &$pos, &$correctletters, &$wrongletters,
+    public function updatecrossquestions(&$rec, &$g, &$pos, &$correctletters, &$wrongletters,
         &$restletters, $game, $attempt, $crossrec, $loadfromdb) {
 
-        global $DB, $USER;
+        global $DB;
 
         $word = $rec->answertext;
-        $len = game_strlen( $word);
+        $len = game_strlen($word);
 
         if ($loadfromdb) {
             $guess = $rec->studentanswer;
         } else {
-            $guess = game_substr( $g, $pos, $len);
+            $guess = game_substr($g, $pos, $len);
         }
 
-        $lenguess = game_strlen( $guess);;
+        $lenguess = game_strlen($guess);;
         $pos += $len;
 
         $isempty = true;
         for ($i = 0; $i < $len; $i++) {
             if ($i < $lenguess) {
-                $letterguess = game_substr( $guess, $i, 1);
+                $letterguess = game_substr($guess, $i, 1);
             } else {
                 $letterguess = " ";
             }
@@ -315,12 +315,12 @@ class CrossDB extends Cross {
             if ($letterguess != ' ') {
                 $isempty = false;
             }
-            $letterword = game_substr( $word, $i, 1);
+            $letterword = game_substr($word, $i, 1);
             if ($letterword != $letterguess) {
                 if (($letterguess != ' ' && $letterguess != '_')) {
                     $wrongletters++;
                 }
-                game_setchar( $guess, $i, '_');
+                game_setchar($guess, $i, '_');
                 $restletters++;
             } else if ($letterguess == ' ') {
                 if ($guess == $word) {
@@ -343,11 +343,11 @@ class CrossDB extends Cross {
         $updrec = new stdClass();
         $updrec->studentanswer = $guess;
         $updrec->id = $rec->id;
-        if (!$DB->update_record( 'game_queries', $updrec, $rec->id)) {
-            throw new moodle_exception( 'cross_error', 'game', 'Update game_queries: not updated');
+        if (!$DB->update_record('game_queries', $updrec, $rec->id)) {
+            throw new moodle_exception('cross_error', 'game', 'Update game_queries: not updated');
         }
 
         $score = $correctletters / $len;
-        game_update_queries( $game, $attempt, $rec, $score, $guess);
+        game_update_queries($game, $attempt, $rec, $score, $guess);
     }
 }

@@ -25,7 +25,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 define('NUM_NONE', '0');
-define('NUM_NUMBERS','1');
+define('NUM_NUMBERS', '1');
 define('NUM_BULLETS', '2');
 define('NUM_INDENTED', '3');
 
@@ -86,7 +86,7 @@ if ($print) {
                 }
             }
             $titles[$ch->id] = $title;
-            $toc .= '<a title="'.htmlspecialchars($title).'" href="#ch'.$ch->id.'">'.$title.'</a>';
+            $toc .= '<a title="' . htmlspecialchars($title) . '" href="#ch' . $ch->id . '">' . $title . '</a>';
             $toc .= (!$ch->subchapter) ? '<ul>' : '</li>';
             $first = 0;
         }
@@ -114,7 +114,7 @@ if ($print) {
                 }
             }
             if ($ch->id == $chapter->id) {
-                $toc .= '<strong>'.$title.'</strong>';
+                $toc .= '<strong>' . $title . '</strong>';
                 if ($ch->subchapter) {
                     $currtitle = $prevtitle;
                     $currsubtitle = $title;

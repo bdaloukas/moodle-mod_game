@@ -256,11 +256,11 @@ class Cross {
                 $a[] = $r;
             }
 
-            uasort($a, [ $this, 'cmp_magic']);
+            uasort($a, [$this, 'cmp_magic']);
             $magics[$n] = $a;
         }
 
-        uasort($this->mwords,  [ $this, 'cmp']);
+        uasort($this->mwords,  [$this, 'cmp']);
 
         $words = ';' . implode(';', $this->mwords) . ';';
 
@@ -700,7 +700,7 @@ class Cross {
                     }
 
                     $c = game_substr($puzzle, $pp, 1);
-                    $poss[] = [ $pp, $newdir, ord($c)];
+                    $poss[] = [$pp, $newdir, ord($c)];
                 }
 
                 $crosspos[] = $posp;
@@ -864,15 +864,15 @@ class Cross {
                     $legendh[$rec->myrow][] = $s;
                     $idh[$rec->myrow][] = $i;
                 } else {
-                    $legendh[$rec->myrow] = [ $s];
-                    $idh[$rec->myrow] = [ $i];
+                    $legendh[$rec->myrow] = [$s];
+                    $idh[$rec->myrow] = [$i];
                 }
             } else {
                 if (array_key_exists($rec->mycol, $legendv)) {
                     $legendv[$rec->mycol][] = $s;
                     $idv[$rec->mycol][] = $i;
                 } else {
-                    $legendv[$rec->mycol] = [ $s];
+                    $legendv[$rec->mycol] = [$s];
                     $idv[$rec->mycol] = [$i];
                 }
             }
@@ -884,14 +884,14 @@ class Cross {
         foreach ($legendh as $key => $value) {
             if (count($value) == 1) {
                 $this->mlegendh[$key] = $value[0];
-                $pos = $idh[ $key][ 0];
-                $aid[ $pos] = '"a'.$key.'"';
+                $pos = $idh[$key][0];
+                $aid[$pos] = '"a'.$key.'"';
             } else {
                 for ($i = 0; $i < count($value); $i++) {
                     $key2 = $key.game_substr($letters, $i, 1);
                     $this->mlegendh[$key2] = $value[$i];
-                    $pos = $idh[ $key][ $i];
-                    $aid[ $pos] = '"a' . $key2 . '"';
+                    $pos = $idh[$key][$i];
+                    $aid[$pos] = '"a' . $key2 . '"';
                 }
             }
         }
@@ -900,14 +900,14 @@ class Cross {
         foreach ($legendv as $key => $value) {
             if (count($value) == 1) {
                 $this->mlegendv[$key] = $value[0];
-                $pos = $idv[ $key][ 0];
-                $aid[ $pos] = '"d' . $key . '"';
+                $pos = $idv[$key][0];
+                $aid[$pos] = '"d' . $key . '"';
             } else {
                 for ($i = 0; $i < count($value); $i++) {
                     $key2 = $key . game_substr($letters, $i, 1);
                     $this->mlegendv[$key2] = $value[$i];
-                    $pos = $idv[ $key][ $i];
-                    $aid[ $pos] = '"d' . $key2 . '"';
+                    $pos = $idv[$key][$i];
+                    $aid[$pos] = '"d' . $key2 . '"';
                 }
             }
         }
@@ -917,7 +917,7 @@ class Cross {
 
         $sclue = game_substr($sclue, 1);
         $sret .= "WordLength = new Array(" . game_substr($swordlength, 1) . ");\n";
-        $sret .= "Clue = new Array(".$sclue.");\n";
+        $sret .= "Clue = new Array(" . $sclue . ");\n";
         $sguess = str_replace(' ', '_', $sguess);
         $sret .= "Guess = new Array(" . game_substr($sguess, 1) . ");\n";
         $sret .= "Solutions = new Array(" . game_substr($ssolutions, 1) . ");\n";

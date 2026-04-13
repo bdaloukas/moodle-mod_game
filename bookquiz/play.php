@@ -151,11 +151,11 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
     $chnavigation = '';
 
     if ($previd) {
-        $chnavigation .= '<a title="'.get_string('navprev', 'book').'" href="attempt.php?id='.$cm->id.
-        '&chapterid='.$previd.'"><img src="'.game_pix_url('bookquiz/nav_prev', 'mod_game').
-        '" class="bigicon" alt="'.get_string('navprev', 'book').'"/></a>';
+        $chnavigation .= '<a title="' . get_string('navprev', 'book') . '" href="attempt.php?id=' . $cm->id .
+        '&chapterid=' . $previd . '"><img src="' . game_pix_url('bookquiz/nav_prev', 'mod_game') .
+        '" class="bigicon" alt="' . get_string('navprev', 'book') . '"/></a>';
     } else {
-        $chnavigation .= '<img src="'.game_pix_url('bookquiz/nav_prev_dis', 'mod_game').'" class="bigicon" alt="" />';
+        $chnavigation .= '<img src="'.game_pix_url('bookquiz/nav_prev_dis', 'mod_game') . '" class="bigicon" alt="" />';
     }
 
     $nextbutton = '';
@@ -166,8 +166,8 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
             game_pix_url('bookquiz/nav_next', 'mod_game') . '" class="bigicon" alt="'.get_string('navnext', 'book') . '" ></a>';
             $nextbutton = '<center>';
             $nextbutton .= '<form name="form" method="get" action="attempt.php">';
-            $nextbutton .= '<input type="hidden" name="id" value="'.$cm->id.'" >' . "\r\n";
-            $nextbutton .= '<input type="hidden" name="chapterid" value="'.$nextid . '" >' . "\r\n";
+            $nextbutton .= '<input type="hidden" name="id" value="' . $cm->id . '" >' . "\r\n";
+            $nextbutton .= '<input type="hidden" name="chapterid" value="' . $nextid . '" >' . "\r\n";
             $nextbutton .= '<input type="submit" value="' . get_string('continue') . '">';
             $nextbutton .= '</center>';
             game_updateattempts_maxgrade($game, $attempt, $scoreattempt, 0, $cm, $course);
@@ -176,8 +176,8 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
         game_updateattempts_maxgrade($game, $attempt, 1, 0, $cm, $course);
 
         $chnavigation .= '<a title="'.get_string('navexit', 'book') . '" href="attempt.php?id=' .
-            $cm->id.'&chapterid='.$lastid.'><img src="' . game_pix_url('bookquiz/nav_exit', 'mod_game') .
-            '" class="bigicon" alt="'.get_string('navexit', 'book').'" /></a>';
+            $cm->id . '&chapterid=' . $lastid . '><img src="' . game_pix_url('bookquiz/nav_exit', 'mod_game') .
+            '" class="bigicon" alt="' . get_string('navexit', 'book') . '" /></a>';
     }
 
     require('toc.php');
@@ -229,7 +229,7 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
     $modcontext = game_get_context_module_instance($cmbook->id);
     $content .= game_filterbook($chapter->content, $chapter->id, $modcontext->id, $game->course);
 
-    $nocleanoption = new stdClass;
+    $nocleanoption = new stdClass();
     $nocleanoption->noclean = true;
     echo '<div>';
     if ($nextbutton != '') {
@@ -243,7 +243,7 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
     echo '</div>';
     echo $OUTPUT->box_end();
     // Lower navigation.
-    echo '<p align="right">'.$chnavigation.'</p>';
+    echo '<p align="right">' . $chnavigation . '</p>';
     ?>
         </td>
     </tr>
@@ -259,6 +259,8 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
 
 /**
  * Computes the last chapter.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param stdClass $bookquiz
@@ -279,8 +281,11 @@ function game_bookquiz_play_computelastchapter($game, &$bookquiz) {
             // Update the data in table game_bookquiz.
             if (($DB->set_field('game_bookquiz', 'lastchapterid', $bookquiz->lastchapterid,
                 ['id' => $bookquiz->id])) == false) {
-                throw new moodle_exception('bookquiz_error', 'game',
-                    "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid");
+                throw new moodle_exception(
+                    'bookquiz_error',
+                    'game',
+                    "Can't update table game_bookquiz with lastchapterid to $bookquiz->lastchapterid"
+                );
             }
         }
     }
@@ -288,6 +293,8 @@ function game_bookquiz_play_computelastchapter($game, &$bookquiz) {
 
 /**
  * Shows questions.
+ *
+ * @package mod_game
  *
  * @param int $id
  * @param int $questionid
@@ -307,7 +314,7 @@ function game_bookquiz_showquestions($id, $questionid, $chapterid, $nextchapteri
     global $CFG;
 
     // Start the form.
-    echo "<form id=\"responseform\" method=\"post\" action=\"{$CFG->wwwroot}/mod/game/attempt.php\" ".
+    echo "<form id=\"responseform\" method=\"post\" action=\"{$CFG->wwwroot}/mod/game/attempt.php\" " .
          " onclick=\"this.autocomplete='off'\">\n";
     if (($onlyshow === false) && ($showsolution === false)) {
         echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
@@ -317,14 +324,14 @@ function game_bookquiz_showquestions($id, $questionid, $chapterid, $nextchapteri
     echo '<div>';
     echo '<input type="hidden" name="id" value="' . $id . "\" />\n";
     echo '<input type="hidden" name="action" value="bookquizcheck" />';
-    echo '<input type="hidden" name="chapterid" value="'.$chapterid.'" />';
-    echo '<input type="hidden" name="scoreattempt" value="'.$scoreattempt.'" />';
-    echo '<input type="hidden" name="nextchapterid" value="'.$nextchapterid.'" />';
+    echo '<input type="hidden" name="chapterid" value="' . $chapterid . '" />';
+    echo '<input type="hidden" name="scoreattempt" value="' . $scoreattempt . '" />';
+    echo '<input type="hidden" name="nextchapterid" value="' . $nextchapterid . '" />';
 
     // Print all the questions.
 
     // Add a hidden field with questionids.
-    echo '<input type="hidden" name="questionids" value="'.$questionlist."\" />\n";
+    echo '<input type="hidden" name="questionids" value="'.$questionlist . "\" />\n";
 
     $number = 0;
     foreach ($questions as $question) {
@@ -335,7 +342,7 @@ function game_bookquiz_showquestions($id, $questionid, $chapterid, $nextchapteri
     // Finish the form.
     echo '</div>';
     if (($onlyshow === false) && ($showsolution === false)) {
-        echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"".get_string('sudoku_submit', 'game')."\"></center>\n";
+        echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
     }
 
     echo "</form>\n";
@@ -344,9 +351,11 @@ function game_bookquiz_showquestions($id, $questionid, $chapterid, $nextchapteri
 /**
  * Selects random one question from the input list.
  *
+ * @package mod_game
+ *
  * @param array $questions
  *
- * @return the position of the random question.
+ * @return int: the position of the random question.
  */
 function game_bookquiz_selectrandomquestion($questions) {
     global $DB;
@@ -378,6 +387,8 @@ function game_bookquiz_selectrandomquestion($questions) {
 /**
  * Check if the answers are correct.
  *
+ * @package mod_game
+ *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -388,7 +399,7 @@ function game_bookquiz_selectrandomquestion($questions) {
 function game_bookquiz_check_questions($cm, $game, $attempt, $bookquiz, $context, $course) {
     global $USER, $DB;
 
-    $scoreattempt = optional_param('scoreattempt',  0, PARAM_INT);
+    $scoreattempt = optional_param('scoreattempt', 0, PARAM_INT);
     $responses = data_submitted();
 
     $questionlist = $responses->questionids;

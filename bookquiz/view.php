@@ -145,9 +145,9 @@ if ($nextid) {
     if ($section = $DB->get_record('course_sections', ['id' => $cm->section])) {
         $sec = $section->section;
     }
-    $chnavigation .= '<a title="'.get_string('navexit', 'book').'" href="../../course/view.php?id='.
-        $course->id.'#section-'.$sec.'"><img src="'.
-        $OUTPUT->pix_url('bookquiz/nav_exit', 'mod_game').'" class="bigicon" alt="'.get_string('navexit', 'book').
+    $chnavigation .= '<a title="'.get_string('navexit', 'book') . '" href="../../course/view.php?id=' .
+        $course->id.'#section-'.$sec.'"><img src="' .
+        $OUTPUT->pix_url('bookquiz/nav_exit', 'mod_game') . '" class="bigicon" alt="' . get_string('navexit', 'book') .
         '" /></a>';
 }
 
@@ -163,10 +163,10 @@ if ($book->disableprinting) {
         $OUTPUT->pix_url('bookquiz/print_book', 'mod_game') .
         '" class="bigicon" alt="' . get_string('printbook', 'book') . '"/></a>';
     $printchapter = '<a title="' . get_string('printchapter', 'book') . '" href="print.php?id=' .
-        $cm->id.'&amp;chapterid=' . $chapter->id.
-        '" onclick="this.target=\'_blank\'"><img src="'.
+        $cm->id.'&amp;chapterid=' . $chapter->id .
+        '" onclick="this.target=\'_blank\'"><img src="' .
         $OUTPUT->pix_url('bookquiz/print_chapter', 'mod_game') . '" class="bigicon" alt="' .
-        get_string('printchapter', 'book').'"/></a>';
+        get_string('printchapter', 'book') . '"/></a>';
 }
 
 
@@ -185,7 +185,7 @@ echo "OK";
     <td valign="top">
         <table border="0" cellspacing="0" width="100%" valign="top" cellpadding="0">
         <tr>
-            <td align="right"><?php echo 'help'.$chnavigation ?></td>
+            <td align="right"><?php echo 'help' . $chnavigation ?></td>
         </tr>
         </table>
     </td>
@@ -211,22 +211,22 @@ echo $OUTPUT->box_start('generalbox');
 $content = '';
 if (!$book->customtitles) {
     if ($currsubtitle == '&nbsp;') {
-        $content .= '<p class="book_chapter_title">'.$currtitle.'</p>';
+        $content .= '<p class="book_chapter_title">' . $currtitle . '</p>';
     } else {
-        $content .= '<p class="book_chapter_title">'.$currtitle.'<br />'.$currsubtitle.'</p>';
+        $content .= '<p class="book_chapter_title">' . $currtitle . '<br />' . $currsubtitle . '</p>';
     }
 }
 
 $content .= $chapter->content;
 
-$nocleanoption = new stdClass;
+$nocleanoption = new stdClass();
 $nocleanoption->noclean = true;
 echo '<div class="book_content">';
 echo format_text($content, FORMAT_HTML, $nocleanoption, $course->id);
 echo '</div>';
 echo $OUTPUT->box_end();
 // Lower navigation.
-echo '<p>'.$chnavigation.'</p>';
+echo '<p>' . $chnavigation . '</p>';
 ?>
     </td>
 </tr>

@@ -45,14 +45,14 @@ define('GAME_REVIEW_OPEN', 0xfc0);          // The next 6 bits refer to the time
 define('GAME_REVIEW_CLOSED', 0x3f000);      // The final 6 bits refer to the time after the game closes.
 
 // Within each group of 6 bits we determine what should be shown.
-define('GAME_REVIEW_RESPONSES',   1 * 0x1041); // Show responses.
-define('GAME_REVIEW_SCORES',      2 * 0x1041); // Show scores.
-define('GAME_REVIEW_FEEDBACK',    4 * 0x1041); // Show feedback.
-define('GAME_REVIEW_ANSWERS',     8 * 0x1041); // Show correct answers.
+define('GAME_REVIEW_RESPONSES', 1 * 0x1041); // Show responses.
+define('GAME_REVIEW_SCORES', 2 * 0x1041); // Show scores.
+define('GAME_REVIEW_FEEDBACK', 4 * 0x1041); // Show feedback.
+define('GAME_REVIEW_ANSWERS', 8 * 0x1041); // Show correct answers.
 
 // Some handling of worked solutions is already in the code but not yet fully supported.
 // and not switched on in the user interface.
-define('GAME_REVIEW_SOLUTIONS',  16 * 0x1041);      // Show solutions.
+define('GAME_REVIEW_SOLUTIONS', 16 * 0x1041);      // Show solutions.
 define('GAME_REVIEW_GENERALFEEDBACK', 32 * 0x1041); // Show general feedback.
 
 /**
@@ -159,7 +159,7 @@ function game_before_add_or_update(&$game) {
     }
 
     if ($game->gamekind == 'millionaire') {
-        $pos = strpos('-'.$game->param8, '#');
+        $pos = strpos('-' . $game->param8, '#');
         if ($pos > 0) {
             $game->param8 = hexdec(substr($game->param8, $pos));
         }
@@ -172,8 +172,14 @@ function game_before_add_or_update(&$game) {
                 $cmg = get_coursemodule_from_instance('game', $game->id, $game->course);
                 $modcontext = game_get_context_module_instance($cmg->id);
                 $attachmentoptions = ['subdirs' => 0, 'maxbytes' => 9999999, 'maxfiles' => 1];
-                file_save_draft_area_files($draftitemid, $modcontext->id, 'mod_game', 'snakes_file', $game->id,
-                    ['subdirs' => 0, 'maxbytes' => 9999999, 'maxfiles' => 1]);
+                file_save_draft_area_files(
+                    $draftitemid,
+                    $modcontext->id,
+                    'mod_game',
+                    'snakes_file',
+                    $game->id,
+                    ['subdirs' => 0, 'maxbytes' => 9999999, 'maxfiles' => 1]
+                );
                 $game->param5 = 1;
             }
 
@@ -262,7 +268,6 @@ function game_user_outline($course, $user, $mod, $game) {
     global $DB;
 
     if ($grade = $DB->get_record_select('game_grades', "userid=$user->id AND gameid = $game->id", null, 'id,score,timemodified')) {
-
         $result = new stdClass();
         if ((float)$grade->score) {
             $result->info = get_string('gradenoun').':&nbsp;' . round($grade->score * $game->grade, $game->decimalpoints) . ' ' .
@@ -315,8 +320,7 @@ function game_user_complete($course, $user, $mod, $game) {
  *
  * @return boolean
  *
- * @return True if anything was printed, otherwise false.
- *@uses $CFG
+ * @return bool: True if anything was printed, otherwise false.
  */
 function game_print_recent_activity(stdClass $course, int $isteacher, int $timestart) {
     return false;
@@ -370,7 +374,7 @@ function game_grades($gameid) {
  * @return array array of grades, false if none
  * @throws dml_exception
  */
-function game_get_user_grades($game, $userid=0) {
+function game_get_user_grades($game, $userid = 0) {
     global $DB;
 
     $user = $userid ? "AND u.id = $userid" : "";
@@ -378,10 +382,10 @@ function game_get_user_grades($game, $userid=0) {
     if (!isset($game->grade)) {
         $game->grade = 1;
     }
-    $sql = 'SELECT u.id, u.id AS userid, '.$game->grade.
+    $sql = 'SELECT u.id, u.id AS userid, ' . $game->grade .
             ' * g.score AS rawgrade, g.timemodified AS dategraded, MAX(a.timefinish) AS datesubmitted
             FROM {user} u, {game_grades} g, {game_attempts} a
-            WHERE u.id = g.userid AND g.gameid = '.$game->id.' AND a.gameid = g.gameid AND u.id = a.userid';
+            WHERE u.id = g.userid AND g.gameid = ' . $game->id . ' AND a.gameid = g.gameid AND u.id = a.userid';
     if ($userid != 0) {
         $sql .= ' AND u.id=' . $userid;
     }
@@ -407,7 +411,7 @@ function game_get_participants(int $gameid) {
  * @param int $scaleid
  * @return bool
  **/
-function game_scale_used ($gameid, $scaleid): bool {
+function game_scale_used($gameid, $scaleid): bool {
     return false;
 }
 
@@ -418,7 +422,7 @@ function game_scale_used ($gameid, $scaleid): bool {
  * @param int $userid specific user only, 0 mean all
  * @param boolean $nullifnone
  */
-function game_update_grades($game=null, $userid = 0, $nullifnone = true) {
+function game_update_grades($game = null, $userid = 0, $nullifnone = true) {
     global $CFG, $DB;
 
     if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
@@ -428,12 +432,10 @@ function game_update_grades($game=null, $userid = 0, $nullifnone = true) {
             return;
         }
     }
-
     if ($game != null) {
         $grades = game_get_user_grades($game, $userid);
         if ($grades != null) {
             game_grade_item_update($game, $grades);
-
         } else if ($userid && $nullifnone) {
             $grade = new stdClass();
             $grade->userid = $userid;
@@ -442,7 +444,6 @@ function game_update_grades($game=null, $userid = 0, $nullifnone = true) {
         } else {
             game_grade_item_update($game);
         }
-
     } else {
         $sql = "SELECT a.*, cm.idnumber as cmidnumber, a.course as courseid
                   FROM {game} a, {course_modules} cm, {modules} m
@@ -468,7 +469,7 @@ function game_update_grades($game=null, $userid = 0, $nullifnone = true) {
  * @param stdClass $grades
  * @return int 0 if ok, error code otherwise
  */
-function game_grade_item_update($game, $grades=null) {
+function game_grade_item_update($game, $grades = null) {
     global $CFG;
 
     if (!function_exists('grade_update')) { // Workaround for buggy PHP versions.
@@ -489,7 +490,6 @@ function game_grade_item_update($game, $grades=null) {
         $params['gradetype'] = GRADE_TYPE_VALUE;
         $params['grademax'] = $game->grade;
         $params['grademin'] = 0;
-
     } else {
         $params['gradetype'] = GRADE_TYPE_NONE;
     }
@@ -512,8 +512,8 @@ function game_grade_item_update($game, $grades=null) {
 function game_grade_item_delete($game) {
     global $CFG;
 
-    if (file_exists($CFG->libdir.'/gradelib.php')) {
-        require_once($CFG->libdir.'/gradelib.php');
+    if (file_exists($CFG->libdir . '/gradelib.php')) {
+        require_once($CFG->libdir . '/gradelib.php');
     } else {
         return;
     }
@@ -646,7 +646,7 @@ function game_print_recent_mod_activity($activity, $courseid, $detail, $modnames
     if ($detail) {
         $modname = $modnames[$activity->type];
         echo '<div class="title">';
-        echo "<img src=\"$CFG->modpixpath/{$activity->type}/icon.gif\" ".
+        echo "<img src=\"$CFG->modpixpath/{$activity->type}/icon.gif\" " .
              "class=\"icon\" alt=\"$modname\" />";
         echo "<a href=\"{$CFG->wwwroot}/mod/game/view.php?id={$activity->cmid}\">{$activity->name}</a>";
         echo '</div>';
@@ -740,7 +740,7 @@ function game_supports(string $feature) {
 function game_get_extra_capabilities(): array {
     global $DB, $CFG;
 
-    require_once($CFG->libdir.'/questionlib.php');
+    require_once($CFG->libdir . '/questionlib.php');
     $caps = question_get_all_capabilities();
     $reportcaps = $DB->get_records_select_menu('capabilities', 'name LIKE ?', ['quizreport/%'], 'id,name');
     $caps = array_merge($caps, $reportcaps);
@@ -770,15 +770,16 @@ function game_num_attempt_summary(stdClass $game, stdClass $cm, bool $returnzero
             $a = new stdClass();
             $a->total = $numattempts;
             if ($currentgroup) {
-                $a->group = $DB->count_records_sql('SELECT count(1) FROM ' .
-                        '{game_attempts} qa JOIN ' .
-                        '{groups_members} gm ON qa.userid = gm.userid ' .
-                        'WHERE gameid = ? AND preview = 0 AND groupid = ?',
+                $a->group = $DB->count_records_sql(
+                    'SELECT count(1) FROM ' .
+                    '{game_attempts} qa JOIN ' .
+                    '{groups_members} gm ON qa.userid = gm.userid ' .
+                    'WHERE gameid = ? AND preview = 0 AND groupid = ?',
                     [$game->id, $currentgroup]
                 );
                 return get_string('attemptsnumthisgroup', 'quiz', $a);
             } else if ($groups = groups_get_all_groups($cm->course, $USER->id, $cm->groupingid)) {
-                list($usql, $params) = $DB->get_in_or_equal(array_keys($groups));
+                [$usql, $params] = $DB->get_in_or_equal(array_keys($groups));
                 $a->group = $DB->count_records_sql(
                     'SELECT count(1) FROM ' .
                     '{game_attempts} qa JOIN ' .
@@ -955,7 +956,7 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
 
         switch ($game->gamekind) {
             case 'bookquiz':
-                $url = new moodle_url('/mod/game/bookquiz/questions.php',  ['q' => $PAGE->cm->instance]);
+                $url = new moodle_url('/mod/game/bookquiz/questions.php', ['q' => $PAGE->cm->instance]);
                 $exportnode = $gamenode->add(
                     get_string('bookquiz_questions', 'game'),
                     $url,
@@ -976,7 +977,7 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
                     navigation_node::TYPE_SETTING,
                     null,
                     null,
-                    new pix_icon('i/item','')
+                    new pix_icon('i/item', '')
                 );
 
                 $url = new moodle_url('/mod/game/export.php', ['id' => $PAGE->cm->id,
@@ -1002,9 +1003,8 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
                         navigation_node::TYPE_SETTING,
                         null,
                         null,
-                        new pix_icon('i/item', ''
-                    )
-                );
+                        new pix_icon('i/item', '')
+                    );
                 break;
         }
     }

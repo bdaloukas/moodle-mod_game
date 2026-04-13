@@ -247,8 +247,8 @@ function game_cross_play(
         }
         if (game_can_start_new_attempt($game)) {
             echo '<br>';
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">".
-                get_string('nextgame', 'game').'</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">" .
+                get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     } else if ($info != '') {
         if ($print === false) {
@@ -976,7 +976,7 @@ function CheckHtmlClick() {
         echo '<div style="margin-top: 1em;">';
 
         if (!$done) {
-            echo '<button id="checkbutton" type="button" onclick="CheckServerClick(0);" style="display: inline;">'.
+            echo '<button id="checkbutton" type="button" onclick="CheckServerClick(0);" style="display: inline;">' .
             get_string('cross_checkbutton', 'game');
             echo '</button>';
 
@@ -988,7 +988,7 @@ function CheckHtmlClick() {
 
         if ($game->param5 == 1 || $game->param5 == null) {
             echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" ' .
-            ' onclick="OnPrint(0);" style="display: inline;">'.get_string('print', 'game');
+            ' onclick="OnPrint(0);" style="display: inline;">' . get_string('print', 'game');
             echo '</button>';
         }
 
@@ -1021,7 +1021,7 @@ function CheckHtmlClick() {
     }
 
     if ($game->bottomtext != '') {
-        echo '<br><br>'.$game->bottomtext;
+        echo '<br><br>' . $game->bottomtext;
     }
 
     if ($attempt != false) {
