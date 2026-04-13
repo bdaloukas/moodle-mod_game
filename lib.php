@@ -755,7 +755,7 @@ function game_get_extra_capabilities(): array {
  * @param stdClass $game the game object. Only $game->id is used at the moment.
  * @param stcClass $cm the cm object. Only $cm->course, $cm->groupmode and $cm->groupingid fields are used at the moment.
  * @param bool $returnzero if false (default), when no attempts have been made '' is returned instead of 'Attempts: 0'.
- * @param int $currentgroup if there is a concept of current group (e.g. a report) pass it in here. Default 0 which means no current group.
+ * @param int $currentgroup if there is a concept of current group pass it in here. Default 0 which means no current group.
  * @return string a string like "Attempts: 123", "Attemtps 123 (45 from your groups)"
  */
 function game_num_attempt_summary(stdClass $game, stdClass $cm, bool $returnzero = false, int $currentgroup = 0) {

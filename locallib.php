@@ -858,7 +858,6 @@ function game_questions_shortanswer_quiz($game) {
         $table = "{quiz_slots} qs,{$CFG->prefix}question_references qr";
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql($sql);
-        $ret = [];
         $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q " .
             " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         foreach ($recs as $rec) {
