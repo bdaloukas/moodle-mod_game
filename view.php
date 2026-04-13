@@ -98,8 +98,8 @@ $title = $course->shortname . ': ' . format_string($game->name);
 
 if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
     $buttons = '<table><tr><td><form method="get" action="view.php"><div>' .
-        '<input type="hidden" name="id" value="'.$cm->id.'" />' .
-        '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on') . '" />'.
+        '<input type="hidden" name="id" value="' . $cm->id . '" />' .
+        '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on') . '" />' .
         '<input type="submit" value="' .
         get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton') .
         '" /></div></form></td></tr></table>';
@@ -277,7 +277,7 @@ if ($numattempts && $gradecolumn && !is_null($mygrade)) {
 
     if ($gradebookfeedback) {
         $resultinfo .= $OUTPUT->heading(get_string('comment', 'game'), 3, 'main');
-        $resultinfo .= '<p class="gameteacherfeedback">' . $gradebookfeedback."</p>\n";
+        $resultinfo .= '<p class="gameteacherfeedback">' . $gradebookfeedback . "</p>\n";
     }
 
     if ($resultinfo) {

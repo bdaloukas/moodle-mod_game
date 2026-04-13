@@ -136,7 +136,7 @@ function game_onexporthtml_cross_repair_questions($game, $context, $filename, $d
     $files = $linesbefore = $linesafter = [];
     $contextcourse = false;
 
-    while (!feof($filehandle) ) {
+    while (!feof($filehandle)) {
         $line = fgets($filehandle);
 
         if ($found) {
@@ -208,7 +208,7 @@ function game_onexporthtml_cross_repair_questions($game, $context, $filename, $d
         $filenoext = substr($fileimage, $posext);
         $ext = substr($fileimage, $posext + 1);
         for ($i = 0;; $i++) {
-            $newfile = $filenoext.$i;
+            $newfile = $filenoext . $i;
             $newfile = md5($newfile) . '.' . $ext;
             if (!array_search($newfile, $files)) {
                 break;
@@ -232,9 +232,9 @@ function game_onexporthtml_cross_repair_questions($game, $context, $filename, $d
 
     $pos = strrpos($filename, '.');
     if ($pos === false) {
-        $filezip = $filename.'.zip';
+        $filezip = $filename . '.zip';
     } else {
-        $filezip = substr($filename, 0, $pos).'.zip';
+        $filezip = substr($filename, 0, $pos) . '.zip';
     }
 
     $filezip = game_create_zip($destdir, $game->course, $filezip);
@@ -372,11 +372,11 @@ function game_onexporthtml_millionaire($game, $context, $html, $destdir) {
     file_put_contents($destdir . '/' . $filename, $ret . "\r\n" . $outputstring);
 
     // Copy the standard pictures of Millionaire.
-    $src = $CFG->dirroot.'/mod/game/pix/millionaire/1';
+    $src = $CFG->dirroot . '/mod/game/pix/millionaire/1';
     $handle = opendir($src);
     while (false !== ($item = readdir($handle))) {
         if ($item != '.' && $item != '..') {
-            if (!is_dir($src.'/'.$item)) {
+            if (!is_dir($src . '/' . $item)) {
                 $itemdest = $item;
 
                 if (strpos($item, '.') === false) {
@@ -388,7 +388,7 @@ function game_onexporthtml_millionaire($game, $context, $html, $destdir) {
         }
     }
 
-    $filezip = game_create_zip($destdir, $courseid, $html->filename.'.zip');
+    $filezip = game_create_zip($destdir, $courseid, $html->filename . '.zip');
     game_send_stored_file($filezip);
 }
 
@@ -453,7 +453,7 @@ function game_onexporthtml_snakes($game, $html, $destdir, $context) {
 
     mkdir($destdir . '/css');
     $src = $CFG->dirroot . '/mod/game/export/html/snakes/css';
-    game_copyfiles($src, $destdir. '/css');
+    game_copyfiles($src, $destdir . '/css');
 
     mkdir($destdir . '/js');
     $src = $CFG->dirroot . '/mod/game/export/html/snakes/js';

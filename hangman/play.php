@@ -347,7 +347,7 @@ function game_hangman_play($cm, $game, $attempt, $hangman, $onlyshow, $showsolut
             $percent = 0;
         }
         $score = $hangman->corrects / $hangman->maxtries + $percent / $hangman->maxtries;
-        echo '<br/><br/>' . get_string('hangman_gradeinstance', 'game') . ' : '.
+        echo '<br/><br/>' . get_string('hangman_gradeinstance', 'game') . ' : ' .
             round($score * 100) . ' %';
     }
 
@@ -379,7 +379,8 @@ function game_hangman_play($cm, $game, $attempt, $hangman, $onlyshow, $showsolut
 function hangman_showpage(
     &$done,
     &$correct,
-    &$wrong, $max,
+    &$wrong,
+    $max,
     &$wordline,
     &$wordline2,
     &$links,

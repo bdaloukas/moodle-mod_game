@@ -1313,16 +1313,15 @@ if (defined('GAME_MOODLE_401')) {
      * Helper function for mod_game_get_course_content_items.
      * It is called for every game of module Game.
      *
-     * @param content_item $defaultmodulecontentitem reference to the content item for the LTI module.
-     * @param stdClass $user the user object, to use for cap checks if desired.
-     * @param stdClass $course the course to scope items to.
-     * @param array &$types
-     * @param string $kind the kind of each game.
+     * @param \core_course\local\entity\content_item $defaultmodulecontentitem Reference to the content item for the LTI module.
+     * @param \stdClass $user The user object, to use for cap checks if desired.
+     * @param \stdClass $course The course to scope items to.
+     * @param array $types
+     * @param string $kind The kind of each game.
      * @throws \core\exception\moodle_exception
      * @throws coding_exception
      * @throws dml_exception
-     */
-    function mod_game_get_course_content_items_type(
+     */    function mod_game_get_course_content_items_type(
         content_item $defaultmodulecontentitem,
         stdClass $user,
         stdClass $course,

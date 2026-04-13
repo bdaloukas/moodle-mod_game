@@ -85,8 +85,10 @@ function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$cou
         $line = game_export_split_files($game->course, $context, 'questiontext', $rec->id, $rec->questiontext, $destdir, $files);
         $linefeedback = '';
         foreach ($recs2 as $rec2) {
-            $line .= '#' . str_replace(['"', '#'], ["'", ' '],
-                game_export_split_files($game->course, $context, 'answer', $rec2->id, $rec2->answer, $destdir, $files));
+            $line .= '#' . str_replace(
+                    ['"', '#'], ["'", ' '],
+                    game_export_split_files($game->course, $context, 'answer', $rec2->id, $rec2->answer, $destdir, $files)
+                    );
             $linefeedback .= '#' . str_replace(['"', '#'], ["'", ' '], $rec2->feedback);
         }
         if ($ret != '') {
@@ -128,7 +130,7 @@ function game_millionaire_html_print($game, $questions, $maxquestions) {
 <script type="text/javascript">
 
     // Millionaire for Moodle by Vasilis Daloukas.
-    <?php echo 'var questions = new Array('.$questions.");\r"; ?>
+    <?php echo 'var questions = new Array(' . $questions . ");\r"; ?>
     var current_question = 0;
     var level = 0;
     var posCorrect = 0;
