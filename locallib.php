@@ -783,14 +783,14 @@ function game_questions_shortanswer($game) {
         case 'glossary':
             $recs = game_questions_shortanswer_glossary($game);
             break;
-        case 'quiz';
+        case 'quiz':
             $recs = game_questions_shortanswer_quiz($game);
             break;
-        case 'question';
+        case 'question':
             $recs = game_questions_shortanswer_question($game);
             break;
         default:
-            throw new moodle_exception('game_error', 'game', 'No sourcemodule '.$game->sourcemodule);
+            throw new moodle_exception('game_error', 'game', 'No sourcemodule ' . $game->sourcemodule);
     }
 
     return $recs;
@@ -845,7 +845,7 @@ function game_questions_shortanswer_quiz($game) {
     }
 
     if (game_get_moodle_version() < '02.07') {
-        $select = "qtype='shortanswer' AND quiz='$game->quizid' ".
+        $select = "qtype='shortanswer' AND quiz='$game->quizid' " .
             " AND qqi.question=q.id" .
             " AND qa.question=q.id" .
             " AND q.hidden=0";
@@ -871,7 +871,7 @@ function game_questions_shortanswer_quiz($game) {
         if ($a == null || count($a) == 0) {
             $a = [0];
         }
-        $select = "qtype='shortanswer' AND q.id IN (".implode(',', $a).')' .
+        $select = "qtype='shortanswer' AND q.id IN (" . implode(',', $a).')' .
             " AND qa.question=q.id";
         $table = "{question} q,{question_answers} qa";
         $fields = "qa.id as qaid, q.id, q.questiontext as questiontext, " .
@@ -2676,7 +2676,7 @@ function game_question_get_id_from_name_prefix($name) {
     if (!preg_match('/^resp([0-9]+)_/', $name, $matches)) {
         return false;
     }
-    return (integer)$matches[1];
+    return (int)$matches[1];
 }
 
 /**

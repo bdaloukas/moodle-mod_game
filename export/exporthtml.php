@@ -328,7 +328,7 @@ function game_onexporthtml_hangman($game, $context, $html, $destdir) {
         }
     }
 
-    $filezip = game_create_zip($destdir, $courseid, $html->filename.'.zip');
+    $filezip = game_create_zip($destdir, $courseid, $html->filename . '.zip');
     game_send_stored_file($filezip);
 }
 

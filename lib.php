@@ -1321,7 +1321,8 @@ if (defined('GAME_MOODLE_401')) {
      * @throws \core\exception\moodle_exception
      * @throws coding_exception
      * @throws dml_exception
-     */    function mod_game_get_course_content_items_type(
+     */
+    function mod_game_get_course_content_items_type(
         content_item $defaultmodulecontentitem,
         stdClass $user,
         stdClass $course,

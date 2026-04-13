@@ -543,7 +543,7 @@ class Cross {
         $n2200 = $n2222 - $n22;
 
         $ret = "<table border=0 cellpadding=2 cellspacing=1><tr>";
-        for ($n = 0;; $n ++) {
+        for ($n = 0;; $n++) {
             $c = game_substr($puzzle, $n, 1);
 
             if (($m = $n % $n22) == 0 || $m == $n21 || $n < $n22 || $n > $n2200) {
