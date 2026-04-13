@@ -96,11 +96,11 @@ foreach ($map as $line) {
     if ($words != '') {
         $words .= ', ';
     }
-    $questions .= '"'.base64_encode($line->question).'"';
-    $words .= '"'.base64_encode($line->answer).'"';
+    $questions .= '"' . base64_encode($line->question) . '"';
+    $words .= '"' . base64_encode($line->answer) . '"';
 
     if ($html->type == 'hangmanp') {
-        $file = $line->id.substr($file, $pos);
+        $file = $line->id . substr($file, $pos);
         game_export_javame_smartcopyimage($src, $destdir . '/' . $file, $html->maxpicturewidth, $html->maxpictureheight);
 
         if ($images != '') {
@@ -222,7 +222,7 @@ function reset() {
 
 <?php
 if ($html->type != 'hangmanp') {
-    echo '    document.hm.src="hangman_0.jpg"'."\r";
+    echo '    document.hm.src="hangman_0.jpg"' . "\r";
 }
 ?>
 

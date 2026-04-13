@@ -162,8 +162,8 @@ function game_bookquiz_play($cm, $game, $attempt, $bookquiz, $chapterid, $contex
     if ($nextid) {
         if ($questionid == 0) {
             $chnavigation .= '<a title="' . get_string('navnext', 'book') . '" href="attempt.php?id=' .
-            $cm->id.'&chapterid=' . $nextid . '"><img src="' .
-            game_pix_url('bookquiz/nav_next', 'mod_game') . '" class="bigicon" alt="'.get_string('navnext', 'book') . '" ></a>';
+            $cm->id . '&chapterid=' . $nextid . '"><img src="' .
+            game_pix_url('bookquiz/nav_next', 'mod_game') . '" class="bigicon" alt="' . get_string('navnext', 'book') . '" ></a>';
             $nextbutton = '<center>';
             $nextbutton .= '<form name="form" method="get" action="attempt.php">';
             $nextbutton .= '<input type="hidden" name="id" value="' . $cm->id . '" >' . "\r\n";
@@ -318,7 +318,8 @@ function game_bookquiz_showquestions($id, $questionid, $chapterid, $nextchapteri
     echo "<form id=\"responseform\" method=\"post\" action=\"{$CFG->wwwroot}/mod/game/attempt.php\" " .
          " onclick=\"this.autocomplete='off'\">\n";
     if (($onlyshow === false) && ($showsolution === false)) {
-        echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
+        echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" .
+                get_string('sudoku_submit', 'game') . "\"></center>\n";
     }
 
     // Add a hidden field with the quiz id.

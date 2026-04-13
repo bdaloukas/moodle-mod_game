@@ -97,11 +97,11 @@ if ($edit != -1 && $PAGE->user_allowed_editing()) {
 $title = $course->shortname . ': ' . format_string($game->name);
 
 if ($PAGE->user_allowed_editing() && !empty($CFG->showblocksonmodpages)) {
-    $buttons = '<table><tr><td><form method="get" action="view.php"><div>'.
-        '<input type="hidden" name="id" value="'.$cm->id.'" />'.
-        '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on').'" />'.
-        '<input type="submit" value="'.
-        get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton').
+    $buttons = '<table><tr><td><form method="get" action="view.php"><div>' .
+        '<input type="hidden" name="id" value="'.$cm->id.'" />' .
+        '<input type="hidden" name="edit" value="'.($PAGE->user_is_editing() ? 'off' : 'on') . '" />'.
+        '<input type="submit" value="' .
+        get_string($PAGE->user_is_editing() ? 'blockseditoff' : 'blocksediton') .
         '" /></div></form></td></tr></table>';
     $PAGE->set_button($buttons);
 }
@@ -116,7 +116,7 @@ echo $OUTPUT->heading(format_string($game->name));
 
 // Display information about this game.
 echo $OUTPUT->box_start('quizinfo');
-echo $game->intro.'<br>';
+echo $game->intro . '<br>';
 if ($game->attempts != 1) {
     echo get_string('gradingmethod', 'quiz', game_get_grading_option_name($game->grademethod));
 }
@@ -127,7 +127,7 @@ if (has_capability('mod/game:viewreports', $context)) {
     if ($strattemptnum = game_get_user_attempts($game->id, $USER->id)) {
         echo get_string('attempts', 'game') . ': ' . count($strattemptnum);
         if ($game->maxattempts) {
-            echo ' (' . get_string('max', 'quiz') . ': ' . $game->maxattempts.')';
+            echo ' (' . get_string('max', 'quiz') . ': ' . $game->maxattempts . ')';
         }
     }
 }
@@ -168,7 +168,7 @@ if ($attempts) {
     echo $OUTPUT->heading(get_string('summaryofattempts', 'quiz'));
 
     // Work out which columns we need, taking account what data is available in each attempt.
-    list($someoptions, $alloptions) = game_get_combined_reviewoptions($game, $attempts, $context);
+    [$someoptions, $alloptions] = game_get_combined_reviewoptions($game, $attempts, $context);
 
     $attemptcolumn = $game->attempts != 1;
 
@@ -235,9 +235,11 @@ if ($attempts) {
             if ($attemptoptions->scores) {
                 $formattedgrade = game_format_grade($game, $attemptgrade);
                 // Highlight the highest grade if appropriate.
-                if ($overallstats && !$attempt->preview && $numattempts > 1 && !is_null($mygrade) &&
-                    $attemptgrade == $mygrade && $game->grademethod == QUIZ_GRADEHIGHEST) {
-                        $table->rowclasses[$attempt->attempt] = 'bestrow';
+                if (
+                    $overallstats && !$attempt->preview && $numattempts > 1 && !is_null($mygrade) &&
+                    $attemptgrade == $mygrade && $game->grademethod == QUIZ_GRADEHIGHEST
+                ) {
+                    $table->rowclasses[$attempt->attempt] = 'bestrow';
                 }
 
                 $row[] = $formattedgrade;
@@ -262,7 +264,7 @@ if ($numattempts && $gradecolumn && !is_null($mygrade)) {
     $resultinfo = '';
 
     if ($overallstats) {
-        $a = new stdClass;
+        $a = new stdClass();
         $a->grade = game_format_grade($game, $mygrade);
         $a->maxgrade = game_format_grade($game, $game->grade);
         $a = get_string('outofshort', 'quiz', $a);
@@ -270,12 +272,12 @@ if ($numattempts && $gradecolumn && !is_null($mygrade)) {
     }
 
     if ($mygradeoverridden) {
-        $resultinfo .= '<p class="overriddennotice">'.get_string('overriddennotice', 'grades')."</p>\n";
+        $resultinfo .= '<p class="overriddennotice">' . get_string('overriddennotice', 'grades') . "</p>\n";
     }
 
     if ($gradebookfeedback) {
         $resultinfo .= $OUTPUT->heading(get_string('comment', 'game'), 3, 'main');
-        $resultinfo .= '<p class="gameteacherfeedback">'.$gradebookfeedback."</p>\n";
+        $resultinfo .= '<p class="gameteacherfeedback">' . $gradebookfeedback."</p>\n";
     }
 
     if ($resultinfo) {
@@ -318,7 +320,7 @@ if ($buttontext) {
 
     // Show the start button, in a div that is initially hidden.
     echo '<div id="gamestartbuttondiv">';
-    $url = new moodle_url($CFG->wwwroot.'/mod/game/attempt.php', ['id' => $id]);
+    $url = new moodle_url($CFG->wwwroot . '/mod/game/attempt.php', ['id' => $id]);
     $button = new single_button($url, $buttontext);
     echo $OUTPUT->render($button);
     echo "</div>\n";

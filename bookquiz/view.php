@@ -133,12 +133,12 @@ if ($previd) {
         '&amp;chapterid=' . $previd . '"><img src="' . $OUTPUT->pix_url('bookquiz/nav_prev', 'mod_game') .
         '" class="bigicon" alt="' . get_string('navprev', 'book') . '"/></a>';
 } else {
-    $chnavigation .= '<img src="' . $OUTPUT->pix_url('bookquiz/nav_prev_dis', 'mod_game').'" class="bigicon" alt="" />';
+    $chnavigation .= '<img src="' . $OUTPUT->pix_url('bookquiz/nav_prev_dis', 'mod_game') . '" class="bigicon" alt="" />';
 }
 
 if ($nextid) {
-    $chnavigation .= '<a title="' . get_string('navnext', 'book') . '" href="view.php?id=' . $cm->id.
-        '&amp;chapterid=' . $nextid . '"><img src="' . $OUTPUT->pix_url('bookquiz/nav_next', 'mod_game').
+    $chnavigation .= '<a title="' . get_string('navnext', 'book') . '" href="view.php?id=' . $cm->id .
+        '&amp;chapterid=' . $nextid . '"><img src="' . $OUTPUT->pix_url('bookquiz/nav_next', 'mod_game') .
         '" class="bigicon" alt="' . get_string('navnext', 'book') . '" /></a>';
 } else {
     $sec = '';

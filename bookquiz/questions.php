@@ -129,6 +129,8 @@ echo $OUTPUT->footer($course);
  * Save infos to database.
  *
  * @package mod_game
+ * @copyright 2007 Vasilis Daloukas
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  *
  * @param int $gameid
  * @param int $bookid
@@ -141,7 +143,7 @@ function game_bookquiz_save($gameid, $bookid, $ids, $form) {
     global $DB;
 
     $questions = $recids = [];
-    $recs = $DB->get_records('game_bookquiz_questions', ['gameid' => $gameid], '', 'id,chapterid,questioncategoryid'));
+    $recs = $DB->get_records('game_bookquiz_questions', ['gameid' => $gameid], '', 'id,chapterid,questioncategoryid');
     if ($recs != false) {
         foreach ($recs as $rec) {
             $questions[$rec->chapterid] = $rec->questioncategoryid;

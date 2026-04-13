@@ -32,7 +32,6 @@
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  **/
 class CrossDB extends Cross {
-
     /** @var int length horizontal. */
     public $mlegendh;
     /** @var int Length vertical. */
@@ -245,7 +244,7 @@ class CrossDB extends Cross {
                 ($correctletters > 1 ? get_string('cross_corrects', 'game') : get_string('cross_correct', 'game'));
         }
         if ($wrongletters) {
-            $a[] = '<b>'.$wrongletters . ' ' .
+            $a[] = '<b>' . $wrongletters . ' ' .
                 ($wrongletters > 1 ? get_string('cross_errors', 'game') : get_string('cross_error', 'game')) . '</b>';
         }
 

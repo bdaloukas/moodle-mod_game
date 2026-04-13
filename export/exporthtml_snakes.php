@@ -119,7 +119,7 @@ echo 'var countofquestionsS=' . count($questionss) . ";\r\n";
 
 $questionsm = '';
 foreach ($questionss as $line) {
-    $s = $line->question.'#'.str_replace(['"', '#'], ["'", ' '], $line->answer);
+    $s = $line->question . '#' . str_replace(['"', '#'], ["'", ' '], $line->answer);
     if ($questionsm != '') {
         $questionsm .= ",\r";
     }

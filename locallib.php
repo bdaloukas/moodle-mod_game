@@ -80,7 +80,7 @@ function game_get_moodle_version() {
  * @param string $lang
  * @return string the uppercase of $str
  */
-function game_upper($str, $lang='') {
+function game_upper($str, $lang = '') {
     if ($lang == 'user') {
         return $str;
     }
@@ -116,7 +116,7 @@ function game_upper($str, $lang='') {
  *
  * @return string the HTML
  */
-function game_showselectcontrol($name, $a,  $input, $events = '') {
+function game_showselectcontrol($name, $a, $input, $events = '') {
     $ret = "<select id=\"$name\" name=\"$name\" $events>";
 
     foreach ($a as $key => $caption) {
@@ -208,8 +208,8 @@ function game_question_shortanswer_glossary($game, $allowspaces, $userepetitions
         return false;
     }
 
-    $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, '.
-            ' 0 as questionid, glossaryid, attachment, 0 as answerid'.
+    $sql = 'SELECT id, concept as answertext, definition as questiontext, id as glossaryentryid, ' .
+            ' 0 as questionid, glossaryid, attachment, 0 as answerid' .
            " FROM {glossary_entries} ge WHERE id = $id";
     if (($rec = $DB->get_record_sql($sql)) == false) {
         return false;
@@ -239,7 +239,7 @@ function game_question_shortanswer_quiz($game, $allowspaces, $userepetitions) {
     }
 
     if (game_get_moodle_version() < '02.07') {
-        $select = "qtype='shortanswer' AND quiz='$game->quizid' ".
+        $select = "qtype='shortanswer' AND quiz='$game->quizid' " .
             " AND qqi.question=q.id";
         $table = "{question} q,{quiz_question_instances} qqi";
     } else if (game_get_moodle_version() >= '04.00') {
@@ -248,7 +248,7 @@ function game_question_shortanswer_quiz($game, $allowspaces, $userepetitions) {
         $sql = "SELECT qr.questionbankentryid FROM $table WHERE $select";
         $recs = $DB->get_records_sql($sql);
         $ret = [];
-        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q ".
+        $sql = "SELECT q.* FROM {$CFG->prefix}question_versions qv, {$CFG->prefix}question q " .
             " WHERE qv.questionid=q.id AND qv.questionbankentryid=? ORDER BY version DESC";
         foreach ($recs as $rec) {
             $recsq = $DB->get_records_sql($sql, [$rec->questionbankentryid], 0, 1);
@@ -260,7 +260,7 @@ function game_question_shortanswer_quiz($game, $allowspaces, $userepetitions) {
         if (count($a) == 0) {
             $select = 'q.id IN (0)';
         } else {
-            $select = 'q.id IN ('.implode(',', $a).')';
+            $select = 'q.id IN (' . implode(',', $a) . ')';
         }
     } else {
         $select = "qtype='shortanswer' AND qs.quizid='$game->quizid' ".
@@ -278,8 +278,8 @@ function game_question_shortanswer_quiz($game, $allowspaces, $userepetitions) {
         $select .= ' AND q.hidden=0 ';
     }
     $table = "{question} q,{question_answers} qa";
-    $fields = "qa.id as answerid, q.id, q.questiontext as questiontext, ".
-        "qa.answer as answertext, q.id as questionid, ".
+    $fields = "qa.id as answerid, q.id, q.questiontext as questiontext, " .
+        "qa.answer as answertext, q.id as questionid, " .
         "0 as glossaryentryid, '' as attachment";
 
     // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
@@ -318,7 +318,7 @@ function game_question_shortanswer_question($game, $allowspaces, $userepetitions
             $cats = question_categorylist($game->questioncategoryid);
             if (count($cats) > 0) {
                 $s = implode(',', $cats);
-                $select = 'qbe.questioncategoryid in ('.$s.')';
+                $select = 'qbe.questioncategoryid in (' . $s . ')';
             }
         }
     } else {
@@ -326,7 +326,7 @@ function game_question_shortanswer_question($game, $allowspaces, $userepetitions
         if ($game->subcategories) {
             $cats = question_categorylist($game->questioncategoryid);
             if (count($cats) > 0) {
-                $select = 'category in ('.implode(',', $cats).')';
+                $select = 'category in (' . implode(',', $cats) . ')';
             }
         }
     }
@@ -345,8 +345,8 @@ function game_question_shortanswer_question($game, $allowspaces, $userepetitions
     }
 
     $table = "{question} q,{question_answers} qa";
-    $fields = "qa.id as answerid, q.id, q.questiontext as questiontext, ".
-        "qa.answer as answertext, q.id as questionid, ".
+    $fields = "qa.id as answerid, q.id, q.questiontext as questiontext, " .
+        "qa.answer as answertext, q.id as questionid, " .
         "0 as glossaryentryid, '' as attachment";
 
     // Maybe there are more answers to one question. I use as correct the one with bigger fraction.
@@ -372,7 +372,7 @@ function game_question_shortanswer_question($game, $allowspaces, $userepetitions
  *
  * @return stdClass the random question
  */
-function game_question_selectrandom($game, $table, $select, $idfields='id', $userepetitions=true) {
+function game_question_selectrandom($game, $table, $select, $idfields = 'id', $userepetitions = true) {
     global $DB, $USER;
 
     $count = $DB->get_field_sql("SELECT COUNT(*) FROM $table WHERE $select");
@@ -386,7 +386,7 @@ function game_question_selectrandom($game, $table, $select, $idfields='id', $use
     for ($i = 1; $i <= CONST_GAME_TRIES_REPETITION; $i++) {
         $sel = mt_rand(0, $count - 1);
 
-        $sql = "SELECT $idfields, $idfields FROM ".$table." WHERE $select";
+        $sql = "SELECT $idfields, $idfields FROM " . $table . " WHERE $select";
         if (($recs = $DB->get_records_sql($sql, null, $sel, 1)) == false) {
             return false;
         }
@@ -488,7 +488,7 @@ function game_update_repetitions($gameid, $userid, $questionid, $glossaryentryid
  *
  * @return stdClass the random record(s)
  */
-function game_questions_selectrandom($game, $count=1) {
+function game_questions_selectrandom($game, $count = 1) {
     global $CFG, $DB;
 
     $useversion = false;
@@ -500,8 +500,8 @@ function game_questions_selectrandom($game, $count=1) {
             }
             if (game_get_moodle_version() < '02.07') {
                 $table = '{question} q, {quiz_question_instances} qqi';
-                $select = " qqi.quiz=$game->quizid".
-                    " AND qqi.question=q.id ".
+                $select = " qqi.quiz=$game->quizid" .
+                    " AND qqi.question=q.id " .
                     " AND q.qtype in ('shortanswer', 'truefalse', 'multichoice')";
             } else if (game_get_moodle_version() >= '04.00') {
                 $select = "qs.quizid='$game->quizid' AND qs.id=qr.itemid ";
@@ -916,7 +916,7 @@ function game_questions_shortanswer_question($game) {
         if ($game->subcategories) {
             $cats = question_categorylist($game->questioncategoryid);
             if (count($cats) > 0) {
-                $select = 'qbe.questioncategoryid in ('.implode(',', $cats).')';
+                $select = 'qbe.questioncategoryid in (' . implode(',', $cats) . ')';
             }
         }
     } else {
@@ -957,7 +957,7 @@ function game_questions_shortanswer_question_fraction($table, $fields, $select, 
 
     $versions = $useversion ? game_get_moodle_version() >= '04.00' : false;
 
-    $order = ($versions ? 'version DESC,' : '').'fraction';
+    $order = ($versions ? 'version DESC,' : '') . 'fraction';
     $sql = "SELECT $fields FROM $table WHERE $select ORDER BY $order DESC";
 
     $recs = $DB->get_records_sql($sql);
@@ -1254,13 +1254,13 @@ function game_get_user_attempts($gameid, $userid, $status = 'finished') {
     global $DB;
 
     $statuscondition = ['all' => '', 'finished' => ' AND timefinish > 0', 'unfinished' => ' AND timefinish = 0'];
-    if ($attempts = $DB->get_records_select(
-            'game_attempts',
-            "gameid = ? AND userid = ? AND preview = 0" . $statuscondition[$status],
-            [$gameid, $userid],
-            'attempt ASC'
-        )
-    ) {
+    $attempts = $DB->get_records_select(
+        'game_attempts',
+        "gameid = ? AND userid = ? AND preview = 0" . $statuscondition[$status],
+        [$gameid, $userid],
+        'attempt ASC'
+    );
+    if ($attempts !== false) {
         return $attempts;
     } else {
         return [];
@@ -1420,9 +1420,9 @@ function game_compute_attempt_layout($game, &$attempt) {
     if ($recs) {
         foreach ($recs as $rec) {
             if ($rec->sourcemodule == 'glossary') {
-                $ret .= $rec->glossaryentryid.'G,';
+                $ret .= $rec->glossaryentryid .'G,';
             } else {
-                $ret .= $rec->questionid.',';
+                $ret .= $rec->questionid . ',';
             }
         }
     }
@@ -1752,11 +1752,11 @@ function game_filterquestion($questiontext, $questionid, $contextid, $courseid) 
 
         $file = substr($questiontext, $pos2 + 1, $pos3 - $pos2 - 1);
 
-        $new = $CFG->wwwroot."/pluginfile.php/$contextid/mod_game/questiontext/$questionid/$file";
+        $new = $CFG->wwwroot . "/pluginfile.php/$contextid/mod_game/questiontext/$questionid/$file";
         $questiontext = substr($questiontext, 0, $pos).$new.substr($questiontext, $pos3);
     }
 
-    $questiontext = str_replace('$$'.'\\'.'\\'.'frac', '$$\\'.'frac', $questiontext);
+    $questiontext = str_replace('$$' . '\\' . '\\' . 'frac', '$$\\' . 'frac', $questiontext);
     return game_filtertext($questiontext, $courseid);
 }
 
@@ -2191,7 +2191,7 @@ function game_print_question_multichoice($game, $question, $context) {
     $row = 1;
     foreach ($anss as $answer) {
     ?>
-        <tr class="<?php echo 'r'.$row = $row ? 0 : 1; ?>">
+        <tr class="<?php echo 'r' . $row = $row ? 0 : 1; ?>">
             <td>
                 <?php echo $answer->control; ?>
             </td>
@@ -2229,7 +2229,7 @@ function game_print_question_multianswer($game, $question, $context) {
         }
         $a->answer = game_filterquestion_answer(str_replace('\"', '"', $a->answer), $a->id, $context->id, $game->course);
         $answer->control = "<input  id=\"resp{$question->id}_{$a->id}\" name=\"resp{$question->id}_{$a->id}\"  " .
-            " type=\"checkbox\" value=\"{$a->id}\" /> ".$a->answer;
+            " type=\"checkbox\" value=\"{$a->id}\" /> " . $a->answer;
         $answer->class = 'radio';
         $answer->id = $a->id;
         $answer->text = $a->answer;
@@ -2253,7 +2253,7 @@ function game_print_question_multianswer($game, $question, $context) {
     $row = 1;
     foreach ($anss as $answer) {
     ?>
-        <tr class="<?php echo 'r'.$row = $row ? 0 : 1; ?>">
+        <tr class="<?php echo 'r'.$row; ?>">
             <td>
                 <?php echo $answer->control; ?>
             </td>
@@ -2315,8 +2315,8 @@ function game_snakes_get_board($game) {
         if ($board == false) {
             throw new moodle_exception('game_error', 'game', 'No board');
         }
-        $board->imagesrc = $CFG->wwwroot.'/mod/game/snakes/boards/'.$board->fileboard;
-        [$board->width, $board->height] = getimagesize(__DIR__.'/snakes/boards/'.$board->fileboard);
+        $board->imagesrc = $CFG->wwwroot . '/mod/game/snakes/boards/' . $board->fileboard;
+        [$board->width, $board->height] = getimagesize(__DIR__ . '/snakes/boards/' . $board->fileboard);
     } else {
         // User defined board.
         $board = game_snakes_create_user_defined_board($game);
@@ -2355,8 +2355,18 @@ function game_snakes_create_user_defined_board(&$game) {
         if ($f === false) {
             throw new moodle_exception('game_error', 'game', 'No image specified');
         }
-        $im = game_createsnakesboard($f->get_content(), $board->usedcols, $board->usedrows, $board->headery, $board->headery,
-            $board->footerx, $board->headerx, $board->data, $board->width, $board->height);
+        $im = game_createsnakesboard(
+            $f->get_content(),
+            $board->usedcols,
+            $board->usedrows,
+            $board->headery,
+            $board->headery,
+            $board->footerx,
+            $board->headerx,
+            $board->data,
+            $board->width,
+            $board->height
+        );
         ob_start();
         imagepng($im);
         $data = ob_get_contents();
@@ -2375,7 +2385,7 @@ function game_snakes_create_user_defined_board(&$game) {
         $game->param7 = $imageinfo['height'];
         $sql = "UPDATE {$CFG->prefix}game SET param5=0,param6=$game->param6,param7=$game->param7 WHERE id=$game->id";
         if (!$DB->execute($sql)) {
-            error('problem in '.$sql);
+            error('problem in ' . $sql);
         }
     }
 
@@ -2441,7 +2451,7 @@ function game_export_createtempdir() {
 /**
  * Create zip
  *
- * @package mod_gam
+ * @package mod_game
  *
  * @param string $srcdir
  * @param int $courseid
@@ -2520,7 +2530,7 @@ function game_addattempt($game) {
         $_SESSION[$key] = $newid;
     }
 
-    return $DB->get_record_select('game_attempts', 'id='.$newid);
+    return $DB->get_record_select('game_attempts', 'id=' . $newid);
 }
 
 /**
@@ -2577,7 +2587,7 @@ function game_export_split_files($courseid, $context, $filearea, $id, $line, $de
         $ext = substr($file, $posext + 1);
         $oldfile = $CFG->wwwroot . "/pluginfile.php/$context->id/mod_game/$filearea/$id/$file";
         for ($i = 0;; $i++) {
-            $newfile = $filenoext.$i;
+            $newfile = $filenoext . $i;
             $newfile = md5($newfile) . '.' . $ext;
             if (!array_search($newfile, $files)) {
                 break;
@@ -2604,7 +2614,7 @@ function game_export_split_files($courseid, $context, $filearea, $id, $line, $de
         if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {
             continue;
         }
-        $file->copy_content_to($destdir.'/images/'.$newfile);
+        $file->copy_content_to($destdir . '/images/' . $newfile);
     }
 
     return $line;
@@ -2692,6 +2702,8 @@ function game_get_version() {
 
 /**
  * Can start a new attempt
+ *
+ * @package mod_game
  *
  * @param object $game the game object.
  */

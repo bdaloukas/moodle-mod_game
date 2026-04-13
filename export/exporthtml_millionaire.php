@@ -53,7 +53,7 @@ function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$cou
         if ($game->quizid == 0) {
             throw new moodle_exception('must_select_quiz', 'game');
         }
-        $select = "qtype='multichoice' AND quiz='$game->quizid' ".
+        $select = "qtype='multichoice' AND quiz='$game->quizid' " .
             " AND qqi.question=q.id";
         $table = "{question} q,{quiz_question_instances} qqi";
     } else {
@@ -62,7 +62,7 @@ function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$cou
         }
 
         // Include subcategories.
-        $select = 'category='.$game->questioncategoryid;
+        $select = 'category=' . $game->questioncategoryid;
         if ($game->subcategories) {
             $cats = question_categorylist($game->questioncategoryid);
             if (strpos($cats, ',') > 0) {
@@ -82,13 +82,12 @@ function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$cou
         $recs2 = $DB->get_records('question_answers', ['question' => $rec->id], 'fraction DESC', 'id,answer,feedback');
 
         // Must parse the questiontext and get the name of files.
-        $line = $rec->questiontext;
         $line = game_export_split_files($game->course, $context, 'questiontext', $rec->id, $rec->questiontext, $destdir, $files);
         $linefeedback = '';
         foreach ($recs2 as $rec2) {
-            $line .= '#'.str_replace(['"', '#'], ["'", ' '],
+            $line .= '#' . str_replace(['"', '#'], ["'", ' '],
                 game_export_split_files($game->course, $context, 'answer', $rec2->id, $rec2->answer, $destdir, $files));
-            $linefeedback .= '#'.str_replace(['"', '#'], ["'", ' '], $rec2->feedback);
+            $linefeedback .= '#' . str_replace(['"', '#'], ["'", ' '], $rec2->feedback);
         }
         if ($ret != '') {
             $ret .= ",\r";
@@ -116,7 +115,7 @@ function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$cou
  * @param string $questions
  * @param int $maxquestions
  */
-function game_millionaire_html_print($game,  $questions, $maxquestions) {
+function game_millionaire_html_print($game, $questions, $maxquestions) {
     $color1 = 'black';
     $color2 = 'DarkOrange';
     $colorback = "white";
@@ -240,7 +239,7 @@ function game_millionaire_html_print($game,  $questions, $maxquestions) {
             pos = wrong;
         }
 
-        info = "<?php echo get_string('millionaire_info_telephone', 'game').'<br><b>';?> ";
+        info = "<?php echo get_string('millionaire_info_telephone', 'game') . '<br><b>';?> ";
         info += document.getElementById("lblAnswer" + pos).innerHTML;
         document.getElementById("info").innerHTML = info;
     }
@@ -273,7 +272,7 @@ function game_millionaire_html_print($game,  $questions, $maxquestions) {
         }
 
         var letters = "<?php echo get_string('lettersall', 'game');?>";
-        info = "<?php echo '<br>'.get_string('millionaire_info_people', 'game').':<br>';?>";
+        info = "<?php echo '<br>' . get_string('millionaire_info_people', 'game') . ':<br>';?>";
         for (i = 0; i < countQuestions; i++) {
             info += "<br>" + letters.charAt(i) + " : " + aPercent[i] + " %";
         }
@@ -521,7 +520,7 @@ var Base64 = {
             style=\"background:$colorback;color:$color1\"
             onmouseover=\"Highlite($i);\r \n\" onmouseout=\"Restore($i);\" onmousedown=\"OnSelectAnswer($i);\"></span></td>\n";
         if ($i == 1) {
-            echo "<td style='background:#408080' rowspan=".$maxquestions." colspan=3><div id=\"info\"></div></td>\n";
+            echo "<td style='background:#408080' rowspan=" . $maxquestions . " colspan=3><div id=\"info\"></div></td>\n";
         }
         echo "</tr>\n";
     }

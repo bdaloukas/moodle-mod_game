@@ -543,7 +543,7 @@ class Cross {
         $n2200 = $n2222 - $n22;
 
         $ret = "<table border=0 cellpadding=2 cellspacing=1><tr>";
-        for ($n = 0;;$n ++) {
+        for ($n = 0;; $n ++) {
             $c = game_substr($puzzle, $n, 1);
 
             if (($m = $n % $n22) == 0 || $m == $n21 || $n < $n22 || $n > $n2200) {
@@ -554,10 +554,8 @@ class Cross {
                 $ret .= "<td class=blanc> </td>";
             } else {
                 if (
-                    (game_substr($puzzle, $n - 1, 1) > '0' ||
-                    game_substr($puzzle, $n + 1, 1) > '0') &&
-                    (game_substr($puzzle, $n - $n22, 1) > '0'
-                    || game_substr($puzzle, $n + $n22, 1) > '0')
+                    (game_substr($puzzle, $n - 1, 1) > '0' || game_substr($puzzle, $n + 1, 1) > '0') &&
+                    (game_substr($puzzle, $n - $n22, 1) > '0' || game_substr($puzzle, $n + $n22, 1) > '0')
                 ) {
                     $ret .= "<td align=center class=connector>$c</td>";
                 } else {

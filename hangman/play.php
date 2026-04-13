@@ -332,7 +332,7 @@ function game_hangman_play($cm, $game, $attempt, $hangman, $onlyshow, $showsolut
             }
 
             if ($hangman->finishedword == false) {
-                echo "<br/><br/><BR/>".get_string('hangman_letters', 'game').' '.$links."\r\n";
+                echo "<br/><br/><BR/>" . get_string('hangman_letters', 'game') . ' ' . $links . "\r\n";
             }
         }
     } else {
@@ -385,7 +385,8 @@ function hangman_showpage(
     &$links,
     $game,
     &$attempt,
-    &$hangman, &$query,
+    &$hangman,
+    &$query,
     $onlyshow,
     $showsolution,
     $context,
@@ -437,7 +438,7 @@ function hangman_showpage(
         if ($query->attachment != '') {
             $args = explode('/', $query->attachment);
             $sql = "SELECT id,mimetype,filesize,filename FROM {$CFG->prefix}files " .
-            "WHERE component='mod_glossary' AND filearea='attachment' AND itemid =".$args[2] .
+            "WHERE component='mod_glossary' AND filearea='attachment' AND itemid =" . $args[2] .
             " ORDER BY filesize DESC LIMIT 1";
             $entry = $DB->get_record_sql($sql);
             if ($entry != null) {
@@ -648,7 +649,7 @@ function game_hangman_show_nextword($cm, $game, $attempt, $hangman, $course) {
         game_hangman_onfinishgame($cm, $game, $attempt, $hangman, $course);
 
         if (game_can_start_new_attempt($game)) {
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">".
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">" .
                 get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     }
