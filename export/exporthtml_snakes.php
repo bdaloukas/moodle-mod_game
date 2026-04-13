@@ -115,7 +115,7 @@ pawn_height[0]= 40;
 <?php
 
 echo "var countofquestionsM=$countofquestionsm;\r\n";
-echo 'var countofquestionsS='.count($questionss).";\r\n";
+echo 'var countofquestionsS=' . count($questionss) . ";\r\n";
 
 $questionsm = '';
 foreach ($questionss as $line) {
@@ -123,13 +123,13 @@ foreach ($questionss as $line) {
     if ($questionsm != '') {
         $questionsm .= ",\r";
     }
-    $questionsm .= '"'.base64_encode(game_upper($s)).'"';
+    $questionsm .= '"' . base64_encode(game_upper($s)) . '"';
 
-    $s = '#'.str_replace(['"', '#'], ["'", ' '], $line->feedback);
+    $s = '#' . str_replace(['"', '#'], ["'", ' '], $line->feedback);
     if ($retfeedback != '') {
         $retfeedback .= ",\r";
     }
-    $retfeedback .= '"'.base64_encode($s).'"';
+    $retfeedback .= '"' . base64_encode($s) . '"';
 }
 $rettimesasked = '';
 for ($i = 0; $i < $countofquestionsm + count($questionss); $i++) {
@@ -520,6 +520,8 @@ function move_pawn() {
 <?php
 /**
  * Javascript code
+ *
+ * @package mod_game
  */
 function createsubmodaljs() {
 ?>

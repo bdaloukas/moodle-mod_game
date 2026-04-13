@@ -49,6 +49,8 @@ define("CONST_GAME_TRIES_REPETITION", "5");
 /**
  * Returns the version of Moodle.
  *
+ * @package mod_game
+ *
  * @return string version e.g. 03.10
  */
 function game_get_moodle_version() {
@@ -71,6 +73,8 @@ function game_get_moodle_version() {
 
 /**
  * Convert a string to upper.
+ *
+ * @package mod_game
  *
  * @param string $str
  * @param string $lang
@@ -103,6 +107,8 @@ function game_upper($str, $lang='') {
 /**
  * Returns the HTML of a select control.
  *
+ * @package mod_game
+ *
  * @param string $name
  * @param array $a
  * @param string $input
@@ -114,11 +120,11 @@ function game_showselectcontrol($name, $a,  $input, $events = '') {
     $ret = "<select id=\"$name\" name=\"$name\" $events>";
 
     foreach ($a as $key => $caption) {
-        $ret .= '<option value="'.$key.'" ';
+        $ret .= '<option value="' . $key . '" ';
         if ($key == $input) {
             $ret .= ' selected="selected" ';
         }
-        $ret .= '>'.$caption."</option>\r\n";
+        $ret .= '>' . $caption . "</option>\r\n";
     }
     $ret .= "</select>\r\n";
 
@@ -127,6 +133,8 @@ function game_showselectcontrol($name, $a,  $input, $events = '') {
 
 /**
  * Returns the HTML of a checkbox control.
+ *
+ * @package mod_game
  *
  * @param string $name
  * @param string $value
@@ -142,6 +150,8 @@ function game_showcheckbox($name, $value) {
 
 /**
  * Used by hangman. Returns a short answer.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param boolean $allowspaces
@@ -164,6 +174,8 @@ function game_question_shortanswer($game, $allowspaces = false, $userepetitions 
 
 /**
  * Used by hangman. Returns a short answer from glossary.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param boolean $allowspaces
@@ -212,6 +224,8 @@ function game_question_shortanswer_glossary($game, $allowspaces, $userepetitions
 
 /**
  * Used by hangman. Returns a short answer from quiz.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param boolean $allowspaces
@@ -281,6 +295,8 @@ function game_question_shortanswer_quiz($game, $allowspaces, $userepetitions) {
 /**
  * Used by hangman. Returns a short answer from question.
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param boolean $allowspaces
  * @param boolean $userepetitions
@@ -345,6 +361,8 @@ function game_question_shortanswer_question($game, $allowspaces, $userepetitions
 
 /**
  * Select a random question. Used by millionaire, game_question_shortanswer_quiz, hidden picture.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param string $table
@@ -422,6 +440,8 @@ function game_question_selectrandom($game, $table, $select, $idfields='id', $use
 /**
  * Updates the repetition table.
  *
+ * @package mod_game
+ *
  * @param int $gameid
  * @param int $userid
  * @param int $questionid
@@ -460,6 +480,8 @@ function game_update_repetitions($gameid, $userid, $questionid, $glossaryentryid
 
 /**
  * Select random questions for Sudoku.
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param int $count
@@ -599,6 +621,8 @@ function game_questions_selectrandom($game, $count=1) {
 /**
  * Select random questions. Used by game_questions_selectrandom.
  *
+ * @package mod_game
+ *
  * @param string $table
  * @param string $select
  * @param int $idfield
@@ -643,6 +667,8 @@ function game_questions_selectrandom_detail($table, $select, $idfield="id", $cou
 /**
  * Tries to detect the language of word.
  *
+ * @package mod_game
+ *
  * @param string $word
  *
  * @return the language detected
@@ -684,6 +710,8 @@ function game_detectlanguage($word) {
 /**
  * The words maybe are in two languages e.g. greek or english so I try to find the correct one.
  *
+ * @package mod_game
+ *
  * @param string $word
  * @param string $lang
  * @param string $userlanguage
@@ -723,6 +751,8 @@ function game_getallletters($word, $lang = '', $userlanguage = '') {
 /**
  * true if exist all the letters
  *
+ * @package mod_game
+ *
  * @param string $str
  * @param string $strfind
  *
@@ -742,6 +772,8 @@ function hangman_existall($str, $strfind) {
 
 /**
  * return a short answer randomly selected. used by cross
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  *
@@ -767,6 +799,8 @@ function game_questions_shortanswer($game) {
 
 /**
  * return a short answer (from glossary) randomly selected. used by cross
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  *
@@ -797,6 +831,8 @@ function game_questions_shortanswer_glossary($game) {
 
 /**
  * return a short answer (from quiz) randomly selected. used by cross
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  *
@@ -859,6 +895,8 @@ function game_questions_shortanswer_quiz($game) {
 /**
  * return a short answer (from question) randomly selected. used by cross
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  *
  * @return a question
@@ -904,6 +942,8 @@ function game_questions_shortanswer_question($game) {
 
 /**
  * question fraction
+ *
+ * @package mod_game
  *
  * @param string $table
  * @param string $fields
@@ -959,6 +999,8 @@ function game_questions_shortanswer_question_fraction($table, $fields, $select, 
 /**
  * sets char
  *
+ * @package mod_game
+ *
  * @param string $s
  * @param int $pos
  * @param string $char
@@ -974,7 +1016,9 @@ function game_setchar(&$s, $pos, $char) {
 }
 
 /**
- * insert a record
+ * Insert a record
+ *
+ * @package mod_game
  *
  * @param stdClass $table
  * @param stdClass $rec
@@ -996,6 +1040,8 @@ function game_insert_record($table, $rec) {
 /**
  * If score is negative doesn't update the record. The field score is between 0 and 1.
  * Updates score on table game_attempts
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param stdClass $attempt
@@ -1058,6 +1104,8 @@ function game_updateattempts($game, $attempt, $score, $finished, $cm, $course) {
 /**
  * Computes max grade
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param stdClass $attempt
  * @param float $grade
@@ -1081,6 +1129,8 @@ function game_updateattempts_maxgrade($game, $attempt, $grade, $finished, $cm, $
 
 /**
  * Update queries
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param stdClass $attempt
@@ -1150,6 +1200,8 @@ function game_update_queries($game, $attempt, $query, $score, $studentanswer, $u
 /**
  * get attempt
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param stdclass $detail
  * @param boolean $autoadd
@@ -1190,6 +1242,8 @@ function game_getattempt($game, &$detail, $autoadd=false) {
 /**
  * get user attempts
  *
+ * @package mod_game
+ *
  * @param integer $gameid the game id.
  * @param integer $userid the userid.
  * @param string $status 'all', 'finished' or 'unfinished' to control
@@ -1217,6 +1271,8 @@ function game_get_user_attempts($gameid, $userid, $status = 'finished') {
  * Returns an unfinished attempt (if there is one) for the given user on the given game.
  * This function does not return preview attempts.
  *
+ * @package mod_game
+ *
  * @param integer $gameid the id of the game.
  * @param integer $userid the id of the user.
  *
@@ -1233,6 +1289,8 @@ function game_get_user_attempt_unfinished($gameid, $userid) {
 
 /**
  * Get the best current score for a particular user in a game.
+ *
+ * @package mod_game
  *
  * @param object $game the game object.
  * @param integer $userid the id of the user.
@@ -1255,6 +1313,8 @@ function game_get_best_score($game, $userid) {
 /**
  * Get the best current grade for a particular user in a game.
  *
+ * @package mod_game
+ *
  * @param object $game the game object.
  * @param integer $userid the id of the user.
  *
@@ -1273,6 +1333,8 @@ function game_get_best_grade($game, $userid) {
 /**
  * Converts score to grade
  *
+ * @package mod_game
+ *
  * @param float $score
  * @param stdClass $game
  *
@@ -1288,6 +1350,8 @@ function game_score_to_grade($score, $game) {
 
 /**
  * Determine review options
+ *
+ * @package mod_game
  *
  * @param object $game the game instance.
  * @param object $attempt the attempt in question.
@@ -1341,6 +1405,8 @@ function game_get_reviewoptions($game, $attempt, $context=null) {
 /**
  * Compute attempt layout
  *
+ * @package mod_game
+ *
  * @param object $game the game object.
  * @param stdClass $attempt
  * @return float the user's current grade for this game.
@@ -1366,6 +1432,8 @@ function game_compute_attempt_layout($game, &$attempt) {
 
 /**
  * Combines the review options from a number of different game attempts.
+ *
+ * @package mod_game
  *
  * @param object $game the game instance.
  * @param array $attempts an array of attempt objects.
@@ -1395,6 +1463,8 @@ function game_get_combined_reviewoptions($game, $attempts, $context=null) {
 
 /**
  * Save the overall grade for a user at a game in the game_grades table
+ *
+ * @package mod_game
  *
  * @param object $game The game for which the best grade is to be calculated and then saved.
  *
@@ -1442,6 +1512,8 @@ function game_save_best_score($game) {
 /**
  * Calculate the overall score for a game given a number of attempts by a particular user.
  *
+ * @package mod_game
+ *
  * @return double         The overall score
  * @param object $game    The game for which the best score is to be calculated
  * @param array $attempts An array of all the attempts of the user at the game
@@ -1482,6 +1554,8 @@ function game_calculate_best_score($game, $attempts) {
 /**
  * Return the attempt with the best score for a game
  *
+ * @package mod_game
+ *
  * Which attempt is the best depends on $game->grademethod. If the  grade
  * method is GRADEAVERAGE then this function simply returns the last attempt.
  * @return object         The attempt with the best grade
@@ -1520,6 +1594,8 @@ function game_calculate_best_attempt($game, $attempts) {
 
 /**
  * get questions for sudoku
+ *
+ * @package mod_game
  *
  * @param string $questionlist
  */
@@ -1567,6 +1643,8 @@ function game_sudoku_getquestions($questionlist) {
 /**
  * Filter glossary
  *
+ * @package mod_game
+ *
  * @param string $text
  * @param int $entryid
  * @param int $contextid
@@ -1604,6 +1682,8 @@ function game_filterglossary($text, $entryid, $contextid, $courseid) {
 
 /**
  * Filter book
+ *
+ * @package mod_game
  *
  * @param string $text
  * @param int $chapterid
@@ -1643,6 +1723,8 @@ function game_filterbook($text, $chapterid, $contextid, $courseid) {
 /**
  * Filter questio
  *
+ * @package mod_game
+ *
  * @param string $questiontext
  * @param int $questionid
  * @param int $contextid
@@ -1681,6 +1763,8 @@ function game_filterquestion($questiontext, $questionid, $contextid, $courseid) 
 /**
  * Filter question answer
  *
+ * @package mod_game
+ *
  * @param string $questiontext
  * @param int $questionid
  * @param int $contextid
@@ -1718,6 +1802,8 @@ function game_filterquestion_answer($questiontext, $questionid, $contextid, $cou
 /**
  * Filter text
  *
+ * @package mod_game
+ *
  * @param string $text
  * @param int $courseid
  */
@@ -1745,6 +1831,8 @@ function game_filtertext($text, $courseid) {
 /**
  * To javascript string
  *
+ * @package mod_game
+ *
  * @param string $text
  */
 function game_tojavascriptstring($text) {
@@ -1763,6 +1851,8 @@ function game_tojavascriptstring($text) {
 
 /**
  * Repair question
+ *
+ * @package mod_game
  *
  * @param string $s
  */
@@ -1791,6 +1881,8 @@ function game_repairquestion($s) {
 
 /**
  * Delete a game attempt.
+ *
+ * @package mod_game
  *
  * @param stdClass $attempt
  * @param stdClass $game
@@ -1828,6 +1920,8 @@ function game_delete_attempt($attempt, $game) {
 /**
  * Returns the most recent attempt by a given user on a given game. May be finished, or may not.
  *
+ * @package mod_game
+ *
  * @param integer $gameid the id of the game.
  * @param integer $userid the id of the user.
  *
@@ -1849,6 +1943,8 @@ function game_get_latest_attempt_by_user($gameid, $userid) {
 /**
  * get grading option name
  *
+ * @package mod_game
+ *
  * @param int $option one of the values GAME_GRADEHIGHEST, GAME_GRADEAVERAGE, GAME_ATTEMPTFIRST or GAME_ATTEMPTLAST.
  * @return the lang string for that option.
  */
@@ -1865,6 +1961,8 @@ function game_get_grading_option_name($option) {
 /**
  * Right to left.
  *
+ * @package mod_game
+ *
  * @param string $lang
  */
 function game_right_to_left($lang) {
@@ -1873,6 +1971,8 @@ function game_right_to_left($lang) {
 
 /**
  * Compute reverse print
+ *
+ * @package mod_game
  *
  * @param stdClass $attempt
  * @param string $wordrtl
@@ -1894,6 +1994,8 @@ function game_compute_reserve_print($attempt, &$wordrtl, &$reverseprint) {
 
 /**
  * select from repetitions
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param stdClass $recs
@@ -1943,6 +2045,8 @@ function game_select_from_repetitions($game, $recs, $need) {
 /**
  * Grades responses
  *
+ * @package mod_game
+ *
  * @param stdClass $question
  * @param array $responses
  * @param int $maxgrade
@@ -1987,6 +2091,8 @@ function game_grade_responses($question, $responses, $maxgrade, &$answertext, &$
 /**
  * Responses multianswer
  *
+ * @package mod_game
+ *
  * @param stdClass $question
  * @param array $responses
  * @param int $maxgrade
@@ -2014,6 +2120,8 @@ function game_grade_responses_multianswer($question, $responses, $maxgrade, &$an
 /**
  * Print question
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param string $question
  * @param stdClass $context
@@ -2032,6 +2140,8 @@ function game_print_question($game, $question, $context) {
 
 /**
  * Print question multichoice
+ *
+ * @package mod_game
  *
  * @param stdClass $game
  * @param string $question
@@ -2097,6 +2207,8 @@ function game_print_question_multichoice($game, $question, $context) {
 /**
  * Print question multianswer
  *
+ * @package mod_game
+ *
  * @param object $game the game object.
  * @param stdClass $question
  * @param stdClass $context
@@ -2157,6 +2269,8 @@ function game_print_question_multianswer($game, $question, $context) {
 /**
  * Print question show answer
  *
+ * @package mod_game
+ *
  * @param stdClass $game
  * @param stdClass $question
  * @param stdClass $context
@@ -2185,6 +2299,8 @@ function game_print_question_shortanswer($game, $question, $context) {
 /**
  * Snakes get board.
  *
+ * @package mod_game
+ *
  * @param object $game the game object.
  */
 function game_snakes_get_board($game) {
@@ -2211,6 +2327,8 @@ function game_snakes_get_board($game) {
 
 /**
  * Creates user defined board.
+ *
+ * @package mod_game
  *
  * @param object $game the game object.
  */
@@ -2273,6 +2391,8 @@ function game_snakes_create_user_defined_board(&$game) {
 /**
  * Snakes get board params.
  *
+ * @package mod_game
+ *
  * @param object $game the game object.
  */
 function game_snakes_get_board_params($game) {
@@ -2295,6 +2415,8 @@ function game_snakes_get_board_params($game) {
 
 /**
  * Export create temp dir
+ *
+ * @package mod_game
  */
 function game_export_createtempdir() {
     global $CFG;
@@ -2318,6 +2440,8 @@ function game_export_createtempdir() {
 
 /**
  * Create zip
+ *
+ * @package mod_gam
  *
  * @param string $srcdir
  * @param int $courseid
@@ -2355,6 +2479,8 @@ function game_create_zip($srcdir, $courseid, $filename) {
 /**
  * Get string lang
  *
+ * @package mod_game
+ *
  * @param string $identifier
  * @param string $module
  * @param string $lang
@@ -2365,6 +2491,8 @@ function game_get_string_lang($identifier, $module, $lang) {
 
 /**
  * Inserts a record to game_attempts.
+ *
+ * @package mod_game
  *
  * @param object $game the game object.
  */
@@ -2388,7 +2516,7 @@ function game_addattempt($game) {
     }
 
     if ($USER->username == 'guest') {
-        $key = 'mod/game:instanceid'.$game->id;
+        $key = 'mod/game:instanceid' . $game->id;
         $_SESSION[$key] = $newid;
     }
 
@@ -2397,6 +2525,8 @@ function game_addattempt($game) {
 
 /**
  * Get contexts
+ *
+ * @package mod_game
  */
 function game_get_contexts() {
     global $CFG, $COURSE;
@@ -2411,6 +2541,8 @@ function game_get_contexts() {
 
 /**
  * Export split files
+ *
+ * @package mod_game
  *
  * @param int $courseid
  * @param stdClass $context
@@ -2481,6 +2613,8 @@ function game_export_split_files($courseid, $context, $filearea, $id, $line, $de
 /**
  * Grade questions
  *
+ * @package mod_game
+ *
  * @param array $questions
  */
 function game_grade_questions($questions) {
@@ -2523,8 +2657,10 @@ function game_grade_questions($questions) {
 /**
  * Extract question id from the prefix of form element names
  *
- * @return integer      The question id
- * @param string $name  The name that contains a prefix that was constructed with question_make_name_prefix()
+ * @package mod_game
+ *
+ * @return int The question id
+ * @param string $name The name that contains a prefix that was constructed with question_make_name_prefix()
  */
 function game_question_get_id_from_name_prefix($name) {
     if (!preg_match('/^resp([0-9]+)_/', $name, $matches)) {
@@ -2535,6 +2671,8 @@ function game_question_get_id_from_name_prefix($name) {
 
 /**
  * Get version.
+ *
+ * @package mod_game
  */
 function game_get_version() {
     global $CFG, $DB;
@@ -2579,6 +2717,8 @@ function game_can_start_new_attempt($game) {
 /**
  * strlen
  *
+ * @package mod_game
+ *
  * @param string $str
  */
 function game_strlen($str) {
@@ -2593,6 +2733,8 @@ function game_strlen($str) {
 
 /**
  * substr
+ *
+ * @package mod_game
  */
 function game_substr() {
     $num = func_num_args();
@@ -2624,6 +2766,8 @@ function game_substr() {
 /**
  * strtoupper
  *
+ * @package mod_game
+ *
  * @param string $str
  */
 function game_strtoupper($str) {
@@ -2641,6 +2785,8 @@ function game_strtoupper($str) {
 
 /**
  * strpos
+ *
+ * @package mod_game
  *
  * @param string $haystack
  * @param string $needle
@@ -2661,6 +2807,8 @@ function game_strpos($haystack, $needle, $offset = 0) {
 /**
  * show query
  *
+ * @package mod_game
+ *
  * @param object $game the game
  * @param stdClass $query
  * @param string $text
@@ -2677,7 +2825,7 @@ function game_show_query($game, $query, $text) {
     } else if ($query->questionid) {
         $cmgame = get_coursemodule_from_instance('game', $game->id, $game->course);
         $context = game_get_context_module_instance($cmgame->id);
-        $text = str_replace["\'", '\"'], ["'", '"'], $text);
+        $text = str_replace(["\'", '\"'], ["'", '"'], $text);
         return game_filterquestion($text, $query->questionid, $context->id, $game->course);
     }
 
@@ -2686,20 +2834,11 @@ function game_show_query($game, $query, $text) {
 
 /**
  * use events?
+ *
+ * @package mod_game
  */
 function game_use_events() {
     $version = game_get_moodle_version();
 
     return($version >= '02.07');
-}
-
-/**
- * Get the feedback text that should be show to a student who got this grade on this game.
- *
- * @param float $grade a grade on this game.
- * @param integer $gameid the id of the game object.
- * @return string the comment that corresponds to this grade (empty string if there is not one.
- */
-function game_feedback_for_grade($grade, $gameid) {
-    return '';
 }

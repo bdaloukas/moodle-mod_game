@@ -45,7 +45,7 @@ if (!$book = $DB->get_record('book', ['id' => $cm->instance])) {
     throw new moodle_exception('bookquiz_error', 'game', 'Course module is incorrect');
 }
 
-require_course_login($course,true, $cm);
+require_course_login($course, true, $cm);
 
 $context = game_get_context_module_instance($cm->id);
 
@@ -130,23 +130,23 @@ echo "previd=$previd nextid=$nextid<br>";
 
 if ($previd) {
     $chnavigation .= '<a title="' . get_string('navprev', 'book') . '" href="view.php?id=' . $cm->id .
-        '&amp;chapterid=' . $previd . '"><img src="'.$OUTPUT->pix_url('bookquiz/nav_prev', 'mod_game').
-        '" class="bigicon" alt="' . get_string('navprev', 'book').'"/></a>';
+        '&amp;chapterid=' . $previd . '"><img src="' . $OUTPUT->pix_url('bookquiz/nav_prev', 'mod_game') .
+        '" class="bigicon" alt="' . get_string('navprev', 'book') . '"/></a>';
 } else {
     $chnavigation .= '<img src="' . $OUTPUT->pix_url('bookquiz/nav_prev_dis', 'mod_game').'" class="bigicon" alt="" />';
 }
 
 if ($nextid) {
-    $chnavigation .= '<a title="'.get_string('navnext', 'book').'" href="view.php?id='.$cm->id.
-        '&amp;chapterid='.$nextid.'"><img src="'.$OUTPUT->pix_url('bookquiz/nav_next', 'mod_game').
-        '" class="bigicon" alt="'.get_string('navnext', 'book').'" /></a>';
+    $chnavigation .= '<a title="' . get_string('navnext', 'book') . '" href="view.php?id=' . $cm->id.
+        '&amp;chapterid=' . $nextid . '"><img src="' . $OUTPUT->pix_url('bookquiz/nav_next', 'mod_game').
+        '" class="bigicon" alt="' . get_string('navnext', 'book') . '" /></a>';
 } else {
     $sec = '';
     if ($section = $DB->get_record('course_sections', ['id' => $cm->section])) {
         $sec = $section->section;
     }
-    $chnavigation .= '<a title="'.get_string('navexit', 'book') . '" href="../../course/view.php?id=' .
-        $course->id.'#section-'.$sec.'"><img src="' .
+    $chnavigation .= '<a title="' . get_string('navexit', 'book') . '" href="../../course/view.php?id=' .
+        $course->id . '#section-' . $sec . '"><img src="' .
         $OUTPUT->pix_url('bookquiz/nav_exit', 'mod_game') . '" class="bigicon" alt="' . get_string('navexit', 'book') .
         '" /></a>';
 }
@@ -163,7 +163,7 @@ if ($book->disableprinting) {
         $OUTPUT->pix_url('bookquiz/print_book', 'mod_game') .
         '" class="bigicon" alt="' . get_string('printbook', 'book') . '"/></a>';
     $printchapter = '<a title="' . get_string('printchapter', 'book') . '" href="print.php?id=' .
-        $cm->id.'&amp;chapterid=' . $chapter->id .
+        $cm->id . '&amp;chapterid=' . $chapter->id .
         '" onclick="this.target=\'_blank\'"><img src="' .
         $OUTPUT->pix_url('bookquiz/print_chapter', 'mod_game') . '" class="bigicon" alt="' .
         get_string('printchapter', 'book') . '"/></a>';

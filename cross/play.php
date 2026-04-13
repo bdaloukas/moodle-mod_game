@@ -970,7 +970,6 @@ function CheckHtmlClick() {
     ?>
 
 </tr></table>
-
     <?php
     if ($onlyshow == false) {
         echo '<div style="margin-top: 1em;">';
@@ -1001,7 +1000,7 @@ function CheckHtmlClick() {
 
     if ($showhtmlsolutions) {
         echo '<button id="checkhtmlbutton" type="button" ' .
-        ' onclick="CheckHtmlClick();" visible=true>'.get_string('cross_checkbutton', 'game');
+        ' onclick="CheckHtmlClick();" visible=true>' . get_string('cross_checkbutton', 'game');
         echo '</button>';
     }
 
@@ -1009,7 +1008,7 @@ function CheckHtmlClick() {
         if ($showhtmlsolutions) {
             echo "&nbsp;&nbsp;&nbsp;&nbsp;";
         }
-        echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick(0);" visible=true>'.get_string('print', 'game');
+        echo '<button id="printhtmlbutton" type="button" onclick="PrintHtmlClick(0);" visible=true>' . get_string('print', 'game');
         echo '</button>';
     }
 

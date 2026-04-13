@@ -34,9 +34,9 @@
 class CrossDB extends Cross {
 
     /** @var int length horizontal. */
-    public $mLegendh;
+    public $mlegendh;
     /** @var int Length vertical. */
-    public $mLegendv;
+    public $mlegendv;
 
     /**
      * Save cross.
@@ -112,8 +112,23 @@ class CrossDB extends Cross {
      * @param stdClass $course
      * @param stdClass $cm
      */
-    public function loadcross($g, &$done, &$html, $game, $attempt, $crossrec, $onlyshow, $showsolution,
-    &$finishattempt, $showhtmlsolutions, &$language, $showstudentguess, $context, $course, $cm) {
+    public function loadcross(
+        $g,
+        &$done,
+        &$html,
+        $game,
+        $attempt,
+        $crossrec,
+        $onlyshow,
+        $showsolution,
+        &$finishattempt,
+        $showhtmlsolutions,
+        &$language,
+        $showstudentguess,
+        $context,
+        $course,
+        $cm
+    ) {
         global $DB;
 
         $info = '';
@@ -226,12 +241,12 @@ class CrossDB extends Cross {
     ) {
         $a = [];
         if ($correctletters) {
-            $a[] = $correctletters.' '.
+            $a[] = $correctletters . ' ' .
                 ($correctletters > 1 ? get_string('cross_corrects', 'game') : get_string('cross_correct', 'game'));
         }
         if ($wrongletters) {
-            $a[] = '<b>'.$wrongletters.' '.
-                ($wrongletters > 1 ? get_string('cross_errors', 'game') : get_string('cross_error', 'game')).'</b>';
+            $a[] = '<b>'.$wrongletters . ' ' .
+                ($wrongletters > 1 ? get_string('cross_errors', 'game') : get_string('cross_error', 'game')) . '</b>';
         }
 
         if ($correctletters > 1 || $wrongletters > 1) {
@@ -287,9 +302,18 @@ class CrossDB extends Cross {
      * @param stdClass $crossrec
      * @param boolean $loadfromdb
      */
-    public function updatecrossquestions(&$rec, &$g, &$pos, &$correctletters, &$wrongletters,
-        &$restletters, $game, $attempt, $crossrec, $loadfromdb) {
-
+    public function updatecrossquestions(
+        &$rec,
+        &$g,
+        &$pos,
+        &$correctletters,
+        &$wrongletters,
+        &$restletters,
+        $game,
+        $attempt,
+        $crossrec,
+        $loadfromdb
+    ) {
         global $DB;
 
         $word = $rec->answertext;
@@ -301,7 +325,7 @@ class CrossDB extends Cross {
             $guess = game_substr($g, $pos, $len);
         }
 
-        $lenguess = game_strlen($guess);;
+        $lenguess = game_strlen($guess);
         $pos += $len;
 
         $isempty = true;

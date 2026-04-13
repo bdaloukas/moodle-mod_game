@@ -24,8 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once( "locallib.php");
-require_once( "exportjavame.php");
+require_once("locallib.php");
+require_once("exportjavame.php");
 
 /**
  * Exports to html.
@@ -34,27 +34,27 @@ require_once( "exportjavame.php");
  * @param stdClass $context
  * @param string $html
  */
-function game_onexporthtml( $game, $context, $html) {
+function game_onexporthtml($game, $context, $html) {
     global $CFG;
 
     $destdir = game_export_createtempdir();
 
-    switch( $game->gamekind) {
+    switch ($game->gamekind) {
         case 'cross';
-            game_onexporthtml_cross( $game, $context, $html, $destdir);
+            game_onexporthtml_cross($game, $context, $html, $destdir);
             break;
         case 'hangman':
-            game_onexporthtml_hangman( $game, $context, $html, $destdir);
+            game_onexporthtml_hangman($game, $context, $html, $destdir);
             break;
         case 'snakes':
-            game_onexporthtml_snakes( $game, $html, $destdir, $context);
+            game_onexporthtml_snakes($game, $html, $destdir, $context);
             break;
         case 'millionaire':
-            game_onexporthtml_millionaire( $game, $context, $html, $destdir);
+            game_onexporthtml_millionaire($game, $context, $html, $destdir);
             break;
     }
 
-    remove_dir( $destdir);
+    remove_dir($destdir);
 }
 
 /**
@@ -65,45 +65,57 @@ function game_onexporthtml( $game, $context, $html) {
  * @param string $html
  * @param string $destdir
  */
-function game_onexporthtml_cross( $game, $context, $html, $destdir) {
+function game_onexporthtml_cross($game, $context, $html, $destdir) {
 
-    global $CFG, $DB;
+    global $DB;
 
-    if ( $html->filename == '') {
+    if ($html->filename == '') {
         $html->filename = 'cross';
     }
 
     $filename = $html->filename . '.htm';
 
-    require( "cross/play.php");
-    $attempt = game_getattempt( $game, $crossrec, true);
-    if ( $crossrec == false) {
-        game_cross_new( $game, $attempt->id, $crossm);
-        $attempt = game_getattempt( $game, $crossrec);
+    require("cross/play.php");
+    $attempt = game_getattempt($game, $crossrec, true);
+    if ($crossrec == false) {
+        game_cross_new($game, $attempt->id, $crossm);
+        $attempt = game_getattempt($game, $crossrec);
     }
 
-    $ret = game_export_printheader( $html->title);
+    $ret = game_export_printheader($html->title);
     echo "$ret<br>";
 
     ob_start();
 
     $cm = new stdClass;
     $cm->id = 0;
-    game_cross_play( $cm, $game, $attempt, $crossrec, '', true, false, false, false,
-        $html->checkbutton, true, $html->printbutton, false, $context, null);
+    game_cross_play($cm,
+        $game,
+        $attempt,
+        $crossrec,
+        '',
+        true,
+        false,
+        false,
+        false,
+        $html->checkbutton,
+        true,
+        $html->printbutton,
+        false,
+        $context,
+        null
+    );
 
     $outputstring = ob_get_contents();
     ob_end_clean();
 
-    $course = $DB->get_record( 'course', [ 'id' => $game->course]);
-
     $filename = $html->filename . '.htm';
 
-    file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
+    file_put_contents($destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
 
-    $filename = game_onexporthtml_cross_repair_questions( $game, $context, $filename, $destdir);
+    $filename = game_onexporthtml_cross_repair_questions($game, $context, $filename, $destdir);
 
-    game_send_stored_file( $filename);
+    game_send_stored_file($filename);
 }
 
 /**
@@ -114,20 +126,20 @@ function game_onexporthtml_cross( $game, $context, $html, $destdir) {
  * @param string $filename
  * @param string $destdir
  */
-function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $destdir) {
+function game_onexporthtml_cross_repair_questions($game, $context, $filename, $destdir) {
     global $CFG, $DB;
 
-    $filehandle = fopen( $destdir.'/'.$filename, "rb");
+    $filehandle = fopen($destdir . '/' . $filename, "rb");
 
     $found = false;
     $files = $linesbefore = $linesafter = [];
     $contextcourse = false;
 
     while (!feof($filehandle) ) {
-        $line = fgets( $filehandle);
+        $line = fgets($filehandle);
 
         if ($found) {
-            if ( strpos( $line, 'new Array')) {
+            if (strpos($line, 'new Array')) {
                 $linesafter[] = $line;
                 break;
             }
@@ -135,7 +147,7 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
             continue;
         }
 
-        if (strpos( $line, 'Clue = new Array') === false) {
+        if (strpos($line, 'Clue = new Array') === false) {
             $linesbefore[] = $line;
             continue;
         }
@@ -144,48 +156,46 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
         $found = true;
     }
     while (!feof($filehandle) ) {
-        $linesafter[] = fgets( $filehandle);
+        $linesafter[] = fgets($filehandle);
     }
 
     fclose($filehandle);
 
-    $search = $CFG->wwwroot.'/pluginfile.php';
-    $pos = 0;
     $search = '"'.$CFG->wwwroot.'/pluginfile.php/'.$context->id.'/mod_game/';
-    $len = strlen( $search);
+    $len = strlen($search);
     $start = 0;
     $filescopied = false;
     for (;;) {
-        $pos1 = strpos( $array, $search, $start);
-        if ( $pos1 == false) {
+        $pos1 = strpos($array, $search, $start);
+        if ($pos1 == false) {
             break;
         }
 
-        $pos2 = strpos( $array, '\"', $pos1 + $len);
-        if ( $pos2 == false) {
+        $pos2 = strpos($array, '\"', $pos1 + $len);
+        if ($pos2 == false) {
             break;
         }
 
         // Have to copy the files.
         if ($contextcourse === false) {
-            mkdir( $destdir.'/images');
-            if (!$contextcourse = get_context_instance(CONTEXT_COURSE, $game->course)) {
-                throw new moodle_exception( 'game_error', 'game', 'nocontext');
+            mkdir($destdir.'/images');
+            if (!$contextcourse = game_get_context_course_instance($game->course)) {
+                throw new moodle_exception('game_error', 'game', 'nocontext');
             }
             $fs = get_file_storage();
         }
 
-        $inputs = explode( '/', substr( $array, $pos1 + $len, $pos2 - $pos1 - $len));
+        $inputs = explode('/', substr($array, $pos1 + $len, $pos2 - $pos1 - $len));
 
         $filearea = $inputs[0];
         $id = $inputs[1];
-        $fileimage = urldecode( $inputs[2]);
+        $fileimage = urldecode($inputs[2]);
         $component = 'question';
 
-        $params = [ 'component' => $component, 'filearea' => $filearea,
+        $params = ['component' => $component, 'filearea' => $filearea,
             'itemid' => $id, 'filename' => $fileimage, 'contextid' => $contextcourse->id];
-        $rec = $DB->get_record( 'files', $params);
-        if ( $rec == false) {
+        $rec = $DB->get_record('files', $params);
+        if ($rec == false) {
             break;
         }
 
@@ -193,40 +203,40 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
             continue;
         }
 
-        $posext = strrpos( $fileimage, '.');
-        $filenoext = substr( $fileimage, $posext);
-        $ext = substr( $fileimage, $posext + 1);
+        $posext = strrpos($fileimage, '.');
+        $filenoext = substr($fileimage, $posext);
+        $ext = substr($fileimage, $posext + 1);
         for ($i = 0;; $i++) {
             $newfile = $filenoext.$i;
-            $newfile = md5( $newfile).'.'.$ext;
-            if (!array_search( $newfile, $files)) {
+            $newfile = md5($newfile) . '.' . $ext;
+            if (!array_search($newfile, $files)) {
                 break;
             }
         }
-        $file->copy_content_to( $destdir.'/images/'.$newfile);
+        $file->copy_content_to($destdir . '/images/' . $newfile);
         $filescopied = true;
 
-        $array = substr( $array, 0, $pos1 + 1).'images/'.$newfile.substr( $array, $pos2);
+        $array = substr($array, 0, $pos1 + 1) . 'images/' . $newfile . substr($array, $pos2);
     }
 
     if ($filescopied == false) {
-        return $destdir.'/'.$filename;
+        return $destdir . '/' . $filename;
     }
 
     $linesbefore[] = $array;
     foreach ($linesafter as $line) {
         $linesbefore[] = $line;
     }
-    file_put_contents( $destdir.'/'.$filename, $linesbefore);
+    file_put_contents($destdir . '/' . $filename, $linesbefore);
 
-    $pos = strrpos( $filename, '.');
+    $pos = strrpos($filename, '.');
     if ($pos === false) {
         $filezip = $filename.'.zip';
     } else {
-        $filezip = substr( $filename, 0, $pos).'.zip';
+        $filezip = substr($filename, 0, $pos).'.zip';
     }
 
-    $filezip = game_create_zip( $destdir, $game->course, $filezip);
+    $filezip = game_create_zip($destdir, $game->course, $filezip);
 
     return $filezip;
 }
@@ -237,7 +247,7 @@ function game_onexporthtml_cross_repair_questions( $game, $context, $filename, $
  * @param string $title
  * @param boolean $showbody
 ] */
-function game_export_printheader( $title, $showbody=true) {
+function game_export_printheader($title, $showbody = true) {
     $ret = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">'."\n";
     $ret .= '<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="el" xml:lang="el">'."\n";
     $ret .= "<head>\n";
@@ -260,7 +270,7 @@ function game_export_printheader( $title, $showbody=true) {
  * @param string $html
  * @param string $destdir
  */
-function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
+function game_onexporthtml_hangman($game, $context, $html, $destdir) {
 
     global $CFG, $DB;
 
@@ -274,51 +284,51 @@ function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
 
     $filename = $html->filename . '.htm';
 
-    $ret = game_export_printheader( $html->title, false);
+    $ret = game_export_printheader($html->title, false);
     $ret .= "\r<body onload=\"reset()\">\r";
 
-    $exportattachment = ( $html->type == 'hangmanp');
+    $exportattachment = ($html->type == 'hangmanp');
 
-    $map = game_exmportjavame_getanswers( $game, $context, $exportattachment, $destdir, $files);
+    $map = game_exmportjavame_getanswers($game, $context, $exportattachment, $destdir, $files);
     if ($map == false) {
-        throw new moodle_exception( 'no_words', 'game');
+        throw new moodle_exception('no_words', 'game');
     }
 
     ob_start();
 
     // Here is the code of hangman.
-    require_once( "exporthtml_hangman.php");
+    require_once("exporthtml_hangman.php");
 
     $outputstring = ob_get_contents();
     ob_end_clean();
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
+    $course = $DB->get_record('course', ['id' => $courseid]);
 
     $filename = $html->filename . '.htm';
-    file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
+    file_put_contents($destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
 
     if ($html->type != 'hangmanp') {
         // Not copy the standard pictures when we use the "Hangman with pictures".
         $src = $CFG->dirroot.'/mod/game/pix/hangman/1';
-        $handle = opendir( $src);
+        $handle = opendir($src);
         while (false !== ($item = readdir($handle))) {
             if ($item != '.' && $item != '..') {
                 if (!is_dir($src.'/'.$item)) {
                     $itemdest = $item;
 
-                    if ( strpos( $item, '.') === false) {
+                    if (strpos($item, '.') === false) {
                         continue;
                     }
 
-                    copy( $src.'/'.$item, $destdir.'/'.$itemdest);
+                    copy($src.'/'.$item, $destdir.'/'.$itemdest);
                 }
             }
         }
     }
 
-    $filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
-    game_send_stored_file( $filezip);
+    $filezip = game_create_zip($destdir, $courseid, $html->filename.'.zip');
+    game_send_stored_file($filezip);
 }
 
 /**
@@ -329,7 +339,7 @@ function game_onexporthtml_hangman( $game, $context, $html, $destdir) {
  * @param string $html
  * @param string $destdir
  */
-function game_onexporthtml_millionaire( $game, $context, $html, $destdir) {
+function game_onexporthtml_millionaire($game, $context, $html, $destdir) {
 
     global $CFG, $DB;
 
@@ -339,46 +349,45 @@ function game_onexporthtml_millionaire( $game, $context, $html, $destdir) {
 
     $filename = $html->filename . '.htm';
 
-    $ret = game_export_printheader( $html->title, false);
+    $ret = game_export_printheader($html->title, false);
     $ret .= "\r<body onload=\"Reset();\">\r";
 
     // Here is the code of millionaire.
-    require( "exporthtml_millionaire.php");
+    require("exporthtml_millionaire.php");
 
-    $questions = game_millionaire_html_getquestions( $game, $context, $maxanswers, $maxquestions, $retfeedback, $destdir, $files);
+    $questions = game_millionaire_html_getquestions($game, $context, $maxanswers, $maxquestions, $retfeedback, $destdir, $files);
     ob_start();
 
-    game_millionaire_html_print( $game, $questions, $maxanswers);
+    game_millionaire_html_print($game, $questions, $maxanswers);
 
     // End of millionaire code.
     $outputstring = ob_get_contents();
     ob_end_clean();
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
 
     $filename = $html->filename . '.htm';
 
-    file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
+    file_put_contents($destdir . '/' . $filename, $ret . "\r\n" . $outputstring);
 
     // Copy the standard pictures of Millionaire.
     $src = $CFG->dirroot.'/mod/game/pix/millionaire/1';
-    $handle = opendir( $src);
+    $handle = opendir($src);
     while (false !== ($item = readdir($handle))) {
         if ($item != '.' && $item != '..') {
             if (!is_dir($src.'/'.$item)) {
                 $itemdest = $item;
 
-                if (strpos( $item, '.') === false) {
+                if (strpos($item, '.') === false) {
                     continue;
                 }
 
-                copy( $src.'/'.$item, $destdir.'/'.$itemdest);
+                copy($src . '/' . $item, $destdir . '/' . $itemdest);
             }
         }
     }
 
-    $filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
+    $filezip = game_create_zip($destdir, $courseid, $html->filename.'.zip');
     game_send_stored_file($filezip);
 }
 
@@ -390,8 +399,8 @@ function game_onexporthtml_millionaire( $game, $context, $html, $destdir) {
  * @param string $destdir
  * @param stdClass $context
  */
-function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
-    require_once( "exporthtml_millionaire.php");
+function game_onexporthtml_snakes($game, $html, $destdir, $context) {
+    require_once("exporthtml_millionaire.php");
 
     global $CFG, $DB;
 
@@ -403,71 +412,79 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
 
     $ret = '';
 
-    $board = game_snakes_get_board( $game);
+    $board = game_snakes_get_board($game);
 
-    if ( ($game->sourcemodule == 'quiz') || ($game->sourcemodule == 'question')) {
-        $questionsm = game_millionaire_html_getquestions( $game, $context, $maxquestions,
-            $countofquestionsm, $retfeedback, $destdir, $files);
+    if (
+        ($game->sourcemodule == 'quiz') || ($game->sourcemodule == 'question')
+    ) {
+        $questionsm = game_millionaire_html_getquestions(
+            $game,
+            $context,
+            $maxquestions,
+            $countofquestionsm,
+            $retfeedback,
+            $destdir,
+            $files
+        );
     } else {
         $questionsm = [];
         $countofquestionsm = 0;
         $retfeedback = '';
     }
-    $questionss = game_exmportjavame_getanswers( $game, $context, false, $destdir, $files);
+    $questionss = game_exmportjavame_getanswers($game, $context, false, $destdir, $files);
 
     ob_start();
 
     // Here is the code of Snakes and Ladders.
-    require( "exporthtml_snakes.php");
+    require("exporthtml_snakes.php");
 
     $outputstring = ob_get_contents();
     ob_end_clean();
 
     $courseid = $game->course;
-    $course = $DB->get_record( 'course', [ 'id' => $courseid]);
 
     $filename = $html->filename . '.htm';
 
-    file_put_contents( $destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
+    file_put_contents($destdir.'/'.$filename, $ret . "\r\n" . $outputstring);
 
     $src = $CFG->dirroot.'/mod/game/export/html/snakes';
-    game_copyfiles( $src, $destdir);
+    game_copyfiles($src, $destdir);
 
-    mkdir( $destdir .'/css');
+    mkdir($destdir .'/css');
     $src = $CFG->dirroot.'/mod/game/export/html/snakes/css';
-    game_copyfiles( $src, $destdir.'/css');
+    game_copyfiles($src, $destdir.'/css');
 
-    mkdir( $destdir .'/js');
+    mkdir($destdir .'/js');
     $src = $CFG->dirroot.'/mod/game/export/html/snakes/js';
-    game_copyfiles( $src, $destdir.'/js');
+    game_copyfiles($src, $destdir.'/js');
     unzip_file($destdir.'/js/js.zip', $destdir.'/js', false);
-    unlink( $destdir.'/js/js.zip');
+    unlink($destdir.'/js/js.zip');
 
-    mkdir( $destdir .'/images');
+    mkdir($destdir .'/images');
     $destfile = $destdir.'/images/'.$board->fileboard;
-    if ( $game->param3 != 0) {
+    if ($game->param3 != 0) {
         // Is a standard board.
-        copy( $board->imagesrc, $destfile);
+        copy($board->imagesrc, $destfile);
     } else {
         $cmg = get_coursemodule_from_instance('game', $game->id, $game->course);
-        $modcontext = get_context_instance(CONTEXT_MODULE, $cmg->id);
+        $modcontext = game_get_context_module_instance($cmg->id);
         $fs = get_file_storage();
         $files = $fs->get_area_files($modcontext->id, 'mod_game', 'snakes_board', $game->id);
         foreach ($files as $f) {
-            if ( $f->is_directory()) {
+            if ($f->is_directory()) {
                 continue;
             }
             break;
         }
-        $f->copy_content_to( $destfile);
+        $f->copy_content_to($destfile);
     }
 
-    $a = [ 'player1.png', 'dice1.png', 'dice2.png', 'dice3.png', 'dice4.png', 'dice5.png', 'dice6.png', 'numbers.png'];
+    $a = ['player1.png', 'dice1.png', 'dice2.png', 'dice3.png', 'dice4.png', 'dice5.png', 'dice6.png', 'numbers.png'];
     foreach ($a as $file) {
-        copy( $CFG->dirroot.'/mod/game/snakes/1/'.$file, $destdir.'/images/'.$file);
+        copy($CFG->dirroot . '/mod/game/snakes/1/' . $file, $destdir . '/images/' . $file);
     }
 
-    $filezip = game_create_zip( $destdir, $courseid, $html->filename.'.zip');
+    $filezip = game_create_zip($destdir, $courseid, $html->filename . '.zip');
     game_send_stored_file($filezip);
 }
 
@@ -477,14 +494,14 @@ function game_onexporthtml_snakes( $game, $html, $destdir, $context) {
  * @param string $src
  * @param string $destdir
  */
-function game_copyfiles( $src, $destdir) {
-    $handle = opendir( $src);
+function game_copyfiles($src, $destdir) {
+    $handle = opendir($src);
     while (($item = readdir($handle)) !== false) {
-        if ( $item == '.' || $item == '..') {
+        if ($item == '.' || $item == '..') {
             continue;
         }
 
-        if ( strpos( $item, '.') === false) {
+        if (strpos($item, '.') === false) {
             continue;
         }
 
@@ -492,7 +509,7 @@ function game_copyfiles( $src, $destdir) {
             continue;
         }
 
-        copy( $src.'/'.$item, $destdir.'/'.$item);
+        copy($src . '/' . $item, $destdir . '/' . $item);
     }
     closedir($handle);
 }

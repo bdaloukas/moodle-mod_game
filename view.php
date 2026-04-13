@@ -23,8 +23,8 @@
  */
 
 require_once(dirname(__FILE__) . '/../../config.php');
-require_once($CFG->libdir.'/gradelib.php');
-require_once($CFG->dirroot.'/mod/game/locallib.php');
+require_once($CFG->libdir . '/gradelib.php');
+require_once($CFG->dirroot . '/mod/game/locallib.php');
 
 $id = optional_param('id', 0, PARAM_INT); // Course Module ID.
 
@@ -336,7 +336,7 @@ if (has_capability('mod/game:manage', $context)) {
     require('check.php');
     $s = game_check_common_problems($context, $game);
     if ($s != '') {
-        echo '<br>'.$s;
+        echo '<br>' . $s;
     }
 }
 
@@ -350,10 +350,10 @@ echo $OUTPUT->footer();
 function game_highscore($game) {
     global $CFG, $DB, $OUTPUT;
 
-    $sql = "SELECT userid, MAX(score) as maxscore".
-    " FROM {$CFG->prefix}game_attempts ".
-    " WHERE gameid={$game->id} AND score > 0".
-    " GROUP BY userid".
+    $sql = "SELECT userid, MAX(score) as maxscore" .
+    " FROM {$CFG->prefix}game_attempts " .
+    " WHERE gameid={$game->id} AND score > 0" .
+    " GROUP BY userid" .
     " ORDER BY max(score) DESC";
     $score = 0;
     $recs = $DB->get_records_sql($sql);
@@ -364,11 +364,11 @@ function game_highscore($game) {
         return;
     }
 
-    $sql = "SELECT u.id, u.lastname, u.firstname, MAX(ga.score) as maxscore".
-    " FROM {$CFG->prefix}user u, {$CFG->prefix}game_attempts ga ".
-    " WHERE ga.gameid={$game->id} AND ga.userid = u.id".
-    " GROUP BY u.id,u.lastname,u.firstname".
-    " HAVING MAX(ga.score) >= $score".
+    $sql = "SELECT u.id, u.lastname, u.firstname, MAX(ga.score) as maxscore" .
+    " FROM {$CFG->prefix}user u, {$CFG->prefix}game_attempts ga " .
+    " WHERE ga.gameid={$game->id} AND ga.userid = u.id" .
+    " GROUP BY u.id,u.lastname,u.firstname" .
+    " HAVING MAX(ga.score) >= $score" .
     " ORDER BY MAX(ga.score) DESC";
 
     $recs = $DB->get_records_sql($sql, null, 0, $game->highscore);
@@ -394,8 +394,8 @@ function game_highscore($game) {
     foreach ($recs as $rec) {
         echo "<tr>";
         $row = [];
-        $row[] = $rec->firstname.' '.$rec->lastname;
-        $row[] = round($rec->maxscore * 100).' %';
+        $row[] = $rec->firstname . ' ' . $rec->lastname;
+        $row[] = round($rec->maxscore * 100) . ' %';
 
         $table->data[$rec->id] = $row;
     }
