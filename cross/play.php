@@ -346,9 +346,9 @@ var CrosswordFinished, Initialized;
 // Check the user's browser and then initialize the puzzle.
 if (document.getElementById("waitmessage") != null) {
     <?php
-    echo 'document.getElementById("waitmessage").innerHTML = ' . json_encode($crosspleasewait) . '; ?>//;';
+    echo 'document.getElementById("waitmessage").innerHTML = ' . json_encode($crosspleasewait) . ';';
     ?>
-    // Current game variables
+    /* Current game variables */
     CurrentWord = -1;
     PrevWordHorizontal = false;
 
@@ -790,7 +790,7 @@ function CheckServerClick(endofgame) {
         sData += "&finishattempt=1";
     }
 
-    var checkserverurl = <?php echo json_encode($checkserverurl); ?>;
+    var checkserverurl = "<?php echo $checkserverurl; ?>";
     if (checkserverurl !== "") {
         window.location = checkserverurl + sData;
     }
@@ -1178,7 +1178,7 @@ function game_cross_show_welcome1() {
  * @param stdClass $cross
  * @throws coding_exception
  */
-function game_cross_show_legends(stdClass $game, stdClass $cross) {
+function game_cross_show_legends(stdClass $game, CrossDB $cross) {
     if ($game->param3 == 2) {
         echo '<div hidden>';
     }
