@@ -480,12 +480,15 @@ function game_update_repetitions($gameid, $userid, $questionid, $glossaryentryid
 /**
  * Select random questions for Sudoku.
  *
- * @package mod_game
- *
  * @param stdClass $game
  * @param int $count
  *
- * @return stdClass the random record(s)
+ * @return array: the random record(s)
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_questions_selectrandom($game, $count = 1) {
     global $CFG, $DB;

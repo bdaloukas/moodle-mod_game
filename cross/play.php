@@ -347,12 +347,7 @@ var CrosswordFinished, Initialized;
 if (document.getElementById("waitmessage") != null) {
     <?php
     echo 'document.getElementById("waitmessage").innerHTML = ' . json_encode($crosspleasewait) . ';';
-    ?>
-    /* Current game variables */
-    CurrentWord = -1;
-    PrevWordHorizontal = false;
-
-    <?php
+    echo "CurrentWord = -1;\nPrevWordHorizontal = false;\n";
     echo $html;
     ?>
     OnlyCheckOnce = false;

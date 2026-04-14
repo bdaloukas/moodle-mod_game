@@ -125,9 +125,11 @@ function game_showusers($game) {
 /**
  * Show groups
  *
+ * @param stdClass $game
+ * @throws coding_exception
+ * @throws dml_exception
  * @package mod_game
  *
- * @param stdClass $game
  */
 function game_showgroups($game) {
     global $CFG, $DB;
@@ -139,13 +141,12 @@ function game_showgroups($game) {
         }
     }
     $href = $CFG->wwwroot . '/mod/game/showattempts.php?q=' . $game->id . '&groupid=';
-?>
+    echo '
             <script type="text/javascript">
                 function onselectgroup() {
-                    window.location.href = "<?php echo $href;?>" + document.getElementById('menugroup').value;
+                    window.location.href = "'.$href.'" + document.getElementById(\'menugroup\').value;
                 }
-            </script>
-    <?php
+            </script>';
 
     $attributes = 'onchange="javascript:onselectgroup();"';
     $name = 'group';

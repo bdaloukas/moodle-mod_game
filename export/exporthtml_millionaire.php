@@ -471,29 +471,43 @@ JS;
 
     echo '<tr height="10%">' . "\n";
     echo '<td style="background:#408080" rowspan="3" colspan="2">' . "\n";
-    echo '<input type="image" name="Help5050" id="Help5050" title="50 50" src="5050.png" alt="" border="0" onmousedown="OnHelp5050();">&nbsp;' . "\n";
-    echo '<input type="image" name="HelpTelephone" id="HelpTelephone" title="' . s($telephonetitle) . '" src="telephone.png" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;' . "\n";
-    echo '<input type="image" name="HelpPeople" id="HelpPeople" title="' . s($helppeopletitle) . '" src="people.png" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;' . "\n";
-    echo '<input type="image" name="Quit" id="Quit" title="' . s($quittitle) . '" src="x.png" alt="" border="0" onmousedown="OnQuit();">&nbsp;' . "\n";
+    echo '<input type="image" name="Help5050" id="Help5050" title="50 50" src="5050.png" alt="" border="0"
+                onmousedown="OnHelp5050();">&nbsp;' . "\n";
+    echo '<input type="image" name="HelpTelephone" id="HelpTelephone" title="' . s($telephonetitle) .
+        '" src="telephone.png" alt="" border="0" onmousedown="OnHelpTelephone();">&nbsp;' . "\n";
+    echo '<input type="image" name="HelpPeople" id="HelpPeople" title="' . s($helppeopletitle) .
+        '" src="people.png" alt="" border="0" onmousedown="OnHelpPeople();">&nbsp;' . "\n";
+    echo '<input type="image" name="Quit" id="Quit" title="' . s($quittitle) .
+        '" src="x.png" alt="" border="0" onmousedown="OnQuit();">&nbsp;' . "\n";
     echo '</td>' . "\n";
-    echo '<td rowspan="' . (int)(16 + $maxquestions) . '" style="background:#408080">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>' . "\n";
+    echo '<td rowspan="' . (int)(16 + $maxquestions) . '" style="background:#408080">&nbsp;&nbsp;&nbsp;
+        &nbsp;&nbsp;&nbsp;</td>' . "\n";
     echo '<td id="levela15" align="right">15</td>' . "\n";
     echo '<td id="levelb15">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>' . "\n";
     echo '<td id="levelc15" align="right">150000</td>' . "\n";
     echo '</tr>' . "\n";
 
-    echo '<tr><td id="levela14" align="right">14</td><td id="levelb14"></td><td id="levelc14" align="right">800000</td></tr>' . "\n";
-    echo '<tr><td id="levela13" align="right">13</td><td id="levelb13"></td><td id="levelc13" align="right">400000</td></tr>' . "\n";
+    echo '<tr><td id="levela14" align="right">14</td><td id="levelb14"></td><td id="levelc14"
+     align="right">800000</td></tr>' . "\n";
+    echo '<tr><td id="levela13" align="right">13</td><td id="levelb13"></td><td id="levelc13"
+     align="right">400000</td></tr>' . "\n";
 
-    echo '<tr><td rowspan="12" colspan="2" valign="top" style="background:' . s($colorback) . ';color:' . s($color1) . '">';
+    echo '<tr><td rowspan="12" colspan="2" valign="top" style="background:' . s($colorback) .
+        ';color:' . s($color1) . '">';
     echo '<div id="question">aa</div></td>';
-    echo '<td id="levela12" align="right">12</td><td id="levelb12"></td><td id="levelc12" align="right">200000</td></tr>' . "\n";
+    echo '<td id="levela12" align="right">12</td><td id="levelb12"></td><td id="levelc12"
+     align="right">200000</td></tr>' . "\n";
 
-    echo '<tr><td id="levela11" align="right">11</td><td id="levelb11"></td><td id="levelc11" align="right">10000</td></tr>' . "\n";
-    echo '<tr><td id="levela10" align="right">10</td><td id="levelb10"></td><td id="levelc10" align="right">5000</td></tr>' . "\n";
-    echo '<tr><td id="levela9" align="right">9</td><td id="levelb9"></td><td id="levelc9" align="right">4000</td></tr>' . "\n";
-    echo '<tr><td id="levela8" align="right">8</td><td id="levelb8"></td><td id="levelc8" align="right">2000</td></tr>' . "\n";
-    echo '<tr><td id="levela7" align="right">7</td><td id="levelb7"></td><td id="levelc7" align="right">1500</td></tr>' . "\n";
+    echo '<tr><td id="levela11" align="right">11</td><td id="levelb11"></td><td id="levelc11"
+     align="right">10000</td></tr>' . "\n";
+    echo '<tr><td id="levela10" align="right">10</td><td id="levelb10"></td><td id="levelc10"
+     align="right">5000</td></tr>' . "\n";
+    echo '<tr><td id="levela9" align="right">9</td><td id="levelb9"></td><td id="levelc9"
+     align="right">4000</td></tr>' . "\n";
+    echo '<tr><td id="levela8" align="right">8</td><td id="levelb8"></td><td id="levelc8"
+     align="right">2000</td></tr>' . "\n";
+    echo '<tr><td id="levela7" align="right">7</td><td id="levelb7"></td><td id="levelc7"
+     align="right">1500</td></tr>' . "\n";
     echo '<tr><td id="levela6" align="right">6</td><td id="levelb6"></td><td id="levelc6" align="right">1000</td></tr>' . "\n";
     echo '<tr><td id="levela5" align="right">5</td><td id="levelb5"></td><td id="levelc5" align="right">500</td></tr>' . "\n";
     echo '<tr><td id="levela4" align="right">4</td><td id="levelb4"></td><td id="levelc4" align="right">400</td></tr>' . "\n";
@@ -514,10 +528,12 @@ JS;
         echo '</td>' . "\n";
         echo '<td style="background:' . s($colorback) . ';color:' . s($color1) . ';" width="100%">&nbsp; ';
         echo '<span id="lblAnswer' . $i . '" style="background:' . s($colorback) . ';color:' . s($color1) . '" ';
-        echo 'onmouseover="Highlite(' . $i . ');" onmouseout="Restore(' . $i . ');" onmousedown="OnSelectAnswer(' . $i . ');"></span>';
+        echo 'onmouseover="Highlite(' . $i . ');" onmouseout="Restore(' . $i .
+            ');" onmousedown="OnSelectAnswer(' . $i . ');"></span>';
         echo '</td>' . "\n";
         if ($i == 1) {
-            echo '<td style="background:#408080" rowspan="' . (int)$maxquestions . '" colspan="3"><div id="info"></div></td>' . "\n";
+            echo '<td style="background:#408080" rowspan="' . (int)$maxquestions .
+                '" colspan="3"><div id="info"></div></td>' . "\n";
         }
         echo '</tr>' . "\n";
     }

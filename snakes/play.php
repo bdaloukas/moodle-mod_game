@@ -26,18 +26,28 @@
 /**
  * Plays the game "Snakes and Ladders".
  *
- * @package mod_game
- *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
  * @param stdClass $course
+ * @return null
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
-function game_snakes_continue($cm, $game, $attempt, $snakes, $context, $course) {
-    if ($attempt != false && $snakes != false) {
-        return game_snakes_play($cm, $game, $attempt, $snakes, $context, $course);
+function game_snakes_continue(
+        $cm,
+        $game,
+        $attempt,
+        $snakes,
+        $context,
+        $course
+) {
+    if ($attempt !== false && $snakes !== false) {
+        game_snakes_play($cm, $game, $attempt, $snakes, $context, $course);
+        return;
     }
 
     if ($attempt === false) {
@@ -63,29 +73,31 @@ function game_snakes_continue($cm, $game, $attempt, $snakes, $context, $course) 
 /**
  * Plays the game "Snakes and Ladders".
  *
- * @package mod_game
- *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
  * @param stdClass $course
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
-    global $CFG, $DB, $OUTPUT;
+    global $CFG, $DB;
 
     $board = game_snakes_get_board($game);
     $showboard = false;
 
     if ($snakes->position > $board->usedcols * $board->usedrows && $snakes->queryid <> 0) {
-        $finish = true;
-
         echo '<B>' . get_string('win', 'game') . '</B><BR>';
         echo '<br>';
         echo "<a href=\"$CFG->wwwroot/mod/game/attempt.php?id={$cm->id}\">" .
             get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-        echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
+        echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">" .
+                get_string('finish', 'game') . '</a> ';
 
         $gradeattempt = 1;
         $finish = 1;
@@ -109,7 +121,7 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
 ?>
     <script language="javascript" event="onload" for="window">
     <!--
-    var retVal = [];
+    let retVal = [];
     const elements = document.getElementsByTagName("*");
     for (const item of elements) {
         if(item.type == 'text'){
@@ -129,7 +141,7 @@ function game_snakes_play($cm, $game, $attempt, $snakes, $context, $course) {
 </div>
 
     <?php
-    if ($finish == false) {
+    if (!$finish) {
         game_snakes_showdice($snakes, $board);
     }
     ?>
@@ -214,11 +226,15 @@ function game_snakes_computeplayerposition($snakes, $board) {
 /**
  * Computes next question.
  *
- * @package mod_game
- *
  * @param stdClass $game
  * @param stdClass $snakes
  * @param stdClass $query
+ * @return bool
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_computenextquestion($game, &$snakes, &$query) {
     global $DB, $USER;
@@ -228,8 +244,6 @@ function game_snakes_computenextquestion($game, &$snakes, &$query) {
         return false;
     }
 
-    $glossaryid = 0;
-    $questionid = 0;
     $minnum = 0;
     $query = new stdClass();
     foreach ($recs as $rec) {
@@ -281,13 +295,15 @@ function game_snakes_computenextquestion($game, &$snakes, &$query) {
 /**
  * Shows the question.
  *
- * @package mod_game
- *
  * @param int $id
  * @param stdClass $game
  * @param stdClass $snakes
  * @param stdClass $query
  * @param stdClass $context
+ * @throws coding_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_showquestion($id, $game, $snakes, $query, $context) {
     if ($game->sourcemodule == 'glossary') {
@@ -300,13 +316,15 @@ function game_snakes_showquestion($id, $game, $snakes, $query, $context) {
 /**
  * Shows the question.
  *
- * @package mod_game
- *
  * @param stdClass $game
  * @param int $id
  * @param stdClass $snakes
  * @param stdClass $query
  * @param stdClass $context
+ * @throws coding_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_showquestion_question($game, $id, $snakes, $query, $context) {
     global $CFG;
@@ -337,12 +355,14 @@ function game_snakes_showquestion_question($game, $id, $snakes, $query, $context
 /**
  * Show a glossary question.
  *
- * @package mod_game
- *
  * @param int $id
  * @param stdClass $snakes
  * @param stdClass $query
  * @param stdClass $game
+ * @throws coding_exception
+ * @throws dml_exception
+ * @package mod_game
+ *
  */
 function game_snakes_showquestion_glossary($id, $snakes, $query, $game) {
     global $CFG, $DB;
@@ -385,17 +405,20 @@ function game_snakes_showquestion_glossary($id, $snakes, $query, $game) {
 /**
  * Checks if answer is correct.
  *
- * @package mod_game
- *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
  * @param stdClass $course
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_check_questions($cm, $game, $attempt, $snakes, $context, $course) {
-    global $CFG, $DB;
+    global $DB;
 
     $responses = data_submitted();
 
@@ -433,17 +456,20 @@ function game_snakes_check_questions($cm, $game, $attempt, $snakes, $context, $c
 /**
  * Checks if the glossary answer is correct.
  *
- * @package mod_game
- *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
  * @param stdClass $snakes
  * @param stdClass $context
  * @param stdClass $course
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $course) {
-    global $CFG, $DB;
+    global $DB;
 
     $responses = data_submitted();
 
@@ -456,7 +482,6 @@ function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $co
 
     $glossaryentry = $DB->get_record('glossary_entries', [ 'id' => $query->glossaryentryid]);
 
-    $name = 'resp' . $query->glossaryentryid;
     $useranswer = $responses->answer;
 
     if (game_upper($useranswer) != game_upper($glossaryentry->concept)) {
@@ -477,8 +502,6 @@ function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $co
 /**
  * Computes the position.
  *
- * @package mod_game
- *
  * @param stdClass $cm
  * @param stdClass $game
  * @param stdClass $attempt
@@ -487,6 +510,11 @@ function game_snakes_check_glossary($cm, $game, $attempt, $snakes, $context, $co
  * @param stdClass $query
  * @param stdClass $context
  * @param stdClass $course
+ * @throws coding_exception
+ * @throws dml_exception
+ * @throws moodle_exception
+ * @package mod_game
+ *
  */
 function game_snakes_position($cm, $game, $attempt, $snakes, $correct, $query, $context, $course) {
     global $DB;
@@ -564,10 +592,11 @@ function game_snakes_foundsnake($position, $data) {
 /**
  * Removes attempt data.
  *
- * @package mod_game
- *
  * @param int $questionusageid
  * @param int $questionid
+ * @throws dml_exception
+ * @package mod_game
+ *
  */
 function game_snakes_remove_attemptdata($questionusageid, $questionid) {
     global $DB;

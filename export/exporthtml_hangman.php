@@ -64,7 +64,7 @@ foreach ($map as $line) {
     if ($html->type == 'hangmanp') {
         $file = $line->attachment;
         $pos = strrpos($file, '.');
-        if ($pos == false) {
+        if ($pos === false) {
             continue;
         }
     }
@@ -72,7 +72,7 @@ foreach ($map as $line) {
     if ($html->type == 'hangmanp') {
         $src = $line->attachment;
         $pos = strrpos($file, '.');
-        if ($pos == false) {
+        if ($pos === false) {
             continue;
         }
     }
@@ -117,7 +117,7 @@ $loosemsg = strip_tags(game_get_string_lang('hangman_loose', 'mod_game', $lang))
 $newlabel = game_get_string_lang('html_hangman_new', 'mod_game', $lang);
 $maxwrong = $game->param10 + 1;
 $startimage = ($html->type == 'hangmanp' ? '' : 'hangman_0.jpg');
-$ishangmanp = ($html->type == 'hangmanp');
+$ishangmanp = ($html->type == 'hangmanp' ? 'true' : 'false');
 
 ?>
 <script type="text/javascript">
@@ -131,7 +131,7 @@ $ishangmanp = ($html->type == 'hangmanp');
     var images = new Array(<?php echo $images; ?>);
     <?php } ?>
 
-    var ishangmanp = <?php echo $ishangmanp ? 'true' : 'false'; ?>;
+    var ishangmanp = <?php echo $ishangmanp; ?>;
     var maxwrong = <?php echo $maxwrong; ?>;
     var winmsg = <?php echo json_encode($winmsg); ?>;
     var loosemsg = <?php echo json_encode($loosemsg); ?>;
@@ -144,25 +144,25 @@ $ishangmanp = ($html->type == 'hangmanp');
     var used_letters_all = "";
 
     function selectLetter(l) {
-        if (can_play == false) {
+        if (can_play === false) {
         }
 
-        if (used_letters.indexOf(l) != -1) {
+        if (used_letters.indexOf(l) !== -1) {
             return;
         }
 
         used_letters_all += l;
 
-        if (to_guess.indexOf(l) == -1) {
+        if (to_guess.indexOf(l) === -1) {
             used_letters += l;
             document.getElementById('usedLetters').innerHTML = used_letters;
         }
 
-        if (to_guess.indexOf(l) != -1) {
+        if (to_guess.indexOf(l) !== -1) {
             pos = 0;
             temp_mask = display_word;
 
-            while (to_guess.indexOf(l, pos) != -1) {
+            while (to_guess.indexOf(l, pos) !== -1) {
                 pos = to_guess.indexOf(l, pos);
                 end = pos + 1;
 
@@ -176,7 +176,7 @@ $ishangmanp = ($html->type == 'hangmanp');
             display_word = temp_mask;
             document.getElementById('displayWord').innerHTML = display_word;
 
-            if (display_word.indexOf("#") == -1) {
+            if (display_word.indexOf("#") === -1) {
                 alert(winmsg);
                 can_play = false;
                 reset();
@@ -188,7 +188,7 @@ $ishangmanp = ($html->type == 'hangmanp');
                 document.hm.src = "hangman_" + wrong_guesses + ".jpg";
             }
 
-            if (wrong_guesses == maxwrong) {
+            if (wrong_guesses === maxwrong) {
                 alert(loosemsg);
                 can_play = false;
                 reset();
@@ -295,10 +295,10 @@ var Base64 = {
 
             output = output + String.fromCharCode(chr1);
 
-            if (enc3 != 64) {
+            if (enc3 !== 64) {
                 output = output + String.fromCharCode(chr2);
             }
-            if (enc4 != 64) {
+            if (enc4 !== 64) {
                 output = output + String.fromCharCode(chr3);
             }
         }

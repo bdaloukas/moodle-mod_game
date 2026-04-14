@@ -93,10 +93,26 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
             if (!array_key_exists($pos, $found)) {
                 $x1 = round($x * $width / $cols);
                 $y1 = round($y * $height / $rows);
-                imagefilledrectangle($imghandle, round($x1), round($y1), round($x1 + $width / $cols), round($y1 + $height / $rows), $color);
+                imagefilledrectangle(
+                    $imghandle,
+                    round($x1),
+                    round($y1),
+                    round($x1 + $width / $cols),
+                    round($y1 + $height / $rows),
+                    $color
+                );
 
                 if (array_key_exists($pos, $cells)) {
-                    shownumber($imghandle, $imgnumbers, $pos, $x1, $y1, round($width / $cols), round($height / $rows), $sizenumbers);
+                    shownumber(
+                        $imghandle,
+                        $imgnumbers,
+                        $pos,
+                        $x1,
+                        $y1,
+                        round($width / $cols),
+                        round($height / $rows),
+                        $sizenumbers
+                    );
                 }
             }
         }

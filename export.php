@@ -50,7 +50,7 @@ class mod_game_exporthtml_form extends moodleform {
      * Definition of form.
      */
     public function definition() {
-        global $CFG, $game;
+        global $game;
 
         $mform = $this->_form;
         $html = $this->_customdata['html'];
@@ -179,9 +179,10 @@ echo $OUTPUT->footer();
 /**
  * Sends via html a file.
  *
+ * @param string $file
+ * @throws moodle_exception
  * @package mod_game
  *
- * @param string $file
  */
 function game_send_stored_file($file) {
     if (file_exists($file)) {
@@ -205,14 +206,14 @@ function game_send_stored_file($file) {
 /**
  * Exports to javame.
  *
- * @param stdClas $game
+ * @param stdClass $game
  * @param stdClass $context
  * @param boolean $exportattachment
  * @param string $dest
  * @param array $files
  */
 function game_exmportjavame_getanswers( $game, $context, $exportattachment, $dest, &$files) {
-    $map = $files = [];
+    $files = [];
 
     switch ($game->sourcemodule) {
         case 'question':
@@ -233,6 +234,9 @@ function game_exmportjavame_getanswers( $game, $context, $exportattachment, $des
  * @param stdClass $context
  * @param string $destdir
  * @param array $files
+ * @return array|null
+ * @throws dml_exception
+ * @throws moodle_exception
  */
 function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$files) {
     $select = 'hidden = 0 AND category='.$game->questioncategoryid;
@@ -255,15 +259,26 @@ function game_exmportjavame_getanswers_question( $game, $context, $destdir, &$fi
  * @param int $courseid
  * @param string $destdir
  * @param array $files
+ * @return array|void
+ * @throws dml_exception
+ * @throws moodle_exception
  */
-function game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, $fields, $courseid, $destdir, &$files) {
-    global $CFG, $DB;
+function game_exmportjavame_getanswers_question_select(
+    $game,
+    $context,
+    $table,
+    $select,
+    $fields,
+    $courseid,
+    $destdir,
+    &$files
+) {
+    global $DB;
 
     if (($questions = $DB->get_records_select( $table, $select, null, '', $fields)) === false) {
         return;
     }
 
-    $line = 0;
     $map = [];
     foreach ($questions as $question) {
         unset( $ret);
@@ -299,6 +314,9 @@ function game_exmportjavame_getanswers_question_select( $game, $context, $table,
  * @param boolean $exportattachment
  * @param string $destdir
  * @param array $files
+ * @return array|false
+ * @throws coding_exception
+ * @throws dml_exception
  */
 function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachment, $destdir, &$files) {
     global $CFG, $DB;
@@ -346,7 +364,7 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
                 }
 
                 $ret->attachment = "glossary/{$game->glossaryid}/$question->id/$question->attachment";
-                $myfiles = $fs->get_area_files( $contextglossary->id, 'mod_glossary', 'attachment', $ret->id);
+                $myfiles = $fs->get_area_files($contextglossary->id, 'mod_glossary', 'attachment', $ret->id);
                 $i = 0;
 
                 foreach ($myfiles as $f) {
@@ -354,8 +372,6 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
                         continue;
                     }
                     $filename = $f->get_filename();
-                    $url = "{$CFG->wwwroot}/pluginfile.php/{$f->get_contextid()}/mod_glossary/attachment}";
-                    $fileurl = $url.$f->get_filepath().$f->get_itemid().'/'.$filename;
                     $pos = strrpos( $filename, '.');
                     $ext = substr( $filename, $pos);
                     $destfile = $ret->id;
@@ -385,15 +401,74 @@ function game_exmportjavame_getanswers_glossary( $game, $context, $exportattachm
  * @param stdClass $context
  * @param string $destdir
  * @param array $files
+ * @return array|null
+ * @throws dml_exception
+ * @throws moodle_exception
  */
 function game_exmportjavame_getanswers_quiz( $game, $context, $destdir, $files) {
-    global $CFG;
-
     $select = "quiz='$game->quizid' ".
         " AND qqi.question=q.id".
         " AND q.hidden=0".
         game_showanswers_appendselect( $game);
     $table = "{question} q,{quiz_question_instances} qqi";
 
-    return game_exmportjavame_getanswers_question_select( $game, $context, $table, $select, "q.*", $game->course, $destdir, $files);
+    return game_exmportjavame_getanswers_question_select(
+        $game,
+        $context,
+        $table,
+        $select,
+        "q.*",
+        $game->course,
+        $destdir,
+        $files
+    );
+}
+
+/**
+ * Copy images
+ *
+ * @param string $filename
+ * @param string $dest
+ * @param int $maxwidth
+ */
+function game_export_javame_smartcopyimage($filename, $dest, $maxwidth) {
+    if ($maxwidth == 0) {
+        copy($filename, $dest);
+        return;
+    }
+
+    $size = getimagesize($filename);
+    if ($size === false) {
+        copy($filename, $dest);
+        return;
+    }
+
+    $mul = $maxwidth / $size[0];
+    if ($mul > 1) {
+        copy($filename, $dest);
+        return;
+    }
+
+    $mime = $size['mime'];
+    switch ($mime) {
+        case 'image/png':
+            $srcimage = imagecreatefrompng($filename);
+            break;
+        case 'image/jpeg':
+            $srcimage = imagecreatefromjpeg($filename);
+            break;
+        case 'image/gif':
+            $srcimage = imagecreatefromgif($filename);
+            break;
+        default:
+            die('Aknown mime type $mime');
+            return false;
+    }
+
+    $dstw = $size[0] * $mul;
+    $dsth = $size[1] * $mul;
+    $dstimage = imagecreatetruecolor($dstw, $dsth);
+    imagecopyresampled($dstimage, $srcimage, 0, 0, 0, 0, $dstw, $dsth, $size[0], $size[1]);
+
+    imagejpeg($dstimage, $dest);
 }
