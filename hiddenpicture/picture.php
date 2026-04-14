@@ -91,12 +91,12 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
         for ($x = 0; $x < $cols; $x++) {
             $pos++;
             if (!array_key_exists($pos, $found)) {
-                $x1 = $x * $width / $cols;
-                $y1 = $y * $height / $rows;
-                imagefilledrectangle($imghandle, $x1, $y1, $x1 + $width / $cols, $y1 + $height / $rows, $color);
+                $x1 = round($x * $width / $cols);
+                $y1 = round($y * $height / $rows);
+                imagefilledrectangle($imghandle, round($x1), round($y1), round($x1 + $width / $cols), round($y1 + $height / $rows), $color);
 
                 if (array_key_exists($pos, $cells)) {
-                    shownumber($imghandle, $imgnumbers, $pos, $x1, $y1, $width / $cols, $height / $rows, $sizenumbers);
+                    shownumber($imghandle, $imgnumbers, $pos, $x1, $y1, round($width / $cols), round($height / $rows), $sizenumbers);
                 }
             }
         }
@@ -134,13 +134,13 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
  */
 function shownumber($imghandle, $imgnumbers, $number, $x1, $y1, $width, $height, $sizenumbers) {
     if ($number < 10) {
-        $dstx = $x1 + $width / 3;
-        $dsty = $y1 + $height / 3;
-        $srcx = $number * $sizenumbers[0] / 10;
-        $srcw = $sizenumbers[0] / 10;
+        $dstx = round($x1 + $width / 3);
+        $dsty = round($y1 + $height / 3);
+        $srcx = round($number * $sizenumbers[0] / 10);
+        $srcw = round($sizenumbers[0] / 10);
         $srch = $sizenumbers[1];
-        $dstw = $width / 10;
-        $dsth = $dstw * $srch / $srcw;
+        $dstw = round($width / 10);
+        $dsth = round($dstw * $srch / $srcw);
         imagecopyresized($imghandle, $imgnumbers, $dstx, $dsty, $srcx, 0, $dstw, $dsth, $srcw, $srch);
     } else {
         $number1 = floor($number / 10);
