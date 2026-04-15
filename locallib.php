@@ -2451,6 +2451,54 @@ function game_export_createtempdir() {
 }
 
 /**
+ * Compatibility wrapper for creating zip archives.
+ *
+ * Uses legacy zip_files() when available; otherwise falls back to
+ * Moodle file packer API.
+ *
+ * @param array $fullsrcfiles Full OS paths to files that should be zipped.
+ * @param string $filezip Full OS path to the target zip file.
+ * @param string $srcdir Base source directory, used to compute relative paths inside zip.
+ * @return bool
+ */
+function game_zip_files_compat(array $fullsrcfiles, string $filezip, string $srcdir): bool {
+    global $CFG;
+
+    // Legacy Moodle support.
+    if (function_exists('zip_files')) {
+        return zip_files($fullsrcfiles, $filezip);
+    }
+
+    require_once($CFG->libdir . '/filelib.php');
+
+    $packer = get_file_packer('application/zip');
+    if (!$packer) {
+        return false;
+    }
+
+    $zipfiles = [];
+    $srcdir = rtrim($srcdir, '/\\');
+
+    foreach ($fullsrcfiles as $fullpath) {
+        if (!is_file($fullpath) || !is_readable($fullpath)) {
+            continue;
+        }
+
+        // Relative path inside zip.
+        $relativepath = substr($fullpath, strlen($srcdir) + 1);
+        $relativepath = str_replace('\\', '/', $relativepath);
+
+        $zipfiles[$relativepath] = $fullpath;
+    }
+
+    if (empty($zipfiles)) {
+        return false;
+    }
+
+    return $packer->archive_to_pathname($zipfiles, $filezip);
+}
+
+/**
  * Create zip
  *
  * @package mod_game
@@ -2483,7 +2531,7 @@ function game_create_zip($srcdir, $courseid, $filename) {
         $fullsrcfiles[] = $srcdir . '/' . $file;
     }
 
-    zip_files($fullsrcfiles, $filezip);
+    game_zip_files_compat($fullsrcfiles, $filezip, $srcdir);
 
     return (file_exists($filezip) ? $filezip : '');
 }

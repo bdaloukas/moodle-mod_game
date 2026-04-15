@@ -35,7 +35,7 @@
  * @param array $files
  */
 function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$countofquestions, &$retfeedback, $destdir, &$files) {
-    global $DB;
+    global $CFG, $DB;
 
     $maxanswers = 0;
     $countofquestions = 0;
@@ -62,19 +62,32 @@ function game_millionaire_html_getquestions($game, $context, &$maxanswers, &$cou
             throw new moodle_exception('must_select_questioncategory', 'game');
         }
 
+        $table = "{question} q";
+
         // Include subcategories.
-        $select = 'category=' . $game->questioncategoryid;
-        if ($game->subcategories) {
-            $cats = question_categorylist($game->questioncategoryid);
-            if (strpos($cats, ',') > 0) {
-                $select = 'category in (' . $cats . ')';
+        if (game_get_moodle_version() >= '04.00') {
+            $table .= ",{$CFG->prefix}question_bank_entries qbe,{$CFG->prefix}question_versions qv ";
+            $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid ' .
+                ' AND qbe.questioncategoryid=' . $game->questioncategoryid;
+            if ($game->subcategories) {
+                $cats = question_categorylist($game->questioncategoryid);
+                if (count($cats) > 0) {
+                    $select = 'qbe.questioncategoryid in (' . implode(',', $cats) . ')';
+                }
+            }
+        } else {
+            $select = 'category=' . $game->questioncategoryid;
+            if ($game->subcategories) {
+                $cats = question_categorylist($game->questioncategoryid);
+                if (count($cats)) {
+                    $select = 'category in (' . implode(',', $cats) . ')';
+                }
             }
         }
+
         $select .= " AND qtype='multichoice'";
 
-        $table = "{question} q";
     }
-    $select .= " AND q.hidden=0";
     $sql = "SELECT q.id as id, q.questiontext FROM $table WHERE $select";
     $recs = $DB->get_records_sql($sql);
     $ret = '';

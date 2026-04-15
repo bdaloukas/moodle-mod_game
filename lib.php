@@ -977,17 +977,6 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
                     null,
                     new pix_icon('i/item', '')
                 );
-
-                $url = new moodle_url('/mod/game/export.php', ['id' => $PAGE->cm->id,
-                    'courseid' => $courseid, 'target' => 'javame']);
-                $gamenode->add(
-                    get_string('export_to_javame', 'game'),
-                    $url,
-                    navigation_node::TYPE_SETTING,
-                    null,
-                    null,
-                    new pix_icon('i/item', '')
-                );
                 break;
             case 'snakes':
             case 'cross':

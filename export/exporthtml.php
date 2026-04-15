@@ -25,7 +25,6 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once("locallib.php");
-require_once("exportjavame.php");
 
 /**
  * Exports to html.
