@@ -26,6 +26,11 @@
 
 namespace mod_game\event;
 
+use coding_exception;
+use context_course;
+use core\event\base;
+use stdClass;
+
 /**
  * The mod_game instance list viewed event class.
  *
@@ -38,9 +43,11 @@ class course_module_instance_list_viewed extends \core\event\course_module_insta
      * Create the event.
      *
      * @param stdClass $course
+     * @return base
+     * @throws coding_exception
      */
-    public static function create_from_course(\stdClass $course) {
-        $params = [ 'context' => \context_course::instance($course->id)];
+    public static function create_from_course(stdClass $course): base {
+        $params = ['context' => context_course::instance($course->id)];
         $event = self::create($params);
         $event->add_record_snapshot('course', $course);
         return $event;

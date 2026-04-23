@@ -13,8 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * The mod_game course module viewed event.
@@ -25,6 +23,11 @@
  */
 
 namespace mod_game\event;
+
+use coding_exception;
+use context_module;
+use core\event\base;
+use stdClass;
 
 /**
  * The mod_game course module viewed event class.
@@ -38,14 +41,14 @@ class course_module_viewed extends \core\event\course_module_viewed {
     /**
      * Create instance of event.
      *
+     * @param stdClass $game
+     * @param context_module $context
+     * @return base
+     * @throws coding_exception
      * @since Moodle 2.7
-     *
-     * @param \stdClass $game
-     * @param \context_module $context
-     * @return course_module_viewed
      */
-    public static function viewed(\stdClass $game, \context_module $context) {
-        $data = [ 'context' => $context, 'objectid' => $game->id];
+    public static function viewed(stdClass $game, context_module $context): base {
+        $data = ['context' => $context, 'objectid' => $game->id];
         $event = self::create($data);
         $event->add_record_snapshot('game', $game);
         return $event;
@@ -57,10 +60,11 @@ class course_module_viewed extends \core\event\course_module_viewed {
      * @param stdClass $game
      * @param context_module $context
      *
-     * @return event
+     * @return base
+     * @throws coding_exception
      */
-    public static function played(\stdClass $game, \context_module $context) {
-        $data = [ 'context' => $context, 'objectid' => $game->id];
+    public static function played(stdClass $game, context_module $context): base {
+        $data = ['context' => $context, 'objectid' => $game->id];
         $event = self::create($data);
         $event->add_record_snapshot('game', $game);
         return $event;

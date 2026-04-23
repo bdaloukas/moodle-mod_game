@@ -13,8 +13,6 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
-// You should have received a copy of the GNU General Public License
-// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * The mod_game chapter viewed event.
@@ -25,86 +23,80 @@
  */
 namespace mod_game\event;
 
+use coding_exception;
+use context_module;
 use core\event\base;
 use core\exception\moodle_exception;
+use moodle_url;
+use stdClass;
 
 defined('MOODLE_INTERNAL') || die();
 
-require(dirname(__FILE__) . '/../../../../version.php');
-
-if ($branch >= '402') {
-    define('GAME_MOODLE_402', 1);
-}
-
-if (defined('GAME_MOODLE_402')) {
+/**
+ * The mod_game chapter viewed event class.
+ *
+ * @package    mod_game
+ * @since      Moodle 2.6
+ * @copyright  2014 Vasilis Daloukas
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class game_played extends base {
     /**
-     * The mod_game chapter viewed event class.
+     * Returns description of what happened.
      *
-     * @package    mod_game
-     * @since      Moodle 2.6
-     * @copyright  2014 Vasilis Daloukas
-     * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+     * @return string
      */
-    class game_played extends base {
-        /**
-         * Returns description of what happened.
-         *
-         * @return string
-         */
-        public function get_description() {
-            return "The user with id '$this->userid' played the game with id '$this->objectid' for the game with the " .
+    public function get_description(): string {
+        return "The user with id '$this->userid' played the game with id '$this->objectid' for the game with the " .
                 "course module id '$this->contextinstanceid'.";
-        }
-
-        /**
-         * Create instance of event.
-         *
-         * @param \stdClass $game
-         * @param \context_module $context
-         * @return event
-         * @throws \coding_exception
-         * @since Moodle 2.7
-         *
-         */
-        public static function played(\stdClass $game, \context_module $context) {
-            $data = [ 'context' => $context, 'objectid' => $game->id];
-            $event = self::create($data);
-            $event->add_record_snapshot('game', $game);
-            return $event;
-        }
-
-
-        /**
-         * Return localised event name.
-         *
-         * @return string
-         * @throws \coding_exception
-         */
-        public static function get_name() {
-            return get_string('eventgameviewed', 'mod_game');
-        }
-
-        /**
-         * Get URL related to the action.
-         *
-         * @return \moodle_url
-         * @throws moodle_exception
-         */
-        public function get_url() {
-            return new \moodle_url('/mod/game/view.php', [ 'id' => $this->contextinstanceid]);
-        }
-
-        /**
-         * Init method.
-         *
-         * @return void
-         */
-        protected function init() {
-            $this->data['crud'] = 'r';
-            $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
-            $this->data['objecttable'] = 'game';
-        }
     }
-} else {
-    die("At least Moodle 4");
+
+    /**
+     * Create instance of event.
+     *
+     * @param stdClass $game
+     * @param context_module $context
+     * @return base
+     * @throws coding_exception
+     * @since Moodle 2.7
+     *
+     */
+    public static function played(stdClass $game, context_module $context): base {
+        $data = ['context' => $context, 'objectid' => $game->id];
+        $event = self::create($data);
+        $event->add_record_snapshot('game', $game);
+        return $event;
+    }
+
+
+    /**
+     * Return localised event name.
+     *
+     * @return string
+     * @throws coding_exception
+     */
+    public static function get_name(): string {
+        return get_string('eventgameviewed', 'mod_game');
+    }
+
+    /**
+     * Get URL related to the action.
+     *
+     * @return moodle_url
+     * @throws moodle_exception
+     */
+    public function get_url(): moodle_url {
+        return new moodle_url('/mod/game/view.php', ['id' => $this->contextinstanceid]);
+    }
+
+    /**
+     * Init method.
+     *
+     * @return void
+     */
+    protected function init() {
+        $this->data['crud'] = 'r';
+        $this->data['edulevel'] = self::LEVEL_PARTICIPATING;
+        $this->data['objecttable'] = 'game';
+    }
 }
