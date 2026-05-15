@@ -803,7 +803,10 @@ function game_num_attempt_summary(stdClass $game, stdClass $cm, bool $returnzero
  * @return float  the score
  */
 function game_format_score(stdClass $game, float $score): float {
-    return format_float($game->grade * $score / 100, $game->decimalpoints);
+    return (float) format_float(
+        $game->grade * $score / 100,
+        $game->decimalpoints
+    );
 }
 
 /**
@@ -815,7 +818,7 @@ function game_format_score(stdClass $game, float $score): float {
  * @return float score
  */
 function game_format_grade(stdClass $game, float $grade): float {
-    return format_float($grade, $game->decimalpoints == null ? 2 : $game->decimalpoints);
+    return (float) format_float($grade, $game->decimalpoints ?? 2);
 }
 
 /**
