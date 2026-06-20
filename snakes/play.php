@@ -335,7 +335,7 @@ function game_snakes_showquestion_question($game, $id, $snakes, $query, $context
     // Start the form.
     echo "<form id=\"responseform\" method=\"post\" " .
         "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
-    echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
+    echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" . get_string('sudoku_submit', 'game') . "\" class=\"btn btn-secondary\"></center>\n";
 
     // Add a hidden field with the quiz id.
     echo '<input type="hidden" name="id" value="' . s($id) . "\" />\n";
@@ -372,7 +372,7 @@ function game_snakes_showquestion_glossary($id, $snakes, $query, $game) {
     // Start the form.
     echo "<form id=\"responseform\" method=\"post\" " .
         "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
-    echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
+    echo "<center><input type=\"submit\" name=\"finishattempt\" value=\"" . get_string('sudoku_submit', 'game') . "\" class=\"btn btn-secondary\"></center>\n";
 
     // Add a hidden field with the queryid.
     echo '<input type="hidden" name="id" value="' . s($id) . "\" />\n";

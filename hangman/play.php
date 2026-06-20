@@ -650,10 +650,10 @@ function game_hangman_show_nextword($cm, $game, $attempt, $hangman, $course) {
         game_hangman_onfinishgame($cm, $game, $attempt, $hangman, $course);
 
         if (game_can_start_new_attempt($game)) {
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">" .
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\" class='btn btn-secondary'>" .
                 get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     }
 
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\">" . get_string('finish', 'game') . '</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$course->id\" class='btn btn-secondary'>" . get_string('finish', 'game') . '</a> ';
 }

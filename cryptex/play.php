@@ -299,7 +299,7 @@ width: 240pt;
 
     echo '<br>';
 
-    echo '<table border=0>';
+    echo '<table border=0 class="table-reboot">';
     echo '<tr><td>';
     $cryptex->displaycryptex($crossm->usedcols, $crossm->usedrows, $cryptexrec->letters, $mask, $showsolution, $textdir);
 ?>
@@ -318,10 +318,10 @@ width: 240pt;
 <div style="margin-top:1em;"><input id="answer" name="answer" type="text" size="24"
  style="font-weight: bold; text-transform:uppercase;" autocomplete="off"></div>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;" class="table-reboot"><tr>
 <td align="right">
-<button id="okbutton" type="submit" class="button" style="font-weight: bold;"><?php echo get_string('ok'); ?></button> &nbsp;
-<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
+<button id="okbutton" type="submit" class="button btn btn-secondary" style="font-weight: bold;"><?php echo get_string('ok'); ?></button> &nbsp;
+<button id="cancelbutton" type="button" class="button btn btn-secondary" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
 </td></tr></table>
 </form>
 </td>
@@ -331,9 +331,9 @@ width: 240pt;
     <?php
 
     if ($showhtmlprintbutton && !$finished) {
-        echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" >' . get_string('finish', 'game');
-        echo '</button>';
-        echo '<button id="printbutton" type="button" onclick="OnPrint();" >' . get_string('print', 'game');
+        echo '<br><button id="finishattemptbutton" type="button" onclick="OnEndGame();" class="btn btn-secondary">' . get_string('finish', 'game');
+        echo '</button> ';
+        echo '<button id="printbutton" type="button" onclick="OnPrint();" class="btn btn-secondary">' . get_string('print', 'game');
         echo '</button><br>';
     }
 
@@ -408,7 +408,7 @@ width: 240pt;
         if (($onlyshow == false) && ($showsolution == false)) {
             if (($game->param8 == 0) || ($game->param8 > $q->tries)) {
                 $question .= ' &nbsp;<input type="submit" value="' .
-                get_string('answer') . '" onclick="OnCheck(' . $q->id . ",msg{$q->id});\" />";
+                get_string('answer') . '" onclick="OnCheck(' . $q->id . ",msg{$q->id});\" class=\"btn btn-secondary\"/>";
             }
         }
         echo $question;
