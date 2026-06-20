@@ -245,7 +245,7 @@ function game_cross_play(
         }
         if (game_can_start_new_attempt($game)) {
             echo '<br>';
-            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\">" .
+            echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}&forcenew=1\" class=\"btn btn-secondary\">" .
                 get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
         }
     } else if ($info != '') {
@@ -290,7 +290,7 @@ function game_cross_play(
 </div>
 
 
-<p><table cellpadding="0" cellspacing="0" border="0">';
+<p><table cellpadding="0" cellspacing="0" border="0" class="table-reboot">';
 
     if ($game->param3 == 1) {
         // Legends is at the right.
@@ -981,19 +981,19 @@ function CheckHtmlClick() {
         echo '<div style="margin-top: 1em;">';
 
         if (!$done) {
-            echo '<button id="checkbutton" type="button" onclick="CheckServerClick(0);" style="display: inline;">' .
+            echo '<button id="checkbutton" type="button" onclick="CheckServerClick(0);" style="display: inline;" class="btn btn-secondary">' .
             get_string('cross_checkbutton', 'game');
             echo '</button>';
 
             echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="finishattemptbutton" ' .
-                ' type="button" onclick="CheckServerClick(1);" style="display: inline;">' .
+                ' type="button" onclick="CheckServerClick(1);" style="display: inline;" class="btn btn-secondary">' .
             get_string('cross_endofgamebutton', 'game');
             echo '</button>';
         }
 
         if ($game->param5 == 1 || $game->param5 == null) {
             echo ' &nbsp;&nbsp;&nbsp;&nbsp;<button id="printbutton" type="button" ' .
-            ' onclick="OnPrint(0);" style="display: inline;">' . get_string('print', 'game');
+            ' onclick="OnPrint(0);" style="display: inline;" class="btn btn-secondary">' . get_string('print', 'game');
             echo '</button>';
         }
 
@@ -1109,11 +1109,11 @@ function game_cross_show_welcome0($game) {
     ?>
 <div id="worderror" style="color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;" class="table-reboot"><tr>
 <td align="right">
-<button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;">
+<button id="okbutton" type="button" class="button btn btn-secondary" onclick="OKClick();" style="font-weight: bold;">
     <?php echo get_string('ok'); ?></button> &nbsp;
-<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
+<button id="cancelbutton" type="button" class="button btn btn-secondary" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
 </td></tr></table>
 
 </div>
@@ -1142,11 +1142,11 @@ function game_cross_show_welcome1() {
  onkeypress="WordEntryKeyPress(event)" onchange="WordEntryKeyPress(event)" autocomplete="off"></div>
 <div id="worderror" style="color:#c00000;font-weight:bold;display:none;margin-top:1em;"></div>
 
-<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;"><tr>
+<table border="0" cellspacing="0" cellpadding="0" width="100%" style="margin-top:1em;" class="table-reboot"><tr>
 <td align="right">
-<button id="okbutton" type="button" class="button" onclick="OKClick();" style="font-weight: bold;">
+<button id="okbutton" type="button" class="button btn btn-secondary" onclick="OKClick();" style="font-weight: bold;">
     <?php echo get_string('ok'); ?></button> &nbsp;
-<button id="cancelbutton" type="button" class="button" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
+<button id="cancelbutton" type="button" class="button btn btn-secondary" onclick="DeselectCurrentWord();"><?php echo get_string('cancel'); ?></button>
 </td></tr></table>
 
 </td><td>&nbsp</td><td>

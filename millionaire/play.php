@@ -149,7 +149,7 @@ function game_millionaire_showgrid($game, $millionaire, $id, $query, $aanswer, $
     $background = "style='background:#$color'";
 
     echo '<form name="Form1" method="post" action="attempt.php" id="Form1">';
-    echo "<table cellpadding=0 cellspacing=0 border=0>\r\n";
+    echo "<table cellpadding=0 cellspacing=0 border=0 class='table-reboot'>\r\n";
     echo "<tr $background>";
     echo '<td rowspan=' . (17 + count($aanswer)) . '>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>';
     echo "<td colspan=6>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>";
@@ -816,7 +816,7 @@ function game_millionaire_onquit($cm, $game, $attempt, $query, $course) {
     game_updateattempts($game, $attempt, -1, true, $cm, $course);
 
     echo '<br>';
-    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\">" .
+    echo "<a href=\"{$CFG->wwwroot}/mod/game/attempt.php?id={$cm->id}\" class=\"btn btn-secondary\">" .
         get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
-    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
+    echo "<a href=\"{$CFG->wwwroot}/course/view.php?id=$cm->course\" class=\"btn btn-secondary\">" . get_string('finish', 'game') . '</a> ';
 }
