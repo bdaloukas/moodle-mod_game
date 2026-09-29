@@ -47,12 +47,12 @@ if (!has_capability('mod/game:viewreports', $context)) {
 }
 
 $action = required_param('action', PARAM_ALPHANUM);
-$gamekind = required_param('gamekind', PARAM_ALPHANUM);
 $update = required_param('update', PARAM_INT);
 
 $attemptid = required_param('attemptid', PARAM_INT);
-$attempt = $DB->get_record('game_attempts', ['id' => $attemptid]);
-$game = $DB->get_record('game', [ 'id' => $attempt->gameid]);
+$attempt = $DB->get_record('game_attempts', ['id' => $attemptid, 'gameid' => $cm->instance], '*', MUST_EXIST);
+$game = $DB->get_record('game', ['id' => $cm->instance], '*', MUST_EXIST);
+$gamekind = $game->gamekind;
 $detail = $DB->get_record('game_' . $gamekind, [ 'id' => $attemptid]);
 $solution = ($action == 'solution');
 
