@@ -1,3 +1,6 @@
+Changes in version 2026-10-08
+* Fix: Moodle 53 compatibility
+
 Changes in version 2025-07-05
 * Fix: Correct url for modifying question.
 * Fix Crossword: Problem on showing legend.
