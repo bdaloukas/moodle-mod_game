@@ -611,7 +611,7 @@ function game_sudoku_showquestions_glossary(
     }
 
     if ($hasquestions) {
-        echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
+        echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\" class=\"btn btn-secondary\"></center>\n";
     }
 
     // Add a hidden field with the quiz id.
@@ -649,7 +649,7 @@ function game_sudoku_showquestions_glossary(
 
     // Finish the form.
     if ($hasquestions) {
-        echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
+        echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\" class=\"btn btn-secondary\"></center>\n";
     }
 
     echo "</form>\n";
