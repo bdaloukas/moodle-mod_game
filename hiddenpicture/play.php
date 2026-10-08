@@ -491,16 +491,13 @@ function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpi
  * @param boolean $usemap
  */
 function game_showpicture($id, $game, $attempt, $query, $cells, $foundcells, $usemap) {
-    global $CFG;
-
-    $filenamenumbers = str_replace("\\", '/', $CFG->dirroot) . "/mod/game/hiddenpicture/numbers.png";
     if ($usemap) {
         $cols = $game->param1;
         $rows = $game->param2;
     } else {
         $cols = $rows = 0;
     }
-    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p={$query->attachment}&n=$filenamenumbers";
+    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p={$query->attachment}";
     $imagesrc = "hiddenpicture/picture.php?$params";
 
     $fs = get_file_storage();

@@ -33,7 +33,7 @@ $cells = required_param('cells', PARAM_SEQUENCE); // CSV.
 $filehash = required_param('p', PARAM_PATH);
 $cols = required_param('cols', PARAM_INT);
 $rows = required_param('rows', PARAM_INT);
-$filenamenumbers = required_param('n', PARAM_TEXT); // Path to numbers picture.
+$filenamenumbers = $CFG->dirroot . '/mod/game/hiddenpicture/numbers.png';
 create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
 
 /**
