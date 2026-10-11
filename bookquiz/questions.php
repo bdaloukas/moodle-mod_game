@@ -27,6 +27,7 @@ require_once("../headergame.php");
 require_once("../locallib.php");
 
 require_login($course->id, false, $cm);
+require_capability('mod/game:manage', $context);
 
 $attempt = game_getattempt($game, $detail);
 if ($game->bookid == 0) {
@@ -34,6 +35,7 @@ if ($game->bookid == 0) {
 }
 
 if ($form = data_submitted()) {   // Filename.
+    require_sesskey();
     $ids = explode(',', $form->ids);
     game_bookquiz_save($game->id, $game->bookid, $ids, $form);
 }
@@ -116,6 +118,7 @@ if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pag
 <input type="hidden" name=id       value="<?php  p($id) ?>" />
 <input type="hidden" name=q       value="<?php  p($q) ?>" />
 <input type="hidden" name=ids       value="<?php  p(substr($ids, 1)) ?>" />
+<input type="hidden" name="sesskey" value="<?php p(sesskey()) ?>" />
 <center>
 <input type="submit" value="<?php  print_string("savechanges") ?>" />
 </center>
@@ -143,6 +146,7 @@ function game_bookquiz_save($gameid, $bookid, $ids, $form) {
     global $DB;
 
     $questions = $recids = [];
+    $coursecontext = context_course::instance($DB->get_field('game', 'course', ['id' => $gameid], MUST_EXIST));
     $recs = $DB->get_records('game_bookquiz_questions', ['gameid' => $gameid], '', 'id,chapterid,questioncategoryid');
     if ($recs != false) {
         foreach ($recs as $rec) {
@@ -153,7 +157,11 @@ function game_bookquiz_save($gameid, $bookid, $ids, $form) {
 
     foreach ($ids as $chapterid) {
         $name = 'categoryid_' . $chapterid;
-        $categoryid = $form->$name;
+        $categoryid = clean_param($form->$name, PARAM_INT);
+        $ownscategory = $DB->record_exists('question_categories', ['id' => $categoryid, 'contextid' => $coursecontext->id]);
+        if ($categoryid != 0 && !$ownscategory) {
+            continue;
+        }
 
         if (!array_key_exists($chapterid, $questions)) {
             if ($categoryid == 0) {
