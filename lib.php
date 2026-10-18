@@ -1383,15 +1383,20 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
     require_course_login($course, true, $cm);
 
     if ($filearea == 'questiontext') {
-        $questionid = $args[0];
-        $file = $args[1];
+        $questionid = clean_param($args[0], PARAM_INT);
+        $file = clean_param($args[1], PARAM_FILE);
+        if (!\mod_game\questionfile::can_serve($context, $cm->instance, $filearea, $questionid)) {
+            return false;
+        }
         $a = explode('/', $context->path);
         if (!$contextcourse = game_get_context_course_instance($course->id)) {
             throw new moodle_exception('game_error', 'game', 'nocontext');
         }
         $a = ['component' => 'question', 'filearea' => 'questiontext',
             'itemid' => $questionid, 'filename' => $file, 'contextid' => $contextcourse->id];
-        $rec = $DB->get_record('files', $a);
+        if (!$rec = $DB->get_record('files', $a)) {
+            return false;
+        }
 
         $fs = get_file_storage();
         $file = $fs->get_file_by_hash($rec->pathnamehash);
@@ -1402,17 +1407,24 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
         // Finally send the file.
         send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
     } else if ($filearea == 'answer') {
-        $answerid = $args[0];
-        $file = $args[1];
+        $answerid = clean_param($args[0], PARAM_INT);
+        $file = clean_param($args[1], PARAM_FILE);
+        if (!\mod_game\questionfile::can_serve($context, $cm->instance, $filearea, $answerid)) {
+            return false;
+        }
 
         if (!$contextcourse = game_get_context_course_instance($course->id)) {
             throw new moodle_exception('game_error', 'game', 'nocontext');
         }
-        $rec = $DB->get_record('files', ['component' => 'question', 'filearea' => 'answer',
-            'itemid' => $answerid, 'filename' => $file, 'contextid' => $contextcourse->id]);
+        $answerparams = ['component' => 'question', 'filearea' => 'answer',
+            'itemid' => $answerid, 'filename' => $file, 'contextid' => $contextcourse->id];
+        if (!$rec = $DB->get_record('files', $answerparams)) {
+            return false;
+        }
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {
+        $file = $fs->get_file_by_hash($rec->pathnamehash);
+        if (!$file || $file->is_directory()) {
             return false;
         }
 
