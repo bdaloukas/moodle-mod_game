@@ -497,7 +497,7 @@ function game_showpicture($id, $game, $attempt, $query, $cells, $foundcells, $us
     } else {
         $cols = $rows = 0;
     }
-    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p={$query->attachment}";
+    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells";
     $imagesrc = "hiddenpicture/picture.php?$params";
 
     $fs = get_file_storage();

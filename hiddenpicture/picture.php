@@ -30,7 +30,7 @@ $attemptid = required_param('id2', PARAM_INT); // Course Module ID.
 
 $foundcells = required_param('f', PARAM_SEQUENCE); // CSV.
 $cells = required_param('cells', PARAM_SEQUENCE); // CSV.
-$filehash = required_param('p', PARAM_PATH);
+$filehash = \mod_game\hiddenpicture::get_attachment_hash($id, $attemptid);
 $cols = required_param('cols', PARAM_INT);
 $rows = required_param('rows', PARAM_INT);
 $filenamenumbers = $CFG->dirroot . '/mod/game/hiddenpicture/numbers.png';
