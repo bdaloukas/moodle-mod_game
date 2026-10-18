@@ -1679,7 +1679,8 @@ function game_filterglossary($text, $entryid, $contextid, $courseid) {
     }
 
     $questiontext = str_replace('$$' . '\\' . '\\' . 'frac', '$$\\' . 'frac', $text);
-    return game_filtertext($text, $courseid);
+    $trusted = !empty($DB->get_field('glossary_entries', 'definitiontrust', ['id' => clean_param($entryid, PARAM_INT)]));
+    return game_filtertext($text, $courseid, $trusted);
 }
 
 /**
@@ -1808,10 +1809,15 @@ function game_filterquestion_answer($questiontext, $questionid, $contextid, $cou
  *
  * @param string $text
  * @param int $courseid
+ * @param bool|null $trusted Trust flag of the source record; null for content that is not cleaned (question, book).
  */
-function game_filtertext($text, $courseid) {
+function game_filtertext($text, $courseid, $trusted = null) {
     $formatoptions = new stdClass();
-    $formatoptions->noclean = true;
+    if ($trusted === null) {
+        $formatoptions->noclean = true;
+    } else {
+        $formatoptions->trusted = $trusted;
+    }
     $formatoptions->filter = 1;
     $text = trim(format_text($text, FORMAT_MOODLE, $formatoptions));
 
