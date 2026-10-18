@@ -2511,6 +2511,7 @@ function game_create_zip($srcdir, $courseid, $filename) {
     global $CFG;
 
     $dir = $CFG->dataroot . '/' . $courseid;
+    $filename = clean_param($filename, PARAM_FILE);
     $filezip = $dir . "/export/{$filename}";
 
     if (file_exists($filezip)) {
