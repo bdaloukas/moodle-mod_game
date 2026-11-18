@@ -1476,7 +1476,6 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
 function game_reset_course_form_definition(&$mform) {
     $mform->addElement('header', 'gameheader', get_string('modulenameplural', 'game'));
     $mform->addElement('checkbox', 'reset_game_all', get_string('reset_game_all', 'game'));
-    $mform->addElement('checkbox', 'reset_game_deleted_course', get_string('reset_game_deleted_course', 'game'));
 }
 
 /**
@@ -1487,112 +1486,41 @@ function game_reset_course_form_definition(&$mform) {
  * @return array
  */
 function game_reset_course_form_defaults($course) {
-    return ['reset_game_all' => 0, 'reset_game_deleted_course' => 0];
+    return ['reset_game_all' => 0];
 }
 
 /**
- * Actual implementation of the reset course functionality, delete all the Game responses for course $data->courseid.
+ * Reset Game user data for the selected course, preserving activity settings.
  *
- * @param stdClass $data the data submitted from the reset course.
+ * All attempt-specific records are removed by the same helper used by the
+ * Privacy API. Game configuration, Book Quiz chapter mappings and board files
+ * are retained. This operation does not clean up unrelated courses.
  *
- * @return array status array
+ * @param stdClass $data The submitted course-reset settings.
+ * @return array Course-reset status entries.
  */
 function game_reset_userdata($data) {
     global $DB;
 
-    $componentstr = get_string('modulenameplural', 'game');
     $status = [];
-    $fs = get_file_storage();
-
-    for ($i = 1; $i <= 2; $i++) {
-        if ($i == 1) {
-            if (empty($data->reset_game_all)) {
-                continue;
-            }
-            $allgamessql = 'SELECT g.id FROM {game} g WHERE g.course = ' . $data->courseid;
-            $allattemptssql = 'SELECT ga.id FROM {game} g LEFT JOIN {game_attempts} ga ON g.id = ga.gameid WHERE g.course = ' .
-                $data->courseid;
-            $newstatus = ['component' => $componentstr, 'item' => get_string('reset_game_all', 'game'), 'error' => false];
-        } else if ($i == 2) {
-            if (empty($data->reset_game_deleted_course)) {
-                continue;
-            }
-
-            $allgamessql = 'SELECT g.id FROM {game} g WHERE NOT EXISTS(SELECT * FROM {course} c WHERE c.id = g.course)';
-            $allattemptssql = 'SELECT ga.id FROM {game_attempts} ga ' .
-                'WHERE NOT EXISTS(SELECT * FROM {game} g WHERE ga.gameid = g.id)';
-            $newstatus = ['component' => $componentstr, 'item' => get_string('reset_game_deleted_course', 'game'),
-                'error' => false];
-        }
-
-        $recs = $DB->get_recordset_sql($allgamessql);
-        if ($recs->valid()) {
-            foreach ($recs as $rec) {
-                if (!$cm = get_coursemodule_from_instance('game', $rec->id)) {
-                    continue;
-                }
-                $context = game_get_context_module_instance($cm->id);
-                $fs->delete_area_files($context->id, 'mod_game', 'gnakes_file');
-                $fs->delete_area_files($context->id, 'mod_game', 'gnakes_board');
-
-                // Reset grades.
-                $game = $DB->get_record_select('game', 'id=' . $rec->id, null, 'id,name,course ');
-                $grades = null;
-                $params = ['itemname' => $game->name, 'idnumber' => 0];
-                $params['reset'] = true;
-                grade_update('mod/game', $game->course, 'mod', 'game', $game->id, 0, $grades, $params);
-            }
-        }
-
-        $DB->delete_records_select('game_bookquiz', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_bookquiz_chapters', "attemptid IN ($allattemptssql)");
-        $DB->delete_records_select('game_bookquiz_questions', "gameid IN ($allgamessql)");
-        $DB->delete_records_select('game_cross', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_cryptex', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_export_html', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_export_javame', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_grades', "gameid IN ($allgamessql)");
-        $DB->delete_records_select('game_hangman', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_hiddenpicture', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_millionaire', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_queries', "gameid IN ($allgamessql)");
-        $DB->delete_records_select('game_repetitions', "gameid IN ($allgamessql)");
-        $DB->delete_records_select('game_snakes', "id IN ($allgamessql)");
-        $DB->delete_records_select('game_sudoku', "id IN ($allgamessql)");
-
-        if ($i == 2) {
-            $DB->delete_records_select('game_attempts', "NOT EXISTS (SELECT * FROM {game} g WHERE {game_attempts}.gameid=g.id)");
-        } else {
-            $DB->delete_records_select('game_attempts', "gameid IN ($allgamessql)");
-        }
-
-        $status[] = $newstatus;
-    }
-
-    if (empty($data->reset_game_deleted_course)) {
+    if (empty($data->reset_game_all)) {
         return $status;
     }
 
-    // Delete data from deleted games.
-    $a = ['bookquiz', 'cross', 'cryptex', 'grades', 'bookquiz_questions', 'export_html', 'export_javame', 'hangman',
-            'hiddenpicture', 'millionaire', 'snakes', 'sudoku'];
-    foreach ($a as $table) {
-        $DB->delete_records_select('game_' . $table, "NOT EXISTS(SELECT * FROM {game} g WHERE {game_$table}.id=g.id)");
+    $games = $DB->get_records('game', ['course' => (int)$data->courseid], '', 'id, name, course, grade');
+    foreach ($games as $game) {
+        // Deletes attempts and their subtype rows by attempt id, plus user
+        // responses, repetitions and grades; preserves activity configuration.
+        game_delete_attempts_data((int)$game->id);
+        // Clear students' grades in the Moodle gradebook but keep the grade item.
+        game_grade_item_update($game, 'reset');
     }
 
-    $a = ['grades', 'queries', 'repetitions'];
-    foreach ($a as $table) {
-        $DB->delete_records_select('game_' . $table, "NOT EXISTS(SELECT * FROM {game} g WHERE {game_$table}.gameid=g.id)");
-    }
-
-    $a = ['bookquiz_chapters'];
-    foreach ($a as $table) {
-        $DB->delete_records_select(
-            'game_' . $table,
-            "NOT EXISTS(SELECT * FROM {game_attempts} ga WHERE {game_$table}.attemptid=ga.id)"
-        );
-    }
-
+    $status[] = [
+        'component' => get_string('modulenameplural', 'game'),
+        'item' => get_string('reset_game_all', 'game'),
+        'error' => false,
+    ];
     return $status;
 }
 
