@@ -387,6 +387,7 @@ function game_hiddenpicture_showquestion_glossary($game, $id, $query) {
     // Add a hidden field with the queryid.
     echo '<input type="hidden" name="id" value="' . s($id) . "\" />\n";
     echo '<input type="hidden" name="action" value="hiddenpicturecheckg" />';
+    echo '<input type="hidden" name="sesskey" value="' . sesskey() . "\" />\n";
     echo '<input type="hidden" name="queryid" value="' . $query->id . "\" />\n";
 
     // Add a hidden field with glossaryentryid.
@@ -415,29 +416,50 @@ function game_hiddenpicture_showquestion_glossary($game, $id, $query) {
  * @param stdClass $course
  */
 function game_hiddenpicture_check_mainquestion($cm, $game, &$attempt, &$hiddenpicture, $finishattempt, $context, $course) {
-    global $CFG, $DB;
+    global $CFG, $DB, $USER;
 
-    $responses = data_submitted();
+    // This request changes stored assessment results; never accept GET or a request without a valid session key.
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new moodle_exception('invalidrequest', 'error');
+    }
+    require_sesskey();
 
-    $glossaryentryid = $responses->glossaryentryid;
-    $queryid = $responses->queryid;
+    // Only the authenticated player's active Hidden Picture attempt may be updated.
+    if (!$attempt || !$hiddenpicture ||
+            (int)$attempt->gameid !== (int)$game->id ||
+            (int)$attempt->userid !== (int)$USER->id ||
+            (int)$hiddenpicture->id !== (int)$attempt->id) {
+        throw new moodle_exception('hiddenpicture_error', 'game');
+    }
 
-    // Load the glossary entry.
-    if (!($entry = $DB->get_record('glossary_entries', ['id' => $glossaryentryid]))) {
+    $queryid = required_param('queryid', PARAM_INT);
+    $glossaryentryid = required_param('glossaryentryid', PARAM_INT);
+    $answer = optional_param('answer', '', PARAM_TEXT);
+
+    // mycol=0 identifies the main glossary question, not one of the picture's regular questions.
+    // Bind all identifiers to the current active attempt before passing the row to the shared updater.
+    $query = $DB->get_record('game_queries', [
+        'id' => $queryid,
+        'attemptid' => $attempt->id,
+        'gameid' => $game->id,
+        'userid' => $attempt->userid,
+        'gamekind' => $game->gamekind,
+        'sourcemodule' => 'glossary',
+        'mycol' => 0,
+    ]);
+    if (!$query || (int)$query->glossaryentryid !== (int)$glossaryentryid) {
+        throw new moodle_exception('hiddenpicture_error', 'game');
+    }
+
+    // Use the server-bound entry and verify the game's configured glossary.
+    $entry = $DB->get_record('glossary_entries', [
+        'id' => $query->glossaryentryid,
+        'glossaryid' => $game->glossaryid2,
+    ]);
+    if (!$entry) {
         throw new moodle_exception('noglossaryentriesfound', 'game');
     }
-    $answer = $responses->answer;
-    $correct = false;
-    if ($answer != '') {
-        if (game_upper($entry->concept) == game_upper($answer)) {
-            $correct = true;
-        }
-    }
-
-    // Load the query.
-    if (!($query = $DB->get_record('game_queries', ['id' => $queryid]))) {
-        throw new moodle_exception('hiddenpicture_error', 'game', "The query $queryid not found");
-    }
+    $correct = ($answer !== '' && game_upper($entry->concept) == game_upper($answer));
 
     game_update_queries($game, $attempt, $query, $correct, $answer);
 

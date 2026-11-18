@@ -27,15 +27,16 @@ require_once("../headergame.php");
 require_once("../locallib.php");
 
 require_login($course->id, false, $cm);
+require_capability('mod/game:manage', $context);
 
 $attempt = game_getattempt($game, $detail);
 if ($game->bookid == 0) {
     throw new moodle_exception('bookquiz_not_select_book', 'game');
 }
 
-if ($form = data_submitted()) {   // Filename.
-    $ids = explode(',', $form->ids);
-    game_bookquiz_save($game->id, $game->bookid, $ids, $form);
+if ($form = data_submitted()) {
+    require_sesskey();
+    game_bookquiz_save($game->id, $game->bookid, $form);
 }
 
 // Print upload form.
@@ -52,7 +53,7 @@ if (($recs = $DB->get_records_select('game_bookquiz_questions', $select, null, '
 $context = game_get_context_course_instance($COURSE->id);
 $select = " contextid in ($context->id)";
 
-$a = [];
+$a = [0 => get_string('none')];
 if ($recs = $DB->get_records_select('question_categories', $select, null, 'id,name')) {
     foreach ($recs as $rec) {
         $s = $rec->name;
@@ -82,7 +83,6 @@ echo '<td><center>' . get_string('bookquiz_chapters', 'game') . '</td>';
 echo '<td><center>' . get_string('bookquiz_categories', 'game') . '</td>';
 echo '<td><center>' . get_string('bookquiz_numquestions', 'game') . '</td>';
 echo "</tr>\r\n";
-$ids = '';
 if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pagenum', 'id,title')) != false) {
     foreach ($recs as $rec) {
         echo '<tr>';
@@ -106,7 +106,6 @@ if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pag
 
         echo "</tr>\r\n";
 
-        $ids .= ',' . $rec->id;
     }
 }
 ?>
@@ -115,7 +114,7 @@ if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pag
 <!-- These hidden variables are always the same -->
 <input type="hidden" name=id       value="<?php  p($id) ?>" />
 <input type="hidden" name=q       value="<?php  p($q) ?>" />
-<input type="hidden" name=ids       value="<?php  p(substr($ids, 1)) ?>" />
+<input type="hidden" name="sesskey" value="<?php echo sesskey(); ?>" />
 <center>
 <input type="submit" value="<?php  print_string("savechanges") ?>" />
 </center>
@@ -126,76 +125,84 @@ if (($recs = $DB->get_records('book_chapters', ['bookid' => $game->bookid], 'pag
 echo $OUTPUT->footer($course);
 
 /**
- * Save infos to database.
+ * Save the selected question categories for chapters of the configured Book.
+ *
+ * Chapter and category identifiers are derived/validated server-side; the
+ * submitted form must not control which Book chapters can be edited.
  *
  * @package mod_game
- * @copyright 2007 Vasilis Daloukas
- * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- *
- * @param int $gameid
- * @param int $bookid
- * @param array $ids
- * @param stdClass $form
+ * @param int $gameid Game instance id.
+ * @param int $bookid Configured Book instance id.
+ * @param stdClass $form Submitted POST data.
  * @throws dml_exception
  * @throws moodle_exception
  */
-function game_bookquiz_save($gameid, $bookid, $ids, $form) {
+function game_bookquiz_save($gameid, $bookid, $form) {
     global $DB;
 
-    $questions = $recids = [];
-    $recs = $DB->get_records('game_bookquiz_questions', ['gameid' => $gameid], '', 'id,chapterid,questioncategoryid');
-    if ($recs != false) {
-        foreach ($recs as $rec) {
-            $questions[$rec->chapterid] = $rec->questioncategoryid;
-            $recids[$rec->chapterid] = $rec->id;
-        }
+    $game = $DB->get_record('game', ['id' => $gameid], 'id,course,bookid', MUST_EXIST);
+    if ((int) $game->bookid !== (int) $bookid) {
+        throw new invalid_parameter_exception('The Book does not belong to this Game.');
     }
 
-    foreach ($ids as $chapterid) {
-        $name = 'categoryid_' . $chapterid;
-        $categoryid = $form->$name;
+    // Use the same course question categories as those displayed in the form.
+    $coursecontext = game_get_context_course_instance($game->course);
+    $validcategories = $DB->get_records('question_categories',
+        ['contextid' => $coursecontext->id], '', 'id');
 
-        if (!array_key_exists($chapterid, $questions)) {
-            if ($categoryid == 0) {
+    // Do not trust a submitted list of chapter IDs. Read them from the Book.
+    $chapters = $DB->get_records('book_chapters', ['bookid' => $bookid], '', 'id');
+    $submitted = [];
+    foreach ($chapters as $chapter) {
+        $fieldname = 'categoryid_' . $chapter->id;
+        if (!isset($form->{$fieldname}) ||
+                !is_scalar($form->{$fieldname}) ||
+                !ctype_digit((string) $form->{$fieldname})) {
+            throw new invalid_parameter_exception('Missing or invalid chapter category.');
+        }
+        $categoryid = (int) $form->{$fieldname};
+        if ($categoryid !== 0 && !isset($validcategories[$categoryid])) {
+            throw new invalid_parameter_exception('Category is not available in this course.');
+        }
+        $submitted[$chapter->id] = $categoryid;
+    }
+
+    // Only perform writes after every submitted value has been validated.
+    $existing = $DB->get_records('game_bookquiz_questions',
+        ['gameid' => $gameid], '', 'id,chapterid,questioncategoryid');
+    $existingbychapter = [];
+    foreach ($existing as $record) {
+        $existingbychapter[$record->chapterid] = $record;
+    }
+
+    $transaction = $DB->start_delegated_transaction();
+    foreach ($submitted as $chapterid => $categoryid) {
+        if (!isset($existingbychapter[$chapterid])) {
+            if ($categoryid === 0) {
                 continue;
             }
-
-            $rec = new stdClass();
-            $rec->gameid = $gameid;
-            $rec->chapterid = $chapterid;
-            $rec->questioncategoryid = $categoryid;
-
-            if (($newid = $DB->insert_record('game_bookquiz_questions', $rec)) == false) {
-                throw new moodle_exception('bookquiz_error', 'game', 'Can\'t insert to game_bookquiz_questions');
-            }
+            $record = (object) [
+                'gameid' => $gameid,
+                'chapterid' => $chapterid,
+                'questioncategoryid' => $categoryid,
+            ];
+            $DB->insert_record('game_bookquiz_questions', $record);
             continue;
         }
 
-        $cat = $questions[$chapterid];
-        if ($cat == $categoryid) {
-            $recids[$chapterid] = 0;
+        $current = $existingbychapter[$chapterid];
+        if ((int) $current->questioncategoryid === $categoryid) {
             continue;
         }
-
-        if ($categoryid == 0) {
-            if (!delete_records('game_bookquiz_questions', 'id', $recids[$chapterid])) {
-                throw new moodle_exception('bookquiz_error', 'game', 'Can\'t delete game_bookquiz_questions');
-            }
+        if ($categoryid === 0) {
+            $DB->delete_records('game_bookquiz_questions',
+                ['id' => $current->id, 'gameid' => $gameid]);
         } else {
-            $updrec = new StdClass();
-            $updrec->id = $recids[$chapterid];
-            $updrec->questioncategoryid = $categoryid;
-            if (($DB->update_record('game_bookquiz_questions', $updrec)) == false) {
-                throw new moodle_exception('bookquiz_error', 'game', 'Can\'t update game_bookquiz_questions');
-            }
-        }
-
-        $recids[$chapterid] = 0;
-    }
-
-    foreach ($recids as $chapterid => $id) {
-        if ($id == 0) {
-            continue;
+            $DB->update_record('game_bookquiz_questions', (object) [
+                'id' => $current->id,
+                'questioncategoryid' => $categoryid,
+            ]);
         }
     }
+    $transaction->allow_commit();
 }

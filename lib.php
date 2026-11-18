@@ -205,51 +205,18 @@ function game_before_add_or_update(&$game) {
 function game_delete_instance($gameid) {
     global $DB;
 
-    // Delete any dependent records here.
-    $aids = [];
-    if (($recs = $DB->get_records('game_attempts', ['gameid' => $gameid])) != false) {
-        $ids = '';
+    // Keep the activity deletion atomic, including all attempt subtype records.
+    // The shared helper handles Book Quiz chapter progress and Hidden Picture data too.
+    $transaction = $DB->start_delegated_transaction();
+    game_delete_attempts_data($gameid);
 
-        $count = 0;
-        foreach ($recs as $rec) {
-            $ids .= ($ids == '' ? $rec->id : ',' . $rec->id);
-            if (++$count > 10) {
-                $aids[] = $ids;
-                $count = 0;
-                $ids = '';
-            }
-        }
-        if ($ids != '') {
-            $aids[] = $ids;
-        }
+    // These are configuration records of the activity, not personal attempt data.
+    $DB->delete_records('game_bookquiz_questions', ['gameid' => $gameid]);
+    foreach (['game_export_javame', 'game_export_html', 'game'] as $table) {
+        $DB->delete_records($table, ['id' => $gameid]);
     }
 
-    foreach ($aids as $ids) {
-        $tables = ['game_hangman', 'game_cross', 'game_cryptex', 'game_millionaire',
-            'game_bookquiz', 'game_sudoku', 'game_snakes'];
-
-        foreach ($tables as $t) {
-            $sql = "DELETE FROM {" . $t . "} WHERE id IN (" . $ids . ')';
-            if (!$DB->execute($sql)) {
-                return false;
-            }
-        }
-    }
-
-    $tables = ['game_attempts', 'game_grades', 'game_bookquiz_questions', 'game_queries', 'game_repetitions'];
-    foreach ($tables as $t) {
-        if (!$DB->delete_records($t, ['gameid' => $gameid])) {
-            return false;
-        }
-    }
-
-    $tables = ['game_export_javame', 'game_export_html', 'game'];
-    foreach ($tables as $table) {
-        if (!$DB->delete_records($table, ['id' => $gameid])) {
-            return false;
-        }
-    }
-
+    $transaction->allow_commit();
     return true;
 }
 
@@ -955,15 +922,17 @@ function game_extend_settings_navigation(settings_navigation $settings, navigati
 
         switch ($game->gamekind) {
             case 'bookquiz':
-                $url = new moodle_url('/mod/game/bookquiz/questions.php', ['q' => $PAGE->cm->instance]);
-                $exportnode = $gamenode->add(
-                    get_string('bookquiz_questions', 'game'),
-                    $url,
-                    navigation_node::TYPE_SETTING,
-                    null,
-                    ull,
-                    new pix_icon('i/item', '')
-                );
+                if (has_capability('mod/game:manage', $context)) {
+                    $url = new moodle_url('/mod/game/bookquiz/questions.php', ['q' => $PAGE->cm->instance]);
+                    $gamenode->add(
+                        get_string('bookquiz_questions', 'game'),
+                        $url,
+                        navigation_node::TYPE_SETTING,
+                        null,
+                        null,
+                        new pix_icon('i/item', '')
+                    );
+                }
                 break;
             case 'hangman':
                 $url = new moodle_url(
@@ -1362,19 +1331,83 @@ if (defined('GAME_MOODLE_401')) {
 }
 
 /**
- * Serves the game attachents.
+ * Authorises a file reference that has actually been rendered to the user.
+ *
+ * A game can display questions before recording them in game_queries (e.g. Book Quiz),
+ * so the per-session rendered list is used rather than relying on answered attempts.
+ * This is populated only while the server generates question/answer HTML.
+ *
+ * @param int $contextid Game module context id.
+ * @param string $filearea questiontext or answer.
+ * @param int $itemid Question or answer id.
+ */
+function game_register_rendered_question_file($contextid, $filearea, $itemid) {
+    global $SESSION, $USER;
+
+    $contextid = (int) $contextid;
+    $itemid = (int) $itemid;
+    if (empty($USER->id) || $contextid <= 0 || $itemid <= 0 ||
+            !in_array($filearea, ['questiontext', 'answer'], true)) {
+        return;
+    }
+
+    if (!isset($SESSION->mod_game_rendered_files) || !is_array($SESSION->mod_game_rendered_files)) {
+        $SESSION->mod_game_rendered_files = [];
+    }
+    $userid = (int) $USER->id;
+    if (!isset($SESSION->mod_game_rendered_files[$userid])) {
+        $SESSION->mod_game_rendered_files[$userid] = [];
+    }
+    if (!isset($SESSION->mod_game_rendered_files[$userid][$contextid])) {
+        $SESSION->mod_game_rendered_files[$userid][$contextid] = [];
+    }
+    if (!isset($SESSION->mod_game_rendered_files[$userid][$contextid][$filearea])) {
+        $SESSION->mod_game_rendered_files[$userid][$contextid][$filearea] = [];
+    }
+
+    $allowed = &$SESSION->mod_game_rendered_files[$userid][$contextid][$filearea];
+    $now = time();
+    // Prune expired entries to limit growth in long-lived sessions.
+    foreach ($allowed as $id => $expires) {
+        if ($expires < $now) {
+            unset($allowed[$id]);
+        }
+    }
+    $allowed[$itemid] = $now + 7200;
+}
+
+/**
+ * Determines whether the requested question/answer attachment has been rendered
+ * to this authenticated user's current Moodle session in this Game activity.
+ *
+ * @param int $contextid Game module context id.
+ * @param string $filearea questiontext or answer.
+ * @param int $itemid Question or answer id.
+ * @return bool
+ */
+function game_can_access_rendered_question_file($contextid, $filearea, $itemid) {
+    global $SESSION, $USER;
+
+    if (empty($USER->id)) {
+        return false;
+    }
+    return !empty($SESSION->mod_game_rendered_files[(int) $USER->id][(int) $contextid][$filearea][(int) $itemid]) &&
+        $SESSION->mod_game_rendered_files[(int) $USER->id][(int) $contextid][$filearea][(int) $itemid] >= time();
+}
+
+/**
+ * Serves the game attachments.
  *
  * @param stdClass $course
  * @param stdClass $cm
  * @param stdClass $context
  * @param string $filearea
  * @param array $args
- * @param boolean $forcedownload
- *
- * @return boolean false if not exists file
+ * @param bool $forcedownload
+ * @return bool false if access is denied or the file does not exist
  */
 function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
-    global $CFG, $DB;
+    global $DB;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
         return false;
@@ -1382,56 +1415,57 @@ function mod_game_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
 
     require_course_login($course, true, $cm);
 
-    if ($filearea == 'questiontext') {
-        $questionid = $args[0];
-        $file = $args[1];
-        $a = explode('/', $context->path);
-        if (!$contextcourse = game_get_context_course_instance($course->id)) {
-            throw new moodle_exception('game_error', 'game', 'nocontext');
+    if ($filearea === 'questiontext' || $filearea === 'answer') {
+        if (count($args) < 2) {
+            return false;
         }
-        $a = ['component' => 'question', 'filearea' => 'questiontext',
-            'itemid' => $questionid, 'filename' => $file, 'contextid' => $contextcourse->id];
-        $rec = $DB->get_record('files', $a);
+
+        $itemid = array_shift($args);
+        if (!ctype_digit((string) $itemid) || (int) $itemid <= 0) {
+            return false;
+        }
+        $itemid = (int) $itemid;
+
+        if (!game_can_access_rendered_question_file($context->id, $filearea, $itemid)) {
+            return false;
+        }
+
+        $filename = array_pop($args);
+        $filepath = $args ? '/' . implode('/', $args) . '/' : '/';
+        $contextcourse = game_get_context_course_instance($course->id);
+        if (!$contextcourse) {
+            return false;
+        }
 
         $fs = get_file_storage();
-        $file = $fs->get_file_by_hash($rec->pathnamehash);
+        $file = $fs->get_file($contextcourse->id, 'question', $filearea, $itemid, $filepath, $filename);
         if (!$file || $file->is_directory()) {
             return false;
         }
 
-        // Finally send the file.
-        send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
-    } else if ($filearea == 'answer') {
-        $answerid = $args[0];
-        $file = $args[1];
-
-        if (!$contextcourse = game_get_context_course_instance($course->id)) {
-            throw new moodle_exception('game_error', 'game', 'nocontext');
-        }
-        $rec = $DB->get_record('files', ['component' => 'question', 'filearea' => 'answer',
-            'itemid' => $answerid, 'filename' => $file, 'contextid' => $contextcourse->id]);
-
-        $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash($rec->pathnamehash) || $file->is_directory()) {
-            return false;
-        }
-
-        // Finally send the file.
-        send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
+        send_stored_file($file, 0, 0, true);
+        return true;
     }
 
-    $filearea = $args[0];
+    // Legacy custom Snakes board URLs have the game id as the external file area.
+    // Keep the existing path convention, but do not coerce the file object to bool.
+    if ((string) $filearea !== (string) $cm->instance || count($args) < 2) {
+        return false;
+    }
+    $legacyfilearea = $args[0];
+    if ($legacyfilearea !== 'snakes_board') {
+        return false;
+    }
     $filename = $args[1];
-
     $fs = get_file_storage();
-    $relativepath = implode('/', $args);
-    $fullpath = "/$context->id/mod_game/$filearea/$cm->instance/$filename";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
+    $fullpath = "/{$context->id}/mod_game/{$legacyfilearea}/{$cm->instance}/{$filename}";
+    $file = $fs->get_file_by_hash(sha1($fullpath));
+    if (!$file || $file->is_directory()) {
         return false;
     }
 
-    // Finally send the file.
-    send_stored_file($file, 0, 0, true); // Download MUST be forced - security!
+    send_stored_file($file, 0, 0, true);
+    return true;
 }
 
 /**
@@ -1725,36 +1759,71 @@ function mod_game_get_completion_active_rule_descriptions($cm) {
 }
 
 /**
+ * Delete per-user Game data without deleting the Game activity or its configuration.
+ *
+ * Each subtype row uses the parent attempt id as its primary key. Book Quiz chapter
+ * progress instead references the parent attempt via its attemptid field.
+ *
+ * @param int $gameid The Game activity id.
+ * @param array|null $userids User ids to erase, or null for all users in this Game.
+ */
+function game_delete_attempts_data($gameid, $userids = null) {
+    global $DB;
+
+    if ($userids !== null) {
+        $userids = array_values(array_unique(array_map('intval', $userids)));
+        if (empty($userids)) {
+            return;
+        }
+        // Keep IN-clause parameter counts within the limits of supported databases.
+        $userbatches = array_chunk($userids, 200);
+    } else {
+        $userbatches = [null];
+    }
+
+    $subtypetables = [
+        'game_bookquiz', 'game_cross', 'game_cryptex', 'game_hangman',
+        'game_hiddenpicture', 'game_millionaire', 'game_snakes', 'game_sudoku',
+    ];
+
+    $transaction = $DB->start_delegated_transaction();
+    foreach ($userbatches as $userbatch) {
+        $where = 'gameid = :gameid';
+        $params = ['gameid' => $gameid];
+        if ($userbatch !== null) {
+            [$userinsql, $userparams] = $DB->get_in_or_equal($userbatch, SQL_PARAMS_NAMED, 'privacyuser');
+            $where .= " AND userid {$userinsql}";
+            $params = array_merge($params, $userparams);
+        }
+
+        // Gather attempt identifiers before erasing the parents. Each batch is small
+        // enough to avoid oversized IN clauses, including on SQLite installations.
+        $attemptids = $DB->get_fieldset_select('game_attempts', 'id', $where, $params);
+        foreach (array_chunk($attemptids, 200) as $idbatch) {
+            [$idsql, $idparams] = $DB->get_in_or_equal($idbatch, SQL_PARAMS_NAMED, 'privacyattempt');
+            foreach ($subtypetables as $table) {
+                $DB->delete_records_select($table, "id {$idsql}", $idparams);
+            }
+            $DB->delete_records_select('game_bookquiz_chapters', "attemptid {$idsql}", $idparams);
+            $DB->delete_records_select('game_queries', "attemptid {$idsql}", $idparams);
+        }
+
+        // Also remove standalone response/grade/repetition rows not linked to an attempt.
+        foreach (['game_queries', 'game_repetitions', 'game_grades', 'game_attempts'] as $table) {
+            $DB->delete_records_select($table, $where, $params);
+        }
+    }
+    $transaction->allow_commit();
+}
+
+/**
  * Delete all the attempts belonging to a user in a particular game.
  *
  * @param int $gameid The id of game.
  * @param object $user The user object.
  */
 function game_delete_user_attempts($gameid, $user) {
-    global $CFG, $DB;
-    require_once($CFG->dirroot . '/mod/game/locallib.php');
-
-    $sql = "SELECT id FROM {$CFG->prefix}game_attempts WHERE gameid=$gameid AND userid={$user->id}";
-    $recs = $DB->get_records_sql($sql);
-    foreach ($recs as $rec) {
-        $params = ['id' => $rec->id];
-        $DB->delete_records('game_bookquiz', $params);
-        $DB->delete_records('game_cross', $params);
-        $DB->delete_records('game_cryptex', $params);
-        $DB->delete_records('game_hangman', $params);
-        $DB->delete_records('game_hiddenpicture', $params);
-        $DB->delete_records('game_millionaire', $params);
-        $DB->delete_records('game_snakes', $params);
-        $DB->delete_records('game_sudoku', $params);
-    }
-
-    $params = ['gameid' => $gameid, 'userid' => $user->id];
-    $DB->delete_records('game_grades', $params);
-
-    $params = ['gameid' => $gameid, 'userid' => $user->id];
-    $DB->delete_records('game_attempts', $params);
-    $DB->delete_records('game_repetitions', $params);
-    $DB->delete_records('game_queries', $params);
+    game_delete_attempts_data($gameid, [$user->id]);
 }
 
 /**

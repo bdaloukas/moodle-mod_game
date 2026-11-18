@@ -34,8 +34,14 @@ if (!has_capability('mod/game:viewreports', $context)) {
 
 $PAGE->navbar->add(get_string('showattempts', 'game'));
 
-$action = optional_param('action', "", PARAM_ALPHANUM);  // Action.
-if ($action == 'delete') {
+$action = optional_param('action', '', PARAM_ALPHANUM);  // Action.
+if ($action === 'delete') {
+    // Deletions must be authorised POST requests with a valid session key.
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        throw new moodle_exception('invalidrequest', 'error');
+    }
+    require_capability('mod/game:deleteattempts', $context);
+    require_sesskey();
     game_ondeleteattempt($game);
 }
 
@@ -193,7 +199,7 @@ function game_showgroups($game) {
 function game_showattempts($game) {
     global $CFG, $DB, $context;
 
-    $allowdelete = has_capability('mod/game:manage', $context);
+    $allowdelete = has_capability('mod/game:deleteattempts', $context);
 
     $userid = optional_param('userid', 0, PARAM_INT);
     $limitfrom = optional_param('limitfrom', 0, PARAM_INT);
@@ -243,14 +249,36 @@ function game_showattempts($game) {
         foreach ($recs as $rec) {
             echo '<tr>';
             echo '<td><center>';
-            if (($rec->timefinish == 0) || $allowdelete) {
-                echo "\r\n<a href=\"{$CFG->wwwroot}/mod/game/showattempts.php?attemptid={$rec->id}";
-                echo "&amp;q={$game->id}&amp;action=delete";
-                if ($allowdelete) {
-                    echo '&allowdelete=1';
+            if ($allowdelete) {
+                // A POST form prevents deletion from being triggered by a plain link.
+                echo html_writer::start_tag('form', [
+                    'method' => 'post',
+                    'action' => (new moodle_url('/mod/game/showattempts.php'))->out(false),
+                ]);
+                foreach ([
+                    'q' => $game->id,
+                    'action' => 'delete',
+                    'attemptid' => $rec->id,
+                    'sesskey' => sesskey(),
+                ] as $name => $value) {
+                    echo html_writer::empty_tag('input', [
+                        'type' => 'hidden',
+                        'name' => $name,
+                        'value' => $value,
+                    ]);
                 }
-                echo '">';
-                echo '<img src="' . game_pix_url('t/delete') . '" alt="' . get_string('delete') . '" style="width: 1em" /></a>';
+                echo html_writer::tag('button',
+                    html_writer::empty_tag('img', [
+                        'src' => game_pix_url('t/delete'),
+                        'alt' => '',
+                        'style' => 'width: 1em',
+                    ]), [
+                        'type' => 'submit',
+                        'title' => get_string('delete'),
+                        'aria-label' => get_string('delete'),
+                        'style' => 'border: 0; background: transparent; padding: 0; cursor: pointer;',
+                    ]);
+                echo html_writer::end_tag('form');
             }
             echo '</center></td>';
             echo '<td><center>' . $rec->firstname . ' ' . $rec->lastname . '</center></td>';
@@ -295,15 +323,50 @@ function game_showattempts($game) {
  * @param stdClass $game
  */
 function game_ondeleteattempt(stdClass $game) {
-    global $CFG, $DB;
+    global $DB;
 
     $attemptid = required_param('attemptid', PARAM_INT);
 
-    switch ($game->gamekind) {
-        case 'bookquiz':
-            $DB->delete_records('game_bookquiz_chapters', ['attemptid' => $attemptid]);
-            break;
+    // Reject attempts belonging to any other Game activity.
+    $attempt = $DB->get_record('game_attempts', [
+        'id' => $attemptid,
+        'gameid' => $game->id,
+    ], '*', MUST_EXIST);
+
+    // Delete related records atomically and update the affected pupil's grade.
+    $transaction = $DB->start_delegated_transaction();
+    if ($game->gamekind === 'bookquiz') {
+        $DB->delete_records('game_bookquiz_chapters', ['attemptid' => $attemptid]);
     }
-    $DB->delete_records('game_queries', [ 'attemptid' => $attemptid]);
-    $DB->delete_records('game_attempts', [ 'id' => $attemptid]);
+
+    // Remove per-attempt data stored in the individual game-kind tables.
+    $attempttables = [
+        'bookquiz' => 'game_bookquiz',
+        'cross' => 'game_cross',
+        'cryptex' => 'game_cryptex',
+        'hangman' => 'game_hangman',
+        'hiddenpicture' => 'game_hiddenpicture',
+        'millionaire' => 'game_millionaire',
+        'snakes' => 'game_snakes',
+        'sudoku' => 'game_sudoku',
+    ];
+    if (isset($attempttables[$game->gamekind])) {
+        $DB->delete_records($attempttables[$game->gamekind], ['id' => $attemptid]);
+    }
+    $DB->delete_records('game_queries', ['attemptid' => $attemptid]);
+    $DB->delete_records('game_attempts', ['id' => $attemptid, 'gameid' => $game->id]);
+
+    $gradeconditions = ['gameid' => $game->id, 'userid' => $attempt->userid];
+    $remainingattempts = game_get_user_attempts($game->id, $attempt->userid, 'all');
+    if (!$remainingattempts) {
+        $DB->delete_records('game_grades', $gradeconditions);
+    } else if ($grade = $DB->get_record('game_grades', $gradeconditions)) {
+        $grade->score = game_calculate_best_score($game, $remainingattempts);
+        $grade->timemodified = time();
+        $DB->update_record('game_grades', $grade);
+    }
+    $transaction->allow_commit();
+
+    // Synchronise the Moodle gradebook for this pupil, not the logged-in teacher.
+    game_update_grades($game, $attempt->userid);
 }

@@ -1755,6 +1755,7 @@ function game_filterquestion($questiontext, $questionid, $contextid, $courseid) 
         $file = substr($questiontext, $pos2 + 1, $pos3 - $pos2 - 1);
 
         $new = $CFG->wwwroot . "/pluginfile.php/$contextid/mod_game/questiontext/$questionid/$file";
+        game_register_rendered_question_file($contextid, 'questiontext', $questionid);
         $questiontext = substr($questiontext, 0, $pos) . $new . substr($questiontext, $pos3);
     }
 
@@ -1795,6 +1796,7 @@ function game_filterquestion_answer($questiontext, $questionid, $contextid, $cou
         $file = substr($questiontext, $pos2 + 1, $pos3 - $pos2 - 1);
 
         $new = $CFG->wwwroot . "/pluginfile.php/$contextid/mod_game/answer/$questionid/$file";
+        game_register_rendered_question_file($contextid, 'answer', $questionid);
         $questiontext = substr($questiontext, 0, $pos) . $new . substr($questiontext, $pos3);
     }
 
