@@ -519,8 +519,10 @@ function game_showpicture($id, $game, $attempt, $query, $cells, $foundcells, $us
     } else {
         $cols = $rows = 0;
     }
-    $params = "id=$id&id2=$attempt->id&f=$foundcells&cols=$cols&rows=$rows&cells=$cells&p={$query->attachment}";
-    $imagesrc = "hiddenpicture/picture.php?$params";
+    // The image endpoint loads the attachment and revealed cells from the authorized attempt.
+    // Do not disclose the attachment hash or trust reveal parameters from a URL.
+    $params = 'id=' . (int)$id . '&id2=' . (int)$attempt->id;
+    $imagesrc = 'hiddenpicture/picture.php?' . $params;
 
     $fs = get_file_storage();
     $file = get_file_storage()->get_file_by_hash($query->attachment);

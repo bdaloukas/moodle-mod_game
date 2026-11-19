@@ -1,3 +1,7 @@
+Changes in version 2026-11-19
+* Fix Hidden Picture image access and reveal-state validation
+
+
 Changes in version 2026-10-08
 * Fix: Moodle 53 compatibility
 

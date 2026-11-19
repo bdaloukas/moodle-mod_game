@@ -23,86 +23,71 @@
  */
 
 require('../../../config.php');
-require_login();
 
-$id = required_param('id', PARAM_INT); // Course Module ID.
-$attemptid = required_param('id2', PARAM_INT); // Course Module ID.
+$id = required_param('id', PARAM_INT); // Game course module id.
+$attemptid = required_param('id2', PARAM_INT); // Hidden Picture attempt id.
 
-$foundcells = required_param('f', PARAM_SEQUENCE); // CSV.
-$cells = required_param('cells', PARAM_SEQUENCE); // CSV.
-$filehash = required_param('p', PARAM_PATH);
-$cols = required_param('cols', PARAM_INT);
-$rows = required_param('rows', PARAM_INT);
+// Ignore legacy p, f, cells, cols and rows URL parameters. All picture state is trusted server data.
+$state = \mod_game\hiddenpicture::get_picture_state($id, $attemptid);
 $filenamenumbers = $CFG->dirroot . '/mod/game/hiddenpicture/numbers.png';
-create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers);
+create_image($state, $filenamenumbers);
 
 /**
- * Create an image.
+ * Render the authenticated player's picture with server-derived reveal state.
  *
- * @param int $id
- * @param int $attemptid
- * @param boolean $foundcells
- * @param stdClass $cells
- * @param string $filehash
- * @param int $cols
- * @param int $rows
- * @param string $filenamenumbers
+ * @param stdClass $state Authorized picture state.
+ * @param string $filenamenumbers Number spritesheet location.
  */
-function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $rows, $filenamenumbers) {
-    global $CFG;
-
-    $a = explode(',', $foundcells);
-    $found = [];
-    foreach ($a as $s) {
-        $found[$s] = 1;
+function create_image($state, $filenamenumbers) {
+    $file = get_file_storage()->get_file_by_hash($state->attachment);
+    if (!$file || $file->is_directory()) {
+        throw new moodle_exception('hiddenpicture_error', 'game');
     }
-
-    $a = explode(',', $cells);
-    $cells = [];
-    foreach ($a as $s) {
-        $cells[$s] = 1;
-    }
-
-    $file = get_file_storage()->get_file_by_hash($filehash);
     $image = $file->get_imageinfo();
-
-    if ($image === false) {
-        die("Aknown filehash $filehash");
-        return false;
+    if (!$image || !in_array($image['mimetype'], ['image/png', 'image/jpeg', 'image/gif'], true)) {
+        throw new moodle_exception('hiddenpicture_error', 'game');
     }
-    $imghandle = imagecreatefromstring($file->get_content());
 
-    $mime = $image['mimetype'];
+    $imghandle = imagecreatefromstring($file->get_content());
+    if ($imghandle === false) {
+        throw new moodle_exception('hiddenpicture_error', 'game');
+    }
 
     $imgnumbers = imagecreatefrompng($filenamenumbers);
     $sizenumbers = getimagesize($filenamenumbers);
+    if ($imgnumbers === false || $sizenumbers === false) {
+        imagedestroy($imghandle);
+        throw new moodle_exception('hiddenpicture_error', 'game');
+    }
 
-    header("Content-type: $mime");
-
-    $color = imagecolorallocate($imghandle, 100, 100, 100);
-
+    // Never allow an HTTP parameter to bypass the masking of an unfinished picture.
+    $cols = $state->cols;
+    $rows = $state->rows;
     $width = $image['width'];
     $height = $image['height'];
+    $color = imagecolorallocate($imghandle, 100, 100, 100);
     $pos = 0;
 
-    $font = 1;
+    if (!$state->found) {
+        for ($y = 0; $y < $rows; $y++) {
+            for ($x = 0; $x < $cols; $x++) {
+                $pos++;
+                if (isset($state->visiblecells[$pos])) {
+                    continue;
+                }
 
-    for ($y = 0; $y < $rows; $y++) {
-        for ($x = 0; $x < $cols; $x++) {
-            $pos++;
-            if (!array_key_exists($pos, $found)) {
                 $x1 = round($x * $width / $cols);
                 $y1 = round($y * $height / $rows);
                 imagefilledrectangle(
                     $imghandle,
-                    round($x1),
-                    round($y1),
+                    $x1,
+                    $y1,
                     round($x1 + $width / $cols),
                     round($y1 + $height / $rows),
                     $color
                 );
 
-                if (array_key_exists($pos, $cells)) {
+                if (isset($state->numberedcells[$pos])) {
                     shownumber(
                         $imghandle,
                         $imgnumbers,
@@ -118,7 +103,10 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
         }
     }
 
-    switch ($mime) {
+    // Generated pictures are specific to one user's current assessment state.
+    header('Cache-Control: private, no-store, no-cache, must-revalidate');
+    header('Content-Type: ' . $image['mimetype']);
+    switch ($image['mimetype']) {
         case 'image/png':
             imagepng($imghandle);
             break;
@@ -128,11 +116,9 @@ function create_image($id, $attemptid, $foundcells, $cells, $filehash, $cols, $r
         case 'image/gif':
             imagegif($imghandle);
             break;
-        default:
-            die('Aknown mime type $mime');
-            return false;
     }
 
+    imagedestroy($imgnumbers);
     imagedestroy($imghandle);
 }
 
