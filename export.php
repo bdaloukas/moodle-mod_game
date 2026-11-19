@@ -117,7 +117,7 @@ class mod_game_exporthtml_form extends moodleform {
         $html = new stdClass();
         $html->id = $this->_customdata['html']->id;
         $html->type = optional_param('type', 0, PARAM_ALPHANUM);
-        $html->filename = $mform->getElementValue('filename');
+        $html->filename = clean_param($mform->getElementValue('filename'), PARAM_FILE);
         $html->title = $mform->getElementValue('title');
         $html->maxpicturewidth = optional_param('maxpicturewidth', 0, PARAM_INT);
         $html->maxpictureheight = optional_param('maxpictureheight', 0, PARAM_INT);
