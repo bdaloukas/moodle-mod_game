@@ -49,27 +49,19 @@ function game_sudoku_continue($cm, $game, $attempt, $sudoku, $endofgame, $contex
         return game_sudoku_play($cm, $game, $attempt, $sudoku, false, false, $context, $course);
     }
 
-    if ($attempt == false) {
-        $attempt = game_addattempt($game);
-    }
-
-    // New game.
-    srand((double)microtime() * 1000000);
+    // Select and validate the puzzle before inserting any attempt-specific records.
 
     $recsudoku = getrandomsudoku();
     if ($recsudoku == false) {
         throw new moodle_exception('sudoku_error', 'game', 'Empty sudoku database');
     }
 
-    $newrec = new stdClass();
-    $newrec->id = $attempt->id;
-    $newrec->guess = '';
-    $newrec->data = $recsudoku->data;
-    $newrec->opened = $recsudoku->opened;
+    if (!game_sudoku_valid_board($recsudoku->data, $recsudoku->opened)) {
+        throw new moodle_exception('sudoku_error', 'game', '', null, 'Invalid Sudoku template');
+    }
 
-    $need = 81 - $recsudoku->opened;
-    $closed = game_sudoku_getclosed($newrec->data);
-    $n = min(count($closed), $need);
+    $closed = game_sudoku_getclosed($recsudoku->data);
+    $n = count($closed);
     // If the teacher set the maximum number of questions.
     if ($game->param2 > 0) {
         if ($game->param2 < $n) {
@@ -77,19 +69,31 @@ function game_sudoku_continue($cm, $game, $attempt, $sudoku, $endofgame, $contex
         }
     }
     $recs = game_questions_selectrandom($game, CONST_GAME_TRIES_REPETITION * $n);
-
-    if ($recs === false) {
-        $sql = "DELETE FROM {game_sudoku} WHERE id={$game->id}";
-        $DB->execute($sql);
+    if (empty($recs)) {
         throw new moodle_exception('no_questions', 'game');
     }
 
-    $closed = array_rand($closed, $n);
-
+    // Fewer questions than blank cells is normal (e.g. 3 or 11 questions).
+    // Assign a position only to questions actually selected for this attempt.
+    $n = min($n, count($recs));
     $selectedrecs = game_select_from_repetitions($game, $recs, $n);
+    $n = count($selectedrecs);
+    $positions = game_sudoku_select_positions($closed, $n);
+    if (!$positions) {
+        throw new moodle_exception('no_questions', 'game');
+    }
 
+    $transaction = $DB->start_delegated_transaction();
+    if ($attempt == false) {
+        $attempt = game_addattempt($game);
+    }
+    $newrec = new stdClass();
+    $newrec->id = $attempt->id;
+    $newrec->guess = '';
+    $newrec->data = $recsudoku->data;
+    $newrec->opened = $recsudoku->opened;
     if (!game_insert_record('game_sudoku', $newrec)) {
-        throw new moodle_exception('error inserting in game_sudoku');
+        throw new moodle_exception('sudoku_error', 'game', '', null, 'Cannot save Sudoku attempt');
     }
 
     $i = 0;
@@ -110,7 +114,7 @@ function game_sudoku_continue($cm, $game, $attempt, $sudoku, $endofgame, $contex
         $query->gamekind = $game->gamekind;
         $query->gameid = $game->id;
         $query->userid = $USER->id;
-        $query->mycol = $closed[$i++];
+        $query->mycol = $positions[$i++];
         $query->sourcemodule = $game->sourcemodule;
         $query->questionid = $rec->questionid;
         $query->glossaryentryid = $rec->glossaryentryid;
@@ -122,7 +126,41 @@ function game_sudoku_continue($cm, $game, $attempt, $sudoku, $endofgame, $contex
         game_update_repetitions($game->id, $USER->id, $query->questionid, $query->glossaryentryid);
     }
 
+    $transaction->allow_commit();
     game_sudoku_play($cm, $game, $attempt, $newrec, false, false, $context, $course);
+}
+
+/**
+ * Validate the persisted 9x9 board representation.
+ * Letters A-I are starting clues; digits 1-9 are hidden cells.
+ *
+ * @param string $data Sudoku puzzle data.
+ * @param int $opened Claimed number of starting clues.
+ * @return bool
+ */
+function game_sudoku_valid_board($data, $opened) {
+    if (!is_string($data) || !preg_match('/^[A-I1-9]{81}$/D', $data)) {
+        return false;
+    }
+    $clues = preg_match_all('/[A-I]/', $data);
+    return $clues > 0 && $clues < 81 && $clues === (int)$opened;
+}
+
+/**
+ * Select distinct blank positions for the questions in an attempt.
+ * array_rand() returns a scalar when selecting just one element.
+ *
+ * @param array $closed Map of blank cell positions.
+ * @param int $count Number of positions required.
+ * @return array Ordered list of cell positions.
+ */
+function game_sudoku_select_positions($closed, $count) {
+    $count = (int)$count;
+    if ($count < 1 || $count > count($closed)) {
+        return [];
+    }
+    $keys = array_rand($closed, $count);
+    return array_map('intval', (array)$keys);
 }
 
 /**
@@ -138,12 +176,17 @@ function game_sudoku_continue($cm, $game, $attempt, $sudoku, $endofgame, $contex
  * @param stdClass $course
  */
 function game_sudoku_play($cm, $game, $attempt, $sudoku, $onlyshow, $showsolution, $context, $course) {
+    if (!game_sudoku_valid_board($sudoku->data, $sudoku->opened)) {
+        throw new moodle_exception('sudoku_error', 'game', '', null, 'Invalid Sudoku board for this attempt');
+    }
     $offsetquestions = game_sudoku_compute_offsetquestions($game->sourcemodule, $attempt, $numbers, $correctquestions);
 
     if ($game->toptext != '') {
         echo $game->toptext . '<br>';
     }
 
+    echo '<div class="game-sudoku-layout" style="display:flex;flex-wrap:wrap;align-items:flex-start;gap:1rem">';
+    echo '<div class="game-sudoku-board" style="flex:0 1 auto;max-width:100%;overflow-x:auto">';
     game_sudoku_showsudoku(
         $sudoku->data,
         $sudoku->guess,
@@ -156,6 +199,7 @@ function game_sudoku_play($cm, $game, $attempt, $sudoku, $onlyshow, $showsolutio
         $game,
         $course
     );
+    echo '</div><div class="game-sudoku-questions" style="flex:1 1 320px;min-width:0">';
     switch ($game->sourcemodule) {
         case 'quiz':
         case 'question':
@@ -187,6 +231,7 @@ function game_sudoku_play($cm, $game, $attempt, $sudoku, $onlyshow, $showsolutio
             break;
     }
 
+    echo '</div></div>';
     if ($game->bottomtext != '') {
         echo '<br>' . $game->bottomtext;
     }
@@ -204,10 +249,12 @@ function game_sudoku_compute_offsetquestions($sourcemodule, $attempt, &$numbers,
     global $CFG, $DB;
 
     $offsetquestions = [];
+    $numbers = [];
+    $correctquestions = [];
     if ($attempt == null) {
         return $offsetquestions;
     }
-    $select = "attemptid = $attempt->id";
+    $select = "attemptid = :attemptid AND gamekind = :gamekind AND mycol > 0";
 
     $fields = 'id, mycol, score';
     switch ($sourcemodule) {
@@ -219,13 +266,11 @@ function game_sudoku_compute_offsetquestions($sourcemodule, $attempt, &$numbers,
             $fields .= ',glossaryentryid as id2';
             break;
     }
-    if (($recs = $DB->get_records_select('game_queries', $select, null, '', $fields)) == false) {
-        $DB->execute("DELETE FROM {$CFG->prefix}game_sudoku WHERE id={$attempt->id}");
-        throw new moodle_exception('sudoku_error', 'game', 'There are no questions ' . $attempt->id);
+    $params = ['attemptid' => $attempt->id, 'gamekind' => 'sudoku'];
+    if (!($recs = $DB->get_records_select('game_queries', $select, $params, '', $fields))) {
+        // Do not silently delete an attempt if its question records are missing.
+        throw new moodle_exception('no_questions', 'game');
     }
-
-    $numbers = [];
-    $correctquestions = [];
     foreach ($recs as $rec) {
         $offsetquestions[$rec->mycol] = $rec->id2;
         $numbers[$rec->id2] = $rec->mycol;
@@ -328,7 +373,7 @@ function game_sudoku_showsudoku(
                     $s = substr($data, $pos, 1);
                     $g = substr($guess, $pos, 1);
                     $pos++;
-                    if ($g != 0) {
+                    if ($g >= '1' && $g <= '9') {
                         $s = $g;
                     }
                     if ($s >= "1" && $s <= "9") {
@@ -375,10 +420,7 @@ function game_sudoku_showsudoku(
     echo '<script type="text/javascript">
     function OnCheck(pos) {
         var s = window.prompt(' . json_encode(get_string('sudoku_guessnumber', 'game')) . ', "");
-        if (s < "1") {
-            return;
-        }
-        if (s > "9") {
+        if (!/^[1-9]$/.test(s)) {
             return;
         }
         window.location.href = ' . json_encode($href) . ' + "&pos=" + pos + "&num=" + s;
@@ -389,7 +431,7 @@ function game_sudoku_showsudoku(
         return $count;
     }
 
-    if (count($offsetquestions) != count($correctquestions)) {
+    if (!game_sudoku_check_found_all_numbers($data, $guess, $offsetquestions, $correctquestions)) {
         return $count;
     }
 
@@ -399,7 +441,7 @@ function game_sudoku_showsudoku(
         get_string('nextgame', 'game') . '</a> &nbsp; &nbsp; &nbsp; &nbsp; ';
     echo "<a href=\"$CFG->wwwroot/course/view.php?id=$cm->course\">" . get_string('finish', 'game') . '</a> ';
 
-    game_updateattempts($game, $attempt, 1, game_sudoku_check_found_all_numbers(), $cm, $course);
+    game_updateattempts($game, $attempt, 1, true, $cm, $course);
 
     return $count;
 }
@@ -409,8 +451,29 @@ function game_sudoku_showsudoku(
  *
  * @package mod_game
  */
-function game_sudoku_check_found_all_numbers() {
-    return false;
+function game_sudoku_check_found_all_numbers($data, $guess, $offsetquestions, $correctquestions) {
+    if (!is_string($data) || !preg_match('/^[A-I1-9]{81}$/D', $data) || empty($offsetquestions)) {
+        return false;
+    }
+
+    // A complete Sudoku needs every assigned question answered correctly.
+    foreach ($offsetquestions as $position => $questionid) {
+        if (!isset($correctquestions[$position])) {
+            return false;
+        }
+    }
+
+    // Every remaining closed cell must have been solved by the player.
+    for ($index = 0; $index < 81; $index++) {
+        if ($data[$index] >= '1' && $data[$index] <= '9') {
+            $position = $index + 1;
+            if (!isset($offsetquestions[$position]) &&
+                    (!isset($guess[$index]) || $guess[$index] !== $data[$index])) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 /**
@@ -505,8 +568,7 @@ function game_sudoku_showquestions_quiz(
     ksort($questions2);
 
     if (count($questions2) == 0) {
-        game_sudoku_showquestion_onfinish($id, $game, $attempt, $sudoku);
-        return;
+        throw new moodle_exception('no_questions', 'game');
     }
 
     $found = false;
@@ -522,10 +584,12 @@ function game_sudoku_showquestions_quiz(
             echo "<form id=\"responseform\" method=\"post\" " .
                 "action=\"{$CFG->wwwroot}/mod/game/attempt.php\" onclick=\"this.autocomplete='off'\">\n";
             if (($onlyshow === false) && ($showsolution === false)) {
-                echo "<br><center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\">";
+                echo '<div class="text-center" style="margin:0.5rem 0">';
+                echo '<input type="submit" name="submit" value="' . s(get_string('sudoku_submit', 'game')) . '">';
 
                 echo " &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=\"submit\" name=\"finishattempt\" value=\"" .
-                get_string('sudoku_finishattemptbutton', 'game') . "\">";
+                s(get_string('sudoku_finishattemptbutton', 'game')) . "\">";
+                echo '</div>';
             }
 
             // Add a hidden field with the quiz id.
@@ -539,16 +603,16 @@ function game_sudoku_showquestions_quiz(
             echo '<input type="hidden" name="questionids" value="' . $questionlist . "\" />\n";
         }
 
-        $number = "<a name=\"a$ofs\">A$ofs</a>";
-
+        echo '<div class="game-sudoku-question" style="margin:0 0 1rem">';
+        echo '<strong>A' . (int)$ofs . '.</strong> ';
         game_print_question($game, $question, $context);
+        echo '</div>';
     }
 
     if ($found) {
         echo "</div>";
 
         // Finish the form.
-        echo '</div>';
         if (($onlyshow === false) && ($showsolution === false)) {
             echo "<center><input type=\"submit\" name=\"submit\" value=\"" . get_string('sudoku_submit', 'game') . "\"></center>\n";
         }
@@ -596,8 +660,7 @@ function game_sudoku_showquestions_glossary(
     ksort($entries2);
 
     if (count($entries2) == 0) {
-        game_sudoku_showquestion_onfinish($id, $game, $attempt, $sudoku);
-        return;
+        throw new moodle_exception('no_questions', 'game');
     }
 
     // Start the form.
@@ -839,8 +902,14 @@ function game_sudoku_check_last($cm, $game, $attempt, $sudoku, $finishattempt, $
 function game_sudoku_check_number($id, $game, $attempt, $sudoku, $pos, $num, $context, $course) {
     global $DB;
 
+    if (!game_sudoku_valid_board($sudoku->data, $sudoku->opened) ||
+            $pos < 1 || $pos > 81 || $num < 1 || $num > 9) {
+        throw new moodle_exception('sudoku_error', 'game', '', null, 'Invalid Sudoku guess');
+    }
+    $offsetquestions = game_sudoku_compute_offsetquestions($game->sourcemodule, $attempt, $numbers, $correctquestions);
+    // Cells reserved for linked questions cannot be revealed by guessing a digit.
     $correct = game_substr($sudoku->data, $pos - 1, 1);
-    if ($correct != $num) {
+    if (isset($offsetquestions[$pos]) || $correct < '1' || $correct > '9' || $correct != $num) {
         game_sudoku_play($id, $game, $attempt, $sudoku, false, false, $context, $course);
         return;
     }

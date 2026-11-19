@@ -569,7 +569,8 @@ function game_questions_selectrandom($game, $count = 1) {
                 if ($game->subcategories) {
                     $cats = question_categorylist($game->questioncategoryid);
                     if (count($cats) > 0) {
-                        $select = 'qbe.questioncategoryid in (' . implode(',', $cats) . ')';
+                        $select = 'qbe.id=qv.questionbankentryid AND q.id=qv.questionid' .
+                            ' AND qbe.questioncategoryid in (' . implode(',', $cats) . ')';
                     }
                 }
             } else {
