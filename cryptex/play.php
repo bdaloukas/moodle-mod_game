@@ -147,7 +147,7 @@ function game_cryptex_check($cm, $game, $attempt, $cryptexrec, $q, $answer, $fin
     }
 
     $crossm = $DB->get_record_select('game_cross', "id=$attempt->id");
-    $query = $DB->get_record_select('game_queries', "id=$q");
+    $query = $DB->get_record('game_queries', ['id' => $q, 'attemptid' => $attempt->id], '*', MUST_EXIST);
 
     $answer1 = trim(game_upper($query->answertext));
     $answer2 = trim(game_upper($answer));
